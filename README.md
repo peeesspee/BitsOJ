@@ -1,12 +1,12 @@
 # BitOJ
 Online Judge for competitive programming contests.  
-###Requirements  
+### Requirements  
 1.  
 2.  
 3.  
 4.  
 
-###Check List  
+### Check List  
 1.  
 2.  
 3.  
