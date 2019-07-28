@@ -1,4 +1,4 @@
-# BitOJ
+# BitsOJ
 Online Judge for competitive programming contests.  
 ### Requirements  
 1.  
