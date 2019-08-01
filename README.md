@@ -1,10 +1,10 @@
 # BitsOJ
-Online Judge for competitive programming contests.  
+Offline Judge for competitive programming contests.  
 ### Requirements  
-1.  
-2.  
-3.  
-4.  
+1.Python3.x  
+2.Subprocess Module  
+3.Socket Programming  
+4.PyQt Module(Might change)  
 
 ### Check List
 #### For Admins
@@ -14,8 +14,6 @@ Online Judge for competitive programming contests.
 4.Can block users from the contest.  
 5.Can start and stop the contest, and set its duration.  
 6.Can broadcast messages and respond to queries.  
-
-
 
 #### For Users  
 1.Can view problems.  
