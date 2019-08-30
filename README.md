@@ -1,5 +1,13 @@
 # BitsOJ
 Offline Judge for competitive programming contests.  
+
+## Setup
+### Setting up RabbitMQ server:
+
+### Install Pika
+
+
+## Goals:
 ### Requirements  
 1.Python3.x  
 2.Subprocess Module  
