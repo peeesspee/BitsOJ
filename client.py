@@ -18,16 +18,18 @@ channel.queue_bind(exchange = 'credential_manager', queue = 'login_requests')
  
 # client username
 global username
+# Client ID
+global client_id
 
 
 # receives the message from the server whether the login is successful or not
 def server_response_handler(ch, method, properties, body):
 	global username
-	server_message = body.decode("utf-8")
+	server_data = body.decode("utf-8")
 	# status of the login request
-	status = server_message[0:7]
-	if(status == '[Valid]'):
-		print("Got a message from Server: " + server_message)
+	status = server_data[0:5]
+	if(status == 'Valid'):
+		status,client_id,server_message = server_data.split(' ')
 	else:
 		# if the login fails deleting the existing queue for the client and again asking for login
 		channel.queue_delete(queue = username)
@@ -37,12 +39,14 @@ def server_response_handler(ch, method, properties, body):
 # Sends the username and password for login request to the client 
 def login():
 	global username
+	global client_id
 	username = input("Enter username: ") or "dummy"
 	password = input("Enter Password: ") or "dummy"
+	client_id = 'Null'
 	print("Validating : " + username + "@" + password)
 
 	# sending username and password to the server
-	channel.basic_publish(exchange = 'credential_manager', routing_key = 'login_requests', body = username + '+' + password)
+	channel.basic_publish(exchange = 'credential_manager', routing_key = 'login_requests', body = username + ' ' + password + ' ' + client_id)
 
 	# Declaring queue for the new client 
 	channel.queue_declare(queue = username)
