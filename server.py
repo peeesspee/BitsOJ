@@ -55,7 +55,12 @@ def client_login_handler(ch, method, properties, body):
 	# Decode the message sent by client
 	client_message = body.decode("utf-8")
 	# Client sends the username, password as "username+password", so we split it.
-	client_username, client_password = client_message.split('+')
+	client_username, client_password, client_id = client_message.split(' ')
+
+	if client_id == "Null":
+		pass
+	else:
+		pass
 
 	print("Validating " + client_username + ":" + client_password + " pair... ")
 
@@ -72,7 +77,7 @@ def client_login_handler(ch, method, properties, body):
 		server_message = "Hello buddy!!"
 
 		# Reply to be sent to client
-		message = "[Valid] [" +  client_id +"] [" + server_message + "]"
+		message = "Valid " +  client_id +" " + server_message
 
 		print("> Server sent :" + message)
 
@@ -82,7 +87,7 @@ def client_login_handler(ch, method, properties, body):
 	# If login is not successful:
 	else:
 		print("Client NOT Verified.")
-		message = "[Invld] "
+		message = "Invld "
 		channel.basic_publish(exchange = 'credential_manager', routing_key = client_username, body = message)
 
 
