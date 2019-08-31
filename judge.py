@@ -1,38 +1,49 @@
-def create_file(code, language):
+def create_file(code, language, file_name):
 
 # if code is in C++
     if language == 'C++':
-        with open("test.cpp", "w") as file:
+        with open(file_name , "w") as file:
             file.write(code)
-            return "test.cpp"
+            return file_name
 
 # if code is in C
     if language == 'C':
-        with open("test.c", 'w') as file:
+        with open(file_name, 'w') as file:
             file.write(code)
-            return "test.c"
+            return file_name
 
 # if code is in Java
     if language == 'Java':
-        with open("test.java", 'w') as file:
+        with open(file_name, 'w') as file:
             file.write(code)
-            return "test.java"
-
+            return file_name
 
 # if code is in Python
     if language == 'Python':
-        with open("test.py", 'w') as file:
+        with open(file_name, 'w') as file:
             file.write(code)
-            return "test.py"
+            return file_name
 
 
 # dummy code stired in string variable x
 x = "import socket \nimport os\nimport subprocess\nimport sys"
 
 
-def judge(code, problem_code, runid, language):
+def judge(code, problem_code, run_id, client_id, language):
 
-    create_file(code, language)
+    if language == 'C++':
+        file_name = client_id + " " + run_id + " "  + " " + problem_code + '.cpp'
+
+    if language == 'C':
+        file_name = client_id + " " + run_id + " "  + " " + problem_code + '.c'
+
+    if language == 'Java':
+        file_name = client_id + " " + run_id + " "  + " " + problem_code + '.java'
+
+    if language == 'Python':
+        file_name = client_id + " " + run_id + " "  + " " + problem_code + '.py'
+
+    create_file(code, language, file_name)
 
 
 
@@ -42,4 +53,4 @@ def judge(code, problem_code, runid, language):
 
 
 # calling judge function
-judge(x, "IAM", "123", "Python");
+judge(x, "KCAT", "prak", "123", "C++");
