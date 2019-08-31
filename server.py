@@ -114,22 +114,5 @@ connection.close()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 #login_thread = Thread(target = login_handler)
 #login_thread.start()
-
-
-
-	
-
-
