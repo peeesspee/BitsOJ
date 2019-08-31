@@ -25,6 +25,7 @@ Offline Judge for competitive programming contests.
 6.Can broadcast messages and respond to queries.  
 
 #### Users  
+0.Can Login
 1.Can view problems.  
 2.Can submit solution, and view result.   
 3.Can view their submission results.   
@@ -44,9 +45,9 @@ Offline Judge for competitive programming contests.
 9.As soon as contest time is over, it must not accept any new solutions.  
 
 #### OJ:Innards
-0.Manage connections.  (Work in progress : 30%)    
-1.Verify user details.  (Work in progress : Enqueued)  
-2.Implement client data queue.  (Work in progress : Enqueued)  
+0.Manage connections.  (Work in progress : 70%)    
+1.Verify user details.  (Work in progress : 30%)  
+2.Implement client data queue.  (Completed)  
 3.Manage Judge queue.  (Scheduled for later)  
 4.Database manager  (Scheduled for later)  
 
