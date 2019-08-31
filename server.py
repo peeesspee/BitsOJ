@@ -34,7 +34,7 @@ except:
 
 
 channel.queue_bind(exchange = 'credential_manager', queue = 'login_requests')
-# channel.queue_bind(exchange = 'credential_manager', queue = 'login_response')
+channel.queue_bind(exchange = 'credential_manager', queue = 'login_response')
 
 
 def validate_client(username, password):
@@ -55,8 +55,8 @@ def client_handler(ch, method, properties, body):
 	
 	if status == True:
 		print("Client Verified.")
-		message = "Hello " + client_username
-		channel.basic_publish(exchange='credential_manager', routing_key = 'login_requests', body = message)
+		message = "Hello client "
+		channel.basic_publish(exchange='credential_manager', routing_key = 'login_response', body = message)
 	else:
 		print("Client NOT Verified.")
 		message = "Hello imposter"
