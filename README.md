@@ -4,10 +4,10 @@ Offline Judge for competitive programming contests.
 ## Setup
 ### Setting up backend services:
 #### 1.Update the system:  
-`sudo apt-get update`
-`sudo apt-get upgrade`
+`sudo apt-get update`  
+`sudo apt-get upgrade`  
 #### 2.Install ErLang
-`cd ~  `
+`cd ~  `  
 `wget http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_general/esl-erlang_20.1-1~ubuntu~xenial_amd64.deb`  
 `sudo dpkg -i esl-erlang_20.1-1\~ubuntu\~xenial_amd64.deb`  
 `erl`  
