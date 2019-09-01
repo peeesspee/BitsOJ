@@ -1,17 +1,21 @@
 import pika
+from Client.connection import establish_connection
 from threading import *
 import sqlite3
 
-rabbitmq_username = 'client'
-rabbitmq_password = 'client'
-host = 'localhost'
+# rabbitmq_username = 'client'
+# rabbitmq_password = 'client'
+# host = 'localhost'
 
 
-#channel.queue_delete(queue = 'queue_name')
+# #channel.queue_delete(queue = 'queue_name')
 
-# establshing connection with the server
-connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
-channel = connection.channel()
+# # establshing connection with the server
+# connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
+# channel = connection.channel()
+
+establish_connection.make_connection()
+
 
 # binding credential manager exchange and login_request queue  which send the login request from client to server 
 channel.queue_bind(exchange = 'credential_manager', queue = 'login_requests')
