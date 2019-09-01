@@ -2,10 +2,40 @@
 Offline Judge for competitive programming contests.  
 
 ## Setup
-### Setting up RabbitMQ server:
+### Setting up backend services:
+#### 1.Update the system:  
++ sudo apt-get update  
++ sudo apt-get upgrade  
+#### 2.Install ErLang
++ cd ~  
++ wget http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_general/esl-erlang_20.1-1~ubuntu~xenial_amd64.deb  
++ sudo dpkg -i esl-erlang_20.1-1\~ubuntu\~xenial_amd64.deb  
++ erl   
+#### 3.Install RabbitMQ  
+Add the Apt repository to your Apt source list directory (/etc/apt/sources.list.d):  
++ echo "deb https://dl.bintray.com/rabbitmq/debian xenial main" | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list  
+Next add our public key to your trusted key list using apt-key:  
++ wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -  
++ sudo apt-get update  
++ sudo apt-get install rabbitmq-server   
+#### 4.Start the server:  
++ sudo systemctl start rabbitmq-server.service  
++ sudo systemctl enable rabbitmq-server.service  
+To check status of RabbitMQ server,  
++ sudo rabbitmqctl status  
+#### 5.Create a new admin account  
+You should give custom values to user_name and user_password in the next command:  
++ sudo rabbitmqctl add_user user_name user_password   
++ sudo rabbitmqctl set_user_tags user_name administrator  
++ sudo rabbitmqctl set_permissions -p / user_name ".*" ".*" ".*"  
+#### 6.Enable RabbitMQ management console  
++ sudo rabbitmq-plugins enable rabbitmq_management  
++ sudo chown -R rabbitmq:rabbitmq /var/lib/rabbitmq/  
+Visit : http://localhost:15672/ and login using user_name and user_password  
 
-### Install Pika
-
+#### 7.Install Pika
++ pip3 install pika
+#### And you're done!!!!
 
 ## Goals:
 ### Requirements  
@@ -14,6 +44,7 @@ Offline Judge for competitive programming contests.
 3.~Socket Programming~  
 4.Pika + RabbitMQ  
 5.PyQt Module(Might change)  
+
 
 ### Check List
 #### Admins
