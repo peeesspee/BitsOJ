@@ -36,8 +36,11 @@ Visit : http://localhost:15672/ and login using user_name and user_password
 #### 7.Install Pika
 `pip3 install pika`  
 
-#### 8.Install PyQt4
-`sudo apt install python3-pyqt4`   
+#### 8.Install PyQt5
+`pip3 install pyqt5`  
+
+
+
 #### And you're done!!!!
 
 ## Goals:
