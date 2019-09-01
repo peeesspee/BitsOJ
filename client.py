@@ -4,7 +4,7 @@ import sqlite3
 
 rabbitmq_username = 'client'
 rabbitmq_password = 'client'
-host = '192.168.20.17'
+host = 'localhost'
 
 
 #channel.queue_delete(queue = 'queue_name')
@@ -29,7 +29,8 @@ def server_response_handler(ch, method, properties, body):
 	# status of the login request
 	status = server_data[0:5]
 	if(status == 'Valid'):
-		status,client_id,server_message = server_data.split(' ')
+		status,client_id,server_message = server_data.split('+')
+		print("Status:" + status + "\nClientID : " + client_id + "\nServer says : " + server_message)
 	else:
 		# if the login fails deleting the existing queue for the client and again asking for login
 		channel.queue_delete(queue = username)
@@ -46,7 +47,7 @@ def login():
 	print("Validating : " + username + "@" + password)
 
 	# sending username and password to the server
-	channel.basic_publish(exchange = 'credential_manager', routing_key = 'login_requests', body = username + ' ' + password + ' ' + client_id)
+	channel.basic_publish(exchange = 'credential_manager', routing_key = 'login_requests', body = username + '+' + password + '+' + client_id)
 
 	# Declaring queue for the new client 
 	channel.queue_declare(queue = username)

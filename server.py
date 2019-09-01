@@ -1,11 +1,11 @@
 import pika
-from threading import *
+import threading
 
 
 # Variables  
 rabbitmq_username = 'BitsOJ'
 rabbitmq_password = 'root'
-host = '192.168.20.17'
+host = 'localhost'
 
 
 # Establish a connection with RabbitMQ Server
@@ -17,7 +17,6 @@ channel = connection.channel()
 try:
 	channel.queue_declare(queue = 'login_requests', durable = True)
 	channel.queue_declare(queue = 'client_requests', durable = True)
-	channel.queue_declare(queue = 'client_response', durable = True)
 	channel.queue_declare(queue = 'judge_requests', durable = True)
 	channel.queue_declare(queue = 'judge_verdicts', durable = True) 
 except:
@@ -43,7 +42,7 @@ def generate_new_client_id():
 
 
 #This function validates the (username, password) pair in the database.
-def validate_client(username, password):
+def validate_client(username, password, client_id):
 	#Validate client in database
 	status = True
 	return status
@@ -55,29 +54,30 @@ def client_login_handler(ch, method, properties, body):
 	# Decode the message sent by client
 	client_message = body.decode("utf-8")
 	# Client sends the username, password as "username+password", so we split it.
-	client_username, client_password, client_id = client_message.split(' ')
+	client_username, client_password, client_id = client_message.split('+')
 
 	if client_id == "Null":
 		pass
 	else:
 		pass
 
-	print("Validating " + client_username + ":" + client_password + " pair... ")
+	print("Validating " + client_username + ":" + client_password + ":" + client_id +" pair... ")
 
 	# Validate the client from the database
-	status = validate_client(client_username, client_password)
+	status = validate_client(client_username, client_password, client_id)
 
 	# If login is successful:
 	if status == True:
 		print("Client Verified.")
 
 		# Generate a new client ID for our verified client
-		client_id = generate_new_client_id()
+		if client_id == "Null":
+			client_id = generate_new_client_id()
 
 		server_message = "Hello buddy!!"
 
 		# Reply to be sent to client
-		message = "Valid " +  client_id +" " + server_message
+		message = "Valid+" +  client_id +"+" + server_message
 
 		print("> Server sent :" + message)
 
@@ -87,7 +87,7 @@ def client_login_handler(ch, method, properties, body):
 	# If login is not successful:
 	else:
 		print("Client NOT Verified.")
-		message = "Invld "
+		message = "Invld+"
 		channel.basic_publish(exchange = 'credential_manager', routing_key = client_username, body = message)
 
 
@@ -98,21 +98,41 @@ def login_handler():
 	channel.basic_consume(queue = 'login_requests', on_message_callback = client_login_handler, auto_ack = True)
 	channel.start_consuming()
 
+def client_handler():
+	return
+
+def judge_handler():
+	return
+
+def gui_handler():
+	return
+
+
+def thread_handler():
+	#Create threads and give their targets
+	login_thread = threading.Thread(target = login_handler)
+	client_thread = threading.Thread(target = client_handler)
+	judge_thread = threading.Thread(target = judge_handler)
+	gui_thread = threading.Thread(target = gui_handler)
+
+	#start threads
+	login_thread.start()
+	client_thread.start()
+	judge_thread.start()
+	gui_thread.start()
+
+	#Join threads (Tell main program to wait until all these threads finish)
+	login_thread.join()
+	client_thread.join()
+	judge_thread.join()
+	gui_thread.join()
 
 
 def main():
-	login_handler()
+	thread_handler()
+	connection.close()
 
 main()
-connection.close()
 
 
 
-
-
-
-
-
-
-#login_thread = Thread(target = login_handler)
-#login_thread.start()
