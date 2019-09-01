@@ -35,6 +35,9 @@ Visit : http://localhost:15672/ and login using user_name and user_password
 
 #### 7.Install Pika
 `pip3 install pika`  
+
+#### 8.Install kivy
+`sudo pip3 install kivy`
 #### And you're done!!!!
 
 ## Goals:
