@@ -50,55 +50,53 @@ def validate_client(username, password, client_id):
 
 # This function handles the client login requests
 def client_login_handler(ch, method, properties, body):
-	print("Got something to validate...")
 	# Decode the message sent by client
 	client_message = body.decode("utf-8")
-	# Client sends the username, password as "username+password", so we split it.
+	# Client sends the username, password, clientID as "username+password+clientID", so we split it.
+	#Default value of clientID is "Null" (String)
 	client_username, client_password, client_id = client_message.split('+')
-
-	if client_id == "Null":
-		pass
-	else:
-		pass
-
-	print("Validating " + client_username + ":" + client_password + ":" + client_id +" pair... ")
+	print("[ LOGIN ] " + "[ " + client_id + " ] > " + client_username + "@" + client_password)
 
 	# Validate the client from the database
 	status = validate_client(client_username, client_password, client_id)
 
 	# If login is successful:
 	if status == True:
-		print("Client Verified.")
-
-		# Generate a new client ID for our verified client
+		# If client logs in for the first time:
 		if client_id == "Null":
 			client_id = generate_new_client_id()
 
-		server_message = "Hello buddy!!"
+		print("[ " + client_username + " ] : Assigned : [ " + client_id + " ]")
 
 		# Reply to be sent to client
+		server_message = "Hello buddy!!"
 		message = "Valid+" +  client_id +"+" + server_message
 
-		print("> Server sent :" + message)
+		print("[ Sent ] " + message)
 
 		# The client listens on its own queue, whose name = client_username (Hard-coded)
 		# This queue is declared in the client.py file
 		channel.basic_publish(exchange = 'credential_manager', routing_key = client_username, body = message)
+
 	# If login is not successful:
 	else:
-		print("Client NOT Verified.")
+		print("[ " + client_username + " ] : NOT verified.")
+
+		# Reply Invalid credentials to client
+		# Every response sent to client has 5 initial characters which specify what server is going to talk about.
+		# Invld signifies an invalid login attempt.
 		message = "Invld+"
 		channel.basic_publish(exchange = 'credential_manager', routing_key = client_username, body = message)
 
 
 #Listens for client logins
 def login_handler():
-	print("Listening for client input...\n")
 	#Client sends login request on login_requests
 	channel.basic_consume(queue = 'login_requests', on_message_callback = client_login_handler, auto_ack = True)
 	channel.start_consuming()
 
 def client_handler():
+
 	return
 
 def judge_handler():
@@ -129,6 +127,7 @@ def thread_handler():
 
 
 def main():
+	print("----------------BitsOJ v1.0----------------")
 	thread_handler()
 	connection.close()
 

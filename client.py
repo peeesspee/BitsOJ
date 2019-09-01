@@ -30,7 +30,7 @@ def server_response_handler(ch, method, properties, body):
 	status = server_data[0:5]
 	if(status == 'Valid'):
 		status,client_id,server_message = server_data.split('+')
-		print("Status:" + status + "\nClientID : " + client_id + "\nServer says : " + server_message)
+		print("[ Status ] " + status + "\n[ ClientID ] : " + client_id + "\n[ Server ] : " + server_message)
 	else:
 		# if the login fails deleting the existing queue for the client and again asking for login
 		channel.queue_delete(queue = username)
@@ -41,10 +41,10 @@ def server_response_handler(ch, method, properties, body):
 def login():
 	global username
 	global client_id
-	username = input("Enter username: ") or "dummy"
-	password = input("Enter Password: ") or "dummy"
-	client_id = 'Null'
-	print("Validating : " + username + "@" + password)
+	username = input("Username : ") or "dummy"
+	password = input("Password : ") or "dummy"
+	client_id = "Null"
+	print("[ Validating ] : " + username + "@" + password)
 
 	# sending username and password to the server
 	channel.basic_publish(exchange = 'credential_manager', routing_key = 'login_requests', body = username + '+' + password + '+' + client_id)
@@ -52,7 +52,7 @@ def login():
 	# Declaring queue for the new client 
 	channel.queue_declare(queue = username)
 	channel.queue_bind(exchange = 'credential_manager', queue = username)
-	print("Listening for server input...\n")
+	print("[ Listening ] @ " + host)
 
 	# Listening from the server for the login request
 	channel.basic_consume(queue = username, on_message_callback = server_response_handler, auto_ack = True)
