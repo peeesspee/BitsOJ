@@ -37,6 +37,7 @@ class submit_solution():
 	def server_response_handler(ch,method,properties,body):
 		submission_result = body.decode('utf-8')
 		status = submission_result[0:5]
+		print(status)
 		if (status == 'Vrdct'):
 			pass
 		else:
