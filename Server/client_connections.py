@@ -1,12 +1,13 @@
 import pika
-from database_management import validate_client, generate_new_client_id
+from database_management import client_authentication
 
 class manage_clients():
 	channel = ''
-	def listen_clients(channel):
+	def listen_clients(channel1):
+		manage_clients.channel = channel1
 		#Client sends login request on login_requests
-		channel.basic_consume(queue = 'login_requests', on_message_callback = manage_clients.client_login_handler, auto_ack = True)
-		channel.start_consuming()
+		channel1.basic_consume(queue = 'login_requests', on_message_callback = manage_clients.client_login_handler, auto_ack = True)
+		channel1.start_consuming()
 
 
 	def client_login_handler(ch, method, properties, body):
@@ -18,13 +19,13 @@ class manage_clients():
 		print("[ LOGIN ] " + "[ " + client_id + " ] > " + client_username + "@" + client_password)
 
 		# Validate the client from the database
-		status = validate_client(client_username, client_password, client_id)
+		status = client_authentication.validate_client(client_username, client_password, client_id)
 
 		# If login is successful:
 		if status == True:
 			# If client logs in for the first time:
 			if client_id == "Null":
-				client_id = generate_new_client_id()
+				client_id = client_authentication.generate_new_client_id()
 
 			print("[ " + client_username + " ] : Assigned : [ " + client_id + " ]")
 
@@ -48,6 +49,4 @@ class manage_clients():
 			message = "Invld+"
 			manage_clients.channel.basic_publish(exchange = 'credential_manager', routing_key = client_username, body = message)
 
-	def main_function(channel1):
-		manage_clients.channel = channel1
-		manage_clients.listen_clients(manage_clients.channel)
+	

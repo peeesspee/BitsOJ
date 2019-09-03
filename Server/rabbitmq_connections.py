@@ -1,8 +1,8 @@
 import pika
 
 #Class to handle incoming connections
-class manage_connections():
-	def initialize_connections(superuser_username, superuser_password, host):
+class manage_connection():
+	def initialize_connection(superuser_username, superuser_password, host):
 		# Establish a connection with RabbitMQ Server
 		# connection object is returned by the server
 		connection = pika.BlockingConnection(pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f"))
@@ -30,8 +30,8 @@ class manage_connections():
 		channel.queue_bind(exchange = 'credential_manager', queue = 'login_requests')
 		return channel, connection
 
+	def terminate_connection(connection):
+		connection.close()
 
-	def main_function(superuser_username, superuser_password, host):
-		channel, connection = manage_connections.initialize_connections(superuser_username, superuser_password, host)
-		return channel, connection
-		
+
+	
