@@ -36,8 +36,11 @@ Visit : http://localhost:15672/ and login using user_name and user_password
 #### 7.Install Pika
 `pip3 install pika`  
 
-#### 8.Install kivy
-`sudo pip3 install kivy`
+#### 8.Install PyQt5
+`pip3 install pyqt5`  
+
+
+
 #### And you're done!!!!
 
 ## Goals:
@@ -46,8 +49,8 @@ Visit : http://localhost:15672/ and login using user_name and user_password
 2.Subprocess Module  
 3.~Socket Programming~  
 4.Pika + RabbitMQ  
-5.~PyQt Module~  
-6.Kivy  
+5.PyQt Module  
+6.~Kivy~  
 
 
 ### Check List
