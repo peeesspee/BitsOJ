@@ -20,7 +20,7 @@ class authenticate_login():
 		authenticate_login.channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = 'Login ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id)
 
 		# Declaring queue for the new client
-		authenticate_login.channel.queue_declare(queue = authenticate_login.username)
+		authenticate_login.channel.queue_declare(queue = authenticate_login.username, durable = True)
 		authenticate_login.channel.queue_bind(exchange = 'connection_manager', queue = authenticate_login.username)
 		print("[ Listening ] @ " + authenticate_login.host)
 
@@ -43,6 +43,6 @@ class authenticate_login():
 			print("Invalid login!!!")
 			# if the login fails deleting the existing queue for the client and again asking for login
 			authenticate_login.channel.queue_delete(queue = authenticate_login.username)
-			authenticate_login.login(authenticate_login.channel)
+			authenticate_login.login(authenticate_login.channel, authenticate_login.host)
 
 

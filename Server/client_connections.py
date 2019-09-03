@@ -35,6 +35,8 @@ class manage_clients():
 
 		print("[ LOGIN ] " + "[ " + client_id + " ] > " + client_username + "@" + client_password)
 
+		
+		manage_clients.channel.queue_bind(exchange = "connection_manager", queue = client_username)
 		# Validate the client from the database
 		status = client_authentication.validate_client(client_username, client_password)
 
@@ -57,7 +59,7 @@ class manage_clients():
 			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = message)
 
 		# If login is not successful:
-		else if status == False:
+		elif status == False:
 			print("[ " + client_username + " ] NOT verified.")
 
 			# Reply Invalid credentials to client
