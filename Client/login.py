@@ -8,14 +8,16 @@ class authenticate_login():
 	host = 'localhost'
 		
 	# Sends the username and password for login request to the client 
-	def login():
+	def login(channel1,host1):
+		authenticate_login.channel = channel1
+		authenticate_login.host = host1
 		authenticate_login.username = input('Enter your username : ') or 'dummy'
 		password = input('Enter your password : ') or 'dummy'
 		
 		print("[ Validating ] : " + authenticate_login.username + "@" + password)
 
 		# sending username and password to the server
-		authenticate_login.channel.basic_publish(exchange = 'credential_manager', routing_key = 'login_requests', body = authenticate_login.username + '+' + password + '+' + authenticate_login.client_id)
+		authenticate_login.channel.basic_publish(exchange = 'credential_manager', routing_key = 'login_requests', body = 'Login ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id)
 
 		# Declaring queue for the new client
 		authenticate_login.channel.queue_declare(queue = authenticate_login.username)
@@ -35,15 +37,10 @@ class authenticate_login():
 		if(status == 'Valid'):
 			status,authenticate_login.client_id,server_message = server_data.split('+')
 			print("[ Status ] " + status + "\n[ ClientID ] : " + authenticate_login.client_id + "\n[ Server ] : " + server_message)
+			return authenticate_login.client_id,authenticate_login.username
 		else:
 			# if the login fails deleting the existing queue for the client and again asking for login
 			authenticate_login.channel.queue_delete(queue = authenticate_login.username)
 			authenticate_login.login(authenticate_login.channel)
-
-
-	def main_function(channel1,host1):
-		authenticate_login.channel = channel1
-		authenticate_login.host = host1
-		authenticate_login.login()
 
 
