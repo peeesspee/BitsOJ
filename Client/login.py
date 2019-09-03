@@ -17,15 +17,31 @@ class authenticate_login():
 		print("[ Validating ] : " + authenticate_login.username + "@" + password)
 
 		# sending username and password to the server
-		authenticate_login.channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = 'Login ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id)
+		authenticate_login.channel.basic_publish(
+			exchange = 'connection_manager', 
+			routing_key = 'client_requests', 
+			body = 'Login ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id
+			)
 
 		# Declaring queue for the new client
-		authenticate_login.channel.queue_declare(queue = authenticate_login.username, durable = True)
-		authenticate_login.channel.queue_bind(exchange = 'connection_manager', queue = authenticate_login.username)
+		authenticate_login.channel.queue_declare(
+			queue = authenticate_login.username, 
+			durable = True
+			)
+		authenticate_login.channel.queue_bind(
+			exchange = 'connection_manager', 
+			queue = authenticate_login.username
+			)
+
 		print("[ Listening ] @ " + authenticate_login.host)
 
 		# Listening from the server for the login request
-		authenticate_login.channel.basic_consume(queue = authenticate_login.username, on_message_callback = authenticate_login.server_response_handler, auto_ack = True)
+		authenticate_login.channel.basic_consume(
+			queue = authenticate_login.username, 
+			on_message_callback = authenticate_login.server_response_handler, 
+			auto_ack = True
+			)
+
 		authenticate_login.channel.start_consuming()
 
 
@@ -34,6 +50,7 @@ class authenticate_login():
 		print(server_data)
 		# status of the login request
 		status = server_data[0:5]
+
 		print (status)
 		if(status == 'Valid'):
 			status,authenticate_login.client_id,server_message = server_data.split('+')
@@ -42,7 +59,13 @@ class authenticate_login():
 		elif status == "Invld":
 			print("Invalid login!!!")
 			# if the login fails deleting the existing queue for the client and again asking for login
-			authenticate_login.channel.queue_delete(queue = authenticate_login.username)
-			authenticate_login.login(authenticate_login.channel, authenticate_login.host)
+			authenticate_login.channel.queue_delete(
+				queue = authenticate_login.username
+				)
+
+			authenticate_login.login(
+				authenticate_login.channel, 
+				authenticate_login.host
+				)
 
 
