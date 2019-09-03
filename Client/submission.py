@@ -29,7 +29,7 @@ class submit_solution():
 
 	def solution_request(code,client_id,username,language,problem_code,channel):
 		submit_solution.final_data = 'Submt ' + client_id + ' '  + problem_code + ' ' + language + ' ' + code
-		channel.basic_publish(exchange = 'credential_manager', routing_key = 'login_requests', body = submit_solution.final_data)
+		channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = submit_solution.final_data)
 		print('Your Code is running ......')
 		channel.basic_consume(queue = username, on_message_callback =submit_solution.server_response_handler , auto_ack = True)
 
