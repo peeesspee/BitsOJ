@@ -14,8 +14,9 @@ def main():
 	
 	# This function handles the client login requests
 	conn, cur = manage_database.initialize_database()
-	manage_database.insert_user("Null","team1","abcd", cur, conn)
-	
+	manage_database.insert_user("1234","team1","abcd", cur, conn)
+	manage_database.insert_user("Null","dummy","dummy", cur, conn)
+
 	channel, connection = manage_connection.initialize_connection(rabbitmq_username, rabbitmq_password, host)
 
 	manage_clients.listen_clients(channel)

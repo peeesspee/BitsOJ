@@ -2,11 +2,12 @@ import sqlite3
 import sys
 
 class manage_database():
-	
+	cur = None
 	def initialize_database():
 		try:
 			conn = sqlite3.connect('server_database.db')
 			cur = conn.cursor()
+			manage_database.cur = cur
 		except Exception as error:
 			print ("[ CRITICAL ERROR ]Database connection error : " + str(error))
 		
@@ -35,7 +36,7 @@ class manage_database():
 			print("[ CRITICAL ERROR ] Database insertion error : " + str(error))
 
 	def get_cursor():
-		return cur
+		return manage_database.cur
 
 
 class client_authentication(manage_database):
@@ -43,10 +44,13 @@ class client_authentication(manage_database):
 	def validate_client(username, password, client_id):
 		#Validate client in database
 		cur = manage_database.get_cursor()
-		cur.execute("select exists(select 1 from accounts where username = ?)", (username))
-		t = cur.fetchall()
-		print (t);
-		status = True
+		cur.execute("select exists(select * from accounts where username = ? and password = ?)", (username,password,))
+		validation_result = cur.fetchall()
+		
+		if(validation_result[0][0] == 1):
+			status = True
+		else:
+			status = False
 		return status
 
 	#This function generates a new client_id for new connections
