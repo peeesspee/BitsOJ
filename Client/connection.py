@@ -1,7 +1,7 @@
 import pika
 
 # Class to handle connection establishment requests
-class establish_connection():
+class manage_connection():
 
 	# Function to establish connection
 	def initialize_connection(rabbitmq_username,rabbitmq_password,host):
@@ -9,7 +9,8 @@ class establish_connection():
 		channel = connection.channel()
 
 		# binding credential manager exchange and login_request queue  which send the login request from client to server
-		channel.queue_bind(exchange = 'credential_manager', queue = 'login_requests')
+		channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
 		return channel,connection
 
-	
+	def terminate_connection(connection):
+		connection.close()

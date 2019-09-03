@@ -17,11 +17,11 @@ class authenticate_login():
 		print("[ Validating ] : " + authenticate_login.username + "@" + password)
 
 		# sending username and password to the server
-		authenticate_login.channel.basic_publish(exchange = 'credential_manager', routing_key = 'login_requests', body = 'Login ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id)
+		authenticate_login.channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = 'Login ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id)
 
 		# Declaring queue for the new client
 		authenticate_login.channel.queue_declare(queue = authenticate_login.username)
-		authenticate_login.channel.queue_bind(exchange = 'credential_manager', queue = authenticate_login.username)
+		authenticate_login.channel.queue_bind(exchange = 'connection_manager', queue = authenticate_login.username)
 		print("[ Listening ] @ " + authenticate_login.host)
 
 		# Listening from the server for the login request
