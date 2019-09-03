@@ -31,14 +31,16 @@ class authenticate_login():
 
 	def server_response_handler(ch,method,properties,body):
 		server_data = body.decode('utf-8')
-
+		print(server_data)
 		# status of the login request
 		status = server_data[0:5]
+		print (status)
 		if(status == 'Valid'):
 			status,authenticate_login.client_id,server_message = server_data.split('+')
 			print("[ Status ] " + status + "\n[ ClientID ] : " + authenticate_login.client_id + "\n[ Server ] : " + server_message)
 			return authenticate_login.client_id,authenticate_login.username
-		else:
+		elif status == "Invld":
+			print("Invalid login!!!")
 			# if the login fails deleting the existing queue for the client and again asking for login
 			authenticate_login.channel.queue_delete(queue = authenticate_login.username)
 			authenticate_login.login(authenticate_login.channel)

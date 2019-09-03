@@ -34,8 +34,9 @@ class manage_clients():
 			print("[ DEBUG ] Client message was : " + str(client_message))
 
 		print("[ LOGIN ] " + "[ " + client_id + " ] > " + client_username + "@" + client_password)
+
 		# Validate the client from the database
-		status = client_authentication.validate_client(client_username, client_password, client_id)
+		status = client_authentication.validate_client(client_username, client_password)
 
 		# If login is successful:
 		if status == True:
@@ -56,13 +57,19 @@ class manage_clients():
 			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = message)
 
 		# If login is not successful:
-		else:
+		else if status == False:
 			print("[ " + client_username + " ] NOT verified.")
 
 			# Reply Invalid credentials to client
 			# Every response sent to client has 5 initial characters which specify what server is going to talk about.
 			# Invld signifies an invalid login attempt.
-			message = "Invld+"
-			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = message)
+			message = "Invld"
+			print(client_username)
+			try:
+				manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = message)
+			except Exception as error:
+				print("[ Error ] " + str(error))
+
+			print ("Done")
 
 	
