@@ -3,10 +3,11 @@ from database_management import client_authentication
 
 class manage_clients():
 	channel = ''
+
 	def listen_clients(channel1):
 		manage_clients.channel = channel1
 		#Client sends login request on login_requests
-		channel1.basic_consume(queue = 'login_requests', on_message_callback = manage_clients.client_login_handler, auto_ack = True)
+		channel1.basic_consume(queue = 'client_requests', on_message_callback = manage_clients.client_login_handler, auto_ack = True)
 		channel1.start_consuming()
 
 
@@ -37,7 +38,7 @@ class manage_clients():
 
 			# The client listens on its own queue, whose name = client_username (Hard-coded)
 			# This queue is declared in the client.py file
-			manage_clients.channel.basic_publish(exchange = 'credential_manager', routing_key = client_username, body = message)
+			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = message)
 
 		# If login is not successful:
 		else:
@@ -47,6 +48,6 @@ class manage_clients():
 			# Every response sent to client has 5 initial characters which specify what server is going to talk about.
 			# Invld signifies an invalid login attempt.
 			message = "Invld+"
-			manage_clients.channel.basic_publish(exchange = 'credential_manager', routing_key = client_username, body = message)
+			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = message)
 
 	

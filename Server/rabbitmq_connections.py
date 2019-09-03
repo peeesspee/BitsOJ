@@ -9,7 +9,6 @@ class manage_connection():
 		channel = connection.channel()
 		# Declare queues 
 		try:
-			channel.queue_declare(queue = 'login_requests', durable = True)
 			channel.queue_declare(queue = 'client_requests', durable = True)
 			channel.queue_declare(queue = 'judge_requests', durable = True)
 			channel.queue_declare(queue = 'judge_verdicts', durable = True) 
@@ -18,7 +17,6 @@ class manage_connection():
 
 		#Declare exchanges
 		try:
-			channel.exchange_declare(exchange = 'credential_manager', exchange_type = 'direct', durable = True)
 			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
 			channel.exchange_declare(exchange = 'judge_manager', exchange_type = 'direct', durable = True)
 		except:
@@ -27,7 +25,7 @@ class manage_connection():
 
 		# Bind the queue to exchanges
 		# This tells it to listen to that particular exchange 
-		channel.queue_bind(exchange = 'credential_manager', queue = 'login_requests')
+		channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
 		return channel, connection
 
 	def terminate_connection(connection):
