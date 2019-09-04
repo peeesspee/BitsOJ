@@ -74,14 +74,14 @@ class manage_clients():
 			print("[ SENT ] " + message)
 
 			# Send login_successful signal to client. 
-			publish_message(client_username, message)
+			manage_clients.publish_message(client_username, message)
 			
 		# If login is not successful:
 		elif status == False:
 			print("[ " + client_username + " ] NOT verified.")
 			message = "INVLD"
 			# Reply "Invalid credentials" to client
-			publish_message(client_username, message)
+			manage_clients.publish_message(client_username, message)
 
 	def manage_client_submissions(client_data):
 		try:
@@ -97,7 +97,7 @@ class manage_clients():
 			message = "VRDCT+" + run_id + '+' + result + '+' + error
 
 			client_username = client_authentication.get_client_username(client_id)
-			publish_message(client_username, message)
+			manage_clients.publish_message(client_username, message)
 		except Exception as error:
 			print("[ ERROR ] Client data parsing error : " + str(error))
 			print("[ DEBUG ] Client message was : " + str(client_message))
