@@ -14,8 +14,10 @@ host = 'localhost'
 
 # cursor = manage_database.initialize_table()
 channel,connection = manage_connection.initialize_connection(rabbitmq_username,rabbitmq_password,host)
-
-client_id,username = authenticate_login.login(channel,host)
+while(True):
+	client_id,username,status = authenticate_login.login(channel,host)
+	if (status == 'Valid'):
+		break
 
 # submit_solution.read_solution(client_id,username,channel)
 

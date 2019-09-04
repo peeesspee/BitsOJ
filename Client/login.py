@@ -55,17 +55,12 @@ class authenticate_login():
 		if(status == 'Valid'):
 			status,authenticate_login.client_id,server_message = server_data.split('+')
 			print("[ Status ] " + status + "\n[ ClientID ] : " + authenticate_login.client_id + "\n[ Server ] : " + server_message)
-			return authenticate_login.client_id,authenticate_login.username
+			return authenticate_login.client_id,authenticate_login.username,status
 		elif status == "Invld":
 			print("Invalid login!!!")
 			# if the login fails deleting the existing queue for the client and again asking for login
 			authenticate_login.channel.queue_delete(
 				queue = authenticate_login.username
-				)
-
-			authenticate_login.login(
-				authenticate_login.channel, 
-				authenticate_login.host
 				)
 
 
