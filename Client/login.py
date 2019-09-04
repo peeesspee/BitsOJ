@@ -20,7 +20,7 @@ class authenticate_login():
 		authenticate_login.channel.basic_publish(
 			exchange = 'connection_manager', 
 			routing_key = 'client_requests', 
-			body = 'Login ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id
+			body = 'LOGIN ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id
 			)
 
 		# Declaring queue for the new client
@@ -50,12 +50,12 @@ class authenticate_login():
 		# status of the login request
 		status = server_data[0:5]
 
-		if(status == 'Valid'):
+		if(status == 'VALID'):
 			status,authenticate_login.client_id,server_message = server_data.split('+')
 			print("[ Status ] " + status + "\n[ ClientID ] : " + authenticate_login.client_id + "\n[ Server ] : " + server_message)
 			return status
 
-		elif status == "Invld":
+		elif status == "INVLD":
 			print("Invalid login!!!")
 			# if the login fails deleting the existing queue for the client and again asking for login
 			authenticate_login.channel.queue_delete(
@@ -63,5 +63,5 @@ class authenticate_login():
 				)
 			return status
 
-	def user_details():
+	def get_user_details():
 		return authenticate_login.client_id, authenticate_login.username

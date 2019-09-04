@@ -20,6 +20,6 @@ while(True):
 	if (status == 'Valid'):
 		break
 
-# submit_solution.read_solution(client_id,username,channel)
+# submit_solution.read_solution(cursor,channel)
 
 manage_connection.terminate_connection(connection)

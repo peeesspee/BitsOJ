@@ -1,9 +1,11 @@
 import pika
 import time
 from database_management import manage_database
+from login import authenticate_login
 
 class submit_solution():
-	client_id_1 = ''
+	client_id = ''
+	username = ''
 	code = ''
 	file_path = ''
 	Language = {1 : 'C', 2 : 'C++', 3 : 'Python', 4 : 'Java'}
@@ -16,7 +18,8 @@ class submit_solution():
 	extension = ''
 
 
-	def read_solution(cur,client_id,username,channel):
+	def read_solution(cur,channel):
+		submit_solution.client_id, submit_solution.username = authenticate_login.get_user_details()
 		submit_solution.cursor = cur
 		try:
 			submit_solution.file_path = input('Enter path of solution : ')
@@ -49,9 +52,9 @@ class submit_solution():
 				channel
 				)
 
-	def solution_request(client_id,usernamechannel):
-		submit_solution.client_id_1 = client_id
-		submit_solution.final_data = 'Submt ' + client_id + ' '  + submit_solution.problem_code + ' ' + submit_solution.language + ' ' + submit_solution.time_stamp + ' ' + submit_solution.code
+	def solution_request(client_id,username,channel):
+		submit_solution.client_id, submit_solution.username = authenticate_login.get_user_details()
+		submit_solution.final_data = 'SUBMT ' + client_id + ' '  + submit_solution.problem_code + ' ' + submit_solution.language + ' ' + submit_solution.time_stamp + ' ' + submit_solution.code
 		channel.basic_publish(
 			exchange = 'connection_manager', 
 			routing_key = 'client_requests', 
