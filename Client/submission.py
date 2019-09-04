@@ -37,8 +37,8 @@ class submit_solution():
 			submit_solution.time_stamp = time.strftime("%H:%M:%S", local_time)
 			submit_solution.solution_request(
 				submit_solution.code,
-				client_id,
-				username,
+				submit_solution.client_id,
+				submit_solution.username,
 				submit_solution.selected_language,
 				submit_solution.selected_problem,
 				submit_solution.time_stamp,
@@ -47,14 +47,13 @@ class submit_solution():
 		except:
 			print("File Not Found ------ Try Again")
 			submit_solution.read_solution(
-				client_id,
-				username,
+				submit_solution.client_id,
+				submit_solution.username,
 				channel
 				)
 
-	def solution_request(client_id,username,channel):
-		submit_solution.client_id, submit_solution.username = authenticate_login.get_user_details()
-		submit_solution.final_data = 'SUBMT ' + client_id + ' '  + submit_solution.problem_code + ' ' + submit_solution.language + ' ' + submit_solution.time_stamp + ' ' + submit_solution.code
+	def solution_request(channel):
+		submit_solution.final_data = 'SUBMT ' + submit_solution.client_id + ' '  + submit_solution.problem_code + ' ' + submit_solution.language + ' ' + submit_solution.time_stamp + ' ' + submit_solution.code
 		channel.basic_publish(
 			exchange = 'connection_manager', 
 			routing_key = 'client_requests', 
@@ -63,7 +62,7 @@ class submit_solution():
 
 		print('Your Code is running ......')
 		channel.basic_consume(
-			queue = username, 
+			queue = submit_solution.username, 
 			on_message_callback =submit_solution.server_response_handler, 
 			auto_ack = True
 			)

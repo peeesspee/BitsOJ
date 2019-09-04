@@ -10,7 +10,7 @@ class manage_database():
 	conn = None
 	def initialize_database():
 		try:
-			conn = sqlite3.connect('server_database.db')
+			conn = sqlite3.connect('server_database.db', check_same_thread = False)
 			cur = conn.cursor()
 			manage_database.cur = cur
 			manage_database.conn = conn
