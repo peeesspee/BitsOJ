@@ -7,11 +7,13 @@ counter = 0
 
 class manage_database():
 	cur = None
+	conn = None
 	def initialize_database():
 		try:
 			conn = sqlite3.connect('server_database.db')
 			cur = conn.cursor()
 			manage_database.cur = cur
+			manage_database.conn = conn
 		except Exception as error:
 			print ("[ CRITICAL ERROR ]Database connection error : " + str(error))
 		
@@ -24,7 +26,7 @@ class manage_database():
 		
 		# Upto here
 		try:	
-			cur.execute("create table accounts(username varchar2(10) PRIMARY KEY, password varchar2(10))")
+			cur.execute("create table accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
 			cur.execute("create table connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10))")
 			cur.execute("create table submissions(client_id varchar2(3), run_id varchar2(5), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(4))")
 			cur.execute("create table scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
@@ -44,9 +46,12 @@ class manage_database():
 	def get_cursor():
 		return manage_database.cur
 
+	def get_connection_object():
+		return manage_database.conn
+
 
 class client_authentication(manage_database):
-	#This function validates the (username, password, client_id) in the database.
+	#This function validates the (user_name, password, client_id) in the database.
 	def validate_client(user_name, password):
 		#Validate client in database
 		cur = manage_database.get_cursor()
@@ -69,6 +74,7 @@ class client_authentication(manage_database):
 
 	def add_connected_client(client_id, user_name):
 		cur = manage_database.get_cursor()
+		conn = manage_database.get_connection_object()
 		try:
 			cur.execute("insert into connected_clients values(?, ?)", (client_id, user_name,))
 		except:
@@ -76,7 +82,7 @@ class client_authentication(manage_database):
 		conn.commit()
 		return
 
-	# Returns a list of tuple, containing client_id, username of connected clients.
+	# Returns a list of tuple, containing client_id, user_name of connected clients.
 	def show_connected_clients():
 		cur = manage_database.get_cursor()
 		try:
@@ -98,10 +104,10 @@ class client_authentication(manage_database):
 			print("[ ERROR ] : The user does not have a client id yet.")
 
 	# Check if a client with given client_id is connected in the system
-	def check_connected_client(username ):
+	def check_connected_client(user_name ):
 		status = False
 		cur = manage_database.get_cursor()
-		select exists("select exists(select * from connected_clients where user_name = )", (user_name,))
+		cur.execute("select exists(select * from connected_clients where user_name = ?)", (user_name,))
 		existence_result = cur.fetchall()
 		if existence_result[0][0] == 1:
 			status = True

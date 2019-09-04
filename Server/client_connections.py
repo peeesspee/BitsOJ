@@ -63,7 +63,7 @@ class manage_clients():
 				# Fetch client ID
 				client_id = client_authentication.generate_new_client_id()
 				# Add client to connected users list
-				client_authentication.add_connected_client(client_id, user_name)
+				client_authentication.add_connected_client(client_id, client_username)
 				print("[ " + client_username + " ] Assigned : " + client_id )
 
 			# Reply to be sent to client
