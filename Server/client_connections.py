@@ -36,7 +36,7 @@ class manage_clients():
 			print("[ ERROR ] Client data parsing error : " + str(error))
 			print("[ DEBUG ] Client message was : " + str(client_message))
 
-		print("[ LOGIN ] " + "[ " + client_id + " ] > " + client_username + "@" + client_password)
+		print("[ LOGIN ] " + " > " + client_username + "@" + client_password + "[ ")
 		# Validate the client from the database
 		status = client_authentication.validate_client(client_username, client_password)
 
@@ -51,11 +51,20 @@ class manage_clients():
 
 		# If login is successful:
 		if status == True:
-			# If client logs in for the first time:
-			if client_id == "Null":
-				client_id = client_authentication.generate_new_client_id()
+			# Check if client has logged in for the first time:
+			status = client_authentication.check_connected_client(client_username)
+			# If client has NOT logged in for the first time
+			if status == True:
+				client_id = client_authentication.get_client_id(client_username)
+				print("[ " + client_username + " ] Previous Client ID : " + client_id )
 
-			print("[ " + client_username + " ] Assigned : [ " + client_id + " ]")
+			# If client has logged in for the first time
+			else:
+				# Fetch client ID
+				client_id = client_authentication.generate_new_client_id()
+				# Add client to connected users list
+				client_authentication.add_connected_client(client_id, user_name)
+				print("[ " + client_username + " ] Assigned : " + client_id )
 
 			# Reply to be sent to client
 			server_message = "Hello buddy!!"
