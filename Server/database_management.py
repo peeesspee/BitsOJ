@@ -27,7 +27,7 @@ class manage_database():
 		try:	
 			cur.execute("create table accounts(client_id varchar2(3), username varchar2(10) PRIMARY KEY, password varchar2(10))")
 			cur.execute("create table active_clients(client_id varchar2(3) PRIMARY KEY, username varchar2(10))")
-			cur.execute("create table submissions(client_id varchar2(3), run_id varchar2(5), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(8))")
+			cur.execute("create table submissions(client_id varchar2(3), run_id varchar2(5), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(4))")
 			cur.execute("create table scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Table creation error : " + str(error))
