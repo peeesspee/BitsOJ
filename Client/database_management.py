@@ -4,7 +4,7 @@ import os
 class manage_database():
 	def initialize_table():
 		try:
-			conn = sqlite3.connect('client_database.db')
+			conn = sqlite3.connect('client_database.db', check_same_thread = False)
 			cur = conn.cursor()
 			cur.execute("create table if not exists my_submissions(run_id varchar2(5),verdict varchar2(2),source_file varchar2(30),language varchar2(3), problem_code varchar2(8), time_stamp ")
 			os.system('mkdir Solution')
