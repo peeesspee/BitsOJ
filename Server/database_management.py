@@ -1,8 +1,8 @@
 import sqlite3
 import sys
 
-global counter
-counter = 0
+global client_id_counter
+client_id_counter = 0
 
 
 class manage_database():
@@ -66,10 +66,9 @@ class client_authentication(manage_database):
 
 	#This function generates a new client_id for new connections
 	def generate_new_client_id():
-		global counter
-		client_id = str("{:03d}".format(counter))
-		print (counter)
-		counter = counter + 1
+		global client_id_counter
+		client_id = str("{:03d}".format(client_id_counter))
+		client_id_counter = client_id_counter + 1
 		return client_id
 
 	def add_connected_client(client_id, user_name):
@@ -102,6 +101,15 @@ class client_authentication(manage_database):
 			return client_id[0][0]
 		except Exception as error:
 			print("[ ERROR ] : The user does not have a client id yet.")
+
+	def get_client_username(client_id):
+		cur = manage_database.get_cursor()
+		try:
+			cur.execute("select user_name from connected_clients where client_id = ?", (client_id, ))
+			client_username = cur.fetchall()
+			return client_username[0][0]
+		except Exception as error:
+			print("[ ERROR ] : Could not fetch username.")
 
 	# Check if a client with given client_id is connected in the system
 	def check_connected_client(user_name ):

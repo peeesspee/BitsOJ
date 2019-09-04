@@ -21,9 +21,9 @@ class manage_clients():
 		
 		print("[ PING ] Recieved a new client message." + client_message)
 		client_code = client_message[0:6]
-		if client_code == 'Login ':
+		if client_code == 'LOGIN ':
 			manage_clients.client_login_handler(client_message[6:])
-		elif client_code == 'Submt':
+		elif client_code == 'SUBMT ':
 			manage_client_submissions(client_message[6:])
 
 	# This function handles all client login requests
@@ -69,20 +69,19 @@ class manage_clients():
 			# Reply to be sent to client
 			server_message = "Hello buddy!!"
 
-			message = "Valid+" +  client_id + "+" + server_message
+			message = "VALID+" +  client_id + "+" + server_message
 
 			print("[ SENT ] " + message)
 
 			# Send login_successful signal to client. 
-			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = message)
-
+			publish_message(client_username, message)
+			
 		# If login is not successful:
 		elif status == False:
 			print("[ " + client_username + " ] NOT verified.")
-			message = "Invld"
+			message = "INVLD"
 			# Reply "Invalid credentials" to client
-			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = message)
-			
+			publish_message(client_username, message)
 
 	def manage_client_submissions(client_data):
 		try:
@@ -92,10 +91,18 @@ class manage_clients():
 			time_stamp = client_data[10:18]		# time_stamp is 8 characters: HH:MM:SS
 			source_code = client_data[18:]
 
-			result = submission.new_submission(client_id, problem_code, language, time_stamp, source_code) 
+			print("[ SUBMIT ]")
 
+			result, run_id, error = submission.new_submission(client_id, problem_code, language, time_stamp, source_code) 
+			message = "VRDCT+" + run_id + '+' + result + '+' + error
+
+			client_username = client_authentication.get_client_username(client_id)
+			publish_message(client_username, message)
 		except Exception as error:
 			print("[ ERROR ] Client data parsing error : " + str(error))
 			print("[ DEBUG ] Client message was : " + str(client_message))
 
+	def publish_message(queue_name, message):
+		manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
+		return
 	
