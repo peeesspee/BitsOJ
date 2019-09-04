@@ -15,7 +15,8 @@ host = 'localhost'
 # cursor = manage_database.initialize_table()
 channel,connection = manage_connection.initialize_connection(rabbitmq_username,rabbitmq_password,host)
 while(True):
-	client_id,username,status = authenticate_login.login(channel,host)
+	status = authenticate_login.login(channel,host)
+	print(status)
 	if (status == 'Valid'):
 		break
 
