@@ -62,5 +62,6 @@ class authenticate_login():
 			authenticate_login.channel.queue_delete(
 				queue = authenticate_login.username
 				)
+			return authenticate_login.client_id,authenticate_login.username,status
 
 
