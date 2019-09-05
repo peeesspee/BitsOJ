@@ -1,5 +1,6 @@
 import pika
 import time
+import os
 from database_management import manage_database
 from login import authenticate_login
 
@@ -24,36 +25,30 @@ class submit_solution():
 		try:
 			submit_solution.file_path = input('Enter path of solution : ')
 			filename, submit_solution.extension = os.path.splitext(submit_solution.file_path)
-			submit_solution.code = open(submit_solution.file_path, 'r').read() 
-			for i,k in submit_solution.Language:
-				print(i,k)
+			submit_solution.code = open(submit_solution.file_path, 'r').read()
+			for key,value in submit_solution.Language.items():
+				print(key,value)
 			submit_solution.selected_language = input('Select language : ')
-			submit_solution.selected_language = str(Language[int(submit_solution.selected_language)])
-			for i,k in submit_solution.Problem_Code:
-				print(i,k)
+			submit_solution.selected_language = str(submit_solution.Language[int(submit_solution.selected_language)])
+			for key,value in submit_solution.Problem_Code.items():
+				print(key,value)
 			submit_solution.selected_problem = input('Select Problem : ')
-			submit_solution.selected_problem = str(Problem_Code[int(submit_solution.selected_problem)])
+			submit_solution.selected_problem = str(submit_solution.Problem_Code[int(submit_solution.selected_problem)])
 			local_time = time.localtime()
 			submit_solution.time_stamp = time.strftime("%H:%M:%S", local_time)
 			submit_solution.solution_request(
-				submit_solution.code,
-				submit_solution.client_id,
-				submit_solution.username,
-				submit_solution.selected_language,
-				submit_solution.selected_problem,
-				submit_solution.time_stamp,
 				channel
 				)
 		except:
 			print("File Not Found ------ Try Again")
 			submit_solution.read_solution(
-				submit_solution.client_id,
-				submit_solution.username,
+				submit_solution.cursor,
 				channel
 				)
 
 	def solution_request(channel):
-		submit_solution.final_data = 'SUBMT ' + submit_solution.client_id + ' '  + submit_solution.problem_code + ' ' + submit_solution.language + ' ' + submit_solution.time_stamp + ' ' + submit_solution.code
+		submit_solution.final_data = 'SUBMT ' + submit_solution.client_id + ' '  + submit_solution.selected_problem + ' ' + submit_solution.selected_language + ' ' + submit_solution.time_stamp + ' ' + submit_solution.code
+		print(channel)
 		channel.basic_publish(
 			exchange = 'connection_manager', 
 			routing_key = 'client_requests', 
@@ -61,32 +56,8 @@ class submit_solution():
 			)
 
 		print('Your Code is running ......')
-		channel.basic_consume(
-			queue = submit_solution.username, 
-			on_message_callback =submit_solution.server_response_handler, 
-			auto_ack = True
-			)
+		
 
 
 
-
-	def server_response_handler(ch,method,properties,body):
-		submission_result = body.decode('utf-8')
-		run_id = int(submission_result[6:11])
-		result = submission_result[12:14]
-		if result != 'AC':
-			error = submission_result[15:]
-			manage_database.insert_verdict(
-				submit_solution.client_id,
-				submit_solution.cursor,
-				run_id,
-				result,
-				submit_solution.language,
-				submit_solution.problem_code,
-				submit_solution.time_stamp,
-				submit_solution.code,
-				submit_solution.extension
-				)
-
-		else:
-			pass
+		
