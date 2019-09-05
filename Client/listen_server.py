@@ -13,7 +13,6 @@ class listening():
 		listening.username = ''
 		listening.channel = ''
 		listening.client_id = 'Null'
-		listening.host = 'localhost'
 		listening.login_status = False
 
 	def listen_server(channel_1):
