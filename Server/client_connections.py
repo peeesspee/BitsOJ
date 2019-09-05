@@ -19,7 +19,7 @@ class manage_clients():
 		# First 5 characters contain metadata
 		client_message = str(body.decode("utf-8"))
 		
-		print("[ PING ] Recieved a new client message : " + client_message)
+		print("[ PING ] Recieved a new client message ")
 		client_code = client_message[0:6]
 		if client_code == 'LOGIN ':
 			manage_clients.client_login_handler(client_message[6:])
@@ -86,10 +86,11 @@ class manage_clients():
 	def client_submission_handler(client_data):
 		try:
 			client_id = client_data[0:3]		# client_id is 3 characters 
-			problem_code = client_data[3:7]		# problem_code is 4 characters
-			language = client_data[7:10]		# language is 3 characters
-			time_stamp = client_data[10:18]		# time_stamp is 8 characters: HH:MM:SS
-			source_code = client_data[18:]
+			problem_code = client_data[4:8]		# problem_code is 4 characters
+			language = client_data[9:12]		# language is 3 characters
+			time_stamp = client_data[13:21]		# time_stamp is 8 characters: HH:MM:SS
+			source_code = client_data[22:]
+			print("[ DATA ] CID :" + client_id + " PCODE:" + problem_code + " Language :" + language + " Time stamp :" + time_stamp)
 
 			print("[ SUBMIT ]")
 
@@ -100,9 +101,10 @@ class manage_clients():
 			manage_clients.publish_message(client_username, message)
 		except Exception as error:
 			print("[ ERROR ] Client data parsing error : " + str(error))
-			print("[ DEBUG ] Client message was : " + str(client_message))
+			
 
 	def publish_message(queue_name, message):
+		print( "[ PUBLISH ] " + message + " TO " + queue_name)
 		manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
 		return
 	

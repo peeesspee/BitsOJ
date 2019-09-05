@@ -5,4 +5,4 @@ __pycache__/
 *~
 *.swp
 *.db
-
+server_database.db
