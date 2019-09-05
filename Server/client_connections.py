@@ -19,7 +19,7 @@ class manage_clients():
 		# First 5 characters contain metadata
 		client_message = str(body.decode("utf-8"))
 		
-		print("[ PING ] Recieved a new client message." + client_message)
+		print("[ PING ] Recieved a new client message : " + client_message)
 		client_code = client_message[0:6]
 		if client_code == 'LOGIN ':
 			manage_clients.client_login_handler(client_message[6:])
@@ -31,12 +31,12 @@ class manage_clients():
 		# Client sends the username, password, clientID as "username+password+clientID", so we split it.
 		# Default value of clientID is "Null" (String)
 		try:
-			client_username, client_password, client_id = client_message.split(' ')
+			client_username, client_password, client_id, client_type = client_message.split(' ')
 		except Exception as error:
 			print("[ ERROR ] Client data parsing error : " + str(error))
 			print("[ DEBUG ] Client message was : " + str(client_message))
 
-		print("[ LOGIN ] " + " > " + client_username + "@" + client_password + "[ ")
+		print("[ LOGIN ] " + " > " + client_username + "@" + client_password + "[ TYPE ] " + client_type)
 		# Validate the client from the database
 		status = client_authentication.validate_client(client_username, client_password)
 

@@ -38,9 +38,11 @@ def manage_threads(channel):
 	judge_handler_thread = threading.Thread()
 
 	client_handler_thread.start()
+	try:
+		client_handler_thread.join()
+	except:
+		print("User Keyboard Interrupt")
 
-	client_handler_thread.join()
 
-	
 
 main()
