@@ -1,0 +1,4 @@
+#Ignore these files for now:
+*.pyc
+*.db
+
