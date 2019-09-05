@@ -28,7 +28,6 @@ class file_manager():
 	            file.write(code)
 	            return file_name
 
-
 	def judge(code, problem_code, run_id, client_id, language):
 
 	    if language == 'C++':
@@ -43,5 +42,5 @@ class file_manager():
 	    if language == 'Python':
 	        file_name = client_id + " " + run_id + " "  + " " + problem_code + '.py'
 
-	    return file_name    
+	    return file_name   
 
