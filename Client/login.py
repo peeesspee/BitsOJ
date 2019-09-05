@@ -5,7 +5,7 @@ class authenticate_login():
 	username = ''
 	channel = ''
 	client_id = 'Null'
-	host = 'localhost'
+	host = ''
 	
 
 	# Sends the username and password for login request to the client 
@@ -32,7 +32,7 @@ class authenticate_login():
 		authenticate_login.channel.basic_publish(
 			exchange = 'connection_manager', 
 			routing_key = 'client_requests', 
-			body = 'LOGIN ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id
+			body = 'LOGIN ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id + ' CLIENT'
 			)
 
 		
