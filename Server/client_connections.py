@@ -1,5 +1,6 @@
 import pika
 from database_management import client_authentication
+from client_submissions import submission
 
 class manage_clients():
 	channel = ''
@@ -18,60 +19,90 @@ class manage_clients():
 		# First 5 characters contain metadata
 		client_message = str(body.decode("utf-8"))
 		
-		print("[ PING ] Recieved a new client message.")
-		print (client_message)
-		if client_message[0:6] == 'Login ':
+		print("[ PING ] Recieved a new client message : " + client_message)
+		client_code = client_message[0:6]
+		if client_code == 'LOGIN ':
 			manage_clients.client_login_handler(client_message[6:])
+		elif client_code == 'SUBMT ':
+			manage_client_submissions(client_message[6:])
 
 	# This function handles all client login requests
 	def client_login_handler(client_message):
 		# Client sends the username, password, clientID as "username+password+clientID", so we split it.
 		# Default value of clientID is "Null" (String)
 		try:
-			client_username, client_password, client_id = client_message.split(' ')
+			client_username, client_password, client_id, client_type = client_message.split(' ')
 		except Exception as error:
 			print("[ ERROR ] Client data parsing error : " + str(error))
 			print("[ DEBUG ] Client message was : " + str(client_message))
 
-		print("[ LOGIN ] " + "[ " + client_id + " ] > " + client_username + "@" + client_password)
-
-		
-		manage_clients.channel.queue_bind(exchange = "connection_manager", queue = client_username)
+		print("[ LOGIN ] " + " > " + client_username + "@" + client_password + "[ TYPE ] " + client_type)
 		# Validate the client from the database
 		status = client_authentication.validate_client(client_username, client_password)
 
+		#Bind the connection_manager exchange to client queue (que name is same as username)
+		manage_clients.channel.queue_bind(exchange = "connection_manager", queue = client_username)
+
+		# The client listens on its own queue, whose name = client_username (Hard-coded)
+		# This queue is declared in the client.py file
+		# Every response sent to client has 5 initial characters which specify what server is going to talk about.
+		# "Valid" signifies a valid login.
+		# "Invld" signifies an invalid login attempt.
+
 		# If login is successful:
 		if status == True:
-			# If client logs in for the first time:
-			if client_id == "Null":
-				client_id = client_authentication.generate_new_client_id()
+			# Check if client has logged in for the first time:
+			status = client_authentication.check_connected_client(client_username)
+			# If client has NOT logged in for the first time
+			if status == True:
+				client_id = client_authentication.get_client_id(client_username)
+				print("[ " + client_username + " ] Previous Client ID : " + client_id )
 
-			print("[ " + client_username + " ] Assigned : [ " + client_id + " ]")
+			# If client has logged in for the first time
+			else:
+				# Fetch client ID
+				client_id = client_authentication.generate_new_client_id()
+				# Add client to connected users list
+				client_authentication.add_connected_client(client_id, client_username)
+				print("[ " + client_username + " ] Assigned : " + client_id )
 
 			# Reply to be sent to client
 			server_message = "Hello buddy!!"
-			message = "Valid+" +  client_id + "+" + server_message
+
+			message = "VALID+" +  client_id + "+" + server_message
 
 			print("[ SENT ] " + message)
 
-			# The client listens on its own queue, whose name = client_username (Hard-coded)
-			# This queue is declared in the client.py file
-			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = message)
-
+			# Send login_successful signal to client. 
+			manage_clients.publish_message(client_username, message)
+			
 		# If login is not successful:
 		elif status == False:
 			print("[ " + client_username + " ] NOT verified.")
+			message = "INVLD"
+			# Reply "Invalid credentials" to client
+			manage_clients.publish_message(client_username, message)
 
-			# Reply Invalid credentials to client
-			# Every response sent to client has 5 initial characters which specify what server is going to talk about.
-			# Invld signifies an invalid login attempt.
-			message = "Invld"
-			print(client_username)
-			try:
-				manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = message)
-			except Exception as error:
-				print("[ Error ] " + str(error))
+	def manage_client_submissions(client_data):
+		try:
+			client_id = client_data[0:3]		# client_id is 3 characters 
+			problem_code = client_data[3:7]		# problem_code is 4 characters
+			language = client_data[7:10]		# language is 3 characters
+			time_stamp = client_data[10:18]		# time_stamp is 8 characters: HH:MM:SS
+			source_code = client_data[18:]
 
-			print ("Done")
+			print("[ SUBMIT ]")
 
+			result, run_id, error = submission.new_submission(client_id, problem_code, language, time_stamp, source_code) 
+			message = "VRDCT+" + run_id + '+' + result + '+' + error
+
+			client_username = client_authentication.get_client_username(client_id)
+			manage_clients.publish_message(client_username, message)
+		except Exception as error:
+			print("[ ERROR ] Client data parsing error : " + str(error))
+			print("[ DEBUG ] Client message was : " + str(client_message))
+
+	def publish_message(queue_name, message):
+		manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
+		return
 	
