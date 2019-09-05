@@ -1,6 +1,7 @@
 import pika
 from login import authenticate_login
 from submission import submit_solution
+from database_management import manage_database
 
 class listening():
 
@@ -35,17 +36,21 @@ class listening():
 			on_message_callback = listening.server_response_handler, 
 			auto_ack = True
 			)
-
+		print("yes")
 		listening.channel.start_consuming()
 
 	def server_response_handler(ch,method,properties,body):
 		server_data = body.decode('utf-8')
+		print("\n\n\n\n")
+		print(server_data)
 		# status of the login request
 		status = server_data[0:5]
 		if status == "VALID" or status == "INVLD":
 			listening.server_login_approvals_handler(server_data)
 		elif status == "VRDCT":
 			listening.submission_verdict(server_data)
+		else:
+			print("wrong data")
 
 		
 
@@ -74,13 +79,14 @@ class listening():
 		print('[ Run ID : ' + run_id + ' ] [ Result : ' + code_result + ' ] [ error : ' + error + ' ]')
 		if code_result != 'AC':
 			error = submission_result[15:]
+			print("Pls bhai")
 			manage_database.insert_verdict(
 				submit_solution.client_id,
 				submit_solution.cursor,
 				run_id,
-				result,
-				submit_solution.language,
-				submit_solution.problem_code,
+				code_result,
+				submit_solution.selected_language,
+				submit_solution.selected_problem,
 				submit_solution.time_stamp,
 				submit_solution.code,
 				submit_solution.extension
@@ -91,9 +97,9 @@ class listening():
 				submit_solution.client_id,
 				submit_solution.cursor,
 				run_id,
-				result,
-				submit_solution.language,
-				submit_solution.problem_code,
+				code_result,
+				submit_solution.selected_language,
+				submit_solution.selected_problem,
 				submit_solution.time_stamp,
 				submit_solution.code,
 				submit_solution.extension

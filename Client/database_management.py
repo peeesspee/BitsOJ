@@ -19,5 +19,6 @@ class manage_database():
 	def insert_verdict(client_id,cur,run_id,verdict,language,problem_code,time_stamp,code,extension):
 		source_file = "Solution/" + client_id + '_' + run_id + '.' + extension
 		file = open("Solution/" + client_id + '_' + run_id + '.' + extension, 'w')
-		file = write(code)
+		file.write(code)
 		manage_database.cur.execute("insert into my_submissions values (?,?,?,?,?,?)",(run_id,verdict,source_file,language,problem_code,time_stamp))
+		manage_database.conn.commit()
