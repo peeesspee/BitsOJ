@@ -1,4 +1,7 @@
 #Ignore these files for now:
+__pycache__/
 *.pyc
-*.db
+*$py.class
+*~
+*.swp
 

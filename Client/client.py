@@ -10,7 +10,7 @@ import sqlite3
 
 rabbitmq_username = 'client'
 rabbitmq_password = 'client'
-host = 'localhost'
+host = '192.168.43.239'
 
 
 
