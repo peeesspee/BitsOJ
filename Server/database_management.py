@@ -2,7 +2,7 @@ import sqlite3
 import sys
 
 global client_id_counter
-client_id_counter = 0
+client_id_counter = 1
 
 
 class manage_database():
@@ -23,10 +23,13 @@ class manage_database():
 		cur.execute("drop table if exists submissions")
 		cur.execute("drop table if exists scoreboard")
 		cur.execute("drop table if exists connected_clients")
+		cur.execute("drop table if exists connected_judges")
+		
 		
 		# Upto here
 		try:	
 			cur.execute("create table accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
+			cur.execute("create table connected_judges(judge_name varchar2(10) PRIMARY KEY, password varchar2(10))")
 			cur.execute("create table connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10))")
 			cur.execute("create table submissions(client_id varchar2(3), run_id varchar2(5), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(4))")
 			cur.execute("create table scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
@@ -92,7 +95,7 @@ class client_authentication(manage_database):
 			print("[ ERROR ] Could not access client database : " + str(error))
 			return Null
 		
-
+	# Get client_id when user_name is known
 	def get_client_id(user_name):
 		cur = manage_database.get_cursor()
 		try:
@@ -102,6 +105,7 @@ class client_authentication(manage_database):
 		except Exception as error:
 			print("[ ERROR ] : The user does not have a client id yet.")
 
+	# Get user_name when client_id is known
 	def get_client_username(client_id):
 		cur = manage_database.get_cursor()
 		try:
@@ -113,10 +117,11 @@ class client_authentication(manage_database):
 
 	# Check if a client with given client_id is connected in the system
 	def check_connected_client(user_name ):
-		status = False
 		cur = manage_database.get_cursor()
 		cur.execute("select exists(select * from connected_clients where user_name = ?)", (user_name,))
 		existence_result = cur.fetchall()
+
 		if existence_result[0][0] == 1:
-			status = True
-		return status
+			return True
+		else:
+			return False

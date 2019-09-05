@@ -24,7 +24,7 @@ class manage_clients():
 		if client_code == 'LOGIN ':
 			manage_clients.client_login_handler(client_message[6:])
 		elif client_code == 'SUBMT ':
-			manage_client_submissions(client_message[6:])
+			manage_clients.client_submission_handler(client_message[6:])
 
 	# This function handles all client login requests
 	def client_login_handler(client_message):
@@ -83,7 +83,7 @@ class manage_clients():
 			# Reply "Invalid credentials" to client
 			manage_clients.publish_message(client_username, message)
 
-	def manage_client_submissions(client_data):
+	def client_submission_handler(client_data):
 		try:
 			client_id = client_data[0:3]		# client_id is 3 characters 
 			problem_code = client_data[3:7]		# problem_code is 4 characters
