@@ -6,18 +6,19 @@ class authenticate_judge():
 	client_id = 'Null'
 	channel = ''
 
+
 	def login(channel, host):
 		authenticate_judge.channel = channel
-		authenticate_judge.username = input("Enter Judge's Username \n")
-		authenticate_judge.password = input("Enter Judge's Password\n")
+		authenticate_judge.username = input("Enter Judge's Username \n") or "judge1"
+		authenticate_judge.password = input("Enter Judge's Password\n") or "judge1"
 
-		print("[Validating] : " + authenticate_judge.username " @ " + authenticate_judge.password "... \n ")
+		print("[Validating] : " + authenticate_judge.username + " @ " + authenticate_judge.password + "... \n ")
 
 
 		authenticate_judge.channel.basic_publish(
 			exchange = 'connection_manager',
-			queue = 'client_requests',
-			body = 'LOGIN' + authenticate_judge.username + ' ' + password
+			routing_key = 'client_requests',
+			body = 'LOGIN ' + authenticate_judge.username + ' ' + authenticate_judge.password + ' ' + authenticate_judge.client_id + ' ' + "JUDGE"
 			)
 
 		channel.queue_declare(
@@ -25,22 +26,22 @@ class authenticate_judge():
 			durable=True
 			)
 
-		authenticate_judge.channel.bind(
+		authenticate_judge.channel.queue_bind(
 			exchange = 'connection_manager',
 			queue = authenticate_judge.username
 			)
 
 		print("Request sent for authentication...\n ")
-		print("[LISTENING] @" + authenticate_judge.username + ' ' + '@' + ' ' + authenticate_judge.password "\n")
+		print("[LISTENING]:" + authenticate_judge.username + ' ' + '@' + ' ' + authenticate_judge.password + "\n")
 
 
 		authenticate_judge.channel.basic_consume(
 			queue = authenticate_judge.username,
-			on_mesage_callback = authenticate_judge.response_handler,
+			on_message_callback = authenticate_judge.response_handler,
 			auto_ack = True
 			)
 
-		authenticate_judge.channel.start_consume()
+		authenticate_judge.channel.start_consuming()
 
 
 	def response_handler(ch, method, properties, body):
@@ -60,6 +61,8 @@ class authenticate_judge():
 				queue = authenticate_judge.username
 				)
 			return status
+
+
 
 	def get_judge_details():
 		return authenticate_judge.client_id, authenticate_judge.username
