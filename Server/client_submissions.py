@@ -5,7 +5,7 @@ class submission():
 	def new_submission(client_id, problem_code, language, time_stamp, source_code):
 		print("[ SUBMIT ] "+ client_id + " for problem " + problem_code)
 		run_id = submission.generate_run_id()
-		file_name = "Client_Submissions/" + client_id + '_' + problem_code + '_' + run_id
+		file_name = client_id + '_' + problem_code + '_' + run_id
 		print ("[ FILE ] "+ client_id + " : " + file_name)
 		submission.make_local_source_file(file_name, source_code, language)
 		judge_verdict = submission.judge_submission(source_code, language, problem_code)
@@ -33,7 +33,7 @@ class submission():
 		# w : Write mode, + : Create file if not exists
 		new_file_name = file_name + file_extension
 		print("[ WRITE ] " + new_file_name)
-		client_local_file = open(new_file_name, "w+")
+		client_local_file = open("Client_Submissions/" + new_file_name, "w+")
 		client_local_file.write(source_code)
 		client_local_file.close()
 		return
@@ -45,10 +45,18 @@ class submission():
 		return run_id
 
 	def judge_submission(source_code, language, problem_code):
-		status = True
-		if status == True:
+		status = 'TE'
+		if status == 'AC':
 			return "AC+No_Error"
-		else:
+		elif status == 'WA':
 			return "WA+Error"
+		elif status == 'TE':
+			return"TE+Time_Limit_Exceeded"
+		elif status == 'NZ':
+			return "NZ+Non_Zero_Exit_Code"
+		elif status == 'SF':
+			return "SF+Segmentation_Fault"
+		else:
+			return "XX+Unknown_Error"
 
 	

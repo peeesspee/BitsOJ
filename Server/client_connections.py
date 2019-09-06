@@ -19,12 +19,16 @@ class manage_clients():
 		# First 5 characters contain metadata
 		client_message = str(body.decode("utf-8"))
 		
-		print("[ PING ] Recieved a new client message ")
+		print("\n[ PING ] Recieved a new client message...")
 		client_code = client_message[0:6]
 		if client_code == 'LOGIN ':
 			manage_clients.client_login_handler(client_message[6:])
 		elif client_code == 'SUBMT ':
 			manage_clients.client_submission_handler(client_message[6:])
+		else:
+			print("[ ERROR ] Client sent garbage data. Trust me you don't wanna see it! ")
+
+		return
 
 	# This function handles all client login requests
 	def client_login_handler(client_message):
@@ -105,6 +109,9 @@ class manage_clients():
 
 	def publish_message(queue_name, message):
 		print( "[ PUBLISH ] " + message + " TO " + queue_name)
-		manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
+		try:
+			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
+		except Exception as error:
+			print("[ CRITICAL ] Could not publish messages : " + str(error))
 		return
 	

@@ -31,7 +31,7 @@ class manage_database():
 			cur.execute("create table accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
 			cur.execute("create table connected_judges(judge_name varchar2(10) PRIMARY KEY, password varchar2(10))")
 			cur.execute("create table connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10))")
-			cur.execute("create table submissions(client_id varchar2(3), run_id varchar2(5), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(4))")
+			cur.execute("create table submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Table creation error : " + str(error))
@@ -62,10 +62,9 @@ class client_authentication(manage_database):
 		validation_result = cur.fetchall()
 		
 		if validation_result[0][0] == 1:
-			status = True
+			return True
 		else:
-			status = False
-		return status
+			return False
 
 	#This function generates a new client_id for new connections
 	def generate_new_client_id():
@@ -125,3 +124,26 @@ class client_authentication(manage_database):
 			return True
 		else:
 			return False
+
+class submissions_database_management(manage_database):
+	def insert_submission(run_id, client_id, language, source_file_name, problem_code, verdict, timestamp):
+		#cur.execute("create table submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(4))")
+		cur = manage_database.get_cursor()
+		conn = manage_database.get_connection_object()
+		try:
+			cur.execute("insert into submissions values(?, ?, ?, ?, ?, ?, ?)", (run_id, client_id, language, source_file_name, verdict, timestamp, ))
+			conn.commit()
+		except:
+			print("[ ERROR ] Could not insert into submission")
+		return
+
+	def view_submissions():
+		cur = manage_database.get_cursor()
+		try:
+			cur.execute("select * from submissions")
+			submission_data = cur.fetchall()
+			return submission_data
+		except:
+			print("[ ERROR ] Could not insert into submission")
+			return Null
+
