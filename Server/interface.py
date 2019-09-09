@@ -20,53 +20,64 @@ class server_window(QMainWindow):
 
 		
 		###########################################################
-		# Define Buttons and their actions
+		# Define Sidebar Buttons and their actions
 		button_width = 200
 		button_height = 50
 
 		self.button_1 = QPushButton('Submissions', self)
 		self.button_1.setFixedSize(button_width, button_height)
 		self.button_1.clicked.connect(self.view_submissions)
+		self.button_1.setObjectName("sidebar_button")
 
 		self.button_2 = QPushButton('Judges', self)
 		self.button_2.setFixedSize(button_width, button_height)
 		self.button_2.clicked.connect(self.manage_judges)
+		self.button_2.setObjectName("sidebar_button")
 
 		self.button_3 = QPushButton('Clients', self)
 		self.button_3.setFixedSize(button_width, button_height)
 		self.button_3.clicked.connect(self.manage_clients)
+		self.button_3.setObjectName("sidebar_button")
 
 		self.button_4 = QPushButton('Queries', self)
 		self.button_4.setFixedSize(button_width, button_height)
 		self.button_4.clicked.connect(self.manage_queries)
+		self.button_4.setObjectName("sidebar_button")
 
 		self.button_5 = QPushButton('Leaderboard', self)
 		self.button_5.setFixedSize(button_width, button_height)
 		self.button_5.clicked.connect(self.manage_leaderboard)
+		self.button_5.setObjectName("sidebar_button")
 
 		self.button_6 = QPushButton('Problems', self)
 		self.button_6.setFixedSize(button_width, button_height)
 		self.button_6.clicked.connect(self.manage_problems)
+		self.button_6.setObjectName("sidebar_button")
 
 		self.button_7 = QPushButton('Languages', self)
 		self.button_7.setFixedSize(button_width, button_height)
 		self.button_7.clicked.connect(self.manage_languages)
+		self.button_7.setObjectName("sidebar_button")
 
 		self.button_8 = QPushButton('Statistics', self)
 		self.button_8.setFixedSize(button_width, button_height)
 		self.button_8.clicked.connect(self.show_stats)
+		self.button_8.setObjectName("sidebar_button")
 
 		self.button_9 = QPushButton('Settings', self)
 		self.button_9.setFixedSize(button_width, button_height)
 		self.button_9.clicked.connect(self.contest_settings)
+		self.button_9.setObjectName("sidebar_button")
 
 		self.button_10 = QPushButton('Generate Report', self)
 		self.button_10.setFixedSize(button_width, button_height)
 		self.button_10.clicked.connect(self.generate_report)
+		self.button_10.setObjectName("sidebar_button")
 
 		self.button_11 = QPushButton('About', self)
 		self.button_11.setFixedSize(button_width, button_height)
 		self.button_11.clicked.connect(self.show_about)
+		self.button_11.setObjectName("sidebar_button")
 
 		###########################################################
 
@@ -314,6 +325,7 @@ class server_window(QMainWindow):
 		custom_close_box.setWindowTitle('Alert!')
 		custom_close_box.setText(message)
 		custom_close_box.setInformativeText(detail_message)
+
 		
 		custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
 		custom_close_box.setDefaultButton(QMessageBox.No)
@@ -322,6 +334,14 @@ class server_window(QMainWindow):
 		button_yes.setText('Yes')
 		button_no = custom_close_box.button(QMessageBox.No)
 		button_no.setText('No')
+
+		button_yes.setObjectName("close_button_yes")
+		button_no.setObjectName("close_button_no")
+
+		button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
+		button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+
+		
 
 		custom_close_box.exec_()
 

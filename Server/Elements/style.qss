@@ -11,37 +11,77 @@ QMessageBox{
 	color: #FF0000;
 }
 
-QPushButton
-{
+QPushButton{
 	text-align : left; 
-	padding-left : 20; 
+	padding-left : 20; 	
+}
+
+QPushButton#sidebar_button
+{
 	background-color : #090909 ; 
 	color : #606060;
 } 
 
-QPushButton::focus
+QPushButton#sidebar_button::focus
 {
 	background-color : #090909 ; 
 	color : #2eb9f7;
 }
 
-QPushButton::hover::focus
+QPushButton#sidebar_button::hover::focus
 {
 	background-color : #090909 ; 
 	color : #2eb9f7;
 }
 
-QPushButton::pressed
+QPushButton#sidebar_button::pressed
 {
 	background-color : #090909 ; 
 	color : #998f9c;
 }
 
-QPushButton::hover
+QPushButton#sidebar_button::hover
 {
 	background-color : #090909 ; 
 	color : #FFFFFF;
 }
+
+
+QPushButton#close_button_yes{
+	background-color : #090909 ; 
+	color : #990000;
+}
+
+QPushButton#close_button_yes::focus{
+	color: #AA0000;
+}
+
+QPushButton#close_button_yes::focus::hover{
+	color: #FF0000;
+}
+
+QPushButton#close_button_yes::hover{
+	color: #FF0000;
+}
+
+
+QPushButton#close_button_no{
+	background-color : #090909 ;
+	color : #009900;
+}
+
+QPushButton#close_button_no::focus{
+	color: #00AA00;
+}
+
+QPushButton#close_button_no::focus::hover{
+	color: #00FF00;
+}
+
+QPushButton#close_button_no::hover{
+	color: #FF0000;
+}
+
 
 QTabBar::tab
 {
@@ -66,14 +106,4 @@ QWidget#screen_widget
 	color : #CCCCCC;
 	background-color : #151515;
 }
-
-QMainWindow
-{
-	background-color : #121212;
-	color : #CCCCCC;
-	border : 2px solid #050505;
-}
-
-
-
 
