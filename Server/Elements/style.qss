@@ -1,0 +1,80 @@
+QStatusBar
+{ 
+	color : #BB86FC ;
+	border-top : 1px solid #000000;
+	background-color : #202020;
+
+}
+
+QPushButton
+{
+	text-align : left; 
+	padding-left : 20; 
+	background-color : #050505
+} 
+
+
+QPushButton
+{
+	background-color : #090909 ; 
+	color : #606060;
+}
+
+QPushButton::focus
+{
+	background-color : #090909 ; 
+	color : #2eb9f7;
+}
+
+QPushButton::hover::focus
+{
+	background-color : #090909 ; 
+	color : #2eb9f7;
+}
+
+QPushButton::pressed
+{
+	background-color : #090909 ; 
+	color : #998f9c;
+}
+
+QPushButton::hover
+{
+	background-color : #090909 ; 
+	color : #FFFFFF;
+}
+
+
+
+
+QTabBar::tab
+{
+	width: 0; 
+	height: 0; 
+	margin: 0; 
+	padding-top: 10; 
+}
+
+
+QWidget#main_screen
+{
+	background-color: #303030;
+}
+
+QWidget#screen_widget
+{
+	border : 1px solid #303030;
+	color : #CCCCCC;
+	background-color : #151515;
+}
+
+QMainWindow
+{
+	background-color : #121212;
+	color : #CCCCCC;
+	border : 2px solid #050505;
+}
+
+
+
+
