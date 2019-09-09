@@ -39,7 +39,11 @@ Visit : http://localhost:15672/ and login using user_name and user_password
 #### 8.Install PyQt5
 `pip3 install pyqt5`  
 
-
+#### 9. For testing purposes, add following users into RabbitMQ management portal:
+   Username     Password     Status        Permissions
+1. BitsOJ       root		administrator   All
+2. client 		client      None			vhost
+3. judge1		judge1		management 		All
 
 #### And you're done!!!!
 
