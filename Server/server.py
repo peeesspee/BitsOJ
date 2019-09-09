@@ -3,7 +3,7 @@ import pika
 from rabbitmq_connections import manage_connection
 from client_connections import manage_clients
 from database_management import manage_database
-from interface import App, init_gui
+from interface import server_window, init_gui
 # Variables  
 rabbitmq_username = 'BitsOJ'
 rabbitmq_password = 'root'
@@ -21,7 +21,10 @@ def main():
 		print("[ CRITICAL ] Could not connect to RabbitMQ server : " + str(error))
 
 	# Initialize GUI handler
-	init_gui()
+	try:
+		init_gui()
+	except Exception as error:
+		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 
 	# Initialize database
 	conn, cur = manage_database.initialize_database()
