@@ -10,14 +10,14 @@ class server_window(QMainWindow):
 	def __init__(self):
 		super().__init__()
 		# Set app icon
-		self.setWindowIcon(QIcon('Elements/icon1.png'))
+		self.setWindowIcon(QIcon('Elements/logo.png'))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ]')
 		# Make  the app run full-screen
-		self.showMaximized()
 		# Initialize status bar (Bottom Bar)
 		self.status = self.statusBar()
 		self.resize(800, 600)
+		
 
 		
 		###########################################################
@@ -423,6 +423,6 @@ class init_gui(server_window):
 
 		# make a reference of App class
 		server_app = server_window()
-		server_app.show()
+		server_app.showMaximized()
 		# Close the server as soon as close button is clicked
 		sys.exit(app.exec_())

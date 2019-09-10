@@ -30,18 +30,17 @@ def main():
 	conn, cur = manage_database.initialize_database()
 	manage_database.insert_user("team1", "abcd", cur, conn)
 	manage_database.insert_user("dummy", "dummy", cur, conn)
-	manage_database.insert_user("judge1", "judge1", cur, conn)
+	manage_database.insert_judge("judge1", "judge1", cur, conn)
 	
 
 	# Manage Threads
 	manage_threads(channel)
 
-
 	manage_connection.terminate_connection(connection)
 
 def manage_threads(channel):
 	client_handler_thread = threading.Thread(target = manage_clients.listen_clients, args = (channel, ))
-	judge_handler_thread = threading.Thread(target = judge_handler_placeholder)
+	judge_handler_thread = threading.Thread(target = manage_judges.listen_judges, args = (channel, ))
 
 	client_handler_thread.start()
 	judge_handler_thread.start()
@@ -52,9 +51,5 @@ def manage_threads(channel):
 
 	except:
 		print("User Keyboard Interrupt")
-
-
-def judge_handler_placeholder():
-	return
 
 main()

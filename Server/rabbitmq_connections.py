@@ -26,6 +26,9 @@ class manage_connection():
 		# Bind the queue to exchanges
 		# This tells it to listen to that particular exchange 
 		channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
+		
+		channel.queue_bind(exchange = 'judge_manager', queue = 'judge_requests')
+		channel.queue_bind(exchange = 'judge_manager', queue = 'judge_verdicts')
 		return channel, connection
 
 	def terminate_connection(connection):

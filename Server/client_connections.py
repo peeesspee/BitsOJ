@@ -41,51 +41,81 @@ class manage_clients():
 			print("[ DEBUG ] Client message was : " + str(client_message))
 
 		print("[ LOGIN ] " + " > " + client_username + "@" + client_password + "[ TYPE ] " + client_type)
-		# Validate the client from the database
-		status = client_authentication.validate_client(client_username, client_password)
+		
+		if client_type == 'CLIENT':
+			# Validate the client from the database
+			status = client_authentication.validate_client(client_username, client_password)
 
-		#Bind the connection_manager exchange to client queue (que name is same as username)
-		manage_clients.channel.queue_bind(exchange = "connection_manager", queue = client_username)
+			#Bind the connection_manager exchange to client queue (que name is same as username)
+			manage_clients.channel.queue_bind(exchange = "connection_manager", queue = client_username)
 
-		# The client listens on its own queue, whose name = client_username (Hard-coded)
-		# This queue is declared in the client.py file
-		# Every response sent to client has 5 initial characters which specify what server is going to talk about.
-		# "Valid" signifies a valid login.
-		# "Invld" signifies an invalid login attempt.
+			# The client listens on its own queue, whose name = client_username (Hard-coded)
+			# This queue is declared in the client.py file
+			# Every response sent to client has 5 initial characters which specify what server is going to talk about.
+			# "Valid" signifies a valid login.
+			# "Invld" signifies an invalid login attempt.
 
-		# If login is successful:
-		if status == True:
-			# Check if client has logged in for the first time:
-			status = client_authentication.check_connected_client(client_username)
-			# If client has NOT logged in for the first time
+			# If login is successful:
 			if status == True:
-				client_id = client_authentication.get_client_id(client_username)
-				print("[ " + client_username + " ] Previous Client ID : " + client_id )
+				# Check if client has logged in for the first time:
+				status = client_authentication.check_connected_client(client_username)
+				# If client has NOT logged in for the first time
+				if status == True:
+					client_id = client_authentication.get_client_id(client_username)
+					print("[ " + client_username + " ] Previous Client ID : " + client_id )
 
-			# If client has logged in for the first time
-			else:
-				# Fetch client ID
-				client_id = client_authentication.generate_new_client_id()
-				# Add client to connected users list
-				client_authentication.add_connected_client(client_id, client_username)
-				print("[ " + client_username + " ] Assigned : " + client_id )
+				# If client has logged in for the first time
+				else:
+					# Fetch client ID
+					client_id = client_authentication.generate_new_client_id()
+					# Add client to connected users list
+					client_authentication.add_connected_client(client_id, client_username)
+					print("[ " + client_username + " ] Assigned : " + client_id )
 
-			# Reply to be sent to client
-			server_message = "Hello buddy!!"
+				# Reply to be sent to client
+				server_message = "Hello buddy!!"
 
-			message = "VALID+" +  client_id + "+" + server_message
+				message = "VALID+" +  client_id + "+" + server_message
 
-			print("[ SENT ] " + message)
+				print("[ SENT ] " + message)
 
-			# Send login_successful signal to client. 
-			manage_clients.publish_message(client_username, message)
-			
-		# If login is not successful:
-		elif status == False:
-			print("[ " + client_username + " ] NOT verified.")
-			message = "INVLD"
-			# Reply "Invalid credentials" to client
-			manage_clients.publish_message(client_username, message)
+				# Send login_successful signal to client. 
+				manage_clients.publish_message(client_username, message)
+				
+			# If login is not successful:
+			elif status == False:
+				print("[ " + client_username + " ] NOT verified.")
+				message = "INVLD"
+				# Reply "Invalid credentials" to client
+				manage_clients.publish_message(client_username, message)
+
+
+		# Judge login is handled as a client to avoid redundancy
+
+		elif client_type == 'JUDGE':
+			# IN ALL REGARDS, CLIENT HERE MEANS A judge_manager
+			status = client_authentication.validate_judge(client_username, client_password)
+
+			#Bind the connection_manager exchange to client queue (queue name is same as username)
+			manage_clients.channel.queue_bind(exchange = "judge_manager", queue = client_username)
+
+			# If login is successful:
+			if status == True:
+				print("[ LOGIN ] Judge login successful : " + client_username )
+				message = "VALID"
+				print("[ SENT ] " + message + ' to ' + client_username)
+				# Send login_successful signal to client. 
+				manage_clients.publish_message(client_username, message)
+				
+			# If login is not successful:
+			elif status == False:
+				print("[ LOGIN ] Judge NOT verified.")
+				message = "INVLD"
+				print("[ SENT ] " + message + ' to ' + client_username)
+				# Reply "Invalid credentials" to client
+				manage_clients.publish_message(client_username, message)
+
+
 
 	def client_submission_handler(client_data):
 		try:
@@ -98,11 +128,13 @@ class manage_clients():
 
 			print("[ SUBMIT ]")
 
-			result, run_id, error = submission.new_submission(client_id, problem_code, language, time_stamp, source_code) 
-			message = "VRDCT+" + run_id + '+' + result + '+' + error
-
+			submission.new_submission(client_id, problem_code, language, time_stamp, source_code) 
+			
+			#######################################################################
+			message = "VRDCT+" + run_id + '+' + 'AC' + '+' + 'NO_ERROR'
 			client_username = client_authentication.get_client_username(client_id)
 			manage_clients.publish_message(client_username, message)
+			#######################################################################
 		except Exception as error:
 			print("[ ERROR ] Client data parsing error : " + str(error))
 			

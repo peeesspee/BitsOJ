@@ -1,3 +1,4 @@
+from judge_connections import manage_judges
 global run_id_counter
 run_id_counter = 1
 class submission():
@@ -8,11 +9,7 @@ class submission():
 		file_name = client_id + '_' + problem_code + '_' + run_id
 		print ("[ FILE ] "+ client_id + " : " + file_name)
 		submission.make_local_source_file(file_name, source_code, language)
-		judge_verdict = submission.judge_submission(source_code, language, problem_code)
-
-		return_code, error_message = judge_verdict.split('+')
-
-		return return_code, run_id, error_message
+		submission.judge_submission(run_id, source_code, language, problem_code)
 
 	# Make a local backup file for the client run id
 	def make_local_source_file(file_name, source_code, language):
@@ -44,19 +41,7 @@ class submission():
 		run_id_counter = run_id_counter + 1
 		return run_id
 
-	def judge_submission(source_code, language, problem_code):
-		status = 'TE'
-		if status == 'AC':
-			return "AC+No_Error"
-		elif status == 'WA':
-			return "WA+Error"
-		elif status == 'TE':
-			return"TE+Time_Limit_Exceeded"
-		elif status == 'NZ':
-			return "NZ+Non_Zero_Exit_Code"
-		elif status == 'SF':
-			return "SF+Segmentation_Fault"
-		else:
-			return "XX+Unknown_Error"
-
+	def judge_submission(run_id, source_code, language, problem_code):
+		manage_judges.send_new_request(run_id, problem_code, language, source_code)
+		
 	
