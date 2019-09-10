@@ -1,27 +1,24 @@
-import pika
 import time
 import os
-from database_management import manage_database
+from databae_management import manage_database
 from login import authenticate_login
+from manage_data_sending import send_options
 
-class submit_solution():
-	client_id = ''
-	username = ''
-	code = ''
-	file_path = ''
+class send_code():
+	client_id, username = authenticate_login.get_user_details()
+	code = None
+	file_path = None
 	Language = {1 : 'gcc', 2 : 'cpp', 3 : 'py2', 4 : 'jva' , 5 : 'py3'}
 	Problem_Code = { 1 : 'PSPA'}
 	final_data = ''
 	selected_language = ''
 	selected_problem = ''
 	time_stamp = ''
-	cursor = None
+	cursor = manage_database.cur
 	extension = ''
 
 
-	def read_solution(cur,channel):
-		submit_solution.client_id, submit_solution.username = authenticate_login.get_user_details()
-		submit_solution.cursor = cur
+	def uploading_solution(channel):
 		try:
 			submit_solution.file_path = input('Enter path of solution : ') or '/home/sj1328/Desktop/algoPractice/dfs.cpp'
 			filename, submit_solution.extension = os.path.splitext(submit_solution.file_path)
@@ -41,27 +38,16 @@ class submit_solution():
 				)
 		except:
 			print("File Not Found ------ Try Again")
-			submit_solution.read_solution(
-				submit_solution.cursor,
+			submit_solution.uploading_solution(
 				channel
 				)
 
 	def solution_request(channel):
-		print(submit_solution.selected_language)
 		submit_solution.final_data = 'SUBMT ' + submit_solution.client_id + ' '  + submit_solution.selected_problem + ' ' + submit_solution.selected_language + ' ' + submit_solution.time_stamp + ' ' + submit_solution.code
 
 		try:
-			channel.basic_publish(
-				exchange = 'connection_manager', 
-				routing_key = 'client_requests', 
-				body = submit_solution.final_data
-				)
+			send_options.publish_data(channel)
 		except:
-			print("Error in channel.basic_publish")
+			print("Error i channel.basic_publish ")
 
-		print('Your Code is running ......')
-		
-
-
-
-		
+		print("Your code is running \n Wait for the judgement")

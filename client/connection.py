@@ -1,5 +1,6 @@
 import pika
 
+
 # Class to handle connection establishment requests
 class manage_connection():
 

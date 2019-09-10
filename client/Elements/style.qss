@@ -1,0 +1,120 @@
+QStatusBar
+{ 
+	color : #BB86FC ;
+	border-top : 1px solid #000000;
+	background-color : #202020;
+
+}
+
+QMessageBox{
+	background-color : #808080;
+	color: #FF0000;
+}
+
+QPushButton#sidebar_button{
+	text-align : left; 
+	padding-left : 20; 	
+}
+
+QPushButton#sidebar_button
+{
+	background-color : #1B1C25 ; 
+	color : #838383;
+} 
+
+QPushButton#sidebar_button::focus
+{
+	color : #FEFFFF;
+}
+
+QPushButton#sidebar_button::hover::focus
+{
+	color : #FEFFFF;
+}
+
+QPushButton#sidebar_button::pressed
+{
+	color : #998f9c;
+}
+
+QPushButton#sidebar_button::hover
+{
+	color : #FEFFFF;
+}
+
+
+QPushButton#close_button_yes{
+	text-align : center;
+	background-color : #090909 ; 
+	color : #990000;
+}
+
+QPushButton#close_button_yes::focus{
+	color: #AA0000;
+}
+
+QPushButton#close_button_yes::focus::hover{
+	color: #FF0000;
+}
+
+QPushButton#close_button_yes::hover{
+	color: #FF0000;
+}
+
+
+QPushButton#close_button_no{
+	text-align : center;
+	background-color : #090909 ;
+	color : #009900;
+}
+
+QPushButton#close_button_no::focus{
+	color: #00AA00;
+}
+
+QPushButton#close_button_no::focus::hover{
+	color: #00FF00;
+}
+
+QPushButton#close_button_no::hover{
+	color: #FF0000;
+}
+
+
+QTabBar::tab
+{
+	width: 0; 
+	height: 0; 
+	margin: 0; 
+	padding-top: 10; 
+}
+
+QTabWidget::pane{
+	color : #AAAAAA;
+}
+
+QWidget#sidebar{
+	background-color : #131217;
+}
+
+QTabWidget#main_tabs{
+	background-color : #171B1F;
+	color: #AAAAAA;
+}
+
+QWidget#screen_widget
+{
+	border : 1px solid #303030;
+	color : #CCCCCC;
+	background-color : #151515;
+}
+
+QWidget#top_widget{
+	border : 1px solid #050505;
+	background-color: #121212;
+	color: #AAAAAA;
+}
+
+QLabel#main_screen_content{
+	color : #AAAAAA;
+}
