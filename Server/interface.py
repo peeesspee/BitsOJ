@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QPalette, QColor
+from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject
 
 global current_status 
@@ -17,6 +17,7 @@ class server_window(QMainWindow):
 		self.showMaximized()
 		# Initialize status bar (Bottom Bar)
 		self.status = self.statusBar()
+		self.resize(800, 600)
 
 		
 		###########################################################
@@ -105,7 +106,7 @@ class server_window(QMainWindow):
 	
 
 	def init_UI(self):
-		self.status.showMessage(server_window.get_status())
+		self.set_status()
 		# Define Layout for sidebar
 		side_bar_layout = QVBoxLayout()
 
@@ -131,13 +132,26 @@ class server_window(QMainWindow):
 		side_bar_widget.setLayout(side_bar_layout)
 		side_bar_widget.setObjectName("sidebar")
 
-		# Define our right side screens corresponding to buttons on the sidebar
-		self.right_widget = QTabWidget()
-		self.right_widget.setObjectName("main_tabs")
+		#Define our top bar
+		logo = QLabel(self)
+		logo_image = QPixmap('Elements/bitwise_new.png')
+		logo_image2 = logo_image.scaledToWidth(104)
+		logo.setPixmap(logo_image2)
 
+		top_bar_layout = QHBoxLayout()
+		top_bar_layout.setContentsMargins(15, 5, 1, 0);
+		top_bar_layout.addWidget(logo)
+
+		top_bar_widget = QWidget()
+		top_bar_widget.setLayout(top_bar_layout)
+		top_bar_widget.setObjectName('top_bar')
+
+		# Define our right side screens corresponding to buttons on the sidebar
 		# Basically right screens are tab widgets whose tabs are hidden, 
 		# and we map sidebar buttons to each tab switch :)
 		# Since sidebars are not natively supported by pyqt5
+		self.right_widget = QTabWidget()
+		self.right_widget.setObjectName("main_tabs")
 		self.right_widget.addTab(self.tab1, '')    # tab names are '' because we don't want them to show up in our screen
 		self.right_widget.addTab(self.tab2, '')
 		self.right_widget.addTab(self.tab3, '')
@@ -159,19 +173,29 @@ class server_window(QMainWindow):
 		main_layout.addWidget(self.right_widget)
 
 		# setstretch( index, stretch_value )
-		main_layout.setStretch(0, 8)
+		main_layout.setStretch(0, 10)
 		main_layout.setStretch(1, 100)
-
-		# Set main_layout as our layout for central widget
+		main_layout.setContentsMargins(10, 1, 10, 1)
+		# Define our main wideget = sidebar + windows
 		main_widget = QWidget()
 		main_widget.setObjectName("screen_widget")
 		main_widget.setLayout(main_layout)
-		self.setCentralWidget(main_widget)
 
-		
 
-		# Define main screens
-		main_windows = QTabWidget()	
+		#Define top_layout = logo_bar + main_layout
+		top_layout = QVBoxLayout()
+		top_layout.addWidget(top_bar_widget)
+		top_layout.addWidget(main_widget)
+		top_layout.setContentsMargins(1, 0, 1, 1)
+		top_layout.setStretch(0, 8)
+		top_layout.setStretch(1, 100)
+
+		top_widget = QWidget()
+		top_widget.setLayout(top_layout)
+		top_widget.setObjectName("main_widget")
+
+		# Set top_widget as our central widget
+		self.setCentralWidget(top_widget)
 
 		return
 
@@ -213,17 +237,26 @@ class server_window(QMainWindow):
 	# Handle UI for various button presses
 	def submissions_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 1'))
-		main_layout.addStretch(10)
+		heading = QLabel('Page1')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
+		main_layout.addStretch(5)
+
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
+		
 		return main
 
 	def judge_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 2'))
+		heading = QLabel('Page2')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
+
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
@@ -231,7 +264,10 @@ class server_window(QMainWindow):
 
 	def client_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 3'))
+		heading = QLabel('Page3')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -240,7 +276,10 @@ class server_window(QMainWindow):
 
 	def query_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 4'))
+		heading = QLabel('Page4')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -249,7 +288,10 @@ class server_window(QMainWindow):
 
 	def leaderboard_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 5'))
+		heading = QLabel('Page5')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -258,7 +300,10 @@ class server_window(QMainWindow):
 
 	def problem_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 6'))
+		heading = QLabel('Page6')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -267,7 +312,10 @@ class server_window(QMainWindow):
 
 	def language_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 7'))
+		heading = QLabel('Page7')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -276,7 +324,10 @@ class server_window(QMainWindow):
 
 	def stats_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 8'))
+		heading = QLabel('Page8')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -285,7 +336,10 @@ class server_window(QMainWindow):
 
 	def settings_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 9'))
+		heading = QLabel('Page9')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -294,7 +348,10 @@ class server_window(QMainWindow):
 
 	def reports_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 10'))
+		heading = QLabel('Page10')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -303,7 +360,10 @@ class server_window(QMainWindow):
 
 	def about_us_ui(self):
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(QLabel('page 11'))
+		heading = QLabel('Page11')
+		heading.setObjectName('main_screen_content')
+
+		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -312,9 +372,9 @@ class server_window(QMainWindow):
 
 	###################################################
 
-	def get_status():
+	def set_status(self):
 		global current_status
-		return current_status
+		self.status.showMessage(current_status)
 
 	def closeEvent(self, event):
 		message = "Pressing 'Yes' will SHUT the Server.\nAre you sure you want to exit?"
@@ -322,7 +382,7 @@ class server_window(QMainWindow):
 		
 		custom_close_box = QMessageBox()
 		custom_close_box.setIcon(QMessageBox.Critical)
-		custom_close_box.setWindowTitle('Alert!')
+		custom_close_box.setWindowTitle('Warning!')
 		custom_close_box.setText(message)
 		custom_close_box.setInformativeText(detail_message)
 
