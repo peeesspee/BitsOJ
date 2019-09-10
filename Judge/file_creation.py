@@ -1,8 +1,6 @@
 class file_manager():
 
 
-	x = "import socket \nimport os\nimport subprocess\nimport sys"
-
 	def create_file(code, language, file_name):
 		# if code is in C++
 	    if language == 'C++':
@@ -28,7 +26,7 @@ class file_manager():
 	            file.write(code)
 	            return file_name
 
-	def judge(code, problem_code, run_id, client_id, language):
+	def file_name(code, problem_code, run_id, client_id, language):
 
 	    if language == 'C++':
 	        file_name = client_id + " " + run_id + " "  + " " + problem_code + '.cpp'
