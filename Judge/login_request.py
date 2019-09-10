@@ -14,6 +14,17 @@ class authenticate_judge():
 
 		print("[Validating] : " + authenticate_judge.username + " @ " + authenticate_judge.password + "... \n ")
 
+		channel.queue_declare(
+			queue = authenticate_judge.username, 
+			durable=True
+			)
+
+
+		authenticate_judge.channel.queue_bind(
+			exchange = 'connection_manager',
+			queue = authenticate_judge.username
+			)
+
 
 		authenticate_judge.channel.basic_publish(
 			exchange = 'connection_manager',
@@ -21,15 +32,7 @@ class authenticate_judge():
 			body = 'LOGIN ' + authenticate_judge.username + ' ' + authenticate_judge.password + ' ' + authenticate_judge.client_id + ' ' + "JUDGE"
 			)
 
-		channel.queue_declare(
-			queue = authenticate_judge.username, 
-			durable=True
-			)
 
-		authenticate_judge.channel.queue_bind(
-			exchange = 'connection_manager',
-			queue = authenticate_judge.username
-			)
 
 		print("Request sent for authentication...\n ")
 		print("[LISTENING]:" + authenticate_judge.username + ' ' + '@' + ' ' + authenticate_judge.password + "\n")
@@ -47,11 +50,11 @@ class authenticate_judge():
 	def response_handler(ch, method, properties, body):
 		server_data = body.decode('utf-8')
 
-		status = server_data[0:5]
+		status = server_data
 
 		if(status == 'VALID'):
-			status,authenticate_judge.client_id,server_message = server_data.split('+')
-			print("[ status ] " + status + "\n[ ClientID ] : " + authenticate_judge.client_id + "\n[ Server ] : " + server_message )
+			status = server_data
+			print("[ status ] " + status  )
 			return status
 
 		elif(status == 'INVLD'):
