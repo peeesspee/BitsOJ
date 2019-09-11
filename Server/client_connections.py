@@ -6,12 +6,27 @@ class manage_clients():
 	channel = ''
 
 	# This function continously listens for client messages 
-	def listen_clients(channel1):
-		manage_clients.channel = channel1
-		# Clients send requests on client_requests
-		# As soon as a new message is recieved, it is sent to client_message_handler for further processing
-		channel1.basic_consume(queue = 'client_requests', on_message_callback = manage_clients.client_message_handler, auto_ack = True)
-		channel1.start_consuming()
+	def listen_clients(superuser_username, superuser_password, host):
+
+		try:
+			connection = pika.BlockingConnection(pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f"))
+			channel = connection.channel()
+			manage_clients.channel = channel
+			channel.queue_declare(queue = 'client_requests', durable = True)
+			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
+			channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
+			print("[ LISTEN ] Started listening on client_requests")
+		
+			# Clients send requests on client_requests
+			# As soon as a new message is recieved, it is sent to client_message_handler for further processing
+			channel.basic_consume(queue = 'client_requests', on_message_callback = manage_clients.client_message_handler, auto_ack = True)
+			channel.start_consuming()
+		except Exception as error:
+			print("[ CRITICAL ] Could not connect to RabbitMQ server : " + str(error))
+			print("[ LISTEN ] STOPPED listening to client channel")
+			return
+
+		
 
 	# This function works on client messages and passes them on to their respective handler function
 	def client_message_handler(ch, method, properties, body):
@@ -32,6 +47,7 @@ class manage_clients():
 
 	# This function handles all client login requests
 	def client_login_handler(client_message):
+
 		# Client sends the username, password, clientID as "username+password+clientID", so we split it.
 		# Default value of clientID is "Null" (String)
 		try:

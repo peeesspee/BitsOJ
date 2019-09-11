@@ -23,6 +23,8 @@ class manage_database():
 		cur.execute("drop table if exists submissions")
 		cur.execute("drop table if exists scoreboard")
 		cur.execute("drop table if exists connected_clients")
+		cur.execute("drop table if exists judge_accounts")
+		
 		
 		# Upto here
 		try:	
@@ -44,7 +46,7 @@ class manage_database():
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Database insertion error : " + str(error))
 
-	def insert_judge(username, password):
+	def insert_judge(user_name, password, cur, conn):
 		try:
 			cur.execute("insert into judge_accounts values (?,?)",(user_name, password,))
 			conn.commit()
