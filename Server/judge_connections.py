@@ -20,34 +20,30 @@ class manage_judges():
 	# This function continously listens for judge verdicts
 	def listen_judges(superuser_username, superuser_password, host):
 		
-		# Create a connection with rabbitmq
+		# Create a connection with rabbitmq and declare exchanges and queues
 		try:
 			connection = pika.BlockingConnection(pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f"))
 			channel = connection.channel()
 			manage_judges.channel = channel
-
-			channel.queue_declare(queue = 'judge_requests', durable = True)
+			
 			channel.queue_declare(queue = 'judge_verdicts', durable = True)
 			channel.exchange_declare(exchange = 'judge_manager', exchange_type = 'direct', durable = True)
 			channel.queue_bind(exchange = 'judge_manager', queue = 'judge_verdicts')
-			print("[ LISTEN ] Started listening on judge_verdict")
-			
-			# Judges send requests on judge_requests
-			# As soon as a new message is recieved, it is sent to judge_message_handler for further processing
-			
 			
 		except Exception as error:
 			print("[ CRITICAL ] Could not connect to RabbitMQ server : " + str(error))
-			print("[ LISTEN ] STOPPED listening to judge channel")
 			return
 
-
 		try:
+			# Judges send responses on judge_verdicts
+			# As soon as a new message is recieved, it is sent to judge_message_handler for further processing
+			print("[ LISTEN ] Started listening on judge_verdict")
 			channel.basic_consume(queue = 'judge_verdicts', on_message_callback = manage_judges.judge_message_handler, auto_ack = True)
 			channel.start_consuming()
 
 		except (KeyboardInterrupt, SystemExit):
 			channel.stop_consuming()
+			print("[ LISTEN ] STOPPED listening to judge channel")
 			connection.close()
 			print("[ STOP ] Judge subprocess terminated successfully!")	
 			return

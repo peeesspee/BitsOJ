@@ -12,30 +12,31 @@ class manage_clients():
 			connection = pika.BlockingConnection(pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f"))
 			channel = connection.channel()
 			manage_clients.channel = channel
-			channel.queue_declare(queue = 'client_requests', durable = True)
 			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
+			channel.queue_declare(queue = 'client_requests', durable = True)
+			channel.queue_declare(queue = 'judge_requests', durable = True)
 			channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
 			channel.queue_bind(exchange = 'connection_manager', queue = 'judge_requests')
-			print("[ LISTEN ] Started listening on client_requests")
 
 			# Initialize run_id counter from database
 			submission.init_run_id()
 			previous_data.get_last_client_id()
 
-		
-			# Clients send requests on client_requests
-			# As soon as a new message is recieved, it is sent to client_message_handler for further processing
-		
 		except Exception as error:
 			print("[ CRITICAL ] Could not connect to RabbitMQ server : " + str(error))
-			print("[ LISTEN ] STOPPED listening to client channel")
+			
 			sys.exit()
 
 		try:
+			# Clients send requests on client_requests
+			# As soon as a new message is recieved, it is sent to client_message_handler for further processing
+			print("[ LISTEN ] Started listening on client_requests")
 			channel.basic_consume(queue = 'client_requests', on_message_callback = manage_clients.client_message_handler, auto_ack = True)
 			channel.start_consuming()
+		# Handle keyboard interrupt ctrl+c and terminate successfully
 		except (KeyboardInterrupt, SystemExit):
 			channel.stop_consuming()
+			print("[ LISTEN ] STOPPED listening to client channel")
 			connection.close()
 			print("[ STOP ] Client subprocess terminated successfully!")			
 			return
@@ -160,7 +161,7 @@ class manage_clients():
 		try:
 			if client_id == 'Nul':
 				print('[ REJECT ] Client has not logged in. This should not happen, please check the client for ambiguity.')
-				
+
 			else:
 				run_id, source_file_name = submission.new_submission(client_id, problem_code, language, time_stamp, source_code)
 				

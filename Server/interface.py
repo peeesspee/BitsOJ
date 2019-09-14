@@ -1,7 +1,9 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap, QStandardItemModel
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer
+from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
+from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex
+
 
 global current_status 
 current_status = "STOPPED"
@@ -17,6 +19,11 @@ class server_window(QMainWindow):
 		# Initialize status bar (Bottom Bar)
 		self.status = self.statusBar()
 		self.resize(800, 600)
+
+		self.timer = QTimer()
+		self.change_flag = True
+		self.timer.timeout.connect(self.update_data)
+		#self.timer.start(2000)
 
 		
 		###########################################################
@@ -84,7 +91,7 @@ class server_window(QMainWindow):
 		###########################################################
 		# Manage tabs on the right window
 		# Each tab is an object returned by the respective function associated with its UI
-		self.tab1 = self.submissions_ui()
+		self.tab1 , self.model = self.submissions_ui()
 		self.tab2 = self.judge_ui()
 		self.tab3 = self.client_ui()
 		self.tab4 = self.query_ui()
@@ -97,8 +104,9 @@ class server_window(QMainWindow):
 		self.tab11 = self.about_us_ui()
 
 		###########################################################
-
-
+		self.model.dataChanged.connect(self.update_data)
+		#self.model.rowsInserted.connect(self.update_data)
+		
 		# Add widgets to our main window
 		server_window.init_UI(self)
 		return
@@ -231,39 +239,69 @@ class server_window(QMainWindow):
 	def show_about(self):
 		self.right_widget.setCurrentIndex(10)
 
+	def update_data(self):
+		print("Hello")
+		return
+	
 
+	
 	#####################################################
+	def manage_db(self):
+		db = QSqlDatabase.addDatabase('QSQLITE')
+		db.setDatabaseName('server_database.db')
+		if db.open():
+			submission_model = QSqlTableModel()
+			submission_model.setTable('submissions')
+			submission_model.setEditStrategy(QSqlTableModel.OnFieldChange)
+			submission_model.select()
+			submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
+			submission_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
+			submission_model.setHeaderData(2, Qt.Horizontal, 'Language')
+			submission_model.setHeaderData(3, Qt.Horizontal, 'Source File')
+			submission_model.setHeaderData(4, Qt.Horizontal, 'Problem Code')
+			submission_model.setHeaderData(5, Qt.Horizontal, 'Verdict')
+			submission_model.setHeaderData(6, Qt.Horizontal, 'Time')
+			#submission_model.dataChanged.emit(QModelIndex(), QModelIndex())
+		return submission_model
+
+	def generate_view(self, model):
+		submission_table = QTableView()
+		submission_table.setModel(model)
+		submission_table.setWindowTitle('Submissions')
+		# Enable sorting in the table view
+		submission_table.setSortingEnabled(True)
+		submission_table.resizeColumnsToContents()
+		horizontal_header = submission_table.horizontalHeader()
+		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+		vertical_header = submission_table.verticalHeader()
+		#vertical_header.setSectionResizeMode(QHeaderView.Stretch)
+		vertical_header.setVisible(False)
+		return submission_table
+
 	# Handle UI for various button presses
 	def submissions_ui(self):
-		main_layout = QVBoxLayout()
 		heading = QLabel('Submissions')
 		heading.setObjectName('main_screen_content')
 
-		model = QStandardItemModel()
-		model.setHorizontalHeaderLabels(['Run ID', 'Client ID', 'Problem', 'Status', 'Time'])
+		submission_model = self.manage_db()
+		submission_table = self.generate_view(submission_model)
+		#submission_model.rowsInserted.connect(self.update_data)
+		
 
-		submission_table = QTableView()
-		submission_table.setModel(model)
-
-		horizontal_header = submission_table.horizontalHeader()
-		vertical_header = submission_table.verticalHeader()
-
-		#horizontal_header.setStretchLastSection(True)
-		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
-		vertical_header.setVisible(False)
-		submission_table.resizeColumnsToContents()
-
-
+		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
 		main_layout.addWidget(submission_table)
-		main_layout.addStretch(5)
+		main_layout.setStretch(0,5)
+		main_layout.setStretch(1,95)
 
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		
-		return main
+		main.show()
+		return main, submission_model
 
+
+	
 
 	def judge_ui(self):
 		main_layout = QVBoxLayout()
@@ -438,8 +476,6 @@ class init_gui(server_window):
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
-
-
 		# make a reference of App class
 		server_app = server_window()
 		server_app.showMaximized()
