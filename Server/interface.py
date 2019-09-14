@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject
+from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap, QStandardItemModel
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer
 
 global current_status 
 current_status = "STOPPED"
@@ -17,6 +17,16 @@ class server_window(QMainWindow):
 		# Initialize status bar (Bottom Bar)
 		self.status = self.statusBar()
 		self.resize(800, 600)
+
+		# Create a timer to call update_gui function periodiaclly
+		self.update_timer = QTimer()
+		# Set update frequency ( 1 second )
+		self.update_timer.setInterval(1000)
+		# Connect timer to update_gui function
+		self.update_timer.timeout.connect(self.update_gui)
+		# Start timer
+		#self.update_timer.start()
+
 		
 
 		
@@ -237,10 +247,26 @@ class server_window(QMainWindow):
 	# Handle UI for various button presses
 	def submissions_ui(self):
 		main_layout = QVBoxLayout()
-		heading = QLabel('Page1')
+		heading = QLabel('Submissions')
 		heading.setObjectName('main_screen_content')
 
+		model = QStandardItemModel()
+		model.setHorizontalHeaderLabels(['Run ID', 'Client ID', 'Problem', 'Status', 'Time'])
+
+		submission_table = QTableView()
+		submission_table.setModel(model)
+
+		horizontal_header = submission_table.horizontalHeader()
+		vertical_header = submission_table.verticalHeader()
+
+		#horizontal_header.setStretchLastSection(True)
+		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+		vertical_header.setVisible(False)
+		submission_table.resizeColumnsToContents()
+
+
 		main_layout.addWidget(heading)
+		main_layout.addWidget(submission_table)
 		main_layout.addStretch(5)
 
 		main = QWidget()
@@ -248,6 +274,7 @@ class server_window(QMainWindow):
 		main.setObjectName("main_screen");
 		
 		return main
+
 
 	def judge_ui(self):
 		main_layout = QVBoxLayout()
@@ -401,15 +428,18 @@ class server_window(QMainWindow):
 		button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
 		button_no.setStyleSheet(open('Elements/style.qss', "r").read())
 
-		
-
 		custom_close_box.exec_()
 
 		if custom_close_box.clickedButton() == button_yes:
 			event.accept()
 		elif custom_close_box.clickedButton() == button_no : 
 			event.ignore()
+
+
+	def update_gui(self):
+		print("[ GUI UPDATE ] Called update_gui()")
 			
+
 
 class init_gui(server_window):
 	def __init__(self):
@@ -425,4 +455,5 @@ class init_gui(server_window):
 		server_app = server_window()
 		server_app.showMaximized()
 		# Close the server as soon as close button is clicked
-		sys.exit(app.exec_())
+		app.exec_()
+		return

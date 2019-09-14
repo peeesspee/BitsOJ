@@ -1,5 +1,7 @@
-import threading
+import multiprocessing
 import pika
+import os
+import signal
 from client_connections import manage_clients
 from database_management import manage_database
 from interface import server_window, init_gui
@@ -12,40 +14,42 @@ host = 'localhost'
 
 
 def main():
-	print("----------------BitsOJ v1.0----------------")
-	
-
 	# Initialize database
 	conn, cur = manage_database.initialize_database()
-	manage_database.insert_user("team1", "abcd", cur, conn)
-	manage_database.insert_user("dummy", "dummy", cur, conn)
-	manage_database.insert_judge("judge1", "judge1", cur, conn)
+	#manage_database.reset_database(conn)
+	#manage_database.insert_user("team1", "abcd", cur, conn)
+	#manage_database.insert_user("dummy", "dummy", cur, conn)
+	#manage_database.insert_judge("judge1", "judge1", cur, conn)
 
 	# Manage Threads
-	manage_threads(superuser_username, superuser_password, host)
+	cpid, jpid = manage_process(superuser_username, superuser_password, host)
 
 	# Initialize GUI handler
 	try:
-		print('hi')
-		#init_gui()
+		print("----------------BitsOJ v1.0----------------")
+		init_gui()
+
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 
+	print("[ EXIT ] Signal passed")
+	#Send SIGINT to both client and judge processes
+	os.kill(cpid, signal.SIGINT)
+	os.kill(jpid, signal.SIGINT)
+
+
+
+def manage_process(superuser_username, superuser_password, host):
+	client_handler_process = multiprocessing.Process(target = manage_clients.listen_clients, args = (superuser_username, superuser_password, host,))
+	judge_handler_process = multiprocessing.Process(target = manage_judges.listen_judges, args = ('judge1', 'judge1', host,))
+
 	
+	client_handler_process.start()
+	judge_handler_process.start()
 
-def manage_threads(superuser_username, superuser_password, host):
-	client_handler_thread = threading.Thread(target = manage_clients.listen_clients, args = (superuser_username, superuser_password, host,))
-	judge_handler_thread = threading.Thread(target = manage_judges.listen_judges, args = (superuser_username, superuser_password, host,))
-
-	client_handler_thread.start()
-	judge_handler_thread.start()
-
-
-	try:
-		client_handler_thread.join()
-		judge_handler_thread.join()
-
-	except:
-		print("User Keyboard Interrupt")
+	cpid = client_handler_process.pid
+	jpid = judge_handler_process.pid
+	return cpid, jpid
+	
 
 main()

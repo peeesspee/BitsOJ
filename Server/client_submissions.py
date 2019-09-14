@@ -7,9 +7,13 @@ class submission():
 		print("[ SUBMIT ] "+ client_id + " for problem " + problem_code)
 		run_id = submission.generate_run_id()
 		file_name = client_id + '_' + problem_code + '_' + run_id
+
 		print ("[ FILE ] "+ client_id + " : " + file_name)
+
 		submission.make_local_source_file(file_name, source_code, language)
-		submission.judge_submission(run_id, source_code, language, problem_code)
+		print('[ JUDGE ] Requesting a new judgement')
+		#submission.judge_submission(run_id, source_code, language, problem_code)
+		return run_id
 
 	# Make a local backup file for the client run id
 	def make_local_source_file(file_name, source_code, language):
@@ -43,5 +47,6 @@ class submission():
 
 	def judge_submission(run_id, source_code, language, problem_code):
 		manage_judges.send_new_request(run_id, problem_code, language, source_code)
+		return
 		
 	

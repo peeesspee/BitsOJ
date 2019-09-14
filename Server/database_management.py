@@ -17,26 +17,29 @@ class manage_database():
 		except Exception as error:
 			print ("[ CRITICAL ERROR ]Database connection error : " + str(error))
 		
-		
-		# Comment out the following lines in production:
-		cur.execute("drop table if exists accounts")
-		cur.execute("drop table if exists submissions")
-		cur.execute("drop table if exists scoreboard")
-		cur.execute("drop table if exists connected_clients")
-		cur.execute("drop table if exists judge_accounts")
-		
-		
-		# Upto here
 		try:	
-			cur.execute("create table accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
-			cur.execute("create table judge_accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
-			cur.execute("create table connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10))")
-			cur.execute("create table submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
-			cur.execute("create table scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
+			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
+			cur.execute("create table if not exists judge_accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
+			cur.execute("create table if not exists connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10))")
+			cur.execute("create table if not exists submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
+			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Table creation error : " + str(error))
 
 		return conn, cur
+
+	def reset_database(conn):
+		cur = conn.cursor()
+		try:
+			cur.execute("drop table if exists accounts")
+			cur.execute("drop table if exists submissions")
+			cur.execute("drop table if exists scoreboard")
+			cur.execute("drop table if exists connected_clients")
+			cur.execute("drop table if exists judge_accounts")
+		except:
+			print("Database drop error")
+
+
 
 	def insert_user(user_name, password, cur, conn):
 		

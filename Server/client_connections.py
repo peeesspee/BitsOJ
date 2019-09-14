@@ -1,4 +1,5 @@
 import pika
+import sys
 from database_management import client_authentication
 from client_submissions import submission
 
@@ -7,7 +8,6 @@ class manage_clients():
 
 	# This function continously listens for client messages 
 	def listen_clients(superuser_username, superuser_password, host):
-
 		try:
 			connection = pika.BlockingConnection(pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f"))
 			channel = connection.channel()
@@ -19,14 +19,20 @@ class manage_clients():
 		
 			# Clients send requests on client_requests
 			# As soon as a new message is recieved, it is sent to client_message_handler for further processing
-			channel.basic_consume(queue = 'client_requests', on_message_callback = manage_clients.client_message_handler, auto_ack = True)
-			channel.start_consuming()
+		
 		except Exception as error:
 			print("[ CRITICAL ] Could not connect to RabbitMQ server : " + str(error))
 			print("[ LISTEN ] STOPPED listening to client channel")
-			return
+			sys.exit()
 
-		
+		try:
+			channel.basic_consume(queue = 'client_requests', on_message_callback = manage_clients.client_message_handler, auto_ack = True)
+			channel.start_consuming()
+		except (KeyboardInterrupt, SystemExit):
+			channel.stop_consuming()
+			connection.close()
+			print("[ STOP ] Client listen terminated due to keyboard interrupt.")			
+			return
 
 	# This function works on client messages and passes them on to their respective handler function
 	def client_message_handler(ch, method, properties, body):
@@ -89,7 +95,7 @@ class manage_clients():
 					print("[ " + client_username + " ] Assigned : " + client_id )
 
 				# Reply to be sent to client
-				server_message = "Hello buddy!!"
+				server_message = "Hello_buddy!!"
 
 				message = "VALID+" +  client_id + "+" + server_message
 
@@ -142,15 +148,19 @@ class manage_clients():
 			source_code = client_data[22:]
 			print("[ DATA ] CID :" + client_id + " PCODE:" + problem_code + " Language :" + language + " Time stamp :" + time_stamp)
 
-			print("[ SUBMIT ]")
+			if client_id == 'Nul':
+				print('[ REJECT ] Client has not logged in. This should not happen, please check the client for ambiguity.')
 
-			submission.new_submission(client_id, problem_code, language, time_stamp, source_code) 
-			
-			#######################################################################
-			message = "VRDCT+" + run_id + '+' + 'AC' + '+' + 'NO_ERROR'
-			client_username = client_authentication.get_client_username(client_id)
-			manage_clients.publish_message(client_username, message)
-			#######################################################################
+			else:
+				run_id = submission.new_submission(client_id, problem_code, language, time_stamp, source_code) 
+				
+				#######################################################################
+				message = "VRDCT+" + str(run_id) + '+' + 'AC' + '+' + 'NO_ERROR'
+				client_username = client_authentication.get_client_username(client_id)
+				manage_clients.publish_message(client_username, message)
+				#######################################################################
+			return
+
 		except Exception as error:
 			print("[ ERROR ] Client data parsing error : " + str(error))
 			
