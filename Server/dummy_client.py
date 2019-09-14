@@ -6,11 +6,11 @@ rabbitmq_username = 'client'
 rabbitmq_password = 'client'
 host = 'localhost'
 
-username = 'team1'
-password = 'abcd'
 global client_id
 client_id = 'Nul'
 
+username = input('Enter username: ') or 'team1'
+password = input('Enter password: ') or 'abcd'
 
 try:
 	connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
@@ -30,7 +30,7 @@ def send():
 	global client_id
 	print("Sending code")
 	code = '#include<iostream>\n int main(void){ std::cout<<"Hello"; return 0; }'
-	message = 'SUBMT ' + client_id + ' '  + 'ABCD' + ' ' + 'CPP' + ' ' + '04:05:06' + ' ' + code
+	message = 'SUBMT ' + client_id + ' '  + 'ABCD' + ' ' + 'CPP' + ' ' + '04:05:06' 
 	print ( message)
 	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
 	print("sent code")

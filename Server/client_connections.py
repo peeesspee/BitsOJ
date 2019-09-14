@@ -1,6 +1,6 @@
 import pika
 import sys
-from database_management import client_authentication, submissions_management
+from database_management import client_authentication, submissions_management, previous_data
 from client_submissions import submission
 
 class manage_clients():
@@ -20,6 +20,8 @@ class manage_clients():
 
 			# Initialize run_id counter from database
 			submission.init_run_id()
+			previous_data.get_last_client_id()
+
 		
 			# Clients send requests on client_requests
 			# As soon as a new message is recieved, it is sent to client_message_handler for further processing
@@ -158,7 +160,7 @@ class manage_clients():
 		try:
 			if client_id == 'Nul':
 				print('[ REJECT ] Client has not logged in. This should not happen, please check the client for ambiguity.')
-
+				
 			else:
 				run_id, source_file_name = submission.new_submission(client_id, problem_code, language, time_stamp, source_code)
 				

@@ -2,8 +2,6 @@ import sqlite3
 import sys
 
 global client_id_counter
-client_id_counter = 1
-
 
 class manage_database():
 	cur = None
@@ -72,6 +70,17 @@ class previous_data(manage_database):
 			return data[0][0]
 		except:
 			return 0
+
+	def get_last_client_id():
+		global client_id_counter
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("select max(client_id) from connected_clients")
+			data =  cur.fetchall()
+			client_id_counter = int(data[0][0])
+		except:
+			client_id_counter = 0
+
 
 class client_authentication(manage_database):
 	# This function validates (judge_username, judge_password) in database
