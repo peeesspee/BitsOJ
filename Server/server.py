@@ -22,7 +22,7 @@ def main():
 	#manage_database.insert_judge("judge1", "judge1", cur, conn)
 
 	# Manage Threads
-	cpid, jpid = manage_process(superuser_username, superuser_password, host)
+	client_pid, judge_pid = manage_process(superuser_username, superuser_password, host)
 
 	# Initialize GUI handler
 	try:
@@ -33,10 +33,15 @@ def main():
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 
 	print("[ EXIT ] Signal passed")
-	#Send SIGINT to both client and judge processes
-	os.kill(cpid, signal.SIGINT)
-	os.kill(jpid, signal.SIGINT)
+	# Send SIGINT to both client and judge processes
+	# SIGINT : Keyboard Interrupt is handled by both subprocesses internally
+	os.kill(client_pid, signal.SIGINT)
+	os.kill(judge_pid, signal.SIGINT)
 
+	# EXIT
+	print("###############################################")
+	print("-----------SERVER CLOSED SUCCESSFULLY----------")
+	print("###############################################")
 
 
 def manage_process(superuser_username, superuser_password, host):
@@ -47,9 +52,11 @@ def manage_process(superuser_username, superuser_password, host):
 	client_handler_process.start()
 	judge_handler_process.start()
 
-	cpid = client_handler_process.pid
-	jpid = judge_handler_process.pid
-	return cpid, jpid
+	# we return process ids of both client and server subprocesses to main()
+	# to interrupt them when close button is pressed in GUI
+	client_pid = client_handler_process.pid
+	judge_pid = judge_handler_process.pid
+	return client_pid, judge_pid
 	
 
 main()

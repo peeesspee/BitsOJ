@@ -63,6 +63,15 @@ class manage_database():
 	def get_connection_object():
 		return manage_database.conn
 
+class previous_data(manage_database):
+	def get_last_run_id():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("select max(run_id) from submissions")
+			data =  cur.fetchall()
+			return data[0][0]
+		except:
+			return 0
 
 class client_authentication(manage_database):
 	# This function validates (judge_username, judge_password) in database
@@ -150,16 +159,16 @@ class client_authentication(manage_database):
 
 	
 
-class submissions_database_management(manage_database):
+class submissions_management(manage_database):
 	def insert_submission(run_id, client_id, language, source_file_name, problem_code, verdict, timestamp):
 		#cur.execute("create table submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(4))")
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
 		try:
-			cur.execute("insert into submissions values(?, ?, ?, ?, ?, ?, ?)", (run_id, client_id, language, source_file_name, verdict, timestamp, ))
+			cur.execute("insert into submissions values(?, ?, ?, ?, ?, ?, ?)", (run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, ))
 			conn.commit()
-		except:
-			print("[ ERROR ] Could not insert into submission")
+		except Exception as error:
+			print("[ ERROR ] Could not insert into submission : " + str(error))
 		return
 
 	def view_submissions():

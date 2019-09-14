@@ -18,17 +18,6 @@ class server_window(QMainWindow):
 		self.status = self.statusBar()
 		self.resize(800, 600)
 
-		# Create a timer to call update_gui function periodiaclly
-		self.update_timer = QTimer()
-		# Set update frequency ( 1 second )
-		self.update_timer.setInterval(1000)
-		# Connect timer to update_gui function
-		self.update_timer.timeout.connect(self.update_gui)
-		# Start timer
-		#self.update_timer.start()
-
-		
-
 		
 		###########################################################
 		# Define Sidebar Buttons and their actions

@@ -1,6 +1,6 @@
 import pika
 import sys
-from database_management import client_authentication
+from database_management import client_authentication, submissions_management
 from client_submissions import submission
 
 class manage_clients():
@@ -15,7 +15,11 @@ class manage_clients():
 			channel.queue_declare(queue = 'client_requests', durable = True)
 			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
 			channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
+			channel.queue_bind(exchange = 'connection_manager', queue = 'judge_requests')
 			print("[ LISTEN ] Started listening on client_requests")
+
+			# Initialize run_id counter from database
+			submission.init_run_id()
 		
 			# Clients send requests on client_requests
 			# As soon as a new message is recieved, it is sent to client_message_handler for further processing
@@ -31,7 +35,7 @@ class manage_clients():
 		except (KeyboardInterrupt, SystemExit):
 			channel.stop_consuming()
 			connection.close()
-			print("[ STOP ] Client listen terminated due to keyboard interrupt.")			
+			print("[ STOP ] Client subprocess terminated successfully!")			
 			return
 
 	# This function works on client messages and passes them on to their respective handler function
@@ -148,21 +152,34 @@ class manage_clients():
 			source_code = client_data[22:]
 			print("[ DATA ] CID :" + client_id + " PCODE:" + problem_code + " Language :" + language + " Time stamp :" + time_stamp)
 
+		except Exception as error:
+			print("[ ERROR ] Client data parsing error : " + str(error))
+
+		try:
 			if client_id == 'Nul':
 				print('[ REJECT ] Client has not logged in. This should not happen, please check the client for ambiguity.')
 
 			else:
-				run_id = submission.new_submission(client_id, problem_code, language, time_stamp, source_code) 
+				run_id, source_file_name = submission.new_submission(client_id, problem_code, language, time_stamp, source_code)
 				
+				manage_clients.send_new_request(run_id, problem_code, language, source_code)
+
 				#######################################################################
-				message = "VRDCT+" + str(run_id) + '+' + 'AC' + '+' + 'NO_ERROR'
+
+				vrdct = 'AC'
+				err_msg = 'No_error'
+				message = "VRDCT+" + str(run_id) + '+' + vrdct + '+' + err_msg
 				client_username = client_authentication.get_client_username(client_id)
 				manage_clients.publish_message(client_username, message)
 				#######################################################################
-			return
 
+				submissions_management.insert_submission(run_id, client_id, language, source_file_name, problem_code, vrdct, time_stamp)
+				
 		except Exception as error:
-			print("[ ERROR ] Client data parsing error : " + str(error))
+			print("[ ERROR ] Client submisssion could not be processed : " + str(error))
+
+
+		
 			
 
 	def publish_message(queue_name, message):
@@ -172,4 +189,10 @@ class manage_clients():
 		except Exception as error:
 			print("[ CRITICAL ] Could not publish messages : " + str(error))
 		return
-	
+
+	def send_new_request(run_id, p_code, language, source_code):
+		message = "JUDGE+" + run_id + '+' + p_code + '+' + language + '+' + source_code
+
+		manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = 'judge_requests', body = message) 
+		print('[ REQUEST ] New judging request sent')
+		return
