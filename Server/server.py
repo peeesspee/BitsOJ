@@ -21,13 +21,19 @@ def main():
 	#manage_database.insert_user("dummy", "dummy", cur, conn)
 	#manage_database.insert_judge("judge1", "judge1", cur, conn)
 
+	##################################
+	# Create variables/lists that will be shared between processes
+	data_changed_flag = multiprocessing.Value('i')
+	data_changed_flag.value = 0
+	##################################
+
 	# Manage Threads
-	client_pid, judge_pid = manage_process(superuser_username, superuser_password, host)
+	client_pid, judge_pid = manage_process(superuser_username, superuser_password, host, data_changed_flag)
 
 	# Initialize GUI handler
 	try:
 		print("----------------BitsOJ v1.0----------------")
-		init_gui()
+		init_gui(data_changed_flag)
 
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
@@ -37,16 +43,15 @@ def main():
 	# SIGINT : Keyboard Interrupt is handled by both subprocesses internally
 	os.kill(client_pid, signal.SIGINT)
 	os.kill(judge_pid, signal.SIGINT)
-
 	# EXIT
 	print("###############################################")
 	print("-----------SERVER CLOSED SUCCESSFULLY----------")
 	print("###############################################")
 
 
-def manage_process(superuser_username, superuser_password, host):
-	client_handler_process = multiprocessing.Process(target = manage_clients.listen_clients, args = (superuser_username, superuser_password, host,))
-	judge_handler_process = multiprocessing.Process(target = manage_judges.listen_judges, args = ('judge1', 'judge1', host,))
+def manage_process(superuser_username, superuser_password, host, data_changed_flag):
+	client_handler_process = multiprocessing.Process(target = manage_clients.listen_clients, args = (superuser_username, superuser_password, host, data_changed_flag,))
+	judge_handler_process = multiprocessing.Process(target = manage_judges.listen_judges, args = ('judge1', 'judge1', host, data_changed_flag,))
 
 	
 	client_handler_process.start()

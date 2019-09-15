@@ -5,9 +5,11 @@ from client_submissions import submission
 
 class manage_clients():
 	channel = ''
-
+	data_changed_flag2 = ''
 	# This function continously listens for client messages 
-	def listen_clients(superuser_username, superuser_password, host):
+	def listen_clients(superuser_username, superuser_password, host, data_changed_flag):
+		manage_clients.data_changed_flag2 = data_changed_flag
+
 		try:
 			connection = pika.BlockingConnection(pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f"))
 			channel = connection.channel()
@@ -19,13 +21,19 @@ class manage_clients():
 			channel.queue_bind(exchange = 'connection_manager', queue = 'judge_requests')
 
 			# Initialize run_id counter from database
-			submission.init_run_id()
-			previous_data.get_last_client_id()
-
 		except Exception as error:
 			print("[ CRITICAL ] Could not connect to RabbitMQ server : " + str(error))
 			
 			sys.exit()
+		try:
+			submission.init_run_id()
+		except:
+			print('[ ERROR ] Could not fetch previous run_id')
+
+		try:
+			previous_data.get_last_client_id()
+		except:
+			print('[ ERROR ] Could not fetch previous client_id')
 
 		try:
 			# Clients send requests on client_requests
@@ -38,7 +46,8 @@ class manage_clients():
 			channel.stop_consuming()
 			print("[ LISTEN ] STOPPED listening to client channel")
 			connection.close()
-			print("[ STOP ] Client subprocess terminated successfully!")			
+			print("[ STOP ] Client subprocess terminated successfully!")
+		
 			return
 
 	# This function works on client messages and passes them on to their respective handler function
@@ -175,9 +184,13 @@ class manage_clients():
 				client_username = client_authentication.get_client_username(client_id)
 				manage_clients.publish_message(client_username, message)
 				#######################################################################
-
+				#######################################################################
+				# This is to be done in judge later on, not here
 				submissions_management.insert_submission(run_id, client_id, language, source_file_name, problem_code, vrdct, time_stamp)
-				
+				print('[ COMMUNICATE ] Changed value of data_changed_flag2 to 1')
+				manage_clients.data_changed_flag2.value = 1
+				#######################################################################
+
 		except Exception as error:
 			print("[ ERROR ] Client submisssion could not be processed : " + str(error))
 

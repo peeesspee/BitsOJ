@@ -67,7 +67,11 @@ class previous_data(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("select max(run_id) from submissions")
 			data =  cur.fetchall()
-			return data[0][0]
+
+			if(data[0][0] == ''):
+				return 0
+			else:
+				return int(data[0][0])
 		except:
 			return 0
 
@@ -77,7 +81,11 @@ class previous_data(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("select max(client_id) from connected_clients")
 			data =  cur.fetchall()
-			client_id_counter = int(data[0][0])
+			if(data[0][0] != ''):
+				client_id_counter = int(data[0][0])
+			else:
+				client_id_counter = 0
+
 		except:
 			client_id_counter = 0
 

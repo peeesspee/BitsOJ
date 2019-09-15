@@ -18,7 +18,7 @@ class manage_judges():
 		return
 
 	# This function continously listens for judge verdicts
-	def listen_judges(superuser_username, superuser_password, host):
+	def listen_judges(superuser_username, superuser_password, host, data_changed_flag):
 		
 		# Create a connection with rabbitmq and declare exchanges and queues
 		try:

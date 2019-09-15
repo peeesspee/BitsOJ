@@ -9,7 +9,7 @@ global current_status
 current_status = "STOPPED"
 
 class server_window(QMainWindow):
-	def __init__(self):
+	def __init__(self, data_changed_flag):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
@@ -23,8 +23,10 @@ class server_window(QMainWindow):
 		self.timer = QTimer()
 		self.change_flag = True
 		self.timer.timeout.connect(self.update_data)
-		#self.timer.start(2000)
-
+		self.timer.start(2000)
+		
+		# make data_changed_flag accessible from the class methods
+		self.data_changed_flag2 = data_changed_flag
 		
 		###########################################################
 		# Define Sidebar Buttons and their actions
@@ -91,7 +93,7 @@ class server_window(QMainWindow):
 		###########################################################
 		# Manage tabs on the right window
 		# Each tab is an object returned by the respective function associated with its UI
-		self.tab1 , self.model = self.submissions_ui()
+		self.tab1 , self.sub_model, self.sub_view = self.submissions_ui()
 		self.tab2 = self.judge_ui()
 		self.tab3 = self.client_ui()
 		self.tab4 = self.query_ui()
@@ -104,8 +106,6 @@ class server_window(QMainWindow):
 		self.tab11 = self.about_us_ui()
 
 		###########################################################
-		self.model.dataChanged.connect(self.update_data)
-		#self.model.rowsInserted.connect(self.update_data)
 		
 		# Add widgets to our main window
 		server_window.init_UI(self)
@@ -240,10 +240,18 @@ class server_window(QMainWindow):
 		self.right_widget.setCurrentIndex(10)
 
 	def update_data(self):
-		print("Hello")
+		# If data has changed in submission table
+		if self.data_changed_flag2.value == 1:
+			print('[ DATA CHANGED ]')
+			self.sub_model.select()
+			# reset data_changed_flag
+			print('[ COMMUNICATE ] Changed value of data_changed_flag2 to 0')
+			self.data_changed_flag2.value = 0
 		return
 	
-
+	def update_view(self):
+		self.sub_model.select()
+		return
 	
 	#####################################################
 	def manage_db(self):
@@ -285,9 +293,8 @@ class server_window(QMainWindow):
 
 		submission_model = self.manage_db()
 		submission_table = self.generate_view(submission_model)
-		#submission_model.rowsInserted.connect(self.update_data)
-		
 
+		
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
 		main_layout.addWidget(submission_table)
@@ -298,7 +305,7 @@ class server_window(QMainWindow):
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		main.show()
-		return main, submission_model
+		return main, submission_model, submission_table
 
 
 	
@@ -469,7 +476,7 @@ class server_window(QMainWindow):
 
 
 class init_gui(server_window):
-	def __init__(self):
+	def __init__(self, data_changed_flag):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
 		app.setStyleSheet(open('Elements/style.qss', "r").read())
@@ -477,7 +484,7 @@ class init_gui(server_window):
 		app.aboutToQuit.connect(self.closeEvent)
 		
 		# make a reference of App class
-		server_app = server_window()
+		server_app = server_window(data_changed_flag)
 		server_app.showMaximized()
 		# Close the server as soon as close button is clicked
 		app.exec_()
