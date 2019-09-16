@@ -1,6 +1,6 @@
 import time
 import os
-from databae_management import manage_database
+from database_management import manage_database
 from login import authenticate_login
 from manage_data_sending import send_options
 

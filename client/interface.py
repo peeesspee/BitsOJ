@@ -1,7 +1,10 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QRect
+# from login import authenticate_login
+# from database_management import manage_database
+# from login import authenticate_login
 
 global current_status
 current_status = "STOPPED"
@@ -13,12 +16,13 @@ class client_window(QMainWindow):
 		self.setWindowIcon(QIcon('Elements/icon1.png'))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ Client ]')
-		# Make the app run full screen
-		self.showMaximized()
+		
 		# Initialize status bar
 		self.status = self.statusBar()
-		self.resize(800, 600)
 
+		# 
+		# Make the app run full screen
+		
 
 		####################################################################
 		# Define Sidebar buttons and their actions
@@ -286,9 +290,12 @@ class init_gui(client_window):
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 
-
 		# make a reference of App class
 		server_app = client_window()
+		server_app.resize(800, 600)
 		server_app.showMaximized()
 		# Close the server as soon as close buton is clicked
 		sys.exit(app.exec_())
+
+
+

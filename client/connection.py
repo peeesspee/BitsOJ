@@ -3,6 +3,8 @@ import pika
 
 # Class to handle connection establishment requests
 class manage_connection():
+	channel = ''
+	host = ''
 
 	# Function to establish connection
 	def initialize_connection(rabbitmq_username,rabbitmq_password,host):
@@ -11,6 +13,8 @@ class manage_connection():
 				"amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"
 				))
 		channel = connection.channel()
+		manage_connection.channel = channel
+		manage_connection.host = host
 		
 		# binding credential manager exchange and login_request queue  which send the login request from client to server
 		channel.queue_bind(
@@ -21,3 +25,6 @@ class manage_connection():
 
 	def terminate_connection(connection):
 		connection.close()
+
+	def channel_host():
+		return channel,host
