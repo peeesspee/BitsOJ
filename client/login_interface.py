@@ -50,6 +50,7 @@ class Login(QWidget):
 		self.setLayout(layout)
 		self.setObjectName('main')
 		self.show()
+		self.connection_object = connection
 		return
 
 	
