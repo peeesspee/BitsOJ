@@ -1,11 +1,11 @@
 QMessageBox{
-	background-color : #202020;
+	background-color : #171B1F;
 	color: #FF0000;
 }
 
-QPushButton
+QPushButton#login
 {
-	background-color : #202020 ; 
+	background-color : #171B1F ; 
 	color : #838383;
 	margin-top: 20px;
 	margin-left : 100px;
@@ -15,22 +15,22 @@ QPushButton
 	font-size : 30px;
 } 
 
-QPushButton::focus
+QPushButton#login::focus
 {
 	color : #0892D0;
 }
 
-QPushButton::hover::focus
+QPushButton#login::hover::focus
 {
 	color : #0892D0;
 }
 
-QPushButton::pressed
+QPushButton#login::pressed
 {
 	color : #0892D0;
 }
 
-QPushButton::hover
+QPushButton#login::hover
 {
 	color : #23B2EE;
 }
@@ -38,7 +38,7 @@ QPushButton::hover
 QWidget#main
 {
 	color : #CCCCCC;
-	background-color : #202020;
+	background-color : #171B1F;
 }
 
 QLineEdit{
@@ -50,15 +50,28 @@ QLineEdit{
 	color : #AAAAAA;
 	font-size : 30px;
   
-    background: #202020;
+    background: #171B1F;
     selection-background-color: darkgray;
 }
 
-QLabel{
+QLabel#label{
 	margin-top : 40px;
 	margin-bottom : 40px;
-	margin-left : 20px;
+	text-align : center;
 	color : #0892D0;
-	font-size : 60px;
-
+	font-size : 56px;
 }
+
+QLabel{
+	color : #AAAAAA;
+	font-size : 22px;
+}
+
+QPushButton
+{
+	background-color : #171B1F ; 
+	color : #838383;
+	text-align : center; 
+	border : 1px solid #0892D0;
+	font-size : 22px;
+} 

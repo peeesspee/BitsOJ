@@ -17,6 +17,7 @@ class Login(QWidget):
 		self.move(qtRectangle.topLeft())
 
 		self.title = QLabel('<<BitsOJ>>')
+		self.title.setObjectName('label')
 		self.title.setFixedWidth(400)
 		self.title.setFixedHeight(150)
 		
@@ -36,6 +37,7 @@ class Login(QWidget):
 		self.button_login.setFixedHeight(80)
 		self.button_login.clicked.connect(self.handle_login)
 		self.button_login.setDefault(True)
+		self.button_login.setObjectName('login')
 
 		layout = QVBoxLayout(self)
 
