@@ -1,0 +1,64 @@
+QMessageBox{
+	background-color : #202020;
+	color: #FF0000;
+}
+
+QPushButton
+{
+	background-color : #202020 ; 
+	color : #838383;
+	margin-top: 20px;
+	margin-left : 100px;
+	text-align : center; 
+	border : 1px solid #0892D0;
+	border-radius : 30px;
+	font-size : 30px;
+} 
+
+QPushButton::focus
+{
+	color : #0892D0;
+}
+
+QPushButton::hover::focus
+{
+	color : #0892D0;
+}
+
+QPushButton::pressed
+{
+	color : #0892D0;
+}
+
+QPushButton::hover
+{
+	color : #23B2EE;
+}
+
+QWidget#main
+{
+	color : #CCCCCC;
+	background-color : #202020;
+}
+
+QLineEdit{
+	border-top : 0px;
+	border-left : 0px;
+	border-right : 0px;
+	border-bottom: 1px solid #76FF03;
+
+	color : #AAAAAA;
+	font-size : 30px;
+  
+    background: #202020;
+    selection-background-color: darkgray;
+}
+
+QLabel{
+	margin-top : 40px;
+	margin-bottom : 40px;
+	margin-left : 20px;
+	color : #0892D0;
+	font-size : 60px;
+
+}
