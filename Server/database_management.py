@@ -18,7 +18,7 @@ class manage_database():
 		try:	
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
 			cur.execute("create table if not exists judge_accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
-			cur.execute("create table if not exists connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10))")
+			cur.execute("create table if not exists connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
 			cur.execute("create table if not exists submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
 		except Exception as error:
@@ -84,10 +84,10 @@ class previous_data(manage_database):
 			if(data[0][0] != ''):
 				client_id_counter = int(data[0][0])
 			else:
-				client_id_counter = 0
+				client_id_counter = 1
 
 		except:
-			client_id_counter = 0
+			client_id_counter = 1
 
 
 class client_authentication(manage_database):
@@ -122,11 +122,11 @@ class client_authentication(manage_database):
 		client_id_counter = client_id_counter + 1
 		return client_id
 
-	def add_connected_client(client_id, user_name):
+	def add_connected_client(client_id, user_name, password):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
 		try:
-			cur.execute("insert into connected_clients values(?, ?)", (client_id, user_name,))
+			cur.execute("insert into connected_clients values(?, ?, ?)", (client_id, user_name, password, ))
 		except:
 			pass
 		conn.commit()
@@ -174,7 +174,6 @@ class client_authentication(manage_database):
 		else:
 			return False
 
-	
 
 class submissions_management(manage_database):
 	def insert_submission(run_id, client_id, language, source_file_name, problem_code, verdict, timestamp):

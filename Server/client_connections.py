@@ -5,10 +5,10 @@ from client_submissions import submission
 
 class manage_clients():
 	channel = ''
-	data_changed_flag2 = ''
+	data_changed_flags = ''
 	# This function continously listens for client messages 
-	def listen_clients(superuser_username, superuser_password, host, data_changed_flag):
-		manage_clients.data_changed_flag2 = data_changed_flag
+	def listen_clients(superuser_username, superuser_password, host, data_changed_flags2):
+		manage_clients.data_changed_flags = data_changed_flags2
 
 		try:
 			connection = pika.BlockingConnection(pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f"))
@@ -90,25 +90,28 @@ class manage_clients():
 			# The client listens on its own queue, whose name = client_username (Hard-coded)
 			# This queue is declared in the client.py file
 			# Every response sent to client has 5 initial characters which specify what server is going to talk about.
-			# "Valid" signifies a valid login.
-			# "Invld" signifies an invalid login attempt.
+			# "VALID" signifies a valid login.
+			# "INVLD" signifies an invalid login attempt.
 
 			# If login is successful:
 			if status == True:
 				# Check if client has logged in for the first time:
-				status = client_authentication.check_connected_client(client_username)
+				previously_connected_status = client_authentication.check_connected_client(client_username)
 				# If client has NOT logged in for the first time
-				if status == True:
+				if previously_connected_status == True:
 					client_id = client_authentication.get_client_id(client_username)
 					print("[ " + client_username + " ] Previous Client ID : " + client_id )
 
 				# If client has logged in for the first time
 				else:
-					# Fetch client ID
+					# Fetch new client ID
 					client_id = client_authentication.generate_new_client_id()
 					# Add client to connected users list
-					client_authentication.add_connected_client(client_id, client_username)
+					client_authentication.add_connected_client(client_id, client_username, client_password)
 					print("[ " + client_username + " ] Assigned : " + client_id )
+
+					# Update GUI to indicate new data
+					manage_clients.data_changed_flags[1] = 1
 
 				# Reply to be sent to client
 				server_message = "Hello_buddy!!"
@@ -154,14 +157,13 @@ class manage_clients():
 				manage_clients.publish_message(client_username, message)
 
 
-
 	def client_submission_handler(client_data):
 		try:
 			client_id = client_data[0:3]		# client_id is 3 characters 
 			problem_code = client_data[4:8]		# problem_code is 4 characters
 			language = client_data[9:12]		# language is 3 characters
 			time_stamp = client_data[13:21]		# time_stamp is 8 characters: HH:MM:SS
-			source_code = client_data[22:]
+			source_code = client_data[22:]		# rest of the message is source code
 			print("[ DATA ] CID :" + client_id + " PCODE:" + problem_code + " Language :" + language + " Time stamp :" + time_stamp)
 
 		except Exception as error:
@@ -177,26 +179,23 @@ class manage_clients():
 				manage_clients.send_new_request(run_id, problem_code, language, source_code)
 
 				#######################################################################
-
 				vrdct = 'AC'
 				err_msg = 'No_error'
 				message = "VRDCT+" + str(run_id) + '+' + vrdct + '+' + err_msg
 				client_username = client_authentication.get_client_username(client_id)
 				manage_clients.publish_message(client_username, message)
 				#######################################################################
+
 				#######################################################################
 				# This is to be done in judge later on, not here
 				submissions_management.insert_submission(run_id, client_id, language, source_file_name, problem_code, vrdct, time_stamp)
-				print('[ COMMUNICATE ] Changed value of data_changed_flag2 to 1')
-				manage_clients.data_changed_flag2.value = 1
+				print('[ COMMUNICATE ] Changed value of data_changed_flags[0] to 1')
+				manage_clients.data_changed_flags[0] = 1
 				#######################################################################
 
 		except Exception as error:
 			print("[ ERROR ] Client submisssion could not be processed : " + str(error))
 
-
-		
-			
 
 	def publish_message(queue_name, message):
 		print( "[ PUBLISH ] " + message + " TO " + queue_name)
@@ -205,6 +204,7 @@ class manage_clients():
 		except Exception as error:
 			print("[ CRITICAL ] Could not publish messages : " + str(error))
 		return
+
 
 	def send_new_request(run_id, p_code, language, source_code):
 		message = "JUDGE+" + run_id + '+' + p_code + '+' + language + '+' + source_code

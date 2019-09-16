@@ -64,7 +64,7 @@ def listen():
 		channel.start_consuming()
 	except (KeyboardInterrupt, SystemExit):
 		channel.stop_consuming()
-		channel.queue_delete(username)
+		#channel.queue_delete(username)
 		connection.close()
 		print("[ STOP ] Keyboard interrupt")
 		sys.exit()

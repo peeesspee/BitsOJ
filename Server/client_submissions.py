@@ -6,7 +6,7 @@ class submission():
 	def new_submission(client_id, problem_code, language, time_stamp, source_code):
 		print("[ SUBMIT ] "+ client_id + " for problem " + problem_code)
 		run_id = submission.generate_run_id()
-		temp_file_name = client_id + '_' + problem_code + '_' + run_id
+		temp_file_name = run_id
 		file_name = submission.make_local_source_file(temp_file_name, source_code, language)
 		print ("[ FILE ] New file created for client : "+ client_id + " File name:  " + file_name)
 
@@ -45,6 +45,7 @@ class submission():
 
 	def init_run_id():
 		global run_id_counter
+		# Get max run_id from submissions and add 1 to it, to initialize run_id counter
 		run_id_counter = int(previous_data.get_last_run_id()) + 1
 		
 	

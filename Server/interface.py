@@ -9,7 +9,7 @@ global current_status
 current_status = "STOPPED"
 
 class server_window(QMainWindow):
-	def __init__(self, data_changed_flag):
+	def __init__(self, data_changed_flags2):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
@@ -26,8 +26,10 @@ class server_window(QMainWindow):
 		self.timer.start(2000)
 		
 		# make data_changed_flag accessible from the class methods
-		self.data_changed_flag2 = data_changed_flag
+		self.data_changed_flags = data_changed_flags2
 		
+		###########################################################
+		self.db = self.init_qt_database()
 		###########################################################
 		# Define Sidebar Buttons and their actions
 		button_width = 200
@@ -93,9 +95,9 @@ class server_window(QMainWindow):
 		###########################################################
 		# Manage tabs on the right window
 		# Each tab is an object returned by the respective function associated with its UI
-		self.tab1 , self.sub_model, self.sub_view = self.submissions_ui()
+		self.tab1, self.sub_model = self.submissions_ui()
 		self.tab2 = self.judge_ui()
-		self.tab3 = self.client_ui()
+		self.tab3, self.client_model = self.client_ui()
 		self.tab4 = self.query_ui()
 		self.tab5 = self.leaderboard_ui()
 		self.tab6 = self.problem_ui()
@@ -241,60 +243,78 @@ class server_window(QMainWindow):
 
 	def update_data(self):
 		# If data has changed in submission table
-		if self.data_changed_flag2.value == 1:
-			print('[ DATA CHANGED ]')
+		if self.data_changed_flags[0] == 1:
 			self.sub_model.select()
 			# reset data_changed_flag
-			print('[ COMMUNICATE ] Changed value of data_changed_flag2 to 0')
-			self.data_changed_flag2.value = 0
+			self.data_changed_flags[0] = 0
+		if self.data_changed_flags[1] == 1:
+			self.client_model.select()
+			self.data_changed_flags[1] = 0
+
 		return
-	
-	def update_view(self):
-		self.sub_model.select()
-		return
+
 	
 	#####################################################
-	def manage_db(self):
-		db = QSqlDatabase.addDatabase('QSQLITE')
-		db.setDatabaseName('server_database.db')
+	# Databse related functions
+	def init_qt_database(self):
+		try:
+			db = QSqlDatabase.addDatabase('QSQLITE')
+			db.setDatabaseName('server_database.db')
+			return db
+		except:
+			print('[ CRITICAL ] Database loading error!')
+
+
+	def manage_models(self, db, table_name):
 		if db.open():
-			submission_model = QSqlTableModel()
-			submission_model.setTable('submissions')
-			submission_model.setEditStrategy(QSqlTableModel.OnFieldChange)
-			submission_model.select()
-			submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
-			submission_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
-			submission_model.setHeaderData(2, Qt.Horizontal, 'Language')
-			submission_model.setHeaderData(3, Qt.Horizontal, 'Source File')
-			submission_model.setHeaderData(4, Qt.Horizontal, 'Problem Code')
-			submission_model.setHeaderData(5, Qt.Horizontal, 'Verdict')
-			submission_model.setHeaderData(6, Qt.Horizontal, 'Time')
-			#submission_model.dataChanged.emit(QModelIndex(), QModelIndex())
-		return submission_model
+			model = QSqlTableModel()
+			model.setTable(table_name)
+			model.setEditStrategy(QSqlTableModel.OnFieldChange)
+			model.select()
+		return model
 
 	def generate_view(self, model):
-		submission_table = QTableView()
-		submission_table.setModel(model)
-		submission_table.setWindowTitle('Submissions')
+		table = QTableView()
+		table.setModel(model)
 		# Enable sorting in the table view
-		submission_table.setSortingEnabled(True)
-		submission_table.resizeColumnsToContents()
-		horizontal_header = submission_table.horizontalHeader()
+		table.setSortingEnabled(True)
+		# Enable Alternate row colors for readablity
+		table.setAlternatingRowColors(True)
+		# Select whole row when clicked
+		table.setSelectionBehavior(QAbstractItemView.SelectRows)
+		# Allow only one row to be selected
+		table.setSelectionMode(QAbstractItemView.SingleSelection)
+		# fit view to whole space
+		table.resizeColumnsToContents()
+		# Make table non-editable
+		table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+		horizontal_header = table.horizontalHeader()
 		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
-		vertical_header = submission_table.verticalHeader()
+		vertical_header = table.verticalHeader()
 		#vertical_header.setSectionResizeMode(QHeaderView.Stretch)
 		vertical_header.setVisible(False)
-		return submission_table
+		return table
+
+	###############################################################
 
 	# Handle UI for various button presses
 	def submissions_ui(self):
 		heading = QLabel('Submissions')
 		heading.setObjectName('main_screen_content')
 
-		submission_model = self.manage_db()
+		submission_model = self.manage_models(self.db, 'submissions')
+
+		submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
+		submission_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
+		submission_model.setHeaderData(2, Qt.Horizontal, 'Language')
+		submission_model.setHeaderData(3, Qt.Horizontal, 'Source File')
+		submission_model.setHeaderData(4, Qt.Horizontal, 'Problem Code')
+		submission_model.setHeaderData(5, Qt.Horizontal, 'Status')
+		submission_model.setHeaderData(6, Qt.Horizontal, 'Time')
+
 		submission_table = self.generate_view(submission_model)
 
-		
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
 		main_layout.addWidget(submission_table)
@@ -305,35 +325,48 @@ class server_window(QMainWindow):
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		main.show()
-		return main, submission_model, submission_table
+		return main, submission_model
 
-
-	
-
-	def judge_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page2')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
 
 	def client_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page3')
+		heading = QLabel('Clients')
 		heading.setObjectName('main_screen_content')
 
+		client_model = self.manage_models(self.db, 'connected_clients')
+		client_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
+		client_model.setHeaderData(1, Qt.Horizontal, 'Username')
+		client_model.setHeaderData(2, Qt.Horizontal, 'Password')
+
+		client_view = self.generate_view(client_model)
+
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(heading)
+		main_layout.addWidget(client_view)
+		main_layout.setStretch(0,5)
+		main_layout.setStretch(1,95)		
+
+		main = QWidget()
+		main.setLayout(main_layout)
+		main.setObjectName("main_screen");
+		return main, client_model
+
+
+	def judge_ui(self):
+		heading = QLabel('Judges')
+		heading.setObjectName('main_screen_content')
+
+		#judge_model = self.manage_models(self.db, )
+
+		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
+
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		return main
+
 
 	def query_ui(self):
 		main_layout = QVBoxLayout()
@@ -347,6 +380,7 @@ class server_window(QMainWindow):
 		main.setObjectName("main_screen");
 		return main
 
+
 	def leaderboard_ui(self):
 		main_layout = QVBoxLayout()
 		heading = QLabel('Page5')
@@ -358,6 +392,7 @@ class server_window(QMainWindow):
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		return main
+
 
 	def problem_ui(self):
 		main_layout = QVBoxLayout()
@@ -371,6 +406,7 @@ class server_window(QMainWindow):
 		main.setObjectName("main_screen");
 		return main
 
+
 	def language_ui(self):
 		main_layout = QVBoxLayout()
 		heading = QLabel('Page7')
@@ -382,6 +418,7 @@ class server_window(QMainWindow):
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		return main
+
 
 	def stats_ui(self):
 		main_layout = QVBoxLayout()
@@ -395,6 +432,7 @@ class server_window(QMainWindow):
 		main.setObjectName("main_screen");
 		return main
 
+
 	def settings_ui(self):
 		main_layout = QVBoxLayout()
 		heading = QLabel('Page9')
@@ -407,6 +445,7 @@ class server_window(QMainWindow):
 		main.setObjectName("main_screen");
 		return main
 
+
 	def reports_ui(self):
 		main_layout = QVBoxLayout()
 		heading = QLabel('Page10')
@@ -418,6 +457,7 @@ class server_window(QMainWindow):
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		return main
+
 
 	def about_us_ui(self):
 		main_layout = QVBoxLayout()
@@ -436,6 +476,7 @@ class server_window(QMainWindow):
 	def set_status(self):
 		global current_status
 		self.status.showMessage(current_status)
+	###################################################
 
 	def closeEvent(self, event):
 		message = "Pressing 'Yes' will SHUT the Server.\nAre you sure you want to exit?"
@@ -447,7 +488,6 @@ class server_window(QMainWindow):
 		custom_close_box.setText(message)
 		custom_close_box.setInformativeText(detail_message)
 
-		
 		custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
 		custom_close_box.setDefaultButton(QMessageBox.No)
 
@@ -470,13 +510,8 @@ class server_window(QMainWindow):
 			event.ignore()
 
 
-	def update_gui(self):
-		print("[ GUI UPDATE ] Called update_gui()")
-			
-
-
 class init_gui(server_window):
-	def __init__(self, data_changed_flag):
+	def __init__(self, data_changed_flags2):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
 		app.setStyleSheet(open('Elements/style.qss', "r").read())
@@ -484,7 +519,7 @@ class init_gui(server_window):
 		app.aboutToQuit.connect(self.closeEvent)
 		
 		# make a reference of App class
-		server_app = server_window(data_changed_flag)
+		server_app = server_window(data_changed_flags2)
 		server_app.showMaximized()
 		# Close the server as soon as close button is clicked
 		app.exec_()

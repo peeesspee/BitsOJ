@@ -11,6 +11,8 @@ QMessageBox{
 	color: #FF0000;
 }
 
+
+
 QPushButton#sidebar_button{
 	text-align : left; 
 	padding-left : 20; 	
@@ -24,23 +26,24 @@ QPushButton#sidebar_button
 
 QPushButton#sidebar_button::focus
 {
-	color : #FEFFFF;
+	color : #0892D0;
 }
 
 QPushButton#sidebar_button::hover::focus
 {
-	color : #FEFFFF;
+	color : #0892D0;
 }
 
 QPushButton#sidebar_button::pressed
 {
-	color : #998f9c;
+	color : #0892D0;
 }
 
 QPushButton#sidebar_button::hover
 {
-	color : #FEFFFF;
+	color : #23B2EE;
 }
+
 
 
 QPushButton#close_button_yes{
@@ -62,6 +65,7 @@ QPushButton#close_button_yes::hover{
 }
 
 
+
 QPushButton#close_button_no{
 	text-align : center;
 	background-color : #090909 ;
@@ -81,6 +85,7 @@ QPushButton#close_button_no::hover{
 }
 
 
+
 QTabBar::tab
 {
 	width: 0; 
@@ -95,6 +100,7 @@ QTabWidget::pane{
 
 QWidget#sidebar{
 	background-color : #131217;
+	margin-left : 0px;
 }
 
 QTabWidget#main_tabs{
@@ -104,17 +110,42 @@ QTabWidget#main_tabs{
 
 QWidget#screen_widget
 {
-	border : 1px solid #303030;
 	color : #CCCCCC;
-	background-color : #151515;
+	background-color : #121212;
 }
 
 QWidget#main_widget{
-	border : 1px solid #050505;
-	background-color: #121212;
+	
+	background-color: #050505;
 	color: #AAAAAA;
 }
 
 QLabel#main_screen_content{
 	color : #AAAAAA;
+}
+
+
+
+
+QTableView{
+	background-color : #171B1F;
+	alternate-background-color : #474B4F;
+	color : #AAAAAA;
+	border : 0px;
+	gridline-color : #505050;
+
+	selection-background-color : #777777;
+}
+
+QHeaderView::section{
+	background-color : #171B1F;
+	color: #0892D0;	
+}
+
+QScrollBar:vertical{
+	width : 0px;
+}
+
+QScrollBar:horizontal{
+	height : 0px;
 }

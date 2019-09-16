@@ -6,34 +6,31 @@ from client_connections import manage_clients
 from database_management import manage_database
 from interface import server_window, init_gui
 from judge_connections import manage_judges
-# Variables  
+
+# Variables  (to be read from server_init.ini later)
 superuser_username = 'BitsOJ'
 superuser_password = 'root'
+judge_username = 'judge1'
+judge_password = 'judge1'
 host = 'localhost'
-
 
 
 def main():
 	# Initialize database
 	conn, cur = manage_database.initialize_database()
-	#manage_database.reset_database(conn)
-	#manage_database.insert_user("team1", "abcd", cur, conn)
-	#manage_database.insert_user("dummy", "dummy", cur, conn)
-	#manage_database.insert_judge("judge1", "judge1", cur, conn)
-
+	
 	##################################
 	# Create variables/lists that will be shared between processes
-	data_changed_flag = multiprocessing.Value('i')
-	data_changed_flag.value = 0
+	data_changed_flags = multiprocessing.Array('i', 10)
 	##################################
 
 	# Manage Threads
-	client_pid, judge_pid = manage_process(superuser_username, superuser_password, host, data_changed_flag)
+	client_pid, judge_pid = manage_process(superuser_username, superuser_password, host, data_changed_flags)
 
 	# Initialize GUI handler
 	try:
 		print("----------------BitsOJ v1.0----------------")
-		init_gui(data_changed_flag)
+		init_gui(data_changed_flags)
 
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
@@ -49,9 +46,9 @@ def main():
 	print("###############################################")
 
 
-def manage_process(superuser_username, superuser_password, host, data_changed_flag):
-	client_handler_process = multiprocessing.Process(target = manage_clients.listen_clients, args = (superuser_username, superuser_password, host, data_changed_flag,))
-	judge_handler_process = multiprocessing.Process(target = manage_judges.listen_judges, args = ('judge1', 'judge1', host, data_changed_flag,))
+def manage_process(superuser_username, superuser_password, host, data_changed_flags):
+	client_handler_process = multiprocessing.Process(target = manage_clients.listen_clients, args = (superuser_username, superuser_password, host, data_changed_flags,))
+	judge_handler_process = multiprocessing.Process(target = manage_judges.listen_judges, args = (judge_username, judge_password, host, data_changed_flags,))
 
 	
 	client_handler_process.start()
