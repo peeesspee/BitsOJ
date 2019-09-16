@@ -1,17 +1,19 @@
 from manage_data_sending import send_options 
+from connection import manage_connection
+# from interface import Login
 
 class authenticate_login():
 	username = None
 	channel = None
 	client_id = 'Null'
 	host = ''
+ 
 
-
-	def login(channel, host):
-		authenticate_login.channel = channel
-		authenticate_login.host = host
-		authenticate_login.username = input('Enter your username : ') or 'dummy'
-		password = input('Enter your password : ') or 'dummy'
+	def login(username, password):
+		authenticate_login.channel = manage_connection.channel
+		authenticate_login.host = manage_connection.host
+		authenticate_login.username = username
+		password = password
 
 		print("[ Validating ] : " + authenticate_login.username + "@" + password)
 
@@ -26,9 +28,16 @@ class authenticate_login():
 			queue = authenticate_login.username
 			)
 
-		send_options.publish_data(channel)
+		authenticate_login.channel.basic_publish(
+			exchange = 'connection_manager', 
+			routing_key = 'client_requests', 
+			body = 'LOGIN ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id + ' CLIENT'
+			)
+		
+		# send_options.publish_data(authenticate_login.channel)
 
 		print("[ Listening ] @ " + authenticate_login.host)
+		return True
 
 
 	def get_user_details():

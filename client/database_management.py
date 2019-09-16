@@ -6,12 +6,14 @@ class manage_database():
 	conn = None
 	def initialize_table():
 		try:
-			manage_database.conn = sqlite3.connect('client_database.db', check_same_thread = False)
-			manage_database.cur = conn.cursor()
+			conn = sqlite3.connect('client_database.db', check_same_thread = False)
+			manage_database.conn = conn
+			cur = conn.cursor()
+			manage_database.cur = cur
 			cur.execute("create table if not exists my_submissions(run_id varchar2(5) PRIMARY KEY,verdict varchar2(2),source_file varchar2(30),language varchar2(3), problem_code varchar2(8), time_stamp text)")
 			os.system('mkdir Solution')
 			return cur
-		except Error: 
+		except Exception as Error: 
 			print(Error)
 
 	def insert_verdict(client_id,run_id,verdict,language,problem_code,time_stamp,code,extension):

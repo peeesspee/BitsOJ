@@ -1,6 +1,6 @@
 import pika 
-from login import authenticate_login
-from manage_code import send_code
+# from login import authenticate_login
+# from manage_code import send_code
 
 class send_options():
 	channel = None
