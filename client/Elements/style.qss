@@ -153,3 +153,19 @@ QScrollBar:vertical{
 QScrollBar:horizontal{
 	height : 0px;
 }
+
+
+/* Style of content marked as main-screen-content and main-screen-heading*/
+QLabel#main_screen_content{
+	color : #999999;
+	font-size : 24px;
+}
+QLabel#main_screen_heading{
+	color : #ADFF2F;
+	font-size : 30px;
+}
+QLabel#about_screen_heading{
+	margin-top : 200px;
+	color : #E91E63;
+	font-size : 30px;
+}

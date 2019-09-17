@@ -1,7 +1,8 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QRect
+from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 # from login import authenticate_login
 # from database_management import manage_database
 # from login import authenticate_login
@@ -228,17 +229,28 @@ class client_window(QMainWindow):
 		return main
 
 	def about_ui(self):
+		head1 = QLabel('Made with <3 by team Bitwise')
+		head1.setObjectName('about_screen_heading')
+		head1.setAlignment(Qt.AlignCenter)
+
+		head2 = QLabel('Guess what! The BitsOJ project is open source!!! ')
+		head2.setObjectName('main_screen_content')
+		head2.setAlignment(Qt.AlignCenter)
+
+		head3 = QLabel('Contribute at https://github.com/peeesspee/BitsOJ')
+		head3.setObjectName('main_screen_content')
+		head3.setAlignment(Qt.AlignCenter)
+
+
+
 		main_layout = QVBoxLayout()
-		heading = QLabel('Page5')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
+		main_layout.addWidget(head1)
+		main_layout.addWidget(head2)
+		main_layout.addWidget(head3)
 		main_layout.addStretch(5)
-
 		main = QWidget()
 		main.setLayout(main_layout)
-		main.setObjectName("main_screen")
-
+		main.setObjectName("main_screen");
 		return main
 
 	###############################################################
