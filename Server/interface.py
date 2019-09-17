@@ -1,4 +1,5 @@
 import sys
+import time
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
@@ -145,12 +146,12 @@ class server_window(QMainWindow):
 		# Define our sidebar widget and set side_bar_layout to it.
 		side_bar_widget = QWidget()
 		side_bar_widget.setLayout(side_bar_layout)
-		side_bar_widget.setFixedWidth(210)
+		side_bar_widget.setFixedWidth(215)
 		side_bar_widget.setObjectName("sidebar")
 
 		#Define our top bar
 		logo = QLabel(self)
-		logo_image = QPixmap('Elements/bitwise_new.png')
+		logo_image = QPixmap('Elements/bitwise_header.png')
 		logo_image2 = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image2)
 
@@ -532,16 +533,24 @@ class server_window(QMainWindow):
 
 
 class init_gui(server_window):
-	def __init__(self, data_changed_flags2):
+	def __init__(self, data_changed_flags):
+		# make a reference of App class
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
 		app.setStyleSheet(open('Elements/style.qss', "r").read())
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
-		# make a reference of App class
-		server_app = server_window(data_changed_flags2)
+		server_app = server_window(data_changed_flags)
+
+		# Splash screen
+		# splash = QSplashScreen(QPixmap("Elements/bitwise.png"))
+		# splash.show()
+		# splash.finish(server_app)	
+		# Splash ends
+
+		
 		server_app.showMaximized()
-		# Close the server as soon as close button is clicked
+		# Execute the app mainloop
 		app.exec_()
 		return

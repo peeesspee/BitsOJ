@@ -44,16 +44,13 @@ def handler(ch, method, properties, body):
 	if status == "VALID" :
 		status, client_id, server_message = server_data.split('+')
 		print("[ Status ] " + status + "\n[ ClientID ] : " + client_id + "\n[ Server ] : " + server_message)
-		ch.basic_ack(delivery_tag = method.delivery_tag)
-		print("> Job finished.")
 	elif status == "INVLD":
 		print("Invalid creds")
 
 	elif status == 'VRDCT':
 		print(server_data)
-		ch.basic_ack(delivery_tag = method.delivery_tag)
 	
-
+	ch.basic_ack(delivery_tag = method.delivery_tag)
 	channel.stop_consuming()
 		
 
@@ -72,12 +69,12 @@ def listen():
 
 def main():
 	login()
-	#time.sleep(2)
 	listen()
 
 	send()
-
 	listen()
+	print('[ DELETE ] Queue ' + username + ' deleted...')
+	channel.queue_delete(username)
 
 
 main()
