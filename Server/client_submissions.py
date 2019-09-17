@@ -9,8 +9,6 @@ class submission():
 		temp_file_name = run_id
 		file_name = submission.make_local_source_file(temp_file_name, source_code, language)
 		print ("[ FILE ] New file created for client : "+ client_id + " File name:  " + file_name)
-
-		print('[ JUDGE ] Requesting a new judgement')
 		return run_id, file_name
 
 	# Make a local backup file for the client run id

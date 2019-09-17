@@ -2,10 +2,13 @@ import multiprocessing
 import pika
 import os
 import signal
+
+from time import sleep
 from client_connections import manage_clients
 from database_management import manage_database
 from interface import server_window, init_gui
 from judge_connections import manage_judges
+
 
 # Variables  (to be read from server_init.ini later)
 superuser_username = 'BitsOJ'
@@ -41,9 +44,10 @@ def main():
 	os.kill(client_pid, signal.SIGINT)
 	os.kill(judge_pid, signal.SIGINT)
 	# EXIT
-	print("###############################################")
-	print("-----------SERVER CLOSED SUCCESSFULLY----------")
-	print("###############################################")
+	sleep(1)
+	print("  ################################################")
+	print("  #----------SERVER CLOSED SUCCESSFULLY----------#")
+	print("  ################################################")
 
 
 def manage_process(superuser_username, superuser_password, host, data_changed_flags):

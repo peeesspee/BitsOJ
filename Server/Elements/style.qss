@@ -13,39 +13,48 @@ QMessageBox{
 
 
 
+/* Style of buttons in the sidebar  START  */
+
 QPushButton#sidebar_button{
 	text-align : left; 
 	padding-left : 20; 	
-}
-
-QPushButton#sidebar_button
-{
-	background-color : #1B1C25 ; 
+	border-radius : 0px;
+	margin-top: 2px;
+	background-color : #131217 ; 
 	color : #838383;
-} 
+}
 
 QPushButton#sidebar_button::focus
 {
-	color : #0892D0;
+	color : #23B2EE;
+	border-right : 2px solid #B2FF59;
+	background-color : #2B2C39 ;
 }
 
 QPushButton#sidebar_button::hover::focus
 {
-	color : #0892D0;
+	color : #23B2EE;
+	border-right : 2px solid #B2FF59;
+	background-color : #2B2C39 ;
 }
 
 QPushButton#sidebar_button::pressed
 {
-	color : #0892D0;
+	color : #23B2EE;
 }
 
 QPushButton#sidebar_button::hover
 {
-	color : #23B2EE;
+	color : #0892D0;
+	border-right : 1px solid #AED581;
+	background-color : #22232E ;
 }
 
+/* Style of buttons in the sidebar  END  */
 
 
+
+/* Style of buttons in the close dialog box  START  */
 QPushButton#close_button_yes{
 	text-align : center;
 	background-color : #090909 ; 
@@ -64,8 +73,6 @@ QPushButton#close_button_yes::hover{
 	color: #FF0000;
 }
 
-
-
 QPushButton#close_button_no{
 	text-align : center;
 	background-color : #090909 ;
@@ -83,9 +90,10 @@ QPushButton#close_button_no::focus::hover{
 QPushButton#close_button_no::hover{
 	color: #FF0000;
 }
+/* Style of buttons in the close dialog box  END  */
 
 
-
+/* Style of tabs in tab-bar (basically invisible)  START  */
 QTabBar::tab
 {
 	width: 0; 
@@ -93,40 +101,63 @@ QTabBar::tab
 	margin: 0; 
 	padding-top: 10; 
 }
+/* Style of tabs in tab-bar (basically invisible)  START  */
 
-QTabWidget::pane{
-	color : #AAAAAA;
-}
 
+
+
+/*--------------MAIN LAYOUT STARTS----------------*/
+
+/* Sidebar style */
 QWidget#sidebar{
 	background-color : #131217;
 	margin-left : 0px;
 }
 
+/* Right panes style START */
+
+/* right panes background color */
 QTabWidget#main_tabs{
 	background-color : #171B1F;
-	color: #AAAAAA;
 }
 
-QWidget#screen_widget
-{
-	color : #CCCCCC;
-	background-color : #121212;
-}
-
-QWidget#main_widget{
-	
-	background-color: #050505;
-	color: #AAAAAA;
-}
-
-QLabel#main_screen_content{
+/* Text color in right panes */
+QTabWidget::pane{
 	color : #AAAAAA;
 }
 
+/* Right panes style END */
+
+/* Style of background */
+QWidget#screen_widget
+{
+	color : #CCCCCC;
+	background-color : #131217;
+}
+
+/* Style of bar where bitwise logo sits */
+QWidget#main_widget{
+	background-color: #0E0F12;
+	color: #AAAAAA;
+}
+
+/* Style of content marked as main-screen-content and main-screen-heading*/
+QLabel#main_screen_content{
+	color : #999999;
+	font-size : 24px;
+}
+QLabel#main_screen_heading{
+	color : #ADFF2F;
+	font-size : 30px;
+}
+QLabel#about_screen_heading{
+	margin-top : 200px;
+	color : #E91E63;
+	font-size : 30px;
+}
 
 
-
+/* Table styles */
 QTableView{
 	background-color : #171B1F;
 	alternate-background-color : #474B4F;
@@ -139,9 +170,10 @@ QTableView{
 
 QHeaderView::section{
 	background-color : #171B1F;
-	color: #0892D0;	
+	color: #FFC0CB;	
 }
 
+/* Scroll bar styles */
 QScrollBar:vertical{
 	width : 0px;
 }
@@ -149,3 +181,5 @@ QScrollBar:vertical{
 QScrollBar:horizontal{
 	height : 0px;
 }
+
+/*--------------MAIN LAYOUT ENDS----------------*/

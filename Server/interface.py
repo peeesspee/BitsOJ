@@ -2,11 +2,17 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 
 
 global current_status 
 current_status = "STOPPED"
+
+# This is to ignore some warnings which were thrown when gui exited and python deleted some assests in wrong order
+# Nothing critical 
+def handler(msg_type, msg_log_context, msg_string):
+	pass
+qInstallMessageHandler(handler)
 
 class server_window(QMainWindow):
 	def __init__(self, data_changed_flags2):
@@ -139,6 +145,7 @@ class server_window(QMainWindow):
 		# Define our sidebar widget and set side_bar_layout to it.
 		side_bar_widget = QWidget()
 		side_bar_widget.setLayout(side_bar_layout)
+		side_bar_widget.setFixedWidth(210)
 		side_bar_widget.setObjectName("sidebar")
 
 		#Define our top bar
@@ -182,9 +189,8 @@ class server_window(QMainWindow):
 		main_layout.addWidget(self.right_widget)
 
 		# setstretch( index, stretch_value )
-		main_layout.setStretch(0, 10)
-		main_layout.setStretch(1, 100)
-		main_layout.setContentsMargins(10, 1, 10, 1)
+		main_layout.setStretch(0, 0)
+		main_layout.setStretch(1, 90)
 		# Define our main wideget = sidebar + windows
 		main_widget = QWidget()
 		main_widget.setObjectName("screen_widget")
@@ -288,6 +294,8 @@ class server_window(QMainWindow):
 		table.resizeColumnsToContents()
 		# Make table non-editable
 		table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		# Set view to delete when gui is closed
+		table.setAttribute(Qt.WA_DeleteOnClose)
 
 		horizontal_header = table.horizontalHeader()
 		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
@@ -301,7 +309,7 @@ class server_window(QMainWindow):
 	# Handle UI for various button presses
 	def submissions_ui(self):
 		heading = QLabel('Submissions')
-		heading.setObjectName('main_screen_content')
+		heading.setObjectName('main_screen_heading')
 
 		submission_model = self.manage_models(self.db, 'submissions')
 
@@ -330,7 +338,7 @@ class server_window(QMainWindow):
 
 	def client_ui(self):
 		heading = QLabel('Clients')
-		heading.setObjectName('main_screen_content')
+		heading.setObjectName('main_screen_heading')
 
 		client_model = self.manage_models(self.db, 'connected_clients')
 		client_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
@@ -460,11 +468,24 @@ class server_window(QMainWindow):
 
 
 	def about_us_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page11')
-		heading.setObjectName('main_screen_content')
+		head1 = QLabel('Made with <3 by team Bitwise')
+		head1.setObjectName('about_screen_heading')
+		head1.setAlignment(Qt.AlignCenter)
 
-		main_layout.addWidget(heading)
+		head2 = QLabel('Guess what! The BitsOJ project is open source!!! ')
+		head2.setObjectName('main_screen_content')
+		head2.setAlignment(Qt.AlignCenter)
+
+		head3 = QLabel('Contribute at https://github.com/peeesspee/BitsOJ')
+		head3.setObjectName('main_screen_content')
+		head3.setAlignment(Qt.AlignCenter)
+
+
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(head1)
+		main_layout.addWidget(head2)
+		main_layout.addWidget(head3)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
