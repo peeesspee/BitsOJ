@@ -16,32 +16,36 @@ QMessageBox{
 QPushButton#sidebar_button{
 	text-align : left; 
 	padding-left : 20; 	
-}
-
-QPushButton#sidebar_button
-{
-	background-color : #1B1C25 ; 
+	background-color : #131217 ; 
 	color : #838383;
+	border : 0 px;
+	border-radius : 0px;
 } 
 
 QPushButton#sidebar_button::focus
 {
-	color : #0892D0;
+	color : #23B2EE;
+	border-right : 3px solid #B2FF59;
+	background-color : #2B2C39 ;
 }
 
 QPushButton#sidebar_button::hover::focus
 {
-	color : #0892D0;
+	color : #23B2EE;
+	border-right : 3px solid #B2FF59;
+	background-color : #2B2C39 ;
 }
 
 QPushButton#sidebar_button::pressed
 {
-	color : #0892D0;
+	color : #23B2EE;
 }
 
 QPushButton#sidebar_button::hover
 {
-	color : #23B2EE;
+	color : #0892D0;
+	border-right : 1px solid #AED581;
+	background-color : #22232E ;
 }
 
 
