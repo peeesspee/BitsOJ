@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import * 
 from login import authenticate_login
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon, QColor, QPixmap
 
 class Login(QWidget):
 	# channel = None
@@ -10,6 +11,7 @@ class Login(QWidget):
 		super().__init__()
 		self.setWindowTitle('BitsOJ v1.0.1 [ LOGIN ]')
 		self.resize(700, 600)
+		self.setWindowIcon(QIcon('Elements/logo.png'))
 
 		qtRectangle = self.frameGeometry()
 		centerPoint = QDesktopWidget().availableGeometry().center()

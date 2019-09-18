@@ -14,7 +14,7 @@ class client_window(QMainWindow):
 	def __init__(self):
 		super().__init__()
 		# Set app icon
-		self.setWindowIcon(QIcon('Elements/icon1.png'))
+		self.setWindowIcon(QIcon('Elements/logo.png'))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ Client ]')
 		
@@ -96,7 +96,7 @@ class client_window(QMainWindow):
 
 		# Define out top bar
 		logo = QLabel(self)
-		logo_image = QPixmap('Elements/bitwise_new.png')
+		logo_image = QPixmap('Elements/bitwise_header.png')
 		logo_image = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image)
 
