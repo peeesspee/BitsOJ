@@ -1,9 +1,10 @@
-import sys
 import time
+import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
+from interface_packages.ui_classes import *
 
 
 global current_status 
@@ -41,6 +42,11 @@ class server_window(QMainWindow):
 		# Define Sidebar Buttons and their actions
 		button_width = 200
 		button_height = 50
+
+		self.button_0 = QPushButton('Overview', self)
+		self.button_0.setFixedSize(button_width, button_height)
+		self.button_0.clicked.connect(self.show_overview)
+		self.button_0.setObjectName("sidebar_button")
 
 		self.button_1 = QPushButton('Submissions', self)
 		self.button_1.setFixedSize(button_width, button_height)
@@ -102,18 +108,20 @@ class server_window(QMainWindow):
 		###########################################################
 		# Manage tabs on the right window
 		# Each tab is an object returned by the respective function associated with its UI
-		self.tab1, self.sub_model = self.submissions_ui()
-		self.tab2 = self.judge_ui()
-		self.tab3, self.client_model = self.client_ui()
-		self.tab4 = self.query_ui()
-		self.tab5 = self.leaderboard_ui()
-		self.tab6 = self.problem_ui()
-		self.tab7 = self.language_ui()
-		self.tab8 = self.stats_ui()
-		self.tab9 = self.settings_ui()
-		self.tab10 = self.reports_ui()
-		self.tab11 = self.about_us_ui()
-
+		# Tab UI are managed by interface_packages/ui_classes.py file 
+		self.tab0 = ui_widgets.overview(self)
+		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
+		self.tab2 = ui_widgets.judge_ui(self)
+		self.tab3, self.client_model = ui_widgets.client_ui(self)
+		self.tab4 = ui_widgets.query_ui(self)
+		self.tab5 = ui_widgets.leaderboard_ui(self)
+		self.tab6 = ui_widgets.problem_ui(self)
+		self.tab7 = ui_widgets.language_ui(self)
+		self.tab8 = ui_widgets.stats_ui(self)
+		self.tab9 = ui_widgets.settings_ui(self)
+		self.tab10 = ui_widgets.reports_ui(self)
+		self.tab11 = ui_widgets.about_us_ui(self)
+		
 		###########################################################
 		
 		# Add widgets to our main window
@@ -127,6 +135,7 @@ class server_window(QMainWindow):
 		side_bar_layout = QVBoxLayout()
 
 		# Add buttons to our layout
+		side_bar_layout.addWidget(self.button_0)
 		side_bar_layout.addWidget(self.button_1)
 		side_bar_layout.addWidget(self.button_2)
 		side_bar_layout.addWidget(self.button_3)
@@ -139,9 +148,10 @@ class server_window(QMainWindow):
 		side_bar_layout.addWidget(self.button_10)
 		side_bar_layout.addWidget(self.button_11)
 
+
 		# Set stretch and spacing
 		side_bar_layout.addStretch(1)
-		side_bar_layout.setSpacing(1)
+		side_bar_layout.setSpacing(0)
 
 		# Define our sidebar widget and set side_bar_layout to it.
 		side_bar_widget = QWidget()
@@ -169,6 +179,8 @@ class server_window(QMainWindow):
 		# Since sidebars are not natively supported by pyqt5
 		self.right_widget = QTabWidget()
 		self.right_widget.setObjectName("main_tabs")
+
+		self.right_widget.addTab(self.tab0, '')
 		self.right_widget.addTab(self.tab1, '')    # tab names are '' because we don't want them to show up in our screen
 		self.right_widget.addTab(self.tab2, '')
 		self.right_widget.addTab(self.tab3, '')
@@ -180,6 +192,7 @@ class server_window(QMainWindow):
 		self.right_widget.addTab(self.tab9, '')
 		self.right_widget.addTab(self.tab10, '')
 		self.right_widget.addTab(self.tab11, '')
+		
 
 		# Screen 1 will be our initial screen 
 		self.right_widget.setCurrentIndex(0)
@@ -215,38 +228,43 @@ class server_window(QMainWindow):
 
 		return
 
-	def view_submissions(self):
+	def show_overview(self):
 		self.right_widget.setCurrentIndex(0)
 
-	def manage_judges(self):
+	def view_submissions(self):
 		self.right_widget.setCurrentIndex(1)
 
-	def manage_clients(self):
+	def manage_judges(self):
 		self.right_widget.setCurrentIndex(2)
 
-	def manage_queries(self):
+	def manage_clients(self):
 		self.right_widget.setCurrentIndex(3)
 
-	def manage_leaderboard(self):
+	def manage_queries(self):
 		self.right_widget.setCurrentIndex(4)
 
-	def manage_problems(self):
+	def manage_leaderboard(self):
 		self.right_widget.setCurrentIndex(5)
 
-	def manage_languages(self):
+	def manage_problems(self):
 		self.right_widget.setCurrentIndex(6)
 
-	def show_stats(self):
+	def manage_languages(self):
 		self.right_widget.setCurrentIndex(7)
 
-	def contest_settings(self):
+	def show_stats(self):
 		self.right_widget.setCurrentIndex(8)
 
-	def generate_report(self):
+	def contest_settings(self):
 		self.right_widget.setCurrentIndex(9)
 
-	def show_about(self):
+	def generate_report(self):
 		self.right_widget.setCurrentIndex(10)
+
+	def show_about(self):
+		self.right_widget.setCurrentIndex(11)
+
+	####################################################
 
 	def update_data(self):
 		# If data has changed in submission table
@@ -305,193 +323,7 @@ class server_window(QMainWindow):
 		vertical_header.setVisible(False)
 		return table
 
-	###############################################################
-
-	# Handle UI for various button presses
-	def submissions_ui(self):
-		heading = QLabel('Submissions')
-		heading.setObjectName('main_screen_heading')
-
-		submission_model = self.manage_models(self.db, 'submissions')
-
-		submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
-		submission_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
-		submission_model.setHeaderData(2, Qt.Horizontal, 'Language')
-		submission_model.setHeaderData(3, Qt.Horizontal, 'Source File')
-		submission_model.setHeaderData(4, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(5, Qt.Horizontal, 'Status')
-		submission_model.setHeaderData(6, Qt.Horizontal, 'Time')
-
-		submission_table = self.generate_view(submission_model)
-
-		main_layout = QVBoxLayout()
-		main_layout.addWidget(heading)
-		main_layout.addWidget(submission_table)
-		main_layout.setStretch(0,5)
-		main_layout.setStretch(1,95)
-
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		main.show()
-		return main, submission_model
-
-
-	def client_ui(self):
-		heading = QLabel('Clients')
-		heading.setObjectName('main_screen_heading')
-
-		client_model = self.manage_models(self.db, 'connected_clients')
-		client_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
-		client_model.setHeaderData(1, Qt.Horizontal, 'Username')
-		client_model.setHeaderData(2, Qt.Horizontal, 'Password')
-
-		client_view = self.generate_view(client_model)
-
-
-		main_layout = QVBoxLayout()
-		main_layout.addWidget(heading)
-		main_layout.addWidget(client_view)
-		main_layout.setStretch(0,5)
-		main_layout.setStretch(1,95)		
-
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main, client_model
-
-
-	def judge_ui(self):
-		heading = QLabel('Judges')
-		heading.setObjectName('main_screen_content')
-
-		#judge_model = self.manage_models(self.db, )
-
-		main_layout = QVBoxLayout()
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
-
-
-	def query_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page4')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
-
-
-	def leaderboard_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page5')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
-
-
-	def problem_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page6')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
-
-
-	def language_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page7')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
-
-
-	def stats_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page8')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
-
-
-	def settings_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page9')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
-
-
-	def reports_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page10')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
-
-
-	def about_us_ui(self):
-		head1 = QLabel('Made with <3 by team Bitwise')
-		head1.setObjectName('about_screen_heading')
-		head1.setAlignment(Qt.AlignCenter)
-
-		head2 = QLabel('Guess what! The BitsOJ project is open source!!! ')
-		head2.setObjectName('main_screen_content')
-		head2.setAlignment(Qt.AlignCenter)
-
-		head3 = QLabel('Contribute at https://github.com/peeesspee/BitsOJ')
-		head3.setObjectName('main_screen_content')
-		head3.setAlignment(Qt.AlignCenter)
-
-
-
-		main_layout = QVBoxLayout()
-		main_layout.addWidget(head1)
-		main_layout.addWidget(head2)
-		main_layout.addWidget(head3)
-		main_layout.addStretch(5)
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
+	###################################################
 
 	###################################################
 

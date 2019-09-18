@@ -2,6 +2,7 @@ import multiprocessing
 import pika
 import os
 import signal
+import sys
 
 from time import sleep
 from client_connections import manage_clients
@@ -17,9 +18,11 @@ judge_username = 'judge1'
 judge_password = 'judge1'
 host = 'localhost'
 
+sys.path.append('../')
 
 def main():
 	# Initialize database
+	print('[ SETUP ] Initialising database....')
 	conn, cur = manage_database.initialize_database()
 	
 	##################################
@@ -28,9 +31,11 @@ def main():
 	##################################
 
 	# Manage Threads
+	print('[ SETUP ] Initialising threads....')
 	client_pid, judge_pid = manage_process(superuser_username, superuser_password, host, data_changed_flags)
 
 	# Initialize GUI handler
+	print('[ SETUP ] Initialising GUI....')
 	try:
 		print("----------------BitsOJ v1.0----------------")
 		init_gui(data_changed_flags)
