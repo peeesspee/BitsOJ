@@ -1,18 +1,18 @@
 # from login import authenticate_login
-from databe_management import manage_database
+from database_management import manage_database
 
 class start_listening():
-	client_id, username = authenticate_login.get_user_details()
+	# client_id, username = authenticate_login.get_user_details()
 	channel = None
-	login_status = False
+	login_status = False 
 
 	def listen_server(channel):
-		listening.channel.basic_consume(
+		start_listening.channel.basic_consume(
 			queue = start_listening.username,
 			on_message_callback = start_listening.server_response_handler,
 			auto_ack = True
 			)
-		listening.start_consuming()
+		start_listening.start_consuming()
 
 	def server_response_handler(ch,method,properties,body):
 		server_data = body.decode('utf-8')
@@ -20,7 +20,7 @@ class start_listening():
 		if status == 'VALID' or status == 'INVLD':
 			start_listening.login_approval_handler(server_data)
 		elif status == "VRDCT":
-			listening.submission_verdict(server_data)
+			start_listening.submission_verdict(server_data)
 		elif status == "CLRFN":
 			print("UNDER DEVELOPMENT")
 		elif status == "SCRBD":
@@ -32,7 +32,7 @@ class start_listening():
 		else:
 			print("WRONG INPUT")
 
-	def login_approval_handler(server_data):
+	def login_approval_handler(ch,method,properties,server_data):
 		status = server_data[0:5]
 		if (status == 'VALID'):
 			status,start_listening.client_id,server_message = server_data.split('+')

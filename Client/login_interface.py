@@ -54,20 +54,21 @@ class Login(QWidget):
 		self.setLayout(layout)
 		self.setObjectName('main')
 		self.show()
-		self.connection_object = connection
+		self.connection_object = connection 
 		return
 
 	
 	def handle_login(self):
 		if (self.username.text() != '' and self.password.text() != ''):
-			a = authenticate_login.login(self.username.text(),self.password.text())
-			# Call client window here
-			print("[ SUCCESS ] ")
-			if(a):
+			login_status = authenticate_login.login(self.username.text(),self.password.text())
+			print(login_status)
+			if( login_status == 'VALID'):
 				try:
 					QApplication.quit()
 				except Exception as error:
 					print('[ ERROR ] Could not exit properly : ' + str(error) )
+			elif( login_status == 'REJCT' ):
+				QMessageBox.warning(self, 'Error', 'Login Rejected')
 			else:
 				QMessageBox.warning(self, 'Error', 'Wrong credentials')
 		elif (self.username.text() == ''):
