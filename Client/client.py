@@ -1,13 +1,8 @@
 import pika
-# Establishing connection from RabbitMQ
 from connection import manage_connection
-# Initialising Database
 from database_management import manage_database
-# Create Process 
-from multiprocessing import Process
-# Main UI after login
+import multiprocessing
 from interface import init_gui
-# Login Interface
 from login_interface import start_interface
 
 
@@ -18,9 +13,16 @@ host = 'localhost'
 
 
 def main():
+	#################################
 	# Initialize the database and returns the cursor 
 	print("[ SETUP ] INITIALISING DATABASE ............")
 	cursor = manage_database.initialize_table()
+
+	##################################
+	# Create variables/lists that will be shared between processes
+	data_changed_flags = multiprocessing.Array('i', 10)
+
+	##################################
 	# Makes connection with RabbitMQ
 	# And returns channel,connection
 	print("[ SETUP ] ESTABLISHING CONNECTION .........")
@@ -36,5 +38,6 @@ def main():
 	# After successful login 
 	# Starting Main GUI
 	init_gui()
+
 
 main()
