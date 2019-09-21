@@ -49,6 +49,10 @@ def handler(ch, method, properties, body):
 
 	elif status == 'VRDCT':
 		print(server_data)
+	elif status == 'REJCT' : 
+		print(server_data[6:])
+	elif status == 'SRJCT':
+		print(server_data[6:])
 	
 	ch.basic_ack(delivery_tag = method.delivery_tag)
 	channel.stop_consuming()
@@ -70,7 +74,7 @@ def listen():
 def main():
 	login()
 	listen()
-
+	
 	send()
 	listen()
 	print('[ DELETE ] Queue ' + username + ' deleted...')

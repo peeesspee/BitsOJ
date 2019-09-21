@@ -28,6 +28,10 @@ def main():
 	##################################
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 10)
+	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
+	data_changed_flags[2] = 1
+	# Do not allow new submissions unless timer is active or admin begins contest
+	data_changed_flags[3] = 1
 	##################################
 
 	# Manage Threads

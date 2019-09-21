@@ -23,6 +23,7 @@ class server_window(QMainWindow):
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ]')
+
 		# Make  the app run full-screen
 		# Initialize status bar (Bottom Bar)
 		self.status = self.statusBar()
@@ -31,7 +32,7 @@ class server_window(QMainWindow):
 		self.timer = QTimer()
 		self.change_flag = True
 		self.timer.timeout.connect(self.update_data)
-		self.timer.start(2000)
+		self.timer.start(1000)
 		
 		# make data_changed_flag accessible from the class methods
 		self.data_changed_flags = data_changed_flags2
@@ -265,20 +266,40 @@ class server_window(QMainWindow):
 		self.right_widget.setCurrentIndex(11)
 
 	####################################################
-
+	# Functions related to GUI updates
 	def update_data(self):
 		# If data has changed in submission table
 		if self.data_changed_flags[0] == 1:
 			self.sub_model.select()
-			# reset data_changed_flag
-			self.data_changed_flags[0] = 0
+			self.set_flags(0, 0)
 		if self.data_changed_flags[1] == 1:
 			self.client_model.select()
-			self.data_changed_flags[1] = 0
-
+			self.set_flags(1, 0)
 		return
 
-	
+	def allow_login_handler(self, state):
+		if(state == Qt.Checked):
+			# Allow logins
+			self.set_flags(2, 0)
+		else:
+			# Stop logins
+			self.set_flags(2, 1)
+		return
+
+	def allow_submissions_handler(self, state):
+		if(state == Qt.Checked):
+			# Allow logins
+			self.set_flags(3, 0)
+		else:
+			# Stop logins
+			self.set_flags(3, 1)
+		return
+
+	def set_flags(self, index, value):
+		self.data_changed_flags[index] = value
+		return
+
+
 	#####################################################
 	# Databse related functions
 	def init_qt_database(self):
@@ -297,6 +318,7 @@ class server_window(QMainWindow):
 			model.setEditStrategy(QSqlTableModel.OnFieldChange)
 			model.select()
 		return model
+
 
 	def generate_view(self, model):
 		table = QTableView()
@@ -324,7 +346,7 @@ class server_window(QMainWindow):
 		return table
 
 	###################################################
-
+	
 	###################################################
 
 	def set_status(self):
@@ -383,6 +405,7 @@ class init_gui(server_window):
 
 		
 		server_app.showMaximized()
+
 		# Execute the app mainloop
 		app.exec_()
 		return

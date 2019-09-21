@@ -80,6 +80,13 @@ class manage_clients():
 			print("[ DEBUG ] Client message was : " + str(client_message))
 
 		print("[ LOGIN ] " + " > " + client_username + "@" + client_password + "[ TYPE ] " + client_type)
+
+		if(manage_clients.data_changed_flags[2] == 1):
+			print('[ LOGIN ] Rejected by ADMIN')
+			message = "REJCT+" + 'Logins have been STOPPED. Please contact admins.'
+			manage_clients.publish_message(client_username, message)
+			return
+
 		
 		if client_type == 'CLIENT':
 			# Validate the client from the database
@@ -157,6 +164,8 @@ class manage_clients():
 				# Reply "Invalid credentials" to client
 				manage_clients.publish_message(client_username, message)
 
+		return
+
 
 	def client_submission_handler(client_data):
 		try:
@@ -165,10 +174,21 @@ class manage_clients():
 			language = client_data[9:12]		# language is 3 characters
 			time_stamp = client_data[13:21]		# time_stamp is 8 characters: HH:MM:SS
 			source_code = client_data[22:]		# rest of the message is source code
-			print("[ DATA ] CID :" + client_id + " PCODE:" + problem_code + " Language :" + language + " Time stamp :" + time_stamp)
+			print("[ SUBMISSION ] Client ID :" + client_id + " Problem:" + problem_code + " Language :" + language + " Time stamp :" + time_stamp)
 
 		except Exception as error:
 			print("[ ERROR ] Client data parsing error : " + str(error))
+
+		# Get client username from database
+		# TO BE OPTIMISED LATER
+		client_username = client_authentication.get_client_username(client_id)
+
+		# If no new submissions are allowed
+		if(manage_clients.data_changed_flags[3] == 1):
+			print('[ SUBMISSION ] Rejected by ADMIN')
+			message = 'REJCT+' + 'Submissions have been STOPPED. Please contact admins.'
+			manage_clients.publish_message(client_username, message)
+			return
 
 		try:
 			if client_id == 'Nul':
@@ -191,7 +211,7 @@ class manage_clients():
 				#######################################################################
 
 				message = "VRDCT+" + str(run_id) + '+' + vrdct + '+' + err_msg
-				client_username = client_authentication.get_client_username(client_id)
+				
 				manage_clients.publish_message(client_username, message)
 
 				#######################################################################
@@ -204,9 +224,11 @@ class manage_clients():
 		except Exception as error:
 			print("[ ERROR ] Client submisssion could not be processed : " + str(error))
 
+		return
+
 
 	def publish_message(queue_name, message):
-		print( "[ PUBLISH ] " + message + " TO " + queue_name)
+		print( '[ PUBLISH ] ' + message + ' TO ' + queue_name)
 		try:
 			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
 		except Exception as error:
