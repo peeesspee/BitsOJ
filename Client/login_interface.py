@@ -106,7 +106,7 @@ class Login(QWidget):
 	
 
 class start_interface(Login):
-	def __init__(self, connection):
+	def __init__(self, connection, data_changed_flag):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
 		app.setStyleSheet(open('Elements/login.qss', "r").read())
