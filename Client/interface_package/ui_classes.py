@@ -25,16 +25,17 @@ class ui_widgets():
 		heading = QLabel('My Submissions')
 		heading.setObjectName('main_screen_content')
 
-		submission_model = self.manage_models(self.db, 'submissions')
+		submission_model = self.manage_models(self.db, 'my_submissions')
 
 		submission_model.setHeaderData(0, Qt.Horizontal, 'Run Id')
-		submission_model.setHeaderData(1, Qt.Horizontal, 'Language')
+		submission_model.setHeaderData(1, Qt.Horizontal, 'Verdict')
 		submission_model.setHeaderData(2, Qt.Horizontal, 'Source File')
-		submission_model.setHeaderData(3, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(4, Qt.Horizontal, 'Status')
+		submission_model.setHeaderData(3, Qt.Horizontal, 'Language')
+		submission_model.setHeaderData(4, Qt.Horizontal, 'Problem Code')
 		submission_model.setHeaderData(5, Qt.Horizontal, 'Time')
 
 		submission_table = self.generate_view(submission_model)
+
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)

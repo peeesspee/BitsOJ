@@ -9,6 +9,13 @@ from interface_package.ui_classes import *
 global current_status 
 current_status = "STOPPED" 
 
+# This is to ignore some warnings which were thrown when gui exited and python deleted some assests in wrong order
+# Nothing critical 
+def handler(msg_type, msg_log_context, msg_string):
+	pass
+qInstallMessageHandler(handler)
+
+
 class client_window(QMainWindow):
 	def __init__(self, data_changed_flag2):
 		super().__init__()

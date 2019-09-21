@@ -193,3 +193,28 @@ QLabel#about_screen_heading{
 	color : #E91E63;
 	font-size : 30px;
 }
+
+/* Table styles */
+QTableView{
+	background-color : #171B1F;
+	alternate-background-color : #474B4F;
+	color : #AAAAAA;
+	border : 0px;
+	gridline-color : #505050;
+
+	selection-background-color : #777777;
+}
+
+QHeaderView::section{
+	background-color : #171B1F;
+	color: #FFC0CB;	
+}
+
+/* Scroll bar styles */
+QScrollBar:vertical{
+	width : 0px;
+}
+
+QScrollBar:horizontal{
+	height : 0px;
+}
