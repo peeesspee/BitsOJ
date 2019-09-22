@@ -5,7 +5,7 @@ from communicate_server import communicate_server
 
 rabbitmq_username = "judge1"
 rabbitmq_password = "judge1"
-host = "localhost"
+host = "192.168.43.239"
 
 
 channel,connection = manage_connection.initialize_connection(rabbitmq_username,rabbitmq_password,host)
@@ -13,14 +13,17 @@ channel,connection = manage_connection.initialize_connection(rabbitmq_username,r
 print(type (channel))
 print("................ BitsOJ Judge .................\n")
 
-status = 'INVLD'
-
-while (status == 'INVLD'):
-
+status = ''
+while (status != 'VALID'):
 	authenticate_judge.login(channel, host)
 	status = authenticate_judge.login_status
-	communicate_server.listen_server()
+	print(status)
 
+	
+
+while (status == 'VALID'):
+	print("\nJudge Authenticated")
+	communicate_server.listen_server()
 
 
 
