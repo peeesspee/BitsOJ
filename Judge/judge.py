@@ -1,19 +1,28 @@
 from file_creation import file_manager
 from connection import manage_connection
 from login_request import authenticate_judge 
+from communicate_server import communicate_server
 
 rabbitmq_username = "judge1"
 rabbitmq_password = "judge1"
-host = "192.168.43.239"
+host = "localhost"
 
 
 channel,connection = manage_connection.initialize_connection(rabbitmq_username,rabbitmq_password,host)
 
 print(type (channel))
+print("................ BitsOJ Judge .................\n")
+
+status = 'INVLD'
+
+while (status == 'INVLD'):
+
+	authenticate_judge.login(channel, host)
+	status = authenticate_judge.login_status
+	communicate_server.listen_server()
 
 
-while (True):
-    status = authenticate_judge.login(channel, host)
+
 
 
 

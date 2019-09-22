@@ -5,6 +5,7 @@ class authenticate_judge():
 	password = ''
 	client_id = 'Null'
 	channel = ''
+	login_status = ''
 
 
 	def login(channel, host):
@@ -12,7 +13,7 @@ class authenticate_judge():
 		authenticate_judge.username = input("Enter Judge's Username \n") or "judge1"
 		authenticate_judge.password = input("Enter Judge's Password\n") or "judge1"
 
-		print("[Validating] : " + authenticate_judge.username + " @ " + authenticate_judge.password + "... \n ")
+		print("\n[Validating] : " + authenticate_judge.username + "@" + authenticate_judge.password )
 
 		channel.queue_declare(
 			queue = authenticate_judge.username, 
@@ -34,8 +35,8 @@ class authenticate_judge():
 
 
 
-		print("Request sent for authentication...\n ")
-		print("[LISTENING]:" + authenticate_judge.username + ' ' + '@' + ' ' + authenticate_judge.password + "\n")
+		print("Request sent for authentication... ")
+		print("[LISTENING]:" + authenticate_judge.username + '@'  + authenticate_judge.password )
 
 
 		authenticate_judge.channel.basic_consume(
@@ -54,17 +55,23 @@ class authenticate_judge():
 
 		if(status == 'VALID'):
 			status = server_data
-			print("[ status ] " + status  )
-			return status
+			print("[status]: " + status  )
+			authenticate_judge.channel.stop_consuming()
+			authenticate_judge.login_status = status
+
+
+			
 
 		elif(status == 'INVLD'):
-			print("INVALID USER !!!\n")
+			print("\nINVALID USER !!!\n")
 
 			authenticate_judge.channel.queue_delete(
 				queue = authenticate_judge.username
 				)
-			return status
+			authenticate_judge.login_status = status
+			
 
+		
 
 
 	def get_judge_details():

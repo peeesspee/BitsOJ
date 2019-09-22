@@ -5,12 +5,13 @@ import subprocess
 class verdict():
 
 
-	x = 'x = "ram.123"\ninr = x.split(".")[1]\nprint(inr)'
-	source_code = x
+	x = open("./A/sol.cpp", 'r')
+	print(x.read())
+	source_code = x.read()
 	problem_code = 'ARCT'
 	run_id = '112'
 	client_id = '1' 
-	language = 'PY2'
+	language = 'C++'
  
 	# x = open("123.cpp", "r")
 	# print(x.read())
@@ -32,7 +33,7 @@ class verdict():
 
 	if  file_name.split('.')[1] == 'c':
 		try:
-			tmp = subprocess.call(["g++",file])
+			tmp = subprocess.call(["gcc",file])
 			tmp = subprocess.call("./a.out")
 			print(tmp)
 		
@@ -51,12 +52,22 @@ class verdict():
 
 
 	if  file_name.split('.')[1] == 'py':
-		try:
-			tmp = subprocess.call(["python2",file])
-			print(tmp)
-		
-		except Exception as e :
-			print(e)
+
+		if file_name.split('.')[0][-1] == '2':
+			try:
+				tmp = subprocess.call(["python2",file])
+				print(tmp)
+			
+			except Exception as e :
+				print(e)
+
+		if file_name.split('.')[0][-1] == '3':
+			try:
+				tmp = subprocess.call(["python3",file])
+				print(tmp)
+			
+			except Exception as e :
+				print(e)
 
 	
 
