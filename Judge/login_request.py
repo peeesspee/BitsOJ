@@ -50,6 +50,7 @@ class authenticate_judge():
 
 	def response_handler(ch, method, properties, body):
 		server_data = body.decode('utf-8')
+		print(server_data)
 
 		status = server_data
 
@@ -58,6 +59,7 @@ class authenticate_judge():
 			print("[status]: " + status  )
 			authenticate_judge.channel.stop_consuming()
 			authenticate_judge.login_status = status
+			authenticate_judge.channel.stop_consuming()
 
 
 			
