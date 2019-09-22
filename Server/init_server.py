@@ -11,7 +11,7 @@ class initialize_server():
 	judge_key = '000000000000000'
 
 	def get_keys():
-		return client_key, judge_key
+		return initialize_server.client_key, initialize_server.judge_key
 
 	def get_login_flag():
 		if(initialize_server.login_allowed_flag == 'True'):
