@@ -1,6 +1,5 @@
 import time
 import os
-from database_management import manage_database
 from login import authenticate_login
 from manage_data_sending import send_options
 
@@ -8,17 +7,17 @@ class send_code():
 	client_id, username = authenticate_login.get_user_details()
 	code = None
 	file_path = None
-	Language = {1 : 'gcc', 2 : 'cpp', 3 : 'py2', 4 : 'jva' , 5 : 'py3'}
+	Language = {1 : 'GCC', 2 : 'CPP', 3 : 'PY2', 4 : 'JVA' , 5 : 'PY3'}
 	Problem_Code = { 1 : 'PSPA'}
 	final_data = ''
 	selected_language = ''
 	selected_problem = ''
 	time_stamp = ''
-	cursor = manage_database.cur
+	cursor = None
 	extension = ''
 
 
-	def uploading_solution(channel):
+	def uploading_solution(channel, connection, cursor, host, data_changed_flags):
 		try:
 			submit_solution.file_path = input('Enter path of solution : ') or '/home/sj1328/Desktop/algoPractice/dfs.cpp'
 			filename, submit_solution.extension = os.path.splitext(submit_solution.file_path)

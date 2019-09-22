@@ -212,9 +212,30 @@ QHeaderView::section{
 
 /* Scroll bar styles */
 QScrollBar:vertical{
-	width : 0px;
+	width : 15px;
+	background-color : #121212;
+	color : #3DC774;
 }
 
 QScrollBar:horizontal{
-	height : 0px;
+	height : 15px;
+	background-color : #121212;
+	color : #3DC774;
+}
+
+QTextEdit#text_area_content
+{
+	background-color : #121212;
+	/*color : #2FA15C;*/
+	color : #3DC774;
+	font-size : 20px;
+}
+
+
+QComboBox#language_box_content
+{
+	background-color : #121212;
+	color : #3DC774;
+	font-size : 20px;
+
 }

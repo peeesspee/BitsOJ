@@ -4,7 +4,7 @@ import pika
 
 class send_options():
 	channel = None
-	host = None
+	host = None 
 	option_list = ['SUBMT', 'LOGIN', 'QUERY', 'RJDGE']
 
 	def options(channel, host):

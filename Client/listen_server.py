@@ -1,12 +1,21 @@
-# from login import authenticate_login
 from database_management import manage_database
 
 class start_listening():
 	# client_id, username = authenticate_login.get_user_details()
 	channel = None
+	connection = None
+	cursor = None
+	host = None
+	data_changed_flags = None
 	login_status = False 
 
-	def listen_server(channel):
+	def listen_server(channel,connection,cursor,host,data_changed_flags2):
+		start_listening.channel = channel
+		start_listening.connection = connection
+		start_listening.cursor = cursor
+		start_listening.host = host
+
+
 		start_listening.channel.basic_consume(
 			queue = start_listening.username,
 			on_message_callback = start_listening.server_response_handler,
@@ -30,17 +39,6 @@ class start_listening():
 		else:
 			print("WRONG INPUT")
 
-	def login_approval_handler(ch,method,properties,server_data):
-		status = server_data[0:5]
-		if (status == 'VALID'):
-			status,start_listening.client_id,server_message = server_data.split('+')
-			authenticate_login.client_id = start_listening.client_id
-			print("[ Status ] " + status + "\n[ ClientID ] : " + listening.client_id + "\n[ Server ] : " + server_message)
-		else:
-			print("Invalid Login!!!!")
-			start_listening.channel.queue_delete(
-				queue = start_listening.username
-				)
 
 
 	def submission_verdict(server_data):

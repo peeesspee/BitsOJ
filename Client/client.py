@@ -10,6 +10,7 @@ from database_management import manage_database
 from interface import init_gui
 from login_interface import start_interface
 from listen_server import start_listening
+from manage_code import send_code
 
 
 # Basic credentials for login to RabbitMQ Server
@@ -43,6 +44,11 @@ def main():
 		# Starting GUI for login portal 
 		start_interface(connection,data_changed_flags) 
 		print("[ LOGIN ] Successful")
+
+		# Manage Threads
+		print('[ SETUP ] Initialising threads....')
+		# listen_pid = manage_process(channel, connection, cursor, host, data_changed_flags)
+
 		# After successful login 
 		# Starting Main GUI
 		init_gui(data_changed_flags)
@@ -50,11 +56,11 @@ def main():
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 
 
-def manage_process(username, password, host, data_changed_flags):
-	# send_data = multiprocessing.Process(target = start_listening.listen_server, args = (username, password, host, data_changed_flags))
-	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (username, password, host, data_changed_flags))
+def manage_process(channel, connection, cursor, host, data_changed_flags):
+	send_data = multiprocessing.Process(target =send_code.uploading_solution , args = (channel, connection, cursor, host, data_changed_flags))
+	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (channel, connection, cursor, host, data_changed_flags))
 
-	# send_data.start()
+	send_data.start()
 	listen_from_server.start()
 
 	# send_pid = send_data.pid

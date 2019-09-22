@@ -69,6 +69,9 @@ class authenticate_login():
 			# Changing login status to rejected
 			print('[ Authentication ]  REJECTED ......')
 			authenticate_login.login_status = 'REJCT'
+			authenticate_login.channel.queue_delete(
+				queue = authenticate_login.username
+				)
 		else:
 			print("Invalid Login!!!!")
 			# Deleting the queue on which the client is listening

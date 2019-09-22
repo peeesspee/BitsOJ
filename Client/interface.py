@@ -52,20 +52,25 @@ class client_window(QMainWindow):
 		self.button_2.clicked.connect(self.view_submissions)
 		self.button_2.setObjectName('sidebar_button')
 
-		self.button_3 = QPushButton('Query', self)
+		self.button_3 = QPushButton('Submit Solution', self)
 		self.button_3.setFixedSize(button_width, button_height)
-		self.button_3.clicked.connect(self.send_query)
+		self.button_3.clicked.connect(self.submit_solution)
 		self.button_3.setObjectName('sidebar_button')
 
-		self.button_4 = QPushButton('Leaderboard', self)
+		self.button_4 = QPushButton('Query', self)
 		self.button_4.setFixedSize(button_width, button_height)
-		self.button_4.clicked.connect(self.ranklist)
+		self.button_4.clicked.connect(self.send_query)
 		self.button_4.setObjectName('sidebar_button')
 
-		self.button_5 = QPushButton('About', self)
+		self.button_5 = QPushButton('Leaderboard', self)
 		self.button_5.setFixedSize(button_width, button_height)
-		self.button_5.clicked.connect(self.show_about)
-		self.button_5.setObjectName('sidebar_button') 
+		self.button_5.clicked.connect(self.ranklist)
+		self.button_5.setObjectName('sidebar_button')
+
+		self.button_6 = QPushButton('About', self)
+		self.button_6.setFixedSize(button_width, button_height)
+		self.button_6.clicked.connect(self.show_about)
+		self.button_6.setObjectName('sidebar_button') 
 
 		#####################################################################
 
@@ -75,9 +80,10 @@ class client_window(QMainWindow):
 		# Tab UI are managed by interface_package/ui_classes.py file
 		self.tab1 = ui_widgets.problems_ui(self)
 		self.tab2, self.sub_model = ui_widgets.submissions_ui(self)
-		self.tab3 = ui_widgets.query_ui(self)
-		self.tab4 = ui_widgets.leaderboard_ui(self)
-		self.tab5 = ui_widgets.about_ui(self)
+		self.tab3 = ui_widgets.submit_ui(self)
+		self.tab4 = ui_widgets.query_ui(self)
+		self.tab5 = ui_widgets.leaderboard_ui(self)
+		self.tab6 = ui_widgets.about_ui(self)
 
 		#####################################################################
 
@@ -97,6 +103,7 @@ class client_window(QMainWindow):
 		side_bar_layout.addWidget(self.button_3)
 		side_bar_layout.addWidget(self.button_4)
 		side_bar_layout.addWidget(self.button_5)
+		side_bar_layout.addWidget(self.button_6)
 
 		# Set stretch and Spacing 
 		side_bar_layout.addStretch(1)
@@ -134,6 +141,7 @@ class client_window(QMainWindow):
 		self.right_widget.addTab(self.tab3, '')
 		self.right_widget.addTab(self.tab4, '')
 		self.right_widget.addTab(self.tab5, '')
+		self.right_widget.addTab(self.tab6, '')
 
 		# Screen 1 will be our initial screen
 		self.right_widget.setCurrentIndex(0)
@@ -175,14 +183,17 @@ class client_window(QMainWindow):
 	def view_submissions(self):
 		self.right_widget.setCurrentIndex(1)
 
-	def send_query(self):
+	def submit_solution(self):
 		self.right_widget.setCurrentIndex(2)
 
-	def ranklist(self):
+	def send_query(self):
 		self.right_widget.setCurrentIndex(3)
 
-	def show_about(self):
+	def ranklist(self):
 		self.right_widget.setCurrentIndex(4)
+
+	def show_about(self):
+		self.right_widget.setCurrentIndex(5)
 
 
 	##################################################################################

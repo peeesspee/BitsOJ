@@ -64,7 +64,7 @@ class Login(QWidget):
 		self.setObjectName('main') 
 		self.show()
 		self.connection_object = connection 
-		return
+		return 
 
 	# Function for handling the login of the user  
 	def handle_login(self):
@@ -82,8 +82,8 @@ class Login(QWidget):
 					print('[ ERROR ] Could not exit properly : ' + str(error) )
 
 			# If server is not accepting login request then show an alert
-			elif( authenticate_login.login_status == 'REJCT' ):
-				QMessageBox.warning(self, 'Error', 'Login Rejected')
+			elif( authenticate_login.login_status == 'LRJCT' ):
+				QMessageBox.warning(self, 'Error', 'Login Rejected by admin.')
 			else:
 				QMessageBox.warning(self, 'Error', 'Wrong credentials')
 

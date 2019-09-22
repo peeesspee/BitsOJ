@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase 
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QSize, QRect
 
 
 class ui_widgets():
@@ -10,7 +10,7 @@ class ui_widgets():
 	def problems_ui(self):
 		main_layout = QVBoxLayout() 
 		heading = QLabel('Page1')
-		heading.setObjectName('main_screen_content')
+		heading.setObjectName('main_screen_heading')
 
 		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
@@ -23,7 +23,7 @@ class ui_widgets():
 
 	def submissions_ui(self):
 		heading = QLabel('My Submissions')
-		heading.setObjectName('main_screen_content')
+		heading.setObjectName('main_screen_heading')
 
 		submission_model = self.manage_models(self.db, 'my_submissions')
 
@@ -49,10 +49,44 @@ class ui_widgets():
 		main.show()
 		return main, submission_model
 
+	def submit_ui(self):
+		heading = QLabel('Submit Solution')
+		heading.setObjectName('main_screen_heading')
+
+		self.language_box = QComboBox()
+		self.language_box.setGeometry(QRect(10, 10, 41, 31))
+		self.language_box.setFixedWidth(250)
+		self.language_box.setFixedHeight(40)
+		self.language_box.setObjectName(("language_box_content"))
+		self.language_box.addItem("PYTHON-3")
+		self.language_box.addItem("PYTHON-2")
+		self.language_box.addItem("C")
+		self.language_box.addItem("C++")
+		self.language_box.addItem("JAVA")
+
+		text_area = QTextEdit()
+		text_area.setFixedHeight(700)
+		text_area.setObjectName('text_area_content')
+		text_area.setPlaceholderText('Paste your code here')
+
+
+		main_layout = QVBoxLayout() 
+
+		main_layout.addWidget(heading)
+		main_layout.addWidget(self.language_box)
+		main_layout.addWidget(text_area)
+		main_layout.addStretch(5)
+
+		main = QWidget()
+		main.setLayout(main_layout)
+		main.setObjectName("main_screen")
+
+		return main
+
 	def query_ui(self):
 		main_layout = QVBoxLayout()
-		heading = QLabel('Page3')
-		heading.setObjectName('main_screen_content')
+		heading = QLabel('Page4')
+		heading.setObjectName('main_screen_heading')
 
 		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
@@ -65,8 +99,8 @@ class ui_widgets():
 
 	def leaderboard_ui(self):
 		main_layout = QVBoxLayout()
-		heading = QLabel('Page4')
-		heading.setObjectName('main_screen_content')
+		heading = QLabel('Page5')
+		heading.setObjectName('main_screen_heading')
 
 		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
