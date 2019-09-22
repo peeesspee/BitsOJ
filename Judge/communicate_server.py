@@ -18,7 +18,7 @@ class communicate_server():
 		channel.queue_bind( exchange = 'judge_manager', queue = 'judge_verdicts')
 
 
-		message = 'VRDCT' + 'AC' + 'NO-ERROR'
+		message = 'VRDCT+' + '+AC+' + 'NO-ERROR'
 		channel.basic_publish(
 			exchange = 'judge_manager',
 			routing_key = 'judge_verdicts',
