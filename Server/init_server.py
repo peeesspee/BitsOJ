@@ -7,6 +7,11 @@ class initialize_server():
 	host = 'localhost'
 	login_allowed_flag = False
 	submission_allowed_flag = False
+	client_key = '000000000000000'
+	judge_key = '000000000000000'
+
+	def get_keys():
+		return client_key, judge_key
 
 	def get_login_flag():
 		if(initialize_server.login_allowed_flag == 'True'):

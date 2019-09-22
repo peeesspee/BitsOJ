@@ -24,7 +24,13 @@ def main():
 	judge_username, judge_password = initialize_server.get_judge_details()
 	host = initialize_server.get_host()
 
-	print(superuser_username, superuser_password, judge_username, judge_password, host)
+	####################################################
+	# TODO
+	client_key, judge_key = initialize_server.get_keys()
+	#
+	####################################################
+
+	
 
 	# Initialize database
 	print('[ SETUP ] Initialising database....')

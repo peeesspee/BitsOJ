@@ -30,7 +30,7 @@ def send():
 	global client_id
 	print("Sending code")
 	code = '#include<iostream>\n int main(void){ std::cout<<"Hello"; return 0; }'
-	message = 'SUBMT ' + client_id + ' '  + 'ABCD' + ' ' + 'CPP' + ' ' + '04:05:06' 
+	message = 'SUBMT ' + client_id + ' '  + 'ABCD' + ' ' + 'CPP' + ' ' + '04:05:06' + code
 	print ( message)
 	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
 	print("sent code")
@@ -46,7 +46,6 @@ def handler(ch, method, properties, body):
 		print("[ Status ] " + status + "\n[ ClientID ] : " + client_id + "\n[ Server ] : " + server_message)
 	elif status == "INVLD":
 		print("Invalid creds")
-
 	elif status == 'VRDCT':
 		print(server_data)
 	elif status == 'REJCT' : 

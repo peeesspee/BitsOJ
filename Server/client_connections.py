@@ -201,30 +201,18 @@ class manage_clients():
 
 			else:
 				run_id, source_file_name = submission.new_submission(client_id, problem_code, language, time_stamp, source_code)
-				# Push the submission in judging queue
-				print('[ JUDGE ] Requesting a new judgement')
-				manage_clients.send_new_request(run_id, problem_code, language, source_code)
 				# Update database
 				status = 'Running'
 				submissions_management.insert_submission(run_id, client_id, language, source_file_name, problem_code, status, time_stamp)
 				manage_clients.data_changed_flags[0] = 1
+				
+				# Push the submission in judging queue
+				print('[ JUDGE ] Requesting a new judgement')
+				manage_clients.send_new_request(run_id, problem_code, language, source_code)
 				#######################################################################
 				# Simulate a new judgement
 				time.sleep(2)
-				vrdct = 'AC'
-				err_msg = 'No_error'
-				#######################################################################
-
-				message = 'VRDCT+' + str(run_id) + '+' + vrdct + '+' + err_msg
 				
-				manage_clients.publish_message(client_username, message)
-
-				#######################################################################
-				# This is to be done in judge later on, not here
-				submissions_management.update_submission_status(run_id, vrdct)
-				#print('[ COMMUNICATE ] Changed value of data_changed_flags[0] to 1')
-				manage_clients.data_changed_flags[0] = 1
-				#######################################################################
 
 		except Exception as error:
 			print('[ ERROR ] Client submisssion could not be processed : ' + str(error))

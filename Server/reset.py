@@ -1,6 +1,4 @@
-from client_connections import manage_clients
 from database_management import manage_database
-from interface import server_window, init_gui
 from judge_connections import manage_judges
 import pika
 

@@ -1,9 +1,10 @@
 import pika
 import sys
+from database_management import submissions_management
 
 class manage_judges():
 	channel = ''
-
+	data_changed_flag = ''
 	# This function works on judge messages and passes them on to their respective handler function
 	def judge_message_handler(ch, method, properties, body):
 		# Decode the message sent by judge
@@ -12,14 +13,36 @@ class manage_judges():
 		print("\n[ PING ] Recieved a new judge message...")
 		judge_code = judge_message[0:5]
 		if judge_code == 'VRDCT':
+
+			client_username = 'team1'
+			status = 'AC'
+			run_id = '00001'
+			message = 'No Error'
+
+			status = judge_message[0:5]
+			run_id = judge_message[6:11]
+			verdict = judge_message[12:14]
+			message = judge_message[15:]
+
 			print(judge_message)
+			
+			# Fetch client username based on run id
+
+
+			manage_judges.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = judge_message) 
+			print('[ VERDICT ] New verdict sent to ' + client_username)
+			submissions_management.update_submission_status(run_id, verdict)
+			# Update GUI
+			manage_judges.data_changed_flag[0] = 1
+
 		else:
 			print("[ ERROR ] Judge sent garbage data. Trust me you don't wanna see it! ")
+			print(judge_message)
 		return
 
 	# This function continously listens for judge verdicts
-	def listen_judges(superuser_username, superuser_password, host, data_changed_flag):
-		
+	def listen_judges(superuser_username, superuser_password, host, data_changed_flag1):
+		manage_judges.data_changed_flag = data_changed_flag1
 		# Create a connection with rabbitmq and declare exchanges and queues
 		try:
 			connection = pika.BlockingConnection(pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f"))
