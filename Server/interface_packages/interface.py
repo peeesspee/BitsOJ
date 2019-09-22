@@ -5,6 +5,7 @@ from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from interface_packages.ui_classes import *
+from init_server import initialize_server
 
 
 global current_status 
@@ -280,20 +281,26 @@ class server_window(QMainWindow):
 	def allow_login_handler(self, state):
 		if(state == Qt.Checked):
 			# Allow logins
-			self.set_flags(2, 0)
+			self.set_flags(2, 1)
 		else:
 			# Stop logins
-			self.set_flags(2, 1)
+			self.set_flags(2, 0)
 		return
 
 	def allow_submissions_handler(self, state):
 		if(state == Qt.Checked):
-			# Allow logins
-			self.set_flags(3, 0)
-		else:
-			# Stop logins
+			# Allow submissions
 			self.set_flags(3, 1)
+		else:
+			# Stop submissions
+			self.set_flags(3, 0)
 		return
+
+	def check_login_allowed(self):
+		return initialize_server.get_login_flag()
+
+	def check_submission_allowed(self):
+		return initialize_server.get_submission_flag()
 
 	def set_flags(self, index, value):
 		self.data_changed_flags[index] = value

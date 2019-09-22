@@ -32,7 +32,7 @@ class manage_judges():
 			
 		except Exception as error:
 			print("[ CRITICAL ] Could not connect to RabbitMQ server : " + str(error))
-			return
+			sys.exit()
 
 		try:
 			# Judges send responses on judge_verdicts

@@ -11,8 +11,11 @@ class ui_widgets:
 		allow_submission_label = QLabel('Allow submissions : ')
 		allow_submission_label.setObjectName('main_screen_content')
 
+		submission_allowed_flag = self.check_submission_allowed()
+		
 		allow_submission_button = QCheckBox('')
 		allow_submission_button.setFixedSize(30, 30)
+		allow_submission_button.setChecked(submission_allowed_flag)
 		allow_submission_button.stateChanged.connect(self.allow_submissions_handler)
 
 		submission_model = self.manage_models(self.db, 'submissions')
@@ -58,8 +61,11 @@ class ui_widgets:
 		allow_login_label = QLabel('Allow Logins : ')
 		allow_login_label.setObjectName('main_screen_content')
 
+		login_allowed_flag = self.check_login_allowed()
+		
 		allow_login_button = QCheckBox('')
 		allow_login_button.setFixedSize(30, 30)
+		allow_login_button.setChecked(login_allowed_flag)
 		allow_login_button.stateChanged.connect(self.allow_login_handler)
 
 		client_model = self.manage_models(self.db, 'connected_clients')
