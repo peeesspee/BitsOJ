@@ -46,6 +46,7 @@ def handler(ch, method, properties, body):
 		run_id = server_data[6:11]
 		message = 'VRDCT+' + str(run_id) + '+AC+No_error'
 		ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
+		print('[ JUDGE ] Sent ' + message)
 		return
 	
 	
@@ -79,7 +80,7 @@ def main():
 		a = int(a)
 		if a == 1:
 			login()
-			listen()
+			listen1()
 		elif a == 2:
 			listen()
 		else:
