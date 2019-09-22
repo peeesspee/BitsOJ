@@ -10,7 +10,7 @@ class manage_judges():
 		judge_message = str(body.decode("utf-8"))
 		
 		print("\n[ PING ] Recieved a new judge message...")
-		judge_code = judge_message[0:6]
+		judge_code = judge_message[0:5]
 		if judge_code == 'VRDCT':
 			print(judge_message)
 		else:
