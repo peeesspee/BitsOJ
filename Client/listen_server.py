@@ -17,9 +17,7 @@ class start_listening():
 	def server_response_handler(ch,method,properties,body):
 		server_data = body.decode('utf-8')
 		status = server_data[0:5]
-		if status == 'VALID' or status == 'INVLD':
-			start_listening.login_approval_handler(server_data)
-		elif status == "VRDCT":
+		if status == "VRDCT":
 			start_listening.submission_verdict(server_data)
 		elif status == "CLRFN":
 			print("UNDER DEVELOPMENT")

@@ -67,6 +67,7 @@ class authenticate_login():
 
 		elif (status == 'REJCT'):
 			# Changing login status to rejected
+			print('[ Authentication ]  REJECTED ......')
 			authenticate_login.login_status = 'REJCT'
 		else:
 			print("Invalid Login!!!!")

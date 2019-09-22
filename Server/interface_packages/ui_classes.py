@@ -8,6 +8,13 @@ class ui_widgets:
 		heading = QLabel('Submissions')
 		heading.setObjectName('main_screen_heading')
 
+		allow_submission_label = QLabel('Allow submissions : ')
+		allow_submission_label.setObjectName('main_screen_content')
+
+		allow_submission_button = QCheckBox('')
+		allow_submission_button.setFixedSize(30, 30)
+		allow_submission_button.stateChanged.connect(self.allow_submissions_handler)
+
 		submission_model = self.manage_models(self.db, 'submissions')
 
 		submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
@@ -20,8 +27,19 @@ class ui_widgets:
 
 		submission_table = self.generate_view(submission_model)
 
+		head_layout = QHBoxLayout()
+		head_layout.addWidget(heading)
+		head_layout.addWidget(allow_submission_label)
+		head_layout.addWidget(allow_submission_button)
+		head_layout.setStretch(0, 80)
+		head_layout.setStretch(1, 10)
+		head_layout.setStretch(2, 10)
+		
+		head_widget = QWidget()
+		head_widget.setLayout(head_layout)
+
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(heading)
+		main_layout.addWidget(head_widget)
 		main_layout.addWidget(submission_table)
 		main_layout.setStretch(0,5)
 		main_layout.setStretch(1,95)
@@ -37,6 +55,13 @@ class ui_widgets:
 		heading = QLabel('Clients')
 		heading.setObjectName('main_screen_heading')
 
+		allow_login_label = QLabel('Allow Logins : ')
+		allow_login_label.setObjectName('main_screen_content')
+
+		allow_login_button = QCheckBox('')
+		allow_login_button.setFixedSize(30, 30)
+		allow_login_button.stateChanged.connect(self.allow_login_handler)
+
 		client_model = self.manage_models(self.db, 'connected_clients')
 		client_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
 		client_model.setHeaderData(1, Qt.Horizontal, 'Username')
@@ -44,9 +69,20 @@ class ui_widgets:
 
 		client_view = self.generate_view(client_model)
 
+		head_layout = QHBoxLayout()
+		head_layout.addWidget(heading)
+		head_layout.addWidget(allow_login_label)
+		head_layout.addWidget(allow_login_button)
+		head_layout.setStretch(0, 80)
+		head_layout.setStretch(1, 10)
+		head_layout.setStretch(2, 10)
+		
+
+		head_widget = QWidget()
+		head_widget.setLayout(head_layout)
 
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(heading)
+		main_layout.addWidget(head_widget)
 		main_layout.addWidget(client_view)
 		main_layout.setStretch(0,5)
 		main_layout.setStretch(1,95)		
@@ -55,7 +91,6 @@ class ui_widgets:
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		return main, client_model
-
 
 	def judge_ui(self):
 		heading = QLabel('Judges')

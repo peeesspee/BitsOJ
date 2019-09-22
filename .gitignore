@@ -7,3 +7,4 @@ __pycache__/
 *.db
 server_database.db
 Client_Submissions/
+diary

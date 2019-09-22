@@ -6,11 +6,14 @@ QStatusBar
 
 }
 
+
 QMessageBox{
 	background-color : #808080;
 	color: #FF0000;
 }
 
+
+/* Style of buttons in the sidebar  START  */
 
 
 QPushButton#sidebar_button{
@@ -47,8 +50,10 @@ QPushButton#sidebar_button::hover
 	border-right : 1px solid #AED581;
 	background-color : #22232E ;
 }
+/* Style of buttons in the sidebar  END  */
 
 
+/* Style of buttons in the close dialog box  START  */
 
 QPushButton#close_button_yes{
 	text-align : center;
@@ -87,9 +92,10 @@ QPushButton#close_button_no::focus::hover{
 QPushButton#close_button_no::hover{
 	color: #FF0000;
 }
+/* Style of buttons in the close dialog box  END  */
 
 
-
+/* Style of tabs in tab-bar (basically invisible)  START  */
 QTabBar::tab
 {
 	width: 0; 
@@ -97,25 +103,40 @@ QTabBar::tab
 	margin: 0; 
 	padding-top: 10; 
 }
+/* Style of tabs in tab-bar (basically invisible)  START  */
 
-QTabWidget::pane{
-	color : #AAAAAA;
-}
+
+/*--------------MAIN LAYOUT STARTS----------------*/
+
+/* Sidebar style */
 
 QWidget#sidebar{
 	background-color : #131217;
 	margin-left : 0px;
 }
 
+/* Right panes style START */
+
+/* right panes background color */
 QTabWidget#main_tabs{
 	background-color : #171B1F;
 	color: #AAAAAA;
 }
 
+
+/* Text color in right panes */
+QTabWidget::pane{
+	color : #AAAAAA;
+}
+
+/* Right panes style END */
+
+
+/* Style of background */
 QWidget#screen_widget
 {
 	color : #CCCCCC;
-	background-color : #121212;
+	background-color : #131217;
 }
 
 QWidget#main_widget{
@@ -131,7 +152,6 @@ QWidget#top_widget{
 QLabel#main_screen_content{
 	color : #AAAAAA;
 }
-
 
 
 
@@ -172,4 +192,29 @@ QLabel#about_screen_heading{
 	margin-top : 200px;
 	color : #E91E63;
 	font-size : 30px;
+}
+
+/* Table styles */
+QTableView{
+	background-color : #171B1F;
+	alternate-background-color : #474B4F;
+	color : #AAAAAA;
+	border : 0px;
+	gridline-color : #505050;
+
+	selection-background-color : #777777;
+}
+
+QHeaderView::section{
+	background-color : #171B1F;
+	color: #FFC0CB;	
+}
+
+/* Scroll bar styles */
+QScrollBar:vertical{
+	width : 0px;
+}
+
+QScrollBar:horizontal{
+	height : 0px;
 }

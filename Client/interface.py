@@ -1,17 +1,23 @@
 import sys
+import time
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-# from login import authenticate_login
-# from database_management import manage_database
-# from login import authenticate_login
+from interface_package.ui_classes import *
 
-global current_status
-current_status = "STOPPED"
+global current_status 
+current_status = "STOPPED" 
+
+# This is to ignore some warnings which were thrown when gui exited and python deleted some assests in wrong order
+# Nothing critical 
+def handler(msg_type, msg_log_context, msg_string):
+	pass
+qInstallMessageHandler(handler)
+
 
 class client_window(QMainWindow):
-	def __init__(self):
+	def __init__(self, data_changed_flag2):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
@@ -21,10 +27,16 @@ class client_window(QMainWindow):
 		# Initialize status bar
 		self.status = self.statusBar()
 
-		# 
-		# Make the app run full screen
-		
+		self.timer = QTimer()
+		self.change_flag = True
+		self.timer.timeout.connect(self.update_data)
+		self.timer.start(2000)
 
+		# Make data_changed_flag accessible from the class methods
+		self.data_changed_flag = data_changed_flag2
+
+		####################################################################
+		self.db = self.init_qt_database()
 		####################################################################
 		# Define Sidebar buttons and their actions
 		button_width = 200
@@ -60,11 +72,12 @@ class client_window(QMainWindow):
 		#####################################################################
 		# Manage tabs o the right window
 		# Each tab is an object returned by the respective function associated with its UI
-		self.tab1 = self.problems_ui()
-		self.tab2 = self.submissions_ui()
-		self.tab3 = self.query_ui()
-		self.tab4 = self.leaderboard_ui()
-		self.tab5 = self.about_ui()
+		# Tab UI are managed by interface_package/ui_classes.py file
+		self.tab1 = ui_widgets.problems_ui(self)
+		self.tab2, self.sub_model = ui_widgets.submissions_ui(self)
+		self.tab3 = ui_widgets.query_ui(self)
+		self.tab4 = ui_widgets.leaderboard_ui(self)
+		self.tab5 = ui_widgets.about_ui(self)
 
 		#####################################################################
 
@@ -87,11 +100,12 @@ class client_window(QMainWindow):
 
 		# Set stretch and Spacing 
 		side_bar_layout.addStretch(1)
-		side_bar_layout.addSpacing(1)
+		side_bar_layout.addSpacing(0)
 
 		# Define our side bar widget and set side bar layout to it
 		side_bar_widget = QWidget()
 		side_bar_widget.setLayout(side_bar_layout)
+		side_bar_widget.setFixedWidth(215)
 		side_bar_widget.setObjectName("sidebar")
 
 		# Define out top bar
@@ -114,6 +128,7 @@ class client_window(QMainWindow):
 		# Since sidebars are not natively supported by pyqt5
 		self.right_widget = QTabWidget()
 		self.right_widget.setObjectName("main_tabs")
+
 		self.right_widget.addTab(self.tab1, '')
 		self.right_widget.addTab(self.tab2, '')
 		self.right_widget.addTab(self.tab3, '')
@@ -170,95 +185,23 @@ class client_window(QMainWindow):
 		self.right_widget.setCurrentIndex(4)
 
 
-	#############################################################################
-	# Handle UI for various button presses
-	def problems_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page1')
-		heading.setObjectName('main_screen_content')
+	##################################################################################
 
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
+	def update_data(self):
+		# If data has changed in submission table
+		if self.data_changed_flag[0] ==1:
+			self.sub_model.select()
+			# reset data_changed_flag
+			self.data_changed_flag[0] = 0
+		return
 
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen")
-
-		return main
-
-	def submissions_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page2')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen")
-
-		return main
-
-	def query_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page3')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen")
-
-		return main
-
-	def leaderboard_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Page4')
-		heading.setObjectName('main_screen_content')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen")
-
-		return main
-
-	def about_ui(self):
-		head1 = QLabel('Made with <3 by team Bitwise')
-		head1.setObjectName('about_screen_heading')
-		head1.setAlignment(Qt.AlignCenter)
-
-		head2 = QLabel('Guess what! The BitsOJ project is open source!!! ')
-		head2.setObjectName('main_screen_content')
-		head2.setAlignment(Qt.AlignCenter)
-
-		head3 = QLabel('Contribute at https://github.com/peeesspee/BitsOJ')
-		head3.setObjectName('main_screen_content')
-		head3.setAlignment(Qt.AlignCenter)
-
-
-
-		main_layout = QVBoxLayout()
-		main_layout.addWidget(head1)
-		main_layout.addWidget(head2)
-		main_layout.addWidget(head3)
-		main_layout.addStretch(5)
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
-
-	###############################################################
-
+	####################################################################################
 
 	def set_status(self):
 		global current_status
 		self.status.showMessage(current_status)
+
+	#####################################################################################
 
 	def closeEvent(self, event):
 		message = "Pressing 'Yes' will SHUT the Client.\nAre you sure you want to exit?"
@@ -293,9 +236,63 @@ class client_window(QMainWindow):
 			event.ignore()
 
 
+	##################################################################################
+	# Database related functions 
+	def init_qt_database(self):
+		try:
+			db = QSqlDatabase.addDatabase('QSQLITE')
+			db.setDatabaseName('client_database.db')
+			return db
+		except:
+			print('[ CRITICAL ] Database loading error......')
+
+	def manage_models(self, db, table_name):
+		if db.open():
+			model = QSqlTableModel()
+			model.setTable(table_name)
+			model.setEditStrategy(QSqlTableModel.OnFieldChange)
+			model.select()
+		return model
+
+	def generate_view(self, model):
+		table = QTableView() 
+		table.setModel(model)
+		# Enable sorting in the table view 
+		table.setSortingEnabled(True)
+		# Enable alternate row colors for readability
+		table.setAlternatingRowColors(True)
+		# Select whole row when clicked
+		table.setSelectionBehavior(QAbstractItemView.SelectRows)
+		# Allow only one row to be selected 
+		table.setSelectionMode(QAbstractItemView.SingleSelection)
+		# fit view to whole space 
+		table.resizeColumnsToContents()
+		# Make table non editable
+		table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		# Set view to delete when gui is closed
+		table.setAttribute(Qt.WA_DeleteOnClose)
+
+		horizontal_header = table.horizontalHeader()
+		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+		vertical_header = table.verticalHeader()
+		#vertical_header.setSectionResizeMode(QHeaderView.Stretch)
+		vertical_header.setVisible(False)
+		return table
+
+	#########################################################################################
+
+	#########################################################################################
+
+	def set_status(self):
+		global current_status
+		self.status.showMessage(current_status)
+
+	#########################################################################################
+
+
 
 class init_gui(client_window):
-	def __init__(self):
+	def __init__(self, data_changed_flag):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
 		app.setStyleSheet(open('Elements/style.qss', "r").read())
@@ -303,7 +300,7 @@ class init_gui(client_window):
 		app.aboutToQuit.connect(self.closeEvent)
 
 		# make a reference of App class
-		server_app = client_window()
+		server_app = client_window(data_changed_flag)
 		server_app.resize(800, 600)
 		server_app.showMaximized()
 		# Close the server as soon as close buton is clicked
