@@ -1,5 +1,6 @@
 import pika
 from connection import manage_connection
+import time
 
 class communicate_server():
 	message = ''
@@ -18,6 +19,7 @@ class communicate_server():
 		channel.exchange_declare( exchange = 'judge_manager', exchange_type = 'direct', durable = True)
 		channel.queue_bind( exchange = 'judge_manager', queue = 'judge_verdicts')
 
+		channel.basic_qos(prefetch_count = 1)
 
 		# message = 'VRDCT' + '+AC+' + 'NO-ERROR'
 		# communicate_server.message = 'VRDCT+' + communicate_server.message + '+AC+' + 'NO-ERROR'
@@ -34,6 +36,7 @@ class communicate_server():
 		x = message[6:11]
 		print(x)
 		communicate_server.message = 'VRDCT+' + x + '+AC+' + 'NO-ERROR'
+		time.sleep(5)
 
 		ch.basic_publish(
 			exchange = 'judge_manager',
