@@ -2,10 +2,53 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
+from database_management import user_management
 
 class ui_widgets:
+
+	def accounts_ui(self):
+		heading = QLabel('Manage Accounts')
+		heading.setObjectName('main_screen_heading')
+
+		create_accounts_button = QPushButton('Create Accounts', self)
+		create_accounts_button.setFixedSize(200, 50)
+		create_accounts_button.clicked.connect(self.create_accounts)
+		create_accounts_button.setObjectName("topbar_button")
+
+		delete_account_button = QPushButton('Delete Account', self)
+		delete_account_button.setFixedSize(200, 50)
+		delete_account_button.clicked.connect(self.delete_account)
+		delete_account_button.setObjectName("topbar_button")
+
+		accounts_model = self.manage_models(self.db, 'accounts')
+		accounts_model.setHeaderData(0, Qt.Horizontal, 'Username')
+		accounts_model.setHeaderData(1, Qt.Horizontal, 'Password')
+		accounts_table = self.generate_view(accounts_model)
+
+		head_layout = QHBoxLayout()
+		head_layout.addWidget(heading)
+		head_layout.addWidget(create_accounts_button)
+		head_layout.addWidget(delete_account_button)
+		head_layout.setStretch(0, 80)
+		head_layout.setStretch(1, 10)
+		head_layout.setStretch(2, 10)
+		head_widget = QWidget()
+		head_widget.setLayout(head_layout)
+
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(head_widget)
+		main_layout.addWidget(accounts_table)
+		
+		main_layout.setStretch(0,10)
+		main_layout.setStretch(1,90)
+		main = QWidget()
+		main.setLayout(main_layout)
+		main.setObjectName("main_screen");
+		return main
+
 	def submissions_ui(self):
-		heading = QLabel('Submissions')
+		heading = QLabel('All Runs')
 		heading.setObjectName('main_screen_heading')
 
 		allow_submission_label = QLabel('Allow submissions : ')
@@ -55,7 +98,7 @@ class ui_widgets:
 
 
 	def client_ui(self):
-		heading = QLabel('Clients')
+		heading = QLabel('Manage Clients')
 		heading.setObjectName('main_screen_heading')
 
 		allow_login_label = QLabel('Allow Logins : ')
@@ -99,7 +142,7 @@ class ui_widgets:
 		return main, client_model
 
 	def judge_ui(self):
-		heading = QLabel('Judges')
+		heading = QLabel('Manage Judges')
 		heading.setObjectName('main_screen_heading')
 
 		#judge_model = self.manage_models(self.db, )
@@ -116,7 +159,7 @@ class ui_widgets:
 
 	def query_ui(self):
 		main_layout = QVBoxLayout()
-		heading = QLabel('Queries')
+		heading = QLabel('All Clarifications')
 		heading.setObjectName('main_screen_heading')
 
 		main_layout.addWidget(heading)
@@ -194,7 +237,7 @@ class ui_widgets:
 
 	def reports_ui(self):
 		main_layout = QVBoxLayout()
-		heading = QLabel('Report')
+		heading = QLabel('Generate Report')
 		heading.setObjectName('main_screen_heading')
 
 		main_layout.addWidget(heading)
@@ -230,15 +273,104 @@ class ui_widgets:
 		main.setObjectName("main_screen");
 		return main
 
-	def overview(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Overview')
-		heading.setObjectName('main_screen_heading')
 
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
+class new_accounts_ui(QMainWindow):
+	pwd_type = 'Random'
+	client_no = 0
+	judge_no = 0
+	data_changed_flags = ''
+	
+	def __init__(self, data_changed_flags, parent=None):
+		super(new_accounts_ui, self).__init__(parent)
+		self.data_changed_flags = data_changed_flags
+		self.setWindowTitle('Add new accounts')
+		self.setFixedSize(300, 200)
+		main = self.add_new_accounts_ui()
+		self.setCentralWidget(main)
+		return
+
+	def combo_box_data_changed(text):
+		new_accounts_ui.pwd_type = str(text)
+
+	def client_updater(text):
+		new_accounts_ui.client_no = int(text)
+		return
+	def judge_updater(text):
+		new_accounts_ui.judge_no = int(text)
+		return
+
+	def add_new_accounts_ui(self):
+		label1 = QLabel('Clients')
+
+		client_entry = QSpinBox()
+		client_entry.setMinimum(0)
+		client_entry.setMaximum(500)
+		client_entry.valueChanged.connect(new_accounts_ui.client_updater)
+		
+		# client_entry.textEdited.connect(new_accounts_ui.client_updater)
+		# client_entry.setInputMask('9000')
+
+		label2 = QLabel('Judges')
+
+		judge_entry = QSpinBox()
+		judge_entry.setMinimum(0)
+		judge_entry.setMaximum(10)
+		judge_entry.valueChanged.connect(new_accounts_ui.judge_updater)
+		# judge_entry.textEdited.connect(new_accounts_ui.judge_updater)
+		# judge_entry.setInputMask('9000')
+
+		label3 = QLabel('Password Type:')
+
+		password_type_entry = QComboBox()
+		password_type_entry.addItem('Random ')
+		password_type_entry.addItem('Easy ')
+		password_type_entry.activated[str].connect(new_accounts_ui.combo_box_data_changed)
+
+		confirm_button = QPushButton('Confirm')
+		confirm_button.setFixedSize(200, 50)
+		confirm_button.clicked.connect(lambda:new_accounts_ui.final_account_status(self))
+		
+		
+		layout = QGridLayout()
+		layout.addWidget(label1, 0, 0)
+		label1.setStyleSheet('''Qlabel{text-align : center; }''')
+		layout.addWidget(client_entry, 0, 1)
+		layout.addWidget(label2, 1, 0)
+		layout.addWidget(judge_entry, 1, 1)
+		layout.addWidget(label3, 2, 0)
+		layout.addWidget(password_type_entry, 2, 1)
+
+
+		layout.setColumnMinimumWidth(0,50)
+		layout.setColumnMinimumWidth(1,50)
+		layout.setColumnStretch(0, 1)
+		layout.setColumnStretch(1, 1)
+		layout.setRowStretch(0, 1)
+		layout.setRowStretch(1, 1)
+		layout.setVerticalSpacing(10)
+		upper_widget = QWidget()
+		upper_widget.setLayout(layout)
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(upper_widget)
+		main_layout.addWidget(confirm_button)
+		
 		main = QWidget()
 		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
+
+		label1.setObjectName('account_label')
+		label2.setObjectName('account_label')
+		label3.setObjectName('account_label')
+		client_entry.setObjectName('account_spinbox')
+		judge_entry.setObjectName('account_spinbox')
+		password_type_entry.setObjectName('account_combobox')
+		confirm_button.setObjectName('account_button')
+		main.setObjectName('account_window')
+		
 		return main
-	
+		
+	def final_account_status(self):
+		user_management.generate_n_users(new_accounts_ui.client_no, new_accounts_ui.judge_no, new_accounts_ui.pwd_type)
+		self.data_changed_flags[4] = 0
+		self.close()
+

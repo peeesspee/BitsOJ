@@ -17,7 +17,6 @@ class manage_database():
 		
 		try:	
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
-			cur.execute("create table if not exists judge_accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
 			cur.execute("create table if not exists connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
 			cur.execute("create table if not exists submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
@@ -33,28 +32,18 @@ class manage_database():
 			cur.execute("drop table if exists submissions")
 			cur.execute("drop table if exists scoreboard")
 			cur.execute("drop table if exists connected_clients")
-			cur.execute("drop table if exists judge_accounts")
 		except:
 			print("Database drop error")
 
 
 
 	def insert_user(user_name, password, cur, conn):
-		
 		try:
 			cur.execute("INSERT INTO accounts VALUES (?,?)",(user_name, password,))
 			conn.commit()
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Database insertion error : " + str(error))
-
-	def insert_judge(user_name, password, cur, conn):
-		try:
-			cur.execute("INSERT INTO judge_accounts VALUES (?,?)",(user_name, password,))
-			conn.commit()
-		except Exception as error:
-			print("[ CRITICAL ERROR ] Database insertion error : " + str(error))
-
-
+			
 	def get_cursor():
 		return manage_database.cur
 
@@ -91,17 +80,6 @@ class previous_data(manage_database):
 
 
 class client_authentication(manage_database):
-	# This function validates (judge_username, judge_password) in database
-	def validate_judge(user_name, password):
-		cur = manage_database.get_cursor()
-		cur.execute("SELECT exists(SELECT * FROM judge_accounts WHERE user_name = ? and password = ?)", (user_name,password,))
-		validation_result = cur.fetchall()
-		
-		if validation_result[0][0] == 1:
-			return True
-		else:
-			return False
-		
 
 	#This function validates the (user_name, password, client_id) in the database.
 	def validate_client(user_name, password):
@@ -131,17 +109,6 @@ class client_authentication(manage_database):
 			pass
 		conn.commit()
 		return	
-
-	# Returns a list of tuple, containing client_id, user_name of connected clients.
-	def show_connected_clients():
-		cur = manage_database.get_cursor()
-		try:
-			cur.execute("SELECT * FROM connected_clients")
-			list_connected_clints = cur.fetchall()
-			return list_connected_clints
-		except Exception as error:
-			print("[ ERROR ] Could not access client database : " + str(error))
-			return Null
 		
 	# Get client_id when user_name is known
 	def get_client_id(user_name):
@@ -207,3 +174,7 @@ class submissions_management(manage_database):
 			print("[ ERROR ] Could not view submissions")
 			return Null
 
+class user_management(manage_database):
+	def generate_n_users(no_of_clients, no_of_judges, password_type):
+		print(no_of_clients, no_of_judges, password_type)
+		return

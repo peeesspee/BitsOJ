@@ -76,6 +76,8 @@ def main():
 	print('1.Login\n2.Send solution\n3.Send Query\n4.Exit')
 	while True:
 		a = input('> ')
+		if(a == ''):
+			continue
 		a = int(a)
 		if a == 1:
 			login()

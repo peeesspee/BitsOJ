@@ -12,7 +12,7 @@ conn, cur = manage_database.initialize_database()
 
 manage_database.insert_user("team1", "abcd", cur, conn)
 manage_database.insert_user("dummy", "dummy", cur, conn)
-manage_database.insert_judge("judge1", "judge1", cur, conn)
+manage_database.insert_user("judge1", "judge1", cur, conn)
 
 connection = pika.BlockingConnection(pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f"))
 channel = connection.channel()

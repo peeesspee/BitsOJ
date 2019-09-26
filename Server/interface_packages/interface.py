@@ -30,6 +30,7 @@ class server_window(QMainWindow):
 		self.status = self.statusBar()
 		self.resize(800, 600)
 
+		# Timer to update GUI every 1 second
 		self.timer = QTimer()
 		self.change_flag = True
 		self.timer.timeout.connect(self.update_data)
@@ -45,9 +46,9 @@ class server_window(QMainWindow):
 		button_width = 200
 		button_height = 50
 
-		self.button_0 = QPushButton('Overview', self)
+		self.button_0 = QPushButton('Accounts', self)
 		self.button_0.setFixedSize(button_width, button_height)
-		self.button_0.clicked.connect(self.show_overview)
+		self.button_0.clicked.connect(self.manage_accounts)
 		self.button_0.setObjectName("sidebar_button")
 
 		self.button_1 = QPushButton('Submissions', self)
@@ -111,7 +112,7 @@ class server_window(QMainWindow):
 		# Manage tabs on the right window
 		# Each tab is an object returned by the respective function associated with its UI
 		# Tab UI are managed by interface_packages/ui_classes.py file 
-		self.tab0 = ui_widgets.overview(self)
+		self.tab0 = ui_widgets.accounts_ui(self)
 		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
 		self.tab2 = ui_widgets.judge_ui(self)
 		self.tab3, self.client_model = ui_widgets.client_ui(self)
@@ -227,42 +228,53 @@ class server_window(QMainWindow):
 
 		# Set top_widget as our central widget
 		self.setCentralWidget(top_widget)
-
 		return
 
-	def show_overview(self):
+	@pyqtSlot()
+	def manage_accounts(self):
 		self.right_widget.setCurrentIndex(0)
 
+	@pyqtSlot()
 	def view_submissions(self):
 		self.right_widget.setCurrentIndex(1)
 
+	@pyqtSlot()
 	def manage_judges(self):
 		self.right_widget.setCurrentIndex(2)
 
+	@pyqtSlot()
 	def manage_clients(self):
 		self.right_widget.setCurrentIndex(3)
 
+	@pyqtSlot()
 	def manage_queries(self):
 		self.right_widget.setCurrentIndex(4)
 
+	@pyqtSlot()
 	def manage_leaderboard(self):
 		self.right_widget.setCurrentIndex(5)
 
+	@pyqtSlot()
 	def manage_problems(self):
 		self.right_widget.setCurrentIndex(6)
 
+	@pyqtSlot()
 	def manage_languages(self):
 		self.right_widget.setCurrentIndex(7)
 
+	@pyqtSlot()
 	def show_stats(self):
 		self.right_widget.setCurrentIndex(8)
 
+	@pyqtSlot()
 	def contest_settings(self):
 		self.right_widget.setCurrentIndex(9)
 
+	@pyqtSlot()
 	def generate_report(self):
 		self.right_widget.setCurrentIndex(10)
 
+	@pyqtSlot()
 	def show_about(self):
 		self.right_widget.setCurrentIndex(11)
 
@@ -352,6 +364,20 @@ class server_window(QMainWindow):
 		vertical_header.setVisible(False)
 		return table
 
+	@pyqtSlot()
+	def create_accounts(self):
+		if self.data_changed_flags[4] == 0:
+			self.data_changed_flags[4] = 1
+			self.window = new_accounts_ui(self.data_changed_flags)
+			self.window.show()			
+		else:
+			pass
+		return
+
+	@pyqtSlot()
+	def delete_account(self):
+		return
+
 	###################################################
 	
 	###################################################
@@ -410,7 +436,6 @@ class init_gui(server_window):
 		# splash.finish(server_app)	
 		# Splash ends
 
-		
 		server_app.showMaximized()
 
 		# Execute the app mainloop
