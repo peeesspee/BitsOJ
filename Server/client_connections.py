@@ -81,6 +81,11 @@ class manage_clients():
 
 		print('[ LOGIN ] ' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
 
+		# Declare queue
+		manage_clients.channel.queue_declare(queue = client_username, durable = True)
+		#Bind the connection_manager exchange to client queue (que name is same as username)
+		manage_clients.channel.queue_bind(exchange = 'connection_manager', queue = client_username)
+
 		if client_type == 'CLIENT':
 			# If client logins have been halted by the Admin, Send a rejection message to the client
 			if(manage_clients.data_changed_flags[2] == 0):
@@ -90,9 +95,6 @@ class manage_clients():
 				return
 			# Validate the client from the database
 			status = client_authentication.validate_client(client_username, client_password)
-
-			#Bind the connection_manager exchange to client queue (que name is same as username)
-			manage_clients.channel.queue_bind(exchange = 'connection_manager', queue = client_username)
 
 			# The client listens on its own queue, whose name = client_username (Hard-coded)
 			# This queue is declared in the ../Client/client.py file
@@ -113,7 +115,7 @@ class manage_clients():
 				else:
 					# Fetch new client ID
 					client_id = client_authentication.generate_new_client_id()
-					# Add client to connected users list
+					# Add client to connected users database
 					client_authentication.add_connected_client(client_id, client_username, client_password)
 					print('[ ' + client_username + ' ] Assigned : ' + client_id )
 

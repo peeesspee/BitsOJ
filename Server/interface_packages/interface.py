@@ -112,7 +112,7 @@ class server_window(QMainWindow):
 		# Manage tabs on the right window
 		# Each tab is an object returned by the respective function associated with its UI
 		# Tab UI are managed by interface_packages/ui_classes.py file 
-		self.tab0 = ui_widgets.accounts_ui(self)
+		self.tab0, self.account_model = ui_widgets.accounts_ui(self)
 		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
 		self.tab2 = ui_widgets.judge_ui(self)
 		self.tab3, self.client_model = ui_widgets.client_ui(self)
@@ -288,6 +288,9 @@ class server_window(QMainWindow):
 		if self.data_changed_flags[1] == 1:
 			self.client_model.select()
 			self.set_flags(1, 0)
+		if self.data_changed_flags[5] == 1:
+			self.account_model.select()
+			self.set_flags(5, 0)
 		return
 
 	def allow_login_handler(self, state):
@@ -367,6 +370,7 @@ class server_window(QMainWindow):
 	@pyqtSlot()
 	def create_accounts(self):
 		if self.data_changed_flags[4] == 0:
+			# CRITICAL section flag set
 			self.data_changed_flags[4] = 1
 			self.window = new_accounts_ui(self.data_changed_flags)
 			self.window.show()			

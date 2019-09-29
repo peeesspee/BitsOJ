@@ -23,6 +23,7 @@ class ui_widgets:
 		accounts_model = self.manage_models(self.db, 'accounts')
 		accounts_model.setHeaderData(0, Qt.Horizontal, 'Username')
 		accounts_model.setHeaderData(1, Qt.Horizontal, 'Password')
+		accounts_model.setHeaderData(2, Qt.Horizontal, 'Type')
 		accounts_table = self.generate_view(accounts_model)
 
 		head_layout = QHBoxLayout()
@@ -45,7 +46,7 @@ class ui_widgets:
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main
+		return main, accounts_model
 
 	def submissions_ui(self):
 		heading = QLabel('All Runs')
@@ -322,8 +323,8 @@ class new_accounts_ui(QMainWindow):
 		label3 = QLabel('Password Type:')
 
 		password_type_entry = QComboBox()
-		password_type_entry.addItem('Random ')
-		password_type_entry.addItem('Easy ')
+		password_type_entry.addItem('Random')
+		password_type_entry.addItem('Easy')
 		password_type_entry.activated[str].connect(new_accounts_ui.combo_box_data_changed)
 
 		confirm_button = QPushButton('Confirm')
@@ -371,6 +372,9 @@ class new_accounts_ui(QMainWindow):
 		
 	def final_account_status(self):
 		user_management.generate_n_users(new_accounts_ui.client_no, new_accounts_ui.judge_no, new_accounts_ui.pwd_type)
+		# Reset the critical section flag
 		self.data_changed_flags[4] = 0
+		# Indicate new insertions in accounts
+		self.data_changed_flags[5] = 1
 		self.close()
 
