@@ -16,6 +16,7 @@ class manage_clients():
 			channel = connection.channel()
 			manage_clients.channel = channel
 			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
+			#channel.exchange_declare(exchange = 'client_broadcasts', exchange_type = '')
 			channel.queue_declare(queue = 'client_requests', durable = True)
 			channel.queue_declare(queue = 'judge_requests', durable = True)
 			channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
@@ -70,7 +71,6 @@ class manage_clients():
 
 	# This function handles all client login requests
 	def client_login_handler(client_message):
-
 		# Client sends the username, password, clientID as 'username+password+clientID', so we split it.
 		# Default value of clientID is 'Null' (String)
 		try:
@@ -79,7 +79,12 @@ class manage_clients():
 			print('[ ERROR ] Client data parsing error : ' + str(error))
 			print('[ DEBUG ] Client message was : ' + str(client_message))
 
-		print('[ LOGIN ] ' + ' > ' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
+		print('[ LOGIN ] ' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
+
+		# Declare queue
+		manage_clients.channel.queue_declare(queue = client_username, durable = True)
+		#Bind the connection_manager exchange to client queue (que name is same as username)
+		manage_clients.channel.queue_bind(exchange = 'connection_manager', queue = client_username)
 
 		if client_type == 'CLIENT':
 			# If client logins have been halted by the Admin, Send a rejection message to the client
@@ -91,11 +96,8 @@ class manage_clients():
 			# Validate the client from the database
 			status = client_authentication.validate_client(client_username, client_password)
 
-			#Bind the connection_manager exchange to client queue (que name is same as username)
-			manage_clients.channel.queue_bind(exchange = 'connection_manager', queue = client_username)
-
 			# The client listens on its own queue, whose name = client_username (Hard-coded)
-			# This queue is declared in the client.py file
+			# This queue is declared in the ../Client/client.py file
 			# Every response sent to client has 5 initial characters which specify what server is going to talk about.
 			# 'VALID' signifies a valid login.
 			# 'INVLD' signifies an invalid login attempt.
@@ -113,18 +115,16 @@ class manage_clients():
 				else:
 					# Fetch new client ID
 					client_id = client_authentication.generate_new_client_id()
-					# Add client to connected users list
+					# Add client to connected users database
 					client_authentication.add_connected_client(client_id, client_username, client_password)
 					print('[ ' + client_username + ' ] Assigned : ' + client_id )
 
-					# Update GUI to indicate new data
-					manage_clients.data_changed_flags[1] = 1
+				# Update GUI to indicate new data
+				manage_clients.data_changed_flags[1] = 1
 
 				# Reply to be sent to client
 				server_message = 'Hello_buddy!!'
-
 				message = 'VALID+' +  client_id + '+' + server_message
-
 				print('[ SENT ] ' + message)
 
 				# Send login_successful signal to client. 
@@ -138,11 +138,10 @@ class manage_clients():
 				manage_clients.publish_message(client_username, message)
 
 
-		# Judge login is handled as a client to avoid redundancy
-
+		# Judge login is handled as a client to avoid redundancy in code
 		elif client_type == 'JUDGE':
 			# IN ALL REGARDS, CLIENT HERE MEANS A judge_manager
-			status = client_authentication.validate_judge(client_username, client_password)
+			status = client_authentication.validate_client(client_username, client_password)
 
 			#Bind the connection_manager exchange to client queue (queue name is same as username)
 			manage_clients.channel.queue_bind(exchange = 'judge_manager', queue = client_username)

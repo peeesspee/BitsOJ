@@ -18,27 +18,33 @@ sys.path.append('../')
 
 def main():
 	# Initialize server
-	print('[ SETUP ] Initialising server....')
+	print('[ SETUP ] Initialising server...')
 	initialize_server.read_file()
 	superuser_username, superuser_password = initialize_server.get_superuser_details()
 	judge_username, judge_password = initialize_server.get_judge_details()
 	host = initialize_server.get_host()
 
 	####################################################
-	# TODO
+	# TODO : Validate these keys when any message is sent, to maintain security (As project is open source)
 	client_key, judge_key = initialize_server.get_keys()
 	#
 	####################################################
 
-	
 
 	# Initialize database
-	print('[ SETUP ] Initialising database....')
+	print('[ SETUP ] Initialising database...')
 	conn, cur = manage_database.initialize_database()
 	
 	##################################
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 10)
+	#index		value		meaning
+	#	0		0/1			0/1: No new/ New submission data to refresh
+	#	1		0/1			0/1: No new/ New login : Refresh login view
+	#	2		0/1 		0/1: Disallow/Allow logins
+	#	3		0/1			0/1: Disallow/Allow submissions
+	#	4
+	#	5
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	login_status = initialize_server.get_login_flag()
 	if login_status == True:
@@ -51,10 +57,11 @@ def main():
 		data_changed_flags[3] = 1
 	else:
 		data_changed_flags[3] = 0
+	data_changed_flags[4] = 0
 	##################################
 
 	# Manage Threads
-	print('[ SETUP ] Initialising threads....')
+	print('[ SETUP ] Initialising subprocesses...')
 	client_pid, judge_pid = manage_process(superuser_username, superuser_password, judge_username, judge_password, host, data_changed_flags)
 
 	# Initialize GUI handler

@@ -10,7 +10,7 @@ global client_id
 client_id = 'Nul'
 
 username = 'team1'
-password = 'abcd'
+password = 'Bits1'
 
 try:
 	connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
@@ -23,7 +23,7 @@ except:
 
 def login():
 	username = input('Enter username: ') or 'team1'
-	password = input('Enter password: ') or 'abcd'
+	password = input('Enter password: ') or 'Bits1'
 	print("Sending")
 	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = 'LOGIN ' + username + ' ' + password + ' ' + client_id + ' CLIENT')
 	print("Sent")
@@ -76,6 +76,8 @@ def main():
 	print('1.Login\n2.Send solution\n3.Send Query\n4.Exit')
 	while True:
 		a = input('> ')
+		if(a == ''):
+			continue
 		a = int(a)
 		if a == 1:
 			login()

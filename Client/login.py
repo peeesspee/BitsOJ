@@ -74,6 +74,7 @@ class authenticate_login():
 				)
 		else:
 			print("Invalid Login!!!!")
+			authenticate_login.login_status = 'LRJCT'
 			# Deleting the queue on which the client is listening
 			authenticate_login.channel.queue_delete(
 				queue = authenticate_login.username

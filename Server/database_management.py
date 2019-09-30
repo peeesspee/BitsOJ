@@ -1,5 +1,7 @@
 import sqlite3
 import sys
+import random
+import string
 
 global client_id_counter
 
@@ -16,8 +18,7 @@ class manage_database():
 			print ("[ CRITICAL ERROR ]Database connection error : " + str(error))
 		
 		try:	
-			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
-			cur.execute("create table if not exists judge_accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(10))")
+			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
 			cur.execute("create table if not exists connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
 			cur.execute("create table if not exists submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
@@ -33,28 +34,18 @@ class manage_database():
 			cur.execute("drop table if exists submissions")
 			cur.execute("drop table if exists scoreboard")
 			cur.execute("drop table if exists connected_clients")
-			cur.execute("drop table if exists judge_accounts")
 		except:
 			print("Database drop error")
 
 
 
-	def insert_user(user_name, password, cur, conn):
-		
+	def insert_user(user_name, password, ctype, cur, conn):
 		try:
-			cur.execute("INSERT INTO accounts VALUES (?,?)",(user_name, password,))
+			cur.execute("INSERT INTO accounts VALUES (?,?,?)",(user_name, password, ctype,))
 			conn.commit()
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Database insertion error : " + str(error))
-
-	def insert_judge(user_name, password, cur, conn):
-		try:
-			cur.execute("INSERT INTO judge_accounts VALUES (?,?)",(user_name, password,))
-			conn.commit()
-		except Exception as error:
-			print("[ CRITICAL ERROR ] Database insertion error : " + str(error))
-
-
+			
 	def get_cursor():
 		return manage_database.cur
 
@@ -91,17 +82,6 @@ class previous_data(manage_database):
 
 
 class client_authentication(manage_database):
-	# This function validates (judge_username, judge_password) in database
-	def validate_judge(user_name, password):
-		cur = manage_database.get_cursor()
-		cur.execute("SELECT exists(SELECT * FROM judge_accounts WHERE user_name = ? and password = ?)", (user_name,password,))
-		validation_result = cur.fetchall()
-		
-		if validation_result[0][0] == 1:
-			return True
-		else:
-			return False
-		
 
 	#This function validates the (user_name, password, client_id) in the database.
 	def validate_client(user_name, password):
@@ -131,17 +111,6 @@ class client_authentication(manage_database):
 			pass
 		conn.commit()
 		return	
-
-	# Returns a list of tuple, containing client_id, user_name of connected clients.
-	def show_connected_clients():
-		cur = manage_database.get_cursor()
-		try:
-			cur.execute("SELECT * FROM connected_clients")
-			list_connected_clints = cur.fetchall()
-			return list_connected_clints
-		except Exception as error:
-			print("[ ERROR ] Could not access client database : " + str(error))
-			return Null
 		
 	# Get client_id when user_name is known
 	def get_client_id(user_name):
@@ -206,4 +175,70 @@ class submissions_management(manage_database):
 		except:
 			print("[ ERROR ] Could not view submissions")
 			return Null
+
+class user_management(manage_database):
+	def generate_n_users(no_of_clients, no_of_judges, password_type):
+		cur = manage_database.get_cursor()
+		print(password_type)
+		# Get max client and judge usernames till now
+		try:
+			cur.execute("SELECT max(user_name) from accounts where client_type = 'CLIENT'")
+			max_client_username = int(cur.fetchall()[0][0][4:])
+		except:
+			max_client_username = 0
+
+		try:
+			cur.execute("SELECT max(user_name) from accounts where client_type = 'JUDGE'")
+			max_judge_username = int(cur.fetchall()[0][0][5:])
+		except:
+			max_judge_username = 0
+		
+		client_list = user_management.generate_clients(no_of_clients, max_client_username)
+		judge_list = user_management.generate_judges(no_of_judges, max_judge_username)
+		client_pass_list = user_management.generate_passwords(max_client_username, no_of_clients, password_type)
+		judge_pass_list = user_management.generate_passwords(max_judge_username, no_of_judges, password_type)
+
+		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
+		cur.execute("begin")
+		try:
+			for i in range(0, no_of_clients):
+				cur.execute("INSERT into accounts values (?, ?, ? )" , (client_list[i], client_pass_list[i], 'CLIENT'))
+
+			for i in range(0, no_of_judges):
+				cur.execute("INSERT into accounts values (?, ?, ? )" , (judge_list[i], judge_pass_list[i], 'JUDGE'))
+
+			cur.execute("commit")
+
+		except:
+			print('[ CRITICAL ] Database insertion error! Roll back')
+			cur.execute("rollback")
+
+		# INSERTION FINISHED
+		return
+
+	def generate_clients(no_of_clients, max_so_far):
+		client_list = list()
+		for i in range(max_so_far+1, max_so_far+no_of_clients+1):
+			client_list.append('team' + str(i))
+
+		return client_list
+	
+	def generate_judges(no_of_judges, max_so_far):
+		judge_list = list()
+		for i in range(max_so_far+1, max_so_far+no_of_judges+1):
+			judge_list.append('judge' + str(i))
+		return judge_list
+		
+	def generate_passwords(prev, number, type):
+		password_list = list()
+		chars=string.ascii_uppercase + string.digits+string.ascii_lowercase
+		for i in range(0, number):
+			if type == 'Easy':
+				password = 'Bits'+str(i + prev + 1)
+			elif type == 'Random':
+				password = ''.join(random.choice(chars) for _ in range(6))
+
+			password_list.append(password)
+		return password_list
+
 

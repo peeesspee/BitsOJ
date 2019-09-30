@@ -231,11 +231,29 @@ QTextEdit#text_area_content
 	font-size : 20px;
 }
 
-
+/* Drop Down Menu */
 QComboBox#language_box_content
 {
 	background-color : #121212;
 	color : #3DC774;
-	font-size : 20px;
+}
 
+
+QComboBox:item:selected
+{
+	background-color : #121212;
+	color : #3DC774;
+
+}
+
+QComboBox:item
+{
+	background-color : #121212;
+	color : #3DC774;
+}
+
+QComboBox:item:hover
+{
+	background-color : #A9A9A9;
+	color : #000000;
 }

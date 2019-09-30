@@ -77,6 +77,8 @@ def main():
 	print('1.Login\n2.Start judging\n3.Exit')
 	while True:
 		a = input('> ')
+		if a == '':
+			continue
 		a = int(a)
 		if a == 1:
 			login()

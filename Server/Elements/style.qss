@@ -54,6 +54,45 @@ QPushButton#sidebar_button::hover
 
 
 
+/* Style of buttons in the topbar  START  */
+QPushButton#topbar_button{
+	font-size : 18px;
+	text-align : center; 	
+	border : 1px solid #ADFF2F;
+	border-radius : 25px;
+	background-color : #202428 ;
+	color : #838383;
+}
+
+QPushButton#topbar_button::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+}
+
+QPushButton#topbar_button::hover::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+}
+
+QPushButton#topbar_button::pressed
+{
+	color : #23B2EE;
+	background-color : #202428;
+}
+
+QPushButton#topbar_button::hover
+{
+	color : #0892D0;
+	background-color : #202428 ;
+}
+
+/* Style of buttons in the topbar  END  */
+
+
+
+
 /* Style of buttons in the close dialog box  START  */
 QPushButton#close_button_yes{
 	text-align : center;
@@ -183,3 +222,41 @@ QScrollBar:horizontal{
 }
 
 /*--------------MAIN LAYOUT ENDS----------------*/
+
+
+
+
+/*--------------ADD USERS LAYOUT STARTS---------*/
+QLabel#account_label
+{
+	color : #23B2EE;
+}
+
+QSpinBox#account_spinbox
+{
+	color : #AAAAAA;
+	background-color : #474B4F;
+}
+
+QComboBox#account_combobox
+{
+	color : #AAAAAA;
+	background-color : #474B4F;
+}
+
+QPushButton#account_button
+{
+	color : #AAAAAA;
+	text-align : center;
+	margin-left : 70px;
+	background-color : #171B1F;
+	border : 1px solid #ADFF2F;
+	border-radius : 25px;
+}
+
+QWidget#account_window
+{
+	background-color : #171B1F;
+}
+
+/*--------------ADD USERS LAYOUT ENDS---------*/
