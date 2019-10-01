@@ -2,6 +2,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase 
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QSize, QRect
+import os
+import time
+# from manage_code import send_code
 
 
 class ui_widgets():
@@ -53,31 +56,29 @@ class ui_widgets():
 		heading = QLabel('Submit Solution')
 		heading.setObjectName('main_screen_heading')
 
-		self.language_box = QComboBox()
-		self.language_box.setGeometry(QRect(10, 10, 491, 31))
-		self.language_box.setFixedWidth(250)
-		self.language_box.setFixedHeight(40)
-		self.language_box.setObjectName(("language_box_content"))
-		self.language_box.addItem("PYTHON-3")
-		self.language_box.addItem("PYTHON-2")
-		self.language_box.addItem("C")
-		self.language_box.addItem("C++")
-		self.language_box.addItem("JAVA")
+		ui_widgets.drop_down = QHBoxLayout()
+		ui_widgets.language_box = QComboBox()
+		ui_widgets.language_box.setGeometry(QRect(10, 10, 491, 31))
+		ui_widgets.language_box.setFixedWidth(250)
+		ui_widgets.language_box.setFixedHeight(40)
+		ui_widgets.language_box.setObjectName(("language_box_content"))
+		ui_widgets.language_box.addItem("PYTHON-3")
+		ui_widgets.language_box.addItem("PYTHON-2")
+		ui_widgets.language_box.addItem("C")
+		ui_widgets.language_box.addItem("C++")
+		ui_widgets.language_box.addItem("JAVA")
 
-		text_area = QTextEdit()
-		text_area.setFixedHeight(700)
-		text_area.setObjectName('text_area_content')
-		text_area.setPlaceholderText('Paste your code here')
+		ui_widgets.text_area = QTextEdit()
+		ui_widgets.text_area.setFixedHeight(700)
+		ui_widgets.text_area.setObjectName('text_area_content')
+		ui_widgets.text_area.setPlaceholderText('Paste your code here')
 
 		self.horizontal_layout = QHBoxLayout()
-		self.upload_file = QPushButton('Upload File', self)
-		self.upload_file.setObjectName('upload_file')
-		self.upload_file.clicked.connect(path_dialog.upload_call)
-		print('Hello')
 		self.submit_solution = QPushButton('Submit', self)
 		self.submit_solution.setObjectName('submit')
-		self.horizontal_layout.addWidget(self.upload_file)
-		self.horizontal_layout.addWidget(self.submit_solution)
+		self.submit_solution.setFixedSize(200, 50)
+		self.submit_solution.clicked.connect(ui_widgets.submit_call)
+		self.horizontal_layout.addWidget(self.submit_solution,  alignment=Qt.AlignRight)
 
 		self.horizontal_widget = QWidget()
 		self.horizontal_widget.setLayout(self.horizontal_layout)
@@ -87,8 +88,8 @@ class ui_widgets():
 		main_layout = QVBoxLayout() 
 
 		main_layout.addWidget(heading)
-		main_layout.addWidget(self.language_box)
-		main_layout.addWidget(text_area)
+		main_layout.addWidget(ui_widgets.language_box)
+		main_layout.addWidget(ui_widgets.text_area)
 		main_layout.addWidget(self.horizontal_widget)
 		main_layout.addStretch(5)
 
@@ -150,35 +151,19 @@ class ui_widgets():
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		return main
+
+
+
+	def submit_call(self):
+		local_time = time.localtime()
+		time_stamp = time.strftime("%H:%M:%S", local_time)
+		textbox_value = ui_widgets.text_area.toPlainText()
+		selected_language = str(ui_widgets.language_box.currentText())
+		print(time_stamp)
+		print(textbox_value)
+		print(str(ui_widgets.language_box.currentText()))
+
+
 	###################################################################################
 
 
-
-class path_dialog(QWidget):
-	file_path = None
-	def __init__(self):
-		super().__init__()
-		self.title = 'Upload File'
-		self.left = 10
-		self.top = 10
-		self.width = 640
-		self.height = 480
-		self.initUI()
-
-	def initUI(self):
-		self.setWindowTitle(self.title)
-		self.setGeometry(self.left, self.top, self.width, self.height)
-		self.openFileNameDialog()
-
-	def openFileNameDialog(self):
-		options = QFileDialog.Options()
-		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Upload File", "","All Files (*);;Python Files (*.py)", options=options)
-		if fileName:
-			print('[ File path ]' + fileName)
-			path_dialog.file_path = fileName
-
-
-	def upload_call():
-		ex = path_dialog()
-		ex.show()

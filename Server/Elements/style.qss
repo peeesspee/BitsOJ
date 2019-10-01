@@ -55,6 +55,7 @@ QPushButton#sidebar_button::hover
 
 
 /* Style of buttons in the topbar  START  */
+
 QPushButton#topbar_button{
 	font-size : 18px;
 	text-align : center; 	

@@ -57,13 +57,10 @@ def main():
 
 
 def manage_process(channel, connection, cursor, host, data_changed_flags):
-	send_data = multiprocessing.Process(target =send_code.uploading_solution , args = (channel, connection, cursor, host, data_changed_flags))
 	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (channel, connection, cursor, host, data_changed_flags))
 
-	send_data.start()
 	listen_from_server.start()
 
-	# send_pid = send_data.pid
 	listen_pid = listen_from_server.pid
 
 	return listen_pid
