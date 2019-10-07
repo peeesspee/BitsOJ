@@ -6,7 +6,7 @@ import os
 import time
 import json
 from functools import partial
-# from manage_code import send_code
+from manage_code import send_code
 
 
 with open("config.json", "r") as read_config:
@@ -27,8 +27,7 @@ class ui_widgets():
 		for i in range(config["No_of_Problems"]):
 			ui_widgets.var['Problem_{}'.format(i+1)] = QPushButton('Problem_'+str(i+1),self)
 			ui_widgets.var['Problem_{}'.format(i+1)].setObjectName('submit')
-			ui_widgets.var['Problem_{}'.format(i+1)].setFixedSize(200, 50)
-			print('Problem_{}'.format(i+1))
+			ui_widgets.var['Problem_{}'.format(i+1)].setFixedSize(250, 60)
 			ui_widgets.var['Problem_{}'.format(i+1)].clicked.connect(partial(ui_widgets.show_problem, i+1))
 			main_layout.addWidget(ui_widgets.var['Problem_{}'.format(i+1)], alignment=Qt.AlignCenter)
 
@@ -129,7 +128,7 @@ class ui_widgets():
 
 	def query_ui(self):
 		main_layout = QVBoxLayout()
-		heading = QLabel('Page4')
+		heading = QLabel('Query')
 		heading.setObjectName('main_screen_heading')
 
 		main_layout.addWidget(heading)
@@ -143,7 +142,7 @@ class ui_widgets():
 
 	def leaderboard_ui(self):
 		main_layout = QVBoxLayout()
-		heading = QLabel('Page5')
+		heading = QLabel('Leaderboard')
 		heading.setObjectName('main_screen_heading')
 
 		main_layout.addWidget(heading)
@@ -188,10 +187,11 @@ class ui_widgets():
 		textbox_value = ui_widgets.text_area.toPlainText()
 		selected_language = str(ui_widgets.language_box.currentText())
 		problem_code = config["Problems"][str(ui_widgets.problem_box.currentText())]
-		print(time_stamp)
-		print(textbox_value)
-		print(str(ui_widgets.language_box.currentText()))
-		print(problem_code)
+		send_code.solution_request(
+			problem_code,
+			selected_language,
+			time_stamp,
+			textbox_value)
 
 
 	def show_problem(i):

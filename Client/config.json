@@ -2,12 +2,13 @@
     "rabbitmq_username": "client",
     "rabbitmq_password": "client",
     "host": "localhost",
-    "No_of_Problems": 5,
+    "No_of_Problems": 6,
     "Problems": {
-        "Problem_1": "asd",
-        "Problem_2": "asw",
-        "Problem_3": "qwe",
-        "Problem_4": "rty",
-        "Problem_5": "tyu"
+        "Problem_1": "asdf",
+        "Problem_2": "sdfg",
+        "Problem_3": "fghg",
+        "Problem_4": "agfd",
+        "Problem_5": "qwer",
+        "Problem_6": "tyui"
     }
 }

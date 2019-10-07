@@ -27,4 +27,4 @@ class manage_connection():
 		connection.close()
 
 	def channel_host():
-		return channel,host
+		return manage_connection.channel,manage_connection.host

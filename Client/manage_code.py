@@ -5,47 +5,32 @@ from connection import manage_connection
 
 class send_code():
 	client_id, username = authenticate_login.get_user_details()
-	code = None
-	file_path = None
-	Language = None
-	Problem_Code = { 1 : 'PSPA'}
-	final_data = ''
-	selected_language = ''
-	selected_problem = ''
-	time_stamp = ''
-	extension = ''
+	channel,host = manage_connection.channel_host()
 
-
-	def uploading_solution(channel, host):
+	def solution_request(problem_Code,selected_language,time_stamp,code):
+		if(selected_language == 'C'):
+			extention = '.c'
+			language_code = 'GCC'
+		elif(selected_language == 'C++'):
+			extention = '.cpp'
+			language_code = 'CPP'
+		elif(selected_language == 'JAVA'):
+			extention = '.java'
+			language_code = 'JVA'
+		elif(selected_language == 'PYTHON-3'):
+			extention = '.py'
+			language_code = 'PY3'
+		else:
+			extention = '.py'
+			language_code = 'PY2'
+		final_data = 'SUBMT ' + authenticate_login.client_id + ' '  + problem_Code + ' ' + language_code + ' ' + time_stamp + ' ' + code
 		try:
-			submit_solution.file_path = input('Enter path of solution : ') or '/home/sj1328/Desktop/algoPractice/dfs.cpp'
-			filename, submit_solution.extension = os.path.splitext(submit_solution.file_path)
-			submit_solution.code = open(submit_solution.file_path, 'r').read()
-			for key,value in submit_solution.Language.items():
-				print(key,value)
-			submit_solution.selected_language = input('Select language : ') or 2
-			submit_solution.selected_language = str(submit_solution.Language[int(submit_solution.selected_language)])
-			for key,value in submit_solution.Problem_Code.items():
-				print(key,value)
-			submit_solution.selected_problem = input('Select Problem : ') or 1
-			submit_solution.selected_problem = str(submit_solution.Problem_Code[int(submit_solution.selected_problem)])
-			local_time = time.localtime()
-			submit_solution.time_stamp = time.strftime("%H:%M:%S", local_time)
-			submit_solution.solution_request(
-				channel
+			authenticate_login.channel.basic_publish(
+				exchange = 'connection_manager',
+				routing_key = 'client_requests',
+				body = final_data,
 				)
 		except:
-			print("File Not Found ------ Try Again")
-			submit_solution.uploading_solution(
-				channel
-				)
+			print("Error in channel.basic_publish ")
 
-	def solution_request(channel):
-		submit_solution.final_data = 'SUBMT ' + submit_solution.client_id + ' '  + submit_solution.selected_problem + ' ' + submit_solution.selected_language + ' ' + submit_solution.time_stamp + ' ' + submit_solution.code
-
-		try:
-			send_options.publish_data(channel)
-		except:
-			print("Error i channel.basic_publish ")
-
-		print("Your code is running \n Wait for the judgement")
+		print("Your code is running \nWait for the judgement")
