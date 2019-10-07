@@ -5,7 +5,8 @@ from communicate_server import communicate_server
 
 rabbitmq_username = "judge1"
 rabbitmq_password = "judge1"
-host = "192.168.43.239"
+# host = "192.168.43.239"
+host = 'localhost'
 
 
 channel,connection = manage_connection.initialize_connection(rabbitmq_username,rabbitmq_password,host)
@@ -27,14 +28,5 @@ while (status == 'VALID'):
 
 
 
-
-
-
 manage_connection.terminate_connection(connection)
-
-
-
-
-
-
 

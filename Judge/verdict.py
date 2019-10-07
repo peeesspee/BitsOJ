@@ -5,7 +5,7 @@ import subprocess
 class verdict():
 
 
-	x = open("./A/sol.cpp", 'r')
+	x = open("./A/gen.cpp", 'r')
 	print(x.read())
 	source_code = x.read()
 	problem_code = 'ARCT'
