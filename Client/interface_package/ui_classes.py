@@ -4,7 +4,12 @@ from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QSize, QRect
 import os
 import time
+import json
 # from manage_code import send_code
+
+
+with open("config.json", "r") as read_config:
+	config = json.load(read_config)
 
 
 class ui_widgets():
@@ -12,11 +17,22 @@ class ui_widgets():
 	# Handle UI for various button presses
 	def problems_ui(self):
 		main_layout = QVBoxLayout() 
-		heading = QLabel('Page1')
+		heading = QLabel('Problems')
 		heading.setObjectName('main_screen_heading')
 
 		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
+		var = {}
+		for i in range(config["No_of_Problems"]):
+			# print(config["Problems"][0])
+			# print(type(config["Problems"][0]))
+			# key, value = config["Problems"][0].items()
+			# key = config["Problems"][0].keys()
+			# print(key)
+			var['Problem_{}'.format(i+1)] = QPushButton('Problem_'+str(i),self)
+			print(type(var['Problem_{}'.format(i+1)]))
+			main_layout.addWidget(var['Problem_{}'.format(i+1)])
+
 
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -56,7 +72,7 @@ class ui_widgets():
 		heading = QLabel('Submit Solution')
 		heading.setObjectName('main_screen_heading')
 
-		ui_widgets.drop_down = QHBoxLayout()
+		self.drop_down = QHBoxLayout()
 		ui_widgets.language_box = QComboBox()
 		ui_widgets.language_box.setGeometry(QRect(10, 10, 491, 31))
 		ui_widgets.language_box.setFixedWidth(250)
@@ -68,6 +84,19 @@ class ui_widgets():
 		ui_widgets.language_box.addItem("C++")
 		ui_widgets.language_box.addItem("JAVA")
 
+		ui_widgets.problem_box = QComboBox()
+		ui_widgets.problem_box.setGeometry(QRect(10, 10, 491, 31))
+		ui_widgets.problem_box.setFixedWidth(250)
+		ui_widgets.problem_box.setFixedHeight(40)
+		ui_widgets.problem_box.setObjectName(("language_box_content"))
+		ui_widgets.problem_box.addItem("Problem 1")
+		ui_widgets.problem_box.addItem("Problem 2")
+
+		self.drop_down.addWidget(ui_widgets.language_box)
+		self.drop_down.addWidget(ui_widgets.problem_box)
+		self.drop_widget = QWidget()
+		self.drop_widget.setLayout(self.drop_down)
+
 		ui_widgets.text_area = QTextEdit()
 		ui_widgets.text_area.setFixedHeight(700)
 		ui_widgets.text_area.setObjectName('text_area_content')
@@ -77,6 +106,7 @@ class ui_widgets():
 		self.submit_solution = QPushButton('Submit', self)
 		self.submit_solution.setObjectName('submit')
 		self.submit_solution.setFixedSize(200, 50)
+		print(type(self.submit_solution))
 		self.submit_solution.clicked.connect(ui_widgets.submit_call)
 		self.horizontal_layout.addWidget(self.submit_solution,  alignment=Qt.AlignRight)
 
@@ -88,7 +118,7 @@ class ui_widgets():
 		main_layout = QVBoxLayout() 
 
 		main_layout.addWidget(heading)
-		main_layout.addWidget(ui_widgets.language_box)
+		main_layout.addWidget(self.drop_widget)
 		main_layout.addWidget(ui_widgets.text_area)
 		main_layout.addWidget(self.horizontal_widget)
 		main_layout.addStretch(5)

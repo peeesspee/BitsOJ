@@ -3,6 +3,7 @@ import multiprocessing
 import os
 import signal
 import sys
+import json
 
 from time import sleep
 from connection import manage_connection
@@ -13,10 +14,13 @@ from listen_server import start_listening
 from manage_code import send_code
 
 
+with open("config.json", "r") as read_config:
+	config = json.load(read_config)
+
 # Basic credentials for login to RabbitMQ Server
-rabbitmq_username = 'client'
-rabbitmq_password = 'client'
-host = 'localhost'
+rabbitmq_username = config["rabbitmq_username"]
+rabbitmq_password = config["rabbitmq_password"]
+host = config["host"]
 
 
 def main():

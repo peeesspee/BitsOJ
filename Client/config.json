@@ -1,0 +1,14 @@
+{
+    "rabbitmq_username": "client",
+    "rabbitmq_password": "client",
+    "host": "localhost",
+    "No_of_Problems": 2,
+    "Problems": [
+        {
+            "Problem_1": "SDS"
+        },
+        {
+            "Problem_2": "SAD"
+        }
+    ]
+}
