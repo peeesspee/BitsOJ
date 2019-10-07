@@ -15,25 +15,22 @@ with open("config.json", "r") as read_config:
 class ui_widgets():
 	#############################################################################
 	# Handle UI for various button presses
+	var = {}
 	def problems_ui(self):
 		main_layout = QVBoxLayout() 
 		heading = QLabel('Problems')
 		heading.setObjectName('main_screen_heading')
 
 		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
-		var = {}
+		
 		for i in range(config["No_of_Problems"]):
-			# print(config["Problems"][0])
-			# print(type(config["Problems"][0]))
-			# key, value = config["Problems"][0].items()
-			# key = config["Problems"][0].keys()
-			# print(key)
-			var['Problem_{}'.format(i+1)] = QPushButton('Problem_'+str(i),self)
-			print(type(var['Problem_{}'.format(i+1)]))
-			main_layout.addWidget(var['Problem_{}'.format(i+1)])
+			ui_widgets.var['Problem_{}'.format(i+1)] = QPushButton('Problem_'+str(i+1),self)
+			ui_widgets.var['Problem_{}'.format(i+1)].setObjectName('submit')
+			ui_widgets.var['Problem_{}'.format(i+1)].setFixedSize(200, 50)
+			ui_widgets.var['Problem_{}'.format(i+1)].clicked.connect(lambda: ui_widgets.show_problem(i+1))
+			main_layout.addWidget(ui_widgets.var['Problem_{}'.format(i+1)], alignment=Qt.AlignCenter)
 
-
+		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen")
@@ -89,8 +86,8 @@ class ui_widgets():
 		ui_widgets.problem_box.setFixedWidth(250)
 		ui_widgets.problem_box.setFixedHeight(40)
 		ui_widgets.problem_box.setObjectName(("language_box_content"))
-		ui_widgets.problem_box.addItem("Problem 1")
-		ui_widgets.problem_box.addItem("Problem 2")
+		for i in range(config["No_of_Problems"]):
+			ui_widgets.problem_box.addItem("Problem_"+str(i+1))
 
 		self.drop_down.addWidget(ui_widgets.language_box)
 		self.drop_down.addWidget(ui_widgets.problem_box)
@@ -106,7 +103,6 @@ class ui_widgets():
 		self.submit_solution = QPushButton('Submit', self)
 		self.submit_solution.setObjectName('submit')
 		self.submit_solution.setFixedSize(200, 50)
-		print(type(self.submit_solution))
 		self.submit_solution.clicked.connect(ui_widgets.submit_call)
 		self.horizontal_layout.addWidget(self.submit_solution,  alignment=Qt.AlignRight)
 
@@ -189,11 +185,15 @@ class ui_widgets():
 		time_stamp = time.strftime("%H:%M:%S", local_time)
 		textbox_value = ui_widgets.text_area.toPlainText()
 		selected_language = str(ui_widgets.language_box.currentText())
+		problem_code = config["Problems"][str(ui_widgets.problem_box.currentText())]
 		print(time_stamp)
 		print(textbox_value)
 		print(str(ui_widgets.language_box.currentText()))
+		print(problem_code)
 
 
+	def show_problem(i):
+		print('Button {0} clicked'.format(i))
 	###################################################################################
 
 

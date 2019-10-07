@@ -26,6 +26,7 @@ class client_window(QMainWindow):
 		
 		# Initialize status bar
 		self.status = self.statusBar()
+		self.resize(800, 600)
 
 		self.timer = QTimer()
 		self.change_flag = True
@@ -312,10 +313,11 @@ class init_gui(client_window):
 
 		# make a reference of App class
 		server_app = client_window(data_changed_flag)
-		server_app.resize(800, 600)
+
+		# server_app.showFullScreen()
 		server_app.showMaximized()
 		# Close the server as soon as close buton is clicked
-		sys.exit(app.exec_())
+		app.exec_()
 
 
 
