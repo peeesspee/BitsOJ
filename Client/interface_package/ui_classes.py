@@ -5,6 +5,7 @@ from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex,
 import os
 import time
 import json
+from functools import partial
 # from manage_code import send_code
 
 
@@ -27,7 +28,8 @@ class ui_widgets():
 			ui_widgets.var['Problem_{}'.format(i+1)] = QPushButton('Problem_'+str(i+1),self)
 			ui_widgets.var['Problem_{}'.format(i+1)].setObjectName('submit')
 			ui_widgets.var['Problem_{}'.format(i+1)].setFixedSize(200, 50)
-			ui_widgets.var['Problem_{}'.format(i+1)].clicked.connect(lambda: ui_widgets.show_problem(i+1))
+			print('Problem_{}'.format(i+1))
+			ui_widgets.var['Problem_{}'.format(i+1)].clicked.connect(partial(ui_widgets.show_problem, i+1))
 			main_layout.addWidget(ui_widgets.var['Problem_{}'.format(i+1)], alignment=Qt.AlignCenter)
 
 		main_layout.addStretch(5)
