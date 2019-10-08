@@ -379,7 +379,45 @@ class server_window(QMainWindow):
 		return
 
 	@pyqtSlot()
-	def delete_account(self):
+	def delete_account(self, selected_rows):
+		if self.data_changed_flags[4] == 0:
+			self.data_changed_flags[4] = 1
+		else:
+			return
+		username = str(selected_rows[0].data())
+		message = "Are you sure you want to delete : " + username + " ? "
+	
+		custom_close_box = QMessageBox()
+		custom_close_box.setIcon(QMessageBox.Critical)
+		custom_close_box.setWindowTitle('Confirm Deletion')
+		custom_close_box.setText(message)
+
+		custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
+		custom_close_box.setDefaultButton(QMessageBox.No)
+
+		button_yes = custom_close_box.button(QMessageBox.Yes)
+		button_yes.setText('Yes')
+		button_no = custom_close_box.button(QMessageBox.No)
+		button_no.setText('No')
+
+		button_yes.setObjectName("close_button_yes")
+		button_no.setObjectName("close_button_no")
+
+		button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
+		button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+
+		custom_close_box.exec_()
+
+		if custom_close_box.clickedButton() == button_yes:
+			user_management.delete_user(username)
+		elif custom_close_box.clickedButton() == button_no : 
+			pass
+
+		# Reset flag
+		self.data_changed_flags[4] = 0
+
+		# Update Accounts View
+		self.data_changed_flags[5] = 1
 		return
 
 	###################################################

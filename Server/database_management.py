@@ -45,7 +45,7 @@ class manage_database():
 			conn.commit()
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Database insertion error : " + str(error))
-			
+
 	def get_cursor():
 		return manage_database.cur
 
@@ -179,7 +179,6 @@ class submissions_management(manage_database):
 class user_management(manage_database):
 	def generate_n_users(no_of_clients, no_of_judges, password_type):
 		cur = manage_database.get_cursor()
-		print(password_type)
 		# Get max client and judge usernames till now
 		try:
 			cur.execute("SELECT max(user_name) from accounts where client_type = 'CLIENT'")
@@ -240,5 +239,14 @@ class user_management(manage_database):
 
 			password_list.append(password)
 		return password_list
+
+	def delete_user(user_name):
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
+			conn.commit()
+		except Exception as error:
+			print("[ CRITICAL ERROR ] Database deletion error : " + str(error))
 
 

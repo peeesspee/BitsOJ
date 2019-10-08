@@ -11,15 +11,13 @@ from interface_packages.interface import server_window, init_gui
 from judge_connections import manage_judges
 from init_server import initialize_server
 
-
-# Variables  (to be read from server_init.ini later)
-
 sys.path.append('../')
 
 def main():
 	# Initialize server
 	print('[ SETUP ] Initialising server...')
-	initialize_server.read_file()
+	#initialize_server.write_config()
+	initialize_server.read_config()
 	superuser_username, superuser_password = initialize_server.get_superuser_details()
 	judge_username, judge_password = initialize_server.get_judge_details()
 	host = initialize_server.get_host()
@@ -43,14 +41,16 @@ def main():
 	#	1		0/1			0/1: No new/ New login : Refresh login view
 	#	2		0/1 		0/1: Disallow/Allow logins
 	#	3		0/1			0/1: Disallow/Allow submissions
-	#	4
-	#	5
+	#	4		0/1			1: A create accounts window is open
+	#	5		0/1			1: New users generated, update view
+
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	login_status = initialize_server.get_login_flag()
 	if login_status == True:
 		data_changed_flags[2] = 1
 	else:
 		data_changed_flags[2] = 0
+
 	# Do not allow new submissions unless timer is active or admin begins contest
 	submission_status = initialize_server.get_submission_flag()
 	if submission_status == True:

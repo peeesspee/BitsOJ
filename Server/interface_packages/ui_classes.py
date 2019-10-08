@@ -17,7 +17,7 @@ class ui_widgets:
 
 		delete_account_button = QPushButton('Delete Account', self)
 		delete_account_button.setFixedSize(200, 50)
-		delete_account_button.clicked.connect(self.delete_account)
+		delete_account_button.clicked.connect(lambda:self.delete_account(accounts_table.selectionModel().selectedRows()))
 		delete_account_button.setObjectName("topbar_button")
 
 		accounts_model = self.manage_models(self.db, 'accounts')
@@ -288,6 +288,9 @@ class new_accounts_ui(QMainWindow):
 		self.setFixedSize(300, 200)
 		main = self.add_new_accounts_ui()
 		self.setCentralWidget(main)
+		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
+
+
 		return
 
 	def combo_box_data_changed(text):
@@ -378,3 +381,4 @@ class new_accounts_ui(QMainWindow):
 		self.data_changed_flags[5] = 1
 		self.close()
 
+ 

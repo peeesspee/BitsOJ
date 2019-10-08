@@ -1,3 +1,5 @@
+import json
+
 # This class reads server configuration file and initializes server's variables
 class initialize_server():
 	superuser_username = 'BitsOJ'
@@ -36,21 +38,50 @@ class initialize_server():
 	def get_host():
 		return initialize_server.host
 
-	def read_file():
-		data_list = []
-		print('[ READ ] config.cfg')
-		config_file = open('config.cfg', 'r')
-		config_file.readline()
-		for data in config_file:
-			data = data[data.find("'")+1:-1]
-			data = data[:data.find("'")]
-			data_list.append(data)
-		
-		initialize_server.superuser_username = data_list[0]
-		initialize_server.superuser_password = data_list[1]
-		initialize_server.judge_username = data_list[2]
-		initialize_server.judge_password = data_list[3]
-		initialize_server.host = data_list[4]
-		initialize_server.login_allowed_flag = data_list[5]
-		initialize_server.submission_allowed_flag = data_list[6]
+	# Read Server config file 
+	def read_config():
+		print('[ READ ] config.json')
+		with open("config.json", "r") as read_json:
+			config = json.load(read_json)
+
+		# Basic credentials for login to RabbitMQ Server
+		initialize_server.superuser_username = config["Server Username"]
+		initialize_server.superuser_password = config["Server Password"]
+		initialize_server.host = config["Server IP"]
+		initialize_server.judge_username = config["Judge Username"]
+		initialize_server.judge_password = config["Judge Password"]
+		initialize_server.login_allowed_flag = config["Login Allowed"]
+		initialize_server.submission_allowed_flag = config["Submission Allowed"]
+		initialize_server.judge_key = config["Judge Key"]
+		initialize_server.client_key = config["Client Key"]
 		return
+
+	# To be moved to setup.py
+	def write_config():
+		print('[ WRITE ] config.json')
+
+		rabbitmq_username = 'BitsOJ'
+		rabbitmq_password = 'root'
+		host = 'localhost'
+		judge_username = 'judge1'
+		judge_password = 'judge1'
+		allow_login = 'True'
+		allow_submission = 'True'
+		judge_key = 'ahSuuiWQ12SthD1'
+		client_key = '1sadHGAD379qKKq'
+				
+
+		json_data = {
+		'Server Username' : rabbitmq_username, 
+		'Server Password' : rabbitmq_password, 
+		'Server IP' : host,
+		'Judge Username' : judge_username,
+		'Judge Password' : judge_password,
+		'Login Allowed' : allow_login,
+		'Submission Allowed' : allow_submission,
+		'Judge Key' : judge_key,
+		'Client Key' : client_key
+		}
+
+		with open("config.json", "w") as data_file:
+			json.dump(json_data, data_file, indent=4)
