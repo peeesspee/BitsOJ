@@ -298,3 +298,16 @@ QComboBox:item:hover
 	background-color : #A9A9A9;
 	color : #000000;
 }
+
+
+/* Scroll Area */
+QScrollArea
+{
+	border: None;
+}
+
+QWidget#myobject
+{
+	color : #121212;
+	background-color : #121212;
+}

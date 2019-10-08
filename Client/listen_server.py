@@ -1,4 +1,5 @@
 from database_management import manage_database
+from login import authenticate_login
 
 class start_listening():
 	# client_id, username = authenticate_login.get_user_details()
@@ -6,7 +7,6 @@ class start_listening():
 	connection = None
 	cursor = None
 	host = None
-	data_changed_flags = None
 	login_status = False 
 
 	def listen_server(channel,connection,cursor,host,data_changed_flags2):
@@ -17,11 +17,11 @@ class start_listening():
 
 
 		start_listening.channel.basic_consume(
-			queue = start_listening.username,
+			queue = authenticate_login.username,
 			on_message_callback = start_listening.server_response_handler,
 			auto_ack = True
 			)
-		start_listening.start_consuming()
+		start_listening.channel.start_consuming()
 
 	def server_response_handler(ch,method,properties,body):
 		server_data = body.decode('utf-8')
@@ -47,7 +47,7 @@ class start_listening():
 		error = server_data[15:]
 		print('[ Run ID : ' + run_id + ' ] [ Result : ' + code_result + ' ] [ error : ' + error + ' ]')
 		manage_database.insert_verdict(
-			start_listening.client_id,
+			authenticate_login.client_id,
 			run_id,
 			code_result,
 			)
