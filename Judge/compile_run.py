@@ -1,6 +1,6 @@
 from file_creation import file_manager
 import subprocess
-import os
+import os,sys
 
 class verdict():
 
@@ -59,6 +59,9 @@ class verdict():
 
 	def compile_file(classfile):
 
+		print(os.listdir(verdict.PATH))
+		cwd = os.getcwd()
+		# print(cwd)
 		if classfile != 'python':
 			try:
 				os.chdir(verdict.PATH)
@@ -68,9 +71,29 @@ class verdict():
 				os.system(classfile)
 			except Exception as error:
 				print(str(error))
+			
+			os.chdir(cwd)
 
 	def run_file(runfile):
-		
+
+		i = 1
+		# print(os.listdir(verdict.PATH))
+		cwd = os.getcwd()
+		print("CUrrent->",cwd)
+		os.chdir(verdict.PATH)
+		pwd = os.getcwd()
+		for file in os.listdir(pwd):
+			print(file)
+			try:	# in try block because name of the file which does'nt contain '.' will throw error
+				pos = file.index('.')
+				ext = file[pos+1:]
+				if ext == 'in':
+					os.system(runfile + ' < ' + file + ' > ' + 'output_' + file[:pos])
+					i = i + 1
+			except:
+				pass
+			
+			
 
 
 
