@@ -131,6 +131,45 @@ QPushButton#submit::hover
 	background-color : #202428 ;
 }
 
+
+QPushButton#problem_buttons{
+	font-size : 24px;
+	text-align : center; 	
+	border : 1px solid #666666;
+	margin-top : 50px;
+	background-color : #1B1C25 ;
+	color : #838383;
+
+}
+
+QPushButton#problem_buttons::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+	border-right : 10px solid #E91E63;
+}
+
+QPushButton#problem_buttons::hover::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+	border-right : 10px solid #E91E63;
+}
+
+QPushButton#problem_buttons::pressed
+{
+	color : #23B2EE;
+	background-color : #202428;
+}
+
+QPushButton#problem_buttons::hover
+{
+	color : #0892D0;
+	background-color : #22232E;
+	border-right : 2px solid #E91E63;
+
+}
+
 /* Style of buttons in the topbar  END  */
 
 
@@ -297,4 +336,17 @@ QComboBox:item:hover
 {
 	background-color : #A9A9A9;
 	color : #000000;
+}
+
+
+/* Scroll Area */
+QScrollArea
+{
+	border: None;
+}
+
+QWidget#myobject
+{
+	color : #121212;
+	background-color : #1B1C25;
 }

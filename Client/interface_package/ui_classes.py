@@ -24,13 +24,38 @@ class ui_widgets():
 
 		main_layout.addWidget(heading)
 		
-		for i in range(config["No_of_Problems"]):
-			ui_widgets.var['Problem_{}'.format(i+1)] = QPushButton('Problem_'+str(i+1),self)
-			ui_widgets.var['Problem_{}'.format(i+1)].setObjectName('submit')
-			ui_widgets.var['Problem_{}'.format(i+1)].setFixedSize(250, 60)
-			ui_widgets.var['Problem_{}'.format(i+1)].clicked.connect(partial(ui_widgets.show_problem, i+1))
-			main_layout.addWidget(ui_widgets.var['Problem_{}'.format(i+1)], alignment=Qt.AlignCenter)
+		column = 0
+		row = 0
+		number_of_buttons = 1 
+		self.scrollArea = QScrollArea(self)
+		self.scrollArea.setWidgetResizable(True)
+		self.scrollAreaWidgetContents = QWidget()
+		self.scrollAreaWidgetContents.setObjectName('myobject')
+		problems_layout = QGridLayout(self.scrollAreaWidgetContents)
+		# problems_layout = QGridLayout()
+		# problems_layout.setSpacing(20)
+		while(number_of_buttons <= config["No_of_Problems"]):
+		# for i in range(config["No_of_Problems"]):
+			ui_widgets.var['Problem_{}'.format(number_of_buttons)] = QPushButton('Problem_'+str(number_of_buttons),self)
+			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setObjectName('problem_buttons')
+			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setFixedSize(500, 200)
+			ui_widgets.var['Problem_{}'.format(number_of_buttons)].clicked.connect(partial(ui_widgets.show_problem, number_of_buttons))
+			problems_layout.addWidget(ui_widgets.var['Problem_{}'.format(number_of_buttons)],row,column)
+			if(column==1):
+				row+=1;
+				column=0;
+			else:
+				column+=1;
+			number_of_buttons+=1;
 
+		self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+		self.scrollArea.setFixedHeight(700)
+		self.scrollArea.setObjectName('myscrollarea')
+		problems_layout.setObjectName('mygrid')
+		# problems_widget = QWidget()
+		# problems_widget.setLayout(problems_layout)
+		main_layout.addWidget(self.scrollArea)
+		# main_layout.addWidget(problems_widget)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -96,7 +121,7 @@ class ui_widgets():
 		self.drop_widget.setLayout(self.drop_down)
 
 		ui_widgets.text_area = QTextEdit()
-		ui_widgets.text_area.setFixedHeight(700)
+		ui_widgets.text_area.setFixedHeight(650)
 		ui_widgets.text_area.setObjectName('text_area_content')
 		ui_widgets.text_area.setPlaceholderText('Paste your code here')
 
@@ -197,5 +222,7 @@ class ui_widgets():
 	def show_problem(i):
 		print('Button {0} clicked'.format(i))
 	###################################################################################
+
+
 
 

@@ -23,6 +23,7 @@ rabbitmq_password = config["rabbitmq_password"]
 host = config["host"]
 
 
+
 def main():
 	#################################
 	# Initialize the database and returns the cursor 
@@ -43,21 +44,33 @@ def main():
 		host
 		)
 
+
+
 	try:
 		print("----------------BitsOJ v1.0----------------")
 		# Starting GUI for login portal 
 		start_interface(connection,data_changed_flags) 
 		print("[ LOGIN ] Successful")
 
+
 		# Manage Threads
 		print('[ SETUP ] Initialising threads....')
-		# listen_pid = manage_process(channel, connection, cursor, host, data_changed_flags)
+		# listen_pid = manage_process(channel,connection,cursor,host,data_changed_flags)
 
 		# After successful login 
 		# Starting Main GUI
 		init_gui(data_changed_flags)
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
+
+	print("[EXIT] Signal Passed")
+	# os.kill(listen_pid, signal.SIGINT)
+	
+
+	sleep(1)
+	print("  ################################################")
+	print("  #----------ClIENT CLOSED SUCCESSFULLY----------#")
+	print("  ################################################")
 
 
 def manage_process(channel, connection, cursor, host, data_changed_flags):
