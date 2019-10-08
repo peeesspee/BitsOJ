@@ -2,7 +2,7 @@
     "rabbitmq_username": "client",
     "rabbitmq_password": "client",
     "host": "localhost",
-    "No_of_Problems": 30,
+    "No_of_Problems": 20,
     "Problems": {
         "Problem_1": "qwer",
         "Problem_2": "wert",
@@ -23,17 +23,6 @@
         "Problem_17": "uiop",
         "Problem_18": "asdf",
         "Problem_19": "sdfg",
-        "Problem_20": "dfgh",
-        "Problem_21": "qwer",
-        "Problem_22": "wert",
-        "Problem_23": "erty",
-        "Problem_24": "rtyu",
-        "Problem_25": "tyui",
-        "Problem_26": "yuio",
-        "Problem_27": "uiop",
-        "Problem_28": "asdf",
-        "Problem_29": "sdfg",
-        "Problem_30": "dfgh"
-
+        "Problem_20": "dfgh"
     }
 }

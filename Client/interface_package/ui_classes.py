@@ -37,8 +37,8 @@ class ui_widgets():
 		while(number_of_buttons <= config["No_of_Problems"]):
 		# for i in range(config["No_of_Problems"]):
 			ui_widgets.var['Problem_{}'.format(number_of_buttons)] = QPushButton('Problem_'+str(number_of_buttons),self)
-			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setObjectName('submit')
-			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setFixedSize(250, 90)
+			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setObjectName('problem_buttons')
+			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setFixedSize(500, 200)
 			ui_widgets.var['Problem_{}'.format(number_of_buttons)].clicked.connect(partial(ui_widgets.show_problem, number_of_buttons))
 			problems_layout.addWidget(ui_widgets.var['Problem_{}'.format(number_of_buttons)],row,column)
 			if(column==1):
