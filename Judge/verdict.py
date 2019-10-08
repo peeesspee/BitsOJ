@@ -1,9 +1,10 @@
 from file_creation import file_manager
 import subprocess
-
+import os
 
 class verdict():
 
+	PATH = "./A/test"
 
 	x = open("./A/gen.cpp", 'r')
 	print(x.read())
