@@ -6,6 +6,7 @@ from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from interface_packages.ui_classes import *
 from init_server import initialize_server
+from database_management import user_management
 
 
 global current_status 
@@ -381,10 +382,16 @@ class server_window(QMainWindow):
 	@pyqtSlot()
 	def delete_account(self, selected_rows):
 		if self.data_changed_flags[4] == 0:
+			# Set critical flag
 			self.data_changed_flags[4] = 1
 		else:
 			return
-		username = str(selected_rows[0].data())
+		# If no row is selected, return
+		try:
+			username = str(selected_rows[0].data())
+		except: 
+			self.data_changed_flags[4] = 0
+			return
 		message = "Are you sure you want to delete : " + username + " ? "
 	
 		custom_close_box = QMessageBox()
@@ -410,14 +417,14 @@ class server_window(QMainWindow):
 
 		if custom_close_box.clickedButton() == button_yes:
 			user_management.delete_user(username)
+			# Update Accounts View
+			self.data_changed_flags[5] = 1
 		elif custom_close_box.clickedButton() == button_no : 
 			pass
 
-		# Reset flag
+		# Reset critical flag
 		self.data_changed_flags[4] = 0
 
-		# Update Accounts View
-		self.data_changed_flags[5] = 1
 		return
 
 	###################################################

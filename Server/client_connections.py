@@ -79,9 +79,9 @@ class manage_clients():
 			print('[ ERROR ] Client data parsing error : ' + str(error))
 			print('[ DEBUG ] Client message was : ' + str(client_message))
 
-		print('[ LOGIN ] ' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
+		print('[ LOGIN REQUEST ] ' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
 
-		# Declare queue
+		# Declare queue with same name as client_username
 		manage_clients.channel.queue_declare(queue = client_username, durable = True)
 		#Bind the connection_manager exchange to client queue (que name is same as username)
 		manage_clients.channel.queue_bind(exchange = 'connection_manager', queue = client_username)
@@ -180,7 +180,8 @@ class manage_clients():
 		# Get client username from database
 		# TO BE OPTIMISED LATER
 		client_username = client_authentication.get_client_username(client_id)
-		if client_username == '':
+		if client_username == 'Null':
+			print('[ REJECT ] Client status is NOT CONNECTED')
 			return
 
 		# If no new submissions are allowed
@@ -224,7 +225,7 @@ class manage_clients():
 		try:
 			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
 		except Exception as error:
-			print('[ CRITICAL ] Could not publish messages : ' + str(error))
+			print('[ CRITICAL ] Could not publish message : ' + str(error))
 		return
 
 
@@ -232,4 +233,13 @@ class manage_clients():
 		message = 'JUDGE+' + run_id + '+' + p_code + '+' + language + '+' + source_code
 		manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = 'judge_requests', body = message) 
 		print('[ REQUEST ] New judging request sent')
+		return
+
+class connection_manager():
+	def publish_message(queue_name, message):
+		print( '[ PUBLISH ] ' + message + ' TO ' + queue_name)
+		try:
+			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
+		except Exception as error:
+			print('[ CRITICAL ] Could not publish message : ' + str(error))
 		return

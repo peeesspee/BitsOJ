@@ -35,7 +35,7 @@ class manage_database():
 			cur.execute("drop table if exists scoreboard")
 			cur.execute("drop table if exists connected_clients")
 		except:
-			print("Database drop error")
+			print("[ CRITICAL ERROR ] Table drop error")
 
 
 
@@ -131,6 +131,7 @@ class client_authentication(manage_database):
 			return client_username[0][0]
 		except Exception as error:
 			print("[ ERROR ] : Could not fetch username.")
+			return 'Null'
 
 	# Check if a client with given client_id is connected in the system
 	def check_connected_client(user_name ):
@@ -218,14 +219,16 @@ class user_management(manage_database):
 	def generate_clients(no_of_clients, max_so_far):
 		client_list = list()
 		for i in range(max_so_far+1, max_so_far+no_of_clients+1):
-			client_list.append('team' + str(i))
+			team_number = "{:05d}".format(i)
+			client_list.append('team' + str(team_number))
 
 		return client_list
 	
 	def generate_judges(no_of_judges, max_so_far):
 		judge_list = list()
 		for i in range(max_so_far+1, max_so_far+no_of_judges+1):
-			judge_list.append('judge' + str(i))
+			judge_number = "{:05d}".format(i)
+			judge_list.append('judge' + str(judge_number))
 		return judge_list
 		
 	def generate_passwords(prev, number, type):
@@ -244,9 +247,18 @@ class user_management(manage_database):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
+			# Check if client is logged in : 
+			if client_authentication.check_connected_client(user_name) == True:
+				cur.execute("SELECT * FROM accounts WHERE user_name = ?", (user_name,))
+				data = cur.fetchall()
+				client_type = data[0][2]
+				if client_type == 'CLIENT':
+					print("[ DISCONNECT ] " + username)
+					cur.execute("DELETE FROM connected_clients WHERE user_name = ?",(user_name,))
+
 			cur.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
 			conn.commit()
 		except Exception as error:
-			print("[ CRITICAL ERROR ] Database deletion error : " + str(error))
+			print("[ ERROR ] Database deletion error : " + str(error))
 
 
