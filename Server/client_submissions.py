@@ -1,37 +1,39 @@
+from database_management import previous_data
 global run_id_counter
-run_id_counter = 1
+
 class submission():
 	# Manage a new submission
 	def new_submission(client_id, problem_code, language, time_stamp, source_code):
 		print("[ SUBMIT ] "+ client_id + " for problem " + problem_code)
-		run_id = generate_run_id()
-		file_name = "Client Submissions/" + client_id + '_' + problem_code + '_' + run_id
-		print ("[ FILE ] "+ client_id + " : " + file_name)
-		make_local_source_file(file_name, source_code, language)
-		judge_verdict = submission.judge_submission(source_code, language, problem_code)
-
-		return_code, error_message = judge_verdict.split('+')
-
-		return return_code, run_id, error_message
+		run_id = submission.generate_run_id()
+		temp_file_name = run_id
+		file_name = submission.make_local_source_file(temp_file_name, source_code, language)
+		print ("[ FILE ] New file created for client : "+ client_id + " File name:  " + file_name)
+		return run_id, file_name
 
 	# Make a local backup file for the client run id
 	def make_local_source_file(file_name, source_code, language):
-		if language == "cpp":
+
+		if language == "CPP":
 			file_extension = ".cpp"
-		elif language == "gcc":
+		elif language == "GCC":
 			file_extension = ".c"
-		elif language == "py2":
+		elif language == "PY2":
 			file_extension = ".py"
-		elif language == "py3":
+		elif language == "PY3":
 			file_extension = ".py"
-		elif language == "jva":
+		elif language == "JVA":
 			file_extension = ".java"
+		else:
+			file_extension = ".temp"
 
 		# w : Write mode, + : Create file if not exists
-		client_local_file = open(file_name + file_extension, "w+")
+		new_file_name = file_name + file_extension
+		print("[ WRITE ] Wrote a new file : " + new_file_name)
+		client_local_file = open("Client_Submissions/" + new_file_name, "w+")
 		client_local_file.write(source_code)
 		client_local_file.close()
-		return
+		return new_file_name
 
 	def generate_run_id():
 		global run_id_counter
@@ -39,11 +41,10 @@ class submission():
 		run_id_counter = run_id_counter + 1
 		return run_id
 
-	def judge_submission(source_code, language, problem_code):
-		status = True
-		if status == True:
-			return "AC+No_Error"
-		else:
-			return "WA+Error"
-
+	def init_run_id():
+		global run_id_counter
+		# Get max run_id from submissions and add 1 to it, to initialize run_id counter
+		run_id_counter = int(previous_data.get_last_run_id()) + 1
+		
+	
 	

@@ -1,0 +1,263 @@
+QStatusBar
+{ 
+	color : #BB86FC ;
+	border-top : 1px solid #000000;
+	background-color : #202020;
+
+}
+
+QMessageBox{
+	background-color : #808080;
+	color: #FF0000;
+}
+
+
+
+/* Style of buttons in the sidebar  START  */
+
+QPushButton#sidebar_button{
+	text-align : left; 
+	padding-left : 20; 	
+	border-radius : 0px;
+	margin-top: 2px;
+	background-color : #131217 ; 
+	color : #838383;
+}
+
+QPushButton#sidebar_button::focus
+{
+	color : #23B2EE;
+	border-right : 3px solid #B2FF59;
+	background-color : #2B2C39 ;
+}
+
+QPushButton#sidebar_button::hover::focus
+{
+	color : #23B2EE;
+	border-right : 3px solid #B2FF59;
+	background-color : #2B2C39 ;
+}
+
+QPushButton#sidebar_button::pressed
+{
+	color : #23B2EE;
+}
+
+QPushButton#sidebar_button::hover
+{
+	color : #0892D0;
+	border-right : 1px solid #AED581;
+	background-color : #22232E ;
+}
+
+/* Style of buttons in the sidebar  END  */
+
+
+
+/* Style of buttons in the topbar  START  */
+
+QPushButton#topbar_button{
+	font-size : 18px;
+	text-align : center; 	
+	border : 1px solid #ADFF2F;
+	border-radius : 25px;
+	background-color : #202428 ;
+	color : #838383;
+}
+
+QPushButton#topbar_button::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+}
+
+QPushButton#topbar_button::hover::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+}
+
+QPushButton#topbar_button::pressed
+{
+	color : #23B2EE;
+	background-color : #202428;
+}
+
+QPushButton#topbar_button::hover
+{
+	color : #0892D0;
+	background-color : #202428 ;
+}
+
+/* Style of buttons in the topbar  END  */
+
+
+
+
+/* Style of buttons in the close dialog box  START  */
+QPushButton#close_button_yes{
+	text-align : center;
+	background-color : #090909 ; 
+	color : #990000;
+}
+
+QPushButton#close_button_yes::focus{
+	color: #AA0000;
+}
+
+QPushButton#close_button_yes::focus::hover{
+	color: #FF0000;
+}
+
+QPushButton#close_button_yes::hover{
+	color: #FF0000;
+}
+
+QPushButton#close_button_no{
+	text-align : center;
+	background-color : #090909 ;
+	color : #009900;
+}
+
+QPushButton#close_button_no::focus{
+	color: #00AA00;
+}
+
+QPushButton#close_button_no::focus::hover{
+	color: #00FF00;
+}
+
+QPushButton#close_button_no::hover{
+	color: #FF0000;
+}
+/* Style of buttons in the close dialog box  END  */
+
+
+/* Style of tabs in tab-bar (basically invisible)  START  */
+QTabBar::tab
+{
+	width: 0; 
+	height: 0; 
+	margin: 0; 
+	padding-top: 10; 
+}
+/* Style of tabs in tab-bar (basically invisible)  START  */
+
+
+
+
+/*--------------MAIN LAYOUT STARTS----------------*/
+
+/* Sidebar style */
+QWidget#sidebar{
+	background-color : #131217;
+	margin-left : 0px;
+}
+
+/* Right panes style START */
+
+/* right panes background color */
+QTabWidget#main_tabs{
+	background-color : #171B1F;
+}
+
+/* Text color in right panes */
+QTabWidget::pane{
+	color : #AAAAAA;
+}
+
+/* Right panes style END */
+
+/* Style of background */
+QWidget#screen_widget
+{
+	color : #CCCCCC;
+	background-color : #131217;
+}
+
+/* Style of bar where bitwise logo sits */
+QWidget#main_widget{
+	background-color: #0E0F12;
+	color: #AAAAAA;
+}
+
+/* Style of content marked as main-screen-content and main-screen-heading*/
+QLabel#main_screen_content{
+	color : #999999;
+	font-size : 24px;
+}
+QLabel#main_screen_heading{
+	color : #ADFF2F;
+	font-size : 30px;
+}
+QLabel#about_screen_heading{
+	margin-top : 200px;
+	color : #E91E63;
+	font-size : 30px;
+}
+
+
+/* Table styles */
+QTableView{
+	background-color : #171B1F;
+	alternate-background-color : #474B4F;
+	color : #AAAAAA;
+	border : 0px;
+	gridline-color : #505050;
+
+	selection-background-color : #777777;
+}
+
+QHeaderView::section{
+	background-color : #171B1F;
+	color: #FFC0CB;	
+}
+
+/* Scroll bar styles */
+QScrollBar:vertical{
+	width : 0px;
+}
+
+QScrollBar:horizontal{
+	height : 0px;
+}
+
+/*--------------MAIN LAYOUT ENDS----------------*/
+
+
+
+
+/*--------------ADD USERS LAYOUT STARTS---------*/
+QLabel#account_label
+{
+	color : #23B2EE;
+}
+
+QSpinBox#account_spinbox
+{
+	color : #AAAAAA;
+	background-color : #474B4F;
+}
+
+QComboBox#account_combobox
+{
+	color : #AAAAAA;
+	background-color : #474B4F;
+}
+
+QPushButton#account_button
+{
+	color : #AAAAAA;
+	text-align : center;
+	margin-left : 70px;
+	background-color : #171B1F;
+	border : 1px solid #ADFF2F;
+	border-radius : 25px;
+}
+
+QWidget#account_window
+{
+	background-color : #171B1F;
+}
+
+/*--------------ADD USERS LAYOUT ENDS---------*/

@@ -1,4 +1,10 @@
 #Ignore these files for now:
+__pycache__/
 *.pyc
+*$py.class
+*~
+*.swp
 *.db
-
+server_database.db
+Client_Submissions/
+diary

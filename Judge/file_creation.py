@@ -1,47 +1,56 @@
 class file_manager():
 
 
-	x = "import socket \nimport os\nimport subprocess\nimport sys"
-
-	def create_file(code, language, file_name):
+	def create_file(source_code, language, file_name):
 		# if code is in C++
 	    if language == 'C++':
 	        with open(file_name , "w") as file:
-	            file.write(code)
+	            file.write(source_code)
 	            return file_name
 
 		# if code is in C
-	    if language == 'C':
+	    if language == 'GCC':
 	        with open(file_name, 'w') as file:
-	            file.write(code)
+	            file.write(source_code)
 	            return file_name
 
 		# if code is in Java
-	    if language == 'Java':
+	    if language == 'JVA':
 	        with open(file_name, 'w') as file:
-	            file.write(code)
+	            file.write(source_code)
 	            return file_name
 
-		# if code is in Python
-	    if language == 'Python':
+		# if code is in Python2
+	    if language == 'PY2':
 	        with open(file_name, 'w') as file:
-	            file.write(code)
+	            file.write(source_code)
+	            return file_name
+
+	    # if code is in Python3
+	    if language == 'PY3':
+	        with open(file_name, 'w') as file:
+	            file.write(source_code)
 	            return file_name
 
 
-	def judge(code, problem_code, run_id, client_id, language):
+
+	def file_name(run_id, problem_code, language, source_code ):
 
 	    if language == 'C++':
-	        file_name = client_id + " " + run_id + " "  + " " + problem_code + '.cpp'
+	        file_name = run_id + '.cpp'
 
-	    if language == 'C':
-	        file_name = client_id + " " + run_id + " "  + " " + problem_code + '.c'
+	    if language == 'GCC':
+	        file_name = run_id + '.c'
 
-	    if language == 'Java':
-	        file_name = client_id + " " + run_id + " "  + " " + problem_code + '.java'
+	    if language == 'JVA':
+	        file_name = run_id + '.java'
 
-	    if language == 'Python':
-	        file_name = client_id + " " + run_id + " "  + " " + problem_code + '.py'
+	    if language == 'PY2':
+	        file_name = run_id + 'P2' + '.py'
 
-	    return file_name    
+	    if language == 'PY3':
+	        file_name = run_id + 'P3' + '.py'
+
+
+	    return file_name   
 

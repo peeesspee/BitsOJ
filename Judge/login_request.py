@@ -5,61 +5,76 @@ class authenticate_judge():
 	password = ''
 	client_id = 'Null'
 	channel = ''
+	login_status = ''
+
 
 	def login(channel, host):
 		authenticate_judge.channel = channel
-		authenticate_judge.username = input("Enter Judge's Username \n")
-		authenticate_judge.password = input("Enter Judge's Password\n")
+		authenticate_judge.username = input("Enter Judge's Username \n") or "judge1"
+		authenticate_judge.password = input("Enter Judge's Password\n") or "judge1"
 
-		print("[Validating] : " + authenticate_judge.username " @ " + authenticate_judge.password "... \n ")
-
-
-		authenticate_judge.channel.basic_publish(
-			exchange = 'connection_manager',
-			queue = 'client_requests',
-			body = 'LOGIN' + authenticate_judge.username + ' ' + password
-			)
+		print("\n[Validating] : " + authenticate_judge.username + "@" + authenticate_judge.password )
 
 		channel.queue_declare(
 			queue = authenticate_judge.username, 
 			durable=True
 			)
 
-		authenticate_judge.channel.bind(
+
+		authenticate_judge.channel.queue_bind(
 			exchange = 'connection_manager',
 			queue = authenticate_judge.username
 			)
 
-		print("Request sent for authentication...\n ")
-		print("[LISTENING] @" + authenticate_judge.username + ' ' + '@' + ' ' + authenticate_judge.password "\n")
+
+		authenticate_judge.channel.basic_publish(
+			exchange = 'connection_manager',
+			routing_key = 'client_requests',
+			body = 'LOGIN ' + authenticate_judge.username + ' ' + authenticate_judge.password + ' ' + authenticate_judge.client_id + ' ' + "JUDGE"
+			)
+
+
+
+		print("Request sent for authentication... ")
+		print("[LISTENING]:" + authenticate_judge.username + '@'  + authenticate_judge.password )
 
 
 		authenticate_judge.channel.basic_consume(
 			queue = authenticate_judge.username,
-			on_mesage_callback = authenticate_judge.response_handler,
+			on_message_callback = authenticate_judge.response_handler,
 			auto_ack = True
 			)
 
-		authenticate_judge.channel.start_consume()
+		authenticate_judge.channel.start_consuming()
 
 
 	def response_handler(ch, method, properties, body):
 		server_data = body.decode('utf-8')
+		print(server_data)
 
-		status = server_data[0:5]
+		status = server_data
 
 		if(status == 'VALID'):
-			status,authenticate_judge.client_id,server_message = server_data.split('+')
-			print("[ status ] " + status + "\n[ ClientID ] : " + authenticate_judge.client_id + "\n[ Server ] : " + server_message )
-			return status
+			status = server_data
+			print("[status]: " + status  )
+			authenticate_judge.channel.stop_consuming()
+			authenticate_judge.login_status = status
+			authenticate_judge.channel.stop_consuming()
+
+
+			
 
 		elif(status == 'INVLD'):
-			print("INVALID USER !!!\n")
+			print("\nINVALID USER !!!\n")
 
 			authenticate_judge.channel.queue_delete(
 				queue = authenticate_judge.username
 				)
-			return status
+			authenticate_judge.login_status = status
+			
+
+		
+
 
 	def get_judge_details():
 		return authenticate_judge.client_id, authenticate_judge.username
