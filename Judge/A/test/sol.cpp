@@ -5,7 +5,7 @@ typedef long long int lli;
 int main()
 {   lli t;
     //freopen("input.in","r",stdin);
-//    freopen("output.ans","w",stdout);
+    //freopen("output.ans","w",stdout);
     cin>>t;
     while(t--)
     {   lli x1,x2,x3,x4,y1,y2,y3,y4;

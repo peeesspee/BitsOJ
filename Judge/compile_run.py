@@ -6,18 +6,6 @@ class verdict():
 
 	PATH = "./A/test"
 
-	# x = open("./A/gen.cpp", 'r')
-	# print(x.read())
-	# source_code = x.read()
-	# problem_code = 'ARCT'
-	# run_id = '112'
-	# client_id = '1' 
-	# language = 'C++'
-
-	# file_name = file_manager.file_name(run_id, problem_code, language, source_code )
-
-	# file = file_manager.create_file(source_code, language, file_name)
-
 	def find_file():
 
 		for (roots, dirs, files) in os.walk(verdict.PATH):
@@ -27,7 +15,8 @@ class verdict():
 					pos = file.index('.')
 					lang = file[pos+1:]
 					if lang == 'c' or lang == 'cpp' or lang == 'java' or lang == 'py':
-						return (file, pos, lang)
+						return (file, pos, lang)		
+
 
 	def lang_compiler(file, pos, lang):
 
@@ -120,8 +109,13 @@ class verdict():
 		i = 1
 		passed = 0
 		cwd = os.getcwd()
-		for files in os.listdir(cwd):
+		list_0f_files = os.listdir(cwd)
+		print(list_0f_files)
+		list_0f_files.sort()
+		print(list_0f_files)
+		for files in list_0f_files:
 			if files == 'output_' + 'input' + str(i):
+				# print(files)
 				f = open('output_' + 'input' + str(i), 'r')
 				data = f.read()
 
@@ -130,66 +124,16 @@ class verdict():
 
 				if(verdict.remove_white_space(data) == verdict.remove_white_space(datacmp)):
 					passed = passed + 1
+					
 
 				g.close()
 				f.close()
 				i = i + 1
+				
 
-		if passed + 1 == i  and passed != 0:
-			print("All test cases passed\n")
+		if passed + 1 == i and passed != 0:
+			print("\nAll test cases passed")
 
 		else :
 			print("No of passed test cases ->", passed)
 
-
-
-
-
-
-	# if  file_name.split('.')[1] == 'cpp':
-	# 	try:
-	# 		tmp = subprocess.call(["g++",file])
-	# 		tmp = subprocess.call("./a.out")
-	# 		print(tmp)
-		
-	# 	except Exception as e :
-	# 		print(e)
-
-
-	# if  file_name.split('.')[1] == 'c':
-	# 	try:
-	# 		tmp = subprocess.call(["gcc",file])
-	# 		tmp = subprocess.call("./a.out")
-	# 		print(tmp)
-		
-	# 	except Exception as e :
-	# 		print(e)
-
-
-	# if  file_name.split('.')[1] == 'java':
-	# 	try:
-	# 		tmp = subprocess.call(["g++",file])
-	# 		tmp = subprocess.call("./a.out")
-	# 		print(tmp)
-		
-	# 	except Exception as e :
-	# 		print(e)
-
-
-	# if  file_name.split('.')[1] == 'py':
-
-	# 	if file_name.split('.')[0][-1] == '2':
-	# 		try:
-	# 			tmp = subprocess.call(["python2",file])
-	# 			print(tmp)
-			
-	# 		except Exception as e :
-	# 			print(e)
-
-	# 	if file_name.split('.')[0][-1] == '3':
-	# 		try:
-	# 			tmp = subprocess.call(["python3",file])
-	# 			print(tmp)
-			
-	# 		except Exception as e :
-	# 			print(e)
