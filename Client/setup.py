@@ -15,6 +15,6 @@ for i in range(No_of_Problems):
 		problem_code = input('Enter Problem Code (Must have only 4 character) : ')
 	Problems[problem_name] = problem_code
 
-json_data = {'rabbitmq_username' : rabbitmq_username, 'rabbitmq_password' : rabbitmq_password,'host' : host, 'No_of_Problems' : No_of_Problems, 'Problems' : Problems}
+json_data = {'client_id' : '', 'rabbitmq_username' : rabbitmq_username, 'rabbitmq_password' : rabbitmq_password,'host' : host, 'No_of_Problems' : No_of_Problems, 'Problems' : Problems}
 with open("config.json", "w") as data_file:
 	json.dump(json_data, data_file, indent=4)
