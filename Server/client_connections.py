@@ -3,14 +3,14 @@ import sys
 import time
 from database_management import client_authentication, submissions_management, previous_data
 from client_submissions import submission
+ 
 
 class manage_clients():
 	channel = ''
 	data_changed_flags = ''
-	# This function continously listens for client messages 
-	def listen_clients(superuser_username, superuser_password, host, data_changed_flags2):
-		manage_clients.data_changed_flags = data_changed_flags2
 
+	def prepare(superuser_username, superuser_password, host, data_changed_flags2):
+		manage_clients.data_changed_flags = data_changed_flags2
 		try:
 			connection = pika.BlockingConnection(pika.URLParameters('amqp://' + superuser_username + ':' + superuser_password + '@' + host + '/%2f'))
 			channel = connection.channel()
@@ -37,6 +37,9 @@ class manage_clients():
 		except:
 			print('[ ERROR ] Could not fetch previous client_id')
 
+		manage_clients.listen_clients(connection, channel, superuser_username, superuser_password, host, data_changed_flags2)
+	# This function continously listens for client messages 
+	def listen_clients(connection, channel, superuser_username, superuser_password, host, data_changed_flags2):
 		try:
 			# Clients send requests on client_requests
 			# As soon as a new message is recieved, it is sent to client_message_handler for further processing
@@ -57,16 +60,18 @@ class manage_clients():
 		# Decode the message sent by client
 		# First 5 characters contain metadata
 		client_message = str(body.decode('utf-8'))
-		
+		# JSON Parsing here
+
+		#Upto here
 		print('\n[ PING ] Recieved a new client message...')
-		client_code = client_message[0:6]
-		if client_code == 'LOGIN ':
+		client_code = client_message[0:5]
+		if client_code == 'LOGIN':
 			manage_clients.client_login_handler(client_message[6:])
-		elif client_code == 'SUBMT ':
+		elif client_code == 'SUBMT':
 			manage_clients.client_submission_handler(client_message[6:])
 		else:
 			print('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
-
+			# Raise Security Exception maybe?
 		return
 
 	# This function handles all client login requests
@@ -91,7 +96,7 @@ class manage_clients():
 			if(manage_clients.data_changed_flags[2] == 0):
 				print('[ LOGIN ] Rejected by ADMIN')
 				message = 'LRJCT'
-				manage_clients.publish_message(client_username, message)
+				response.publish_message(manage_clients.channel, client_username, message)
 				return
 			# Validate the client from the database
 			status = client_authentication.validate_client(client_username, client_password)
@@ -128,14 +133,14 @@ class manage_clients():
 				print('[ SENT ] ' + message)
 
 				# Send login_successful signal to client. 
-				manage_clients.publish_message(client_username, message)
+				response.publish_message(manage_clients.channel, client_username, message)
 				
 			# If login is not successful:
 			elif status == False:
 				print('[ ' + client_username + ' ] NOT verified.')
 				message = 'INVLD'
 				# Reply 'Invalid credentials' to client
-				manage_clients.publish_message(client_username, message)
+				response.publish_message(manage_clients.channel, client_username, message)
 
 
 		# Judge login is handled as a client to avoid redundancy in code
@@ -152,7 +157,7 @@ class manage_clients():
 				message = 'VALID'
 				print('[ SENT ] ' + message + ' to ' + client_username)
 				# Send login_successful signal to client. 
-				manage_clients.publish_message(client_username, message)
+				response.publish_message(manage_clients.channel, client_username, message)
 				
 			# If login is not successful:
 			elif status == False:
@@ -160,7 +165,7 @@ class manage_clients():
 				message = 'INVLD'
 				print('[ SENT ] ' + message + ' to ' + client_username)
 				# Reply 'Invalid credentials' to client
-				manage_clients.publish_message(client_username, message)
+				response.publish_message(manage_clients.channel, client_username, message)
 
 		return
 
@@ -190,7 +195,7 @@ class manage_clients():
 			# Send SRJCT : SubmissionReject
 			message = 'SRJCT'
 			try:
-				manage_clients.publish_message(client_username, message)
+				response.publish_message(manage_clients.channel, client_username, message)
 			except Exception as error:
 				print('[ ERROR ] Client has no username so could not send error code.' )
 			return
@@ -210,22 +215,10 @@ class manage_clients():
 				print('[ JUDGE ] Requesting a new judgement')
 				manage_clients.send_new_request(run_id, problem_code, language, source_code)
 				#######################################################################
-				# Simulate a new judgement
-				time.sleep(2)
 				
-
 		except Exception as error:
 			print('[ ERROR ] Client submisssion could not be processed : ' + str(error))
 
-		return
-
-
-	def publish_message(queue_name, message):
-		print( '[ PUBLISH ] ' + message + ' TO ' + queue_name)
-		try:
-			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
-		except Exception as error:
-			print('[ CRITICAL ] Could not publish message : ' + str(error))
 		return
 
 
@@ -235,11 +228,11 @@ class manage_clients():
 		print('[ REQUEST ] New judging request sent')
 		return
 
-class connection_manager():
-	def publish_message(queue_name, message):
+class response():
+	def publish_message(channel, queue_name, message):
 		print( '[ PUBLISH ] ' + message + ' TO ' + queue_name)
 		try:
-			manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
+			channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
 		except Exception as error:
 			print('[ CRITICAL ] Could not publish message : ' + str(error))
 		return

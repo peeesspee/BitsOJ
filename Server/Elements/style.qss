@@ -27,14 +27,14 @@ QPushButton#sidebar_button{
 QPushButton#sidebar_button::focus
 {
 	color : #23B2EE;
-	border-right : 3px solid #B2FF59;
+	border-right : 7px solid #B2FF59;
 	background-color : #2B2C39 ;
 }
 
 QPushButton#sidebar_button::hover::focus
 {
 	color : #23B2EE;
-	border-right : 3px solid #B2FF59;
+	border-right : 7px solid #B2FF59;
 	background-color : #2B2C39 ;
 }
 
@@ -213,7 +213,7 @@ QTableView::item:selected{
 
 QHeaderView::section{
 	background-color : #171B1F;
-	color: #FFC0CB;	
+	color: #E91E63;	
 }
 
 /* Scroll bar styles */

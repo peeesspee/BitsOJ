@@ -99,7 +99,7 @@ class ui_widgets:
 
 
 	def client_ui(self):
-		heading = QLabel('Manage Clients')
+		heading = QLabel('Connected Clients')
 		heading.setObjectName('main_screen_heading')
 
 		allow_login_label = QLabel('Allow Logins : ')
@@ -333,6 +333,7 @@ class new_accounts_ui(QMainWindow):
 		confirm_button = QPushButton('Confirm')
 		confirm_button.setFixedSize(200, 50)
 		confirm_button.clicked.connect(lambda:new_accounts_ui.final_account_status(self))
+		confirm_button.setDefault(True)
 		
 		
 		layout = QGridLayout()

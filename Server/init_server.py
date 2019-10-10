@@ -1,5 +1,5 @@
 import json
-
+ 
 # This class reads server configuration file and initializes server's variables
 class initialize_server():
 	superuser_username = 'BitsOJ'
@@ -7,8 +7,8 @@ class initialize_server():
 	judge_username = 'judge1'
 	judge_password = 'judge1'
 	host = 'localhost'
-	login_allowed_flag = False
-	submission_allowed_flag = False
+	login_allowed_flag = 'False'
+	submission_allowed_flag = 'False'
 	client_key = '000000000000000'
 	judge_key = '000000000000000'
 
@@ -16,14 +16,16 @@ class initialize_server():
 		return initialize_server.client_key, initialize_server.judge_key
 
 	def get_login_flag():
-		if(initialize_server.login_allowed_flag == 'True'):
+		flag = initialize_server.login_allowed_flag
+		if flag == 'True' or flag == 'true':
 			return True
 		else:
 			return False
 		
 
 	def get_submission_flag():
-		if(initialize_server.submission_allowed_flag == 'True'):
+		flag = initialize_server.submission_allowed_flag
+		if flag == 'True' or flag == 'true':
 			return True
 		else:
 			return False
@@ -57,20 +59,13 @@ class initialize_server():
 		return
 
 	# To be moved to setup.py
-	def write_config():
+class save_status():
+	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, client_key, judge_key):
 		print('[ WRITE ] config.json')
 
-		rabbitmq_username = 'BitsOJ'
-		rabbitmq_password = 'root'
-		host = 'localhost'
-		judge_username = 'judge1'
-		judge_password = 'judge1'
-		allow_login = 'True'
-		allow_submission = 'True'
-		judge_key = 'ahSuuiWQ12SthD1'
-		client_key = '1sadHGAD379qKKq'
+		allow_login = str(allow_login)
+		allow_submission = str(allow_submission) 
 				
-
 		json_data = {
 		'Server Username' : rabbitmq_username, 
 		'Server Password' : rabbitmq_password, 

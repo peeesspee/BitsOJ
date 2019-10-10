@@ -9,24 +9,21 @@ from client_connections import manage_clients
 from database_management import manage_database
 from interface_packages.interface import server_window, init_gui
 from judge_connections import manage_judges
-from init_server import initialize_server
+from init_server import initialize_server, save_status
 
 sys.path.append('../')
 
 def main():
 	# Initialize server
 	print('[ SETUP ] Initialising server...')
-	#initialize_server.write_config()
 	initialize_server.read_config()
 	superuser_username, superuser_password = initialize_server.get_superuser_details()
 	judge_username, judge_password = initialize_server.get_judge_details()
 	host = initialize_server.get_host()
-
-	####################################################
-	# TODO : Validate these keys when any message is sent, to maintain security (As project is open source)
 	client_key, judge_key = initialize_server.get_keys()
-	#
 	####################################################
+	# TODO : Validate client and server keys when any message is sent, to maintain security 
+	# (As project is open source)
 
 
 	# Initialize database
@@ -78,6 +75,18 @@ def main():
 	# SIGINT : Keyboard Interrupt is handled by both subprocesses internally
 	os.kill(client_pid, signal.SIGINT)
 	os.kill(judge_pid, signal.SIGINT)
+
+	# Write config file
+	if data_changed_flags[2] == 1:
+		login_status = True
+	else:
+		login_status = False
+	if data_changed_flags[3] == 1:
+		submission_status = True
+	else:
+		submission_status = False
+	save_status.write_config(superuser_username, superuser_password, judge_username, judge_password, host, login_status, submission_status, client_key, judge_key)
+
 	# EXIT
 	sleep(1)
 	print("  ################################################")
@@ -86,7 +95,7 @@ def main():
 
 
 def manage_process(superuser_username, superuser_password, judge_username, judge_password, host, data_changed_flags):
-	client_handler_process = multiprocessing.Process(target = manage_clients.listen_clients, args = (superuser_username, superuser_password, host, data_changed_flags,))
+	client_handler_process = multiprocessing.Process(target = manage_clients.prepare, args = (superuser_username, superuser_password, host, data_changed_flags,))
 	judge_handler_process = multiprocessing.Process(target = manage_judges.listen_judges, args = (judge_username, judge_password, host, data_changed_flags,))
 
 	client_handler_process.start()

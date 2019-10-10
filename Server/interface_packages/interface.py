@@ -12,12 +12,14 @@ from database_management import user_management
 global current_status 
 current_status = "STOPPED"
 
-# This is to ignore some warnings which were thrown when gui exited and python deleted some assests in wrong order
-# Nothing critical 
+# This is to ignore some warnings which were thrown when gui exited and 
+# python deleted some assests in wrong order
+# Nothing critical :)
 def handler(msg_type, msg_log_context, msg_string):
 	pass
 qInstallMessageHandler(handler)
 
+# This class handles the main window of server
 class server_window(QMainWindow):
 	def __init__(self, data_changed_flags2):
 		super().__init__()
@@ -381,16 +383,18 @@ class server_window(QMainWindow):
 
 	@pyqtSlot()
 	def delete_account(self, selected_rows):
-		if self.data_changed_flags[4] == 0:
+		if self.data_changed_flags[6] == 0:
 			# Set critical flag
-			self.data_changed_flags[4] = 1
+			self.data_changed_flags[6] = 1
 		else:
+			# If one data deletion window is already opened, process it first.
 			return
 		# If no row is selected, return
 		try:
 			username = str(selected_rows[0].data())
 		except: 
-			self.data_changed_flags[4] = 0
+			# Reset data_changed_flag for deletion of account
+			self.data_changed_flags[6] = 0
 			return
 		message = "Are you sure you want to delete : " + username + " ? "
 	
@@ -423,7 +427,7 @@ class server_window(QMainWindow):
 			pass
 
 		# Reset critical flag
-		self.data_changed_flags[4] = 0
+		self.data_changed_flags[6] = 0
 
 		return
 

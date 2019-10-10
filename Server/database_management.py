@@ -3,6 +3,8 @@ import sys
 import random
 import string
 
+
+
 global client_id_counter
 
 class manage_database():
@@ -249,12 +251,17 @@ class user_management(manage_database):
 			conn = manage_database.get_connection_object()
 			# Check if client is logged in : 
 			if client_authentication.check_connected_client(user_name) == True:
+				
 				cur.execute("SELECT * FROM accounts WHERE user_name = ?", (user_name,))
 				data = cur.fetchall()
 				client_type = data[0][2]
 				if client_type == 'CLIENT':
 					print("[ DISCONNECT ] " + username)
+					
+
 					cur.execute("DELETE FROM connected_clients WHERE user_name = ?",(user_name,))
+
+
 
 			cur.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
 			conn.commit()

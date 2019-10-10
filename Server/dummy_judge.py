@@ -9,8 +9,8 @@ host = 'localhost'
 global client_id
 client_id = 'Nul'
 
-username = 'judge1'
-password = 'judge1'
+username = ''
+password = ''
 
 try:
 	connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
@@ -22,6 +22,8 @@ except:
 	print("Error")
 
 def login():
+	global username
+	global password
 	username = input('Enter judge username: ') or 'judge1'
 	password = input('Enter judge password: ') or 'judge1'
 	print("Sending")
@@ -51,6 +53,8 @@ def handler(ch, method, properties, body):
 	
 	
 def listen():
+	global username
+	global password
 	print("[ LISTEN ]")
 	channel.basic_consume(queue = 'judge_requests', on_message_callback = handler)
 	try:
@@ -62,6 +66,8 @@ def listen():
 		sys.exit()
 
 def listen1():
+	global username
+	global password
 	print("[ LISTEN ]")
 	channel.basic_consume(queue = username, on_message_callback = handler)
 	try:

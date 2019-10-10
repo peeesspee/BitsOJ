@@ -15,16 +15,17 @@ password = 'Bits1'
 try:
 	connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
 	channel = connection.channel()
-	channel.queue_declare(queue = username, durable = True)
-	channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
-	channel.queue_bind(exchange = 'connection_manager', queue = username)
 except:
 	print("Error")
 
 def login():
-	username = input('Enter username: ') or 'team1'
-	password = input('Enter password: ') or 'Bits1'
+	global username
+	username = input('Enter username: ') 
+	password = input('Enter password: ')
 	print("Sending")
+	channel.queue_declare(queue = username, durable = True)
+	channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
+	channel.queue_bind(exchange = 'connection_manager', queue = username)
 	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = 'LOGIN ' + username + ' ' + password + ' ' + client_id + ' CLIENT')
 	print("Sent")
 
@@ -54,15 +55,17 @@ def handler(ch, method, properties, body):
 		print(server_data[6:])
 	elif status == 'SRJCT':
 		print(server_data[6:])
-	
+	print("[ ACK ]")
 	ch.basic_ack(delivery_tag = method.delivery_tag)
 	channel.stop_consuming()
 		
 
 def listen():
 	print("[ LISTEN ]")
+	global username
 	channel.basic_consume(queue = username, on_message_callback = handler)
 	try:
+		print("[ CONSUME ] on " + username)
 		channel.start_consuming()
 	except (KeyboardInterrupt, SystemExit):
 		channel.stop_consuming()
