@@ -114,12 +114,11 @@ class verdict():
 		list_0f_files.sort()
 		print(list_0f_files)
 		for files in list_0f_files:
-			if files == 'output_' + 'input' + str(i):
-				# print(files)
-				f = open('output_' + 'input' + str(i), 'r')
+			if files[len(files)-3:] == 'ans':
+				f = open('output_' + files[:len(files) - 4], 'r')
 				data = f.read()
 
-				g = open(str(i) + '.ans', 'r')
+				g = open(files, 'r')
 				datacmp = g.read()
 
 				if(verdict.remove_white_space(data) == verdict.remove_white_space(datacmp)):
