@@ -5,6 +5,7 @@ from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex,
 import os
 import time
 import json
+import webbrowser
 from functools import partial
 from manage_code import send_code
 
@@ -156,7 +157,26 @@ class ui_widgets():
 		heading = QLabel('Query')
 		heading.setObjectName('main_screen_heading')
 
+		top = QLabel('Ask Your Question')
+		top.setObjectName('about_screen_heading')
+		top.setAlignment(Qt.AlignCenter)
+
+		self.ask_query = QLineEdit(self)
+		self.ask_query.setFixedWidth(600)
+		self.ask_query.setFixedHeight(70)
+		self.ask_query.setPlaceholderText('Type Your Question')
+		self.ask_query.setObjectName('ask_query')
+
+		self.send_query = QPushButton('Send', self)
+		self.send_query.setFixedSize(200, 50)
+		self.send_query.clicked.connect(ui_widgets.sending)
+		self.send_query.setObjectName('ask')
+
+
 		main_layout.addWidget(heading)
+		main_layout.addWidget(top)
+		main_layout.addWidget(self.ask_query, alignment=Qt.AlignCenter)
+		main_layout.addWidget(self.send_query, alignment=Qt.AlignCenter)
 		main_layout.addStretch(5)
 
 		main = QWidget()
@@ -220,7 +240,12 @@ class ui_widgets():
 
 
 	def show_problem(i):
-		print('Button {0} clicked'.format(i))
+		webbrowser.open('Problems/Problem_'+str(i)+'.pdf')
+		# print('Button {0} clicked'.format(i))
+
+
+	def sending(self):
+		print('OK')
 	###################################################################################
 
 
