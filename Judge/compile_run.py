@@ -1,6 +1,6 @@
 from file_creation import file_manager
 import subprocess
-import os
+import os,sys
 
 class verdict():
 
@@ -59,6 +59,9 @@ class verdict():
 
 	def compile_file(classfile):
 
+		print(os.listdir(verdict.PATH))
+		cwd = os.getcwd()
+		# print(cwd)
 		if classfile != 'python':
 			try:
 				os.chdir(verdict.PATH)
@@ -68,9 +71,77 @@ class verdict():
 				os.system(classfile)
 			except Exception as error:
 				print(str(error))
+			
+			os.chdir(cwd)
 
 	def run_file(runfile):
-		
+
+		# print(os.listdir(verdict.PATH))
+		cwd = os.getcwd()
+		print("in run file CUrrent->",cwd)
+		os.chdir(verdict.PATH)
+		pwd = os.getcwd()
+		i = 1
+		for file in os.listdir(pwd):
+			print(file)
+			try:	# in try block because name of the file which does'nt contain '.' will throw error
+				pos = file.index('.')
+				ext = file[pos+1:]
+				if ext == 'in':
+					os.system(runfile + ' < ' + file + ' > ' + 'output_' + file[:pos] )
+					i = i + 1
+			except:
+				pass
+		# os.chdir(cwd)
+		cwd = os.getcwd()
+		print("CUrrent->",cwd)
+
+
+	def remove_object(file, lang, pos):
+
+		cwd = os.getcwd()
+		if lang == 'c' or lang == 'cpp':
+			for files in os.listdir(cwd):
+				if files == file[:pos]:
+					os.remove(file[:pos])
+
+		elif lang == 'java':
+			for files in os.listdir(verdict.PATH):
+				if files == file[:pos] + '.class':
+					os.remove(file[:pos] + '.class')
+
+	def remove_white_space(data):
+		return data.strip()
+
+
+
+	def compare_outputs():
+
+		i = 1
+		passed = 0
+		cwd = os.getcwd()
+		for files in os.listdir(cwd):
+			if files == 'output_' + 'input' + str(i):
+				f = open('output_' + 'input' + str(i), 'r')
+				data = f.read()
+
+				g = open(str(i) + '.ans', 'r')
+				datacmp = g.read()
+
+				if(verdict.remove_white_space(data) == verdict.remove_white_space(datacmp)):
+					passed = passed + 1
+
+				g.close()
+				f.close()
+				i = i + 1
+
+		if passed + 1 == i  and passed != 0:
+			print("All test cases passed\n")
+
+		else :
+			print("No of passed test cases ->", passed)
+
+
 
 
 
