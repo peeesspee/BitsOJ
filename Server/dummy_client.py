@@ -64,18 +64,28 @@ def send():
 def handler(ch, method, properties, body):
 	global client_id
 	server_data = str(body.decode("utf-8"))
-	status = server_data[0:5]
-	if status == "VALID" :
-		status, client_id, server_message = server_data.split('+')
-		print("[ Status ] " + status + "\n[ ClientID ] : " + client_id + "\n[ Server ] : " + server_message)
-	elif status == "INVLD":
+
+	json_data = json.loads(server_data)
+	code = json_data["Code"]
+	if code == 'VRDCT':
+		status = json_data['Status']
+		run_id = json_data['Run ID']
+		message = json_data['Message']
+		print("[ Status ] " + status + "\n[ Run ID ] : " + run_id + "\n[ Message ] : " + message)
+	elif code =='VALID':
+		client_id = json_data['Client ID']
+		message = json_data['Message']
+		print("[ Response ] " + code + "\n[ Client ID ] : " + client_id + "\n[ Message ] : " + message)
+
+	elif code == 'INVLD':
 		print("Invalid creds")
-	elif status == 'VRDCT':
-		print(server_data)
-	elif status == 'REJCT' : 
-		print(server_data[6:])
-	elif status == 'SRJCT':
-		print(server_data[6:])
+
+	elif code == 'REJCT' : 
+		print('Login Rejected')
+		
+	elif code == 'SRJCT':
+		print('Submission Rejected')
+
 	print("[ ACK ]")
 	ch.basic_ack(delivery_tag = method.delivery_tag)
 	channel.stop_consuming()

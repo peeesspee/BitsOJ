@@ -24,8 +24,8 @@ except:
 def login():
 	global username
 	global password
-	username = input('Enter judge username: ') or 'judge1'
-	password = input('Enter judge password: ') or 'judge1'
+	username = input('Enter judge username: ') or 'judge00001'
+	password = input('Enter judge password: ') or 'CbkTJv'
 	print("Sending")
 	message = {
 		'Code' : 'LOGIN', 
@@ -44,7 +44,7 @@ def handler(ch, method, properties, body):
 	global client_id
 	server_data = str(body.decode("utf-8"))
 	status = server_data[0:5]
-	if status == "VALID" :
+	if status == 'VALID':
 		print('LOGGED IN')
 		ch.basic_ack(delivery_tag = method.delivery_tag)
 		channel.stop_consuming()
