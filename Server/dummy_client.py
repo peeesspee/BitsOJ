@@ -2,6 +2,7 @@ import pika
 import time
 import threading
 import sys
+import json
 rabbitmq_username = 'client'
 rabbitmq_password = 'client'
 host = 'localhost'
@@ -9,8 +10,8 @@ host = 'localhost'
 global client_id
 client_id = 'Nul'
 
-username = 'team1'
-password = 'Bits1'
+username = 'team00005'
+password = 'rq3bvS'
 
 try:
 	connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
@@ -19,22 +20,42 @@ except:
 	print("Error")
 
 def login():
-	global username
-	username = input('Enter username: ') 
-	password = input('Enter password: ')
+	global username, password, client_id
+	username = input('Enter username: ') or username
+	password = input('Enter password: ') or password
 	print("Sending")
 	channel.queue_declare(queue = username, durable = True)
 	channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
 	channel.queue_bind(exchange = 'connection_manager', queue = username)
-	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = 'LOGIN ' + username + ' ' + password + ' ' + client_id + ' CLIENT')
+
+	message = {
+		'Code' : 'LOGIN', 
+		'Username' : username, 
+		'Password' : password,
+		'ID' : client_id,
+		'Type' : 'CLIENT'
+		}
+	
+	message = json.dumps(message)
+
+	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
 	print("Sent")
 
 def send():
 	global client_id
 	print("Sending code")
 	code = '#include<iostream>\n int main(void){ std::cout<<"Hello"; return 0; }'
-	message = 'SUBMT ' + client_id + ' '  + 'ABCD' + ' ' + 'CPP' + ' ' + '04:05:06' + code
-	print ( message)
+
+	message = {
+		'Code' : 'SUBMT', 
+		'ID' : client_id,
+		'PCode' : 'ABCD',
+		'Language' : 'CPP',
+		'Time' : '04:05:06',
+		'Source' : code
+		}
+	message = json.dumps(message)
+	
 	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
 	print("sent code")
 
