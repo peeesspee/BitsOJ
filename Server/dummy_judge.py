@@ -24,10 +24,19 @@ except:
 def login():
 	global username
 	global password
-	username = input('Enter judge username: ') or 'judge1'
-	password = input('Enter judge password: ') or 'judge1'
+	username = input('Enter judge username: ') or 'judge00001'
+	password = input('Enter judge password: ') or 'CbkTJv'
 	print("Sending")
-	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = 'LOGIN ' + username + ' ' + password + ' ' + client_id + ' JUDGE')
+	message = {
+		'Code' : 'LOGIN', 
+		'Username' : username, 
+		'Password' : password,
+		'ID' : client_id,
+		'Type' : 'JUDGE'
+		}
+	
+	message = json.dumps(message)
+	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
 	print("Sent")
 
 
@@ -35,7 +44,7 @@ def handler(ch, method, properties, body):
 	global client_id
 	server_data = str(body.decode("utf-8"))
 	status = server_data[0:5]
-	if status == "VALID" :
+	if status == 'VALID':
 		print('LOGGED IN')
 		ch.basic_ack(delivery_tag = method.delivery_tag)
 		channel.stop_consuming()

@@ -1,6 +1,7 @@
 import pika
 import sys
 import time
+import json
 from database_management import client_authentication, submissions_management, previous_data
 from client_submissions import submission
  
@@ -57,34 +58,42 @@ class manage_clients():
 
 	# This function works on client messages and passes them on to their respective handler function
 	def client_message_handler(ch, method, properties, body):
+		print('\n[ PING ] Recieved a new client message...')
 		# Decode the message sent by client
-		# First 5 characters contain metadata
 		client_message = str(body.decode('utf-8'))
 		# JSON Parsing here
+		try:
+			json_data = json.loads(client_message)
+			client_code = json_data["Code"]
+			if client_code == 'LOGIN':
+				client_username = json_data["Username"]
+				client_password = json_data["Password"]
+				client_id = json_data["ID"]
+				client_type = json_data["Type"]
 
-		#Upto here
-		print('\n[ PING ] Recieved a new client message...')
-		client_code = client_message[0:5]
-		if client_code == 'LOGIN':
-			manage_clients.client_login_handler(client_message[6:])
-		elif client_code == 'SUBMT':
-			manage_clients.client_submission_handler(client_message[6:])
-		else:
-			print('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
-			# Raise Security Exception maybe?
+				manage_clients.client_login_handler(client_username, client_password, client_id, client_type)
+			elif client_code == 'SUBMT':
+				client_id = json_data["ID"]		
+				problem_code = json_data["PCode"]		
+				language = json_data["Language"]		
+				time_stamp = json_data["Time"]		
+				source_code = json_data["Source"]	
+
+				manage_clients.client_submission_handler(client_id, problem_code, language, time_stamp, source_code)
+			else:
+				print('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
+				# Raise Security Exception maybe?
+
+		except Exception as error:
+			print("[ ERROR ] Client json data could not be parsed : "  + str(error))
 		return
 
 	# This function handles all client login requests
-	def client_login_handler(client_message):
+	def client_login_handler(client_username, client_password, client_id, client_type):
 		# Client sends the username, password, clientID as 'username+password+clientID', so we split it.
 		# Default value of clientID is 'Null' (String)
-		try:
-			client_username, client_password, client_id, client_type = client_message.split(' ')
-		except Exception as error:
-			print('[ ERROR ] Client data parsing error : ' + str(error))
-			print('[ DEBUG ] Client message was : ' + str(client_message))
-
-		print('[ LOGIN REQUEST ] ' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
+		
+		print('[ LOGIN REQUEST ] ::: ' + client_id + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
 
 		# Declare queue with same name as client_username
 		manage_clients.channel.queue_declare(queue = client_username, durable = True)
@@ -95,7 +104,10 @@ class manage_clients():
 			# If client logins have been halted by the Admin, Send a rejection message to the client
 			if(manage_clients.data_changed_flags[2] == 0):
 				print('[ LOGIN ] Rejected by ADMIN')
-				message = 'LRJCT'
+				message = {
+				'Code' : 'LRJCT'
+				}
+				message = json.dumps(message)
 				response.publish_message(manage_clients.channel, client_username, message)
 				return
 			# Validate the client from the database
@@ -129,16 +141,26 @@ class manage_clients():
 
 				# Reply to be sent to client
 				server_message = 'Hello_buddy!!'
-				message = 'VALID+' +  client_id + '+' + server_message
 				print('[ SENT ] ' + message)
 
+				message = {
+				'Code' : 'VALID', 
+				'Client ID' : client_id, 
+				'Message' : server_message
+				}
+				message = json.dumps(message)
+
+				print('[ SENT ] VALID to ' + client_username)
 				# Send login_successful signal to client. 
 				response.publish_message(manage_clients.channel, client_username, message)
 				
 			# If login is not successful:
 			elif status == False:
 				print('[ ' + client_username + ' ] NOT verified.')
-				message = 'INVLD'
+				message = {
+				'Code' : 'INVLD'
+				}
+				message = json.dumps(message)
 				# Reply 'Invalid credentials' to client
 				response.publish_message(manage_clients.channel, client_username, message)
 
@@ -154,46 +176,48 @@ class manage_clients():
 			# If login is successful:
 			if status == True:
 				print('[ LOGIN ] Judge login successful : ' + client_username )
-				message = 'VALID'
-				print('[ SENT ] ' + message + ' to ' + client_username)
+				message = {
+				'Code' : 'VALID', 
+				'Client ID' : client_id, 
+				'Message' : server_message
+				}
+				message = json.dumps(message)
+				print('[ SENT ] VALID to ' + client_username)
 				# Send login_successful signal to client. 
 				response.publish_message(manage_clients.channel, client_username, message)
 				
 			# If login is not successful:
 			elif status == False:
 				print('[ LOGIN ] Judge NOT verified.')
-				message = 'INVLD'
-				print('[ SENT ] ' + message + ' to ' + client_username)
+				message = {
+				'Code' : 'INVLD'
+				}
+				message = json.dumps(message)
+				print('[ SENT ] INVLD to' + client_username)
 				# Reply 'Invalid credentials' to client
 				response.publish_message(manage_clients.channel, client_username, message)
 
 		return
 
 
-	def client_submission_handler(client_data):
-		try:
-			client_id = client_data[0:3]		# client_id is 3 characters 
-			problem_code = client_data[4:8]		# problem_code is 4 characters
-			language = client_data[9:12]		# language is 3 characters
-			time_stamp = client_data[13:21]		# time_stamp is 8 characters: HH:MM:SS
-			source_code = client_data[22:]		# rest of the message is source code
-			print('[ SUBMISSION ] Client ID :' + client_id + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp)
-
-		except Exception as error:
-			print('[ ERROR ] Client data parsing error : ' + str(error))
+	def client_submission_handler(client_id, problem_code, language, time_stamp, source_code):
+		print('[ SUBMISSION ] Client ID :' + client_id + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp)
 
 		# Get client username from database
 		# TO BE OPTIMISED LATER
 		client_username = client_authentication.get_client_username(client_id)
 		if client_username == 'Null':
-			print('[ REJECT ] Client status is NOT CONNECTED')
+			print('[ REJECT ] Client status is NOT CONNECTED. This should not happen! Please check for malicious client.')
 			return
 
 		# If no new submissions are allowed
 		if(manage_clients.data_changed_flags[3] == 0):
 			print('[ SUBMISSION ] Rejected by ADMIN')
 			# Send SRJCT : SubmissionReject
-			message = 'SRJCT'
+			message = {
+				'Code' : 'SRJCT'
+				}
+			message = json.dumps(message)
 			try:
 				response.publish_message(manage_clients.channel, client_username, message)
 			except Exception as error:
@@ -213,7 +237,7 @@ class manage_clients():
 				
 				# Push the submission in judging queue
 				print('[ JUDGE ] Requesting a new judgement')
-				manage_clients.send_new_request(run_id, problem_code, language, source_code)
+				manage_clients.send_new_request(client_id, client_username, run_id, problem_code, language, source_code)
 				#######################################################################
 				
 		except Exception as error:
@@ -222,14 +246,26 @@ class manage_clients():
 		return
 
 
-	def send_new_request(run_id, p_code, language, source_code):
-		message = 'JUDGE+' + run_id + '+' + p_code + '+' + language + '+' + source_code
+	def send_new_request(client_id, client_username, run_id, p_code, language, source_code):
+		message = {
+		'Code' : 'JUDGE', 
+		'Client ID' : client_id, 
+		'Client Username' : client_username,
+		'Run ID' : run_id,
+		'Language' : language,
+		'PCode' : p_code,
+		'Source' : source_code
+		}
+	
+		message = json.dumps(message)
+
 		manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = 'judge_requests', body = message) 
 		print('[ REQUEST ] New judging request sent')
 		return
 
 class response():
 	def publish_message(channel, queue_name, message):
+		#message is in json format
 		print( '[ PUBLISH ] ' + message + ' TO ' + queue_name)
 		try:
 			channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
