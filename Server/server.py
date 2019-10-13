@@ -7,7 +7,7 @@ import sys
 from time import sleep
 from client_connections import manage_clients
 from database_management import manage_database
-from interface_packages.interface import server_window, init_gui
+from Interface.interface import server_window, init_gui
 from judge_connections import manage_judges
 from init_server import initialize_server, save_status
 

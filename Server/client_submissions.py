@@ -37,7 +37,7 @@ class submission():
 
 	def generate_run_id():
 		global run_id_counter
-		run_id = str("{:05d}".format(run_id_counter))
+		run_id = str(run_id_counter)
 		run_id_counter = run_id_counter + 1
 		return run_id
 

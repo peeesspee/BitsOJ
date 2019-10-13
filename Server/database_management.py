@@ -100,7 +100,7 @@ class client_authentication(manage_database):
 	#This function generates a new client_id for new connections
 	def generate_new_client_id():
 		global client_id_counter
-		client_id = str("{:03d}".format(client_id_counter))
+		client_id = str(client_id_counter)
 		client_id_counter = client_id_counter + 1
 		return client_id
 

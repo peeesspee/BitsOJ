@@ -141,8 +141,7 @@ class manage_clients():
 
 				# Reply to be sent to client
 				server_message = 'Hello_buddy!!'
-				print('[ SENT ] ' + message)
-
+				
 				message = {
 				'Code' : 'VALID', 
 				'Client ID' : client_id, 
@@ -172,7 +171,7 @@ class manage_clients():
 
 			#Bind the connection_manager exchange to client queue (queue name is same as username)
 			manage_clients.channel.queue_bind(exchange = 'judge_manager', queue = client_username)
-
+			server_message = 'Hello Judge!'
 			# If login is successful:
 			if status == True:
 				print('[ LOGIN ] Judge login successful : ' + client_username )
@@ -266,7 +265,7 @@ class manage_clients():
 class response():
 	def publish_message(channel, queue_name, message):
 		#message is in json format
-		print( '[ PUBLISH ] ' + message + ' TO ' + queue_name)
+		print( '[ PUBLISH ] new message TO ' + queue_name)
 		try:
 			channel.basic_publish(exchange = 'connection_manager', routing_key = queue_name, body = message)
 		except Exception as error:

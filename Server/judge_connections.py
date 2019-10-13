@@ -19,7 +19,7 @@ class manage_judges():
 				client_id = json_data['Client ID']
 				status = json_data['Status']
 				run_id = json_data['Run ID']
-				message = json_data['Error']
+				message = json_data['Message']
 			else:
 				print('[ ERROR ] Judge sent garbage data. Trust me you don\'t wanna see it! ')
 				print(judge_message)
@@ -40,7 +40,7 @@ class manage_judges():
 		try:
 			manage_judges.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = judge_message) 
 			print('[ VERDICT ] New verdict sent to ' + client_username)
-			submissions_management.update_submission_status(run_id, verdict)
+			submissions_management.update_submission_status(run_id, status)
 			# Update GUI
 			manage_judges.data_changed_flag[0] = 1
 		except Exception as error:

@@ -8,10 +8,10 @@ rabbitmq_password = 'client'
 host = 'localhost'
 
 global client_id
-client_id = 'Nul'
+client_id = 'Null'
 
-username = 'team00005'
-password = 'rq3bvS'
+username = 'team00001'
+password = 'KtmW7C'
 
 try:
 	connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))

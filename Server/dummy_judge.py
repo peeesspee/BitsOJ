@@ -2,6 +2,7 @@ import pika
 import time
 import threading
 import sys
+import json
 rabbitmq_username = 'judge1'
 rabbitmq_password = 'judge1'
 host = 'localhost'
@@ -9,8 +10,8 @@ host = 'localhost'
 global client_id
 client_id = 'Nul'
 
-username = ''
-password = ''
+username = 'judge00001'
+password = 'RR9ZES'
 
 try:
 	connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
@@ -24,8 +25,8 @@ except:
 def login():
 	global username
 	global password
-	username = input('Enter judge username: ') or 'judge00001'
-	password = input('Enter judge password: ') or 'CbkTJv'
+	username = input('Enter judge username: ') or username
+	password = input('Enter judge password: ') or password
 	print("Sending")
 	message = {
 		'Code' : 'LOGIN', 
@@ -43,40 +44,48 @@ def login():
 def handler(ch, method, properties, body):
 	global client_id
 	server_data = str(body.decode("utf-8"))
-	json_data = json.loads(server_data)
+	if(server_data == ''):
+		print("Empty!")
+		return
+	print(server_data)
+	try:
+		json_data = json.loads(server_data)
+		print(json_data)
 
-	code = json_data["Code"]
-	if code == 'JUDGE':
-		run_id = json_data['Run ID']
-		username = json_data['Client Username'] 
-		client_id = json_data['Client ID']
-		language = json_data['Language']
-		PCode = json_data['PCode']
-		Source = json_data['Source']
+		code = json_data['Code']
+		if code == 'JUDGE':
+			run_id = json_data['Run ID']
+			username = json_data['Client Username'] 
+			client_id = json_data['Client ID']
+			language = json_data['Language']
+			PCode = json_data['PCode']
+			Source = json_data['Source']
 
-		message = {
-		'Code' : 'VRDCT', 
-		'Client Username' : username,
-		'Client ID' : client_id,
-		'Status' : 'AC',
-		'Run ID' : run_id,
-		'Message' : 'No Error'
-		}
-		message = json.dumps(message)
+			message = {
+			'Code' : 'VRDCT', 
+			'Client Username' : username,
+			'Client ID' : client_id,
+			'Status' : 'AC',
+			'Run ID' : run_id,
+			'Message' : 'No Error'
+			}
+			message = json.dumps(message)
 
 
-		ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
-		print('[ JUDGE ] Sent ' + message)
-	
-	elif code =='VALID':
-		client_id = json_data['Client ID']
-		message = json_data['Message']
-		print('[ ' + code + ' ] ::: ' + client_id + ' ::: ' + message  )
-	elif code == 'INVLD':
-		print("[ INVALID LOGIN ]")
+			ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
+			print('[ JUDGE ] Sent ' + message)
+		
+		elif code =='VALID':
+			client_id = json_data['Client ID']
+			message = json_data['Message']
+			print('[ ' + code + ' ] ::: ' + client_id + ' ::: ' + message  )
+		elif code == 'INVLD':
+			print("[ INVALID LOGIN ]")
 
-	return
-
+		ch.stop_consuming()
+		return
+	except Exception as error:
+		print('Error : ' + str(error))
 
 
 
