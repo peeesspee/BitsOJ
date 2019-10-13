@@ -43,24 +43,43 @@ def login():
 def handler(ch, method, properties, body):
 	global client_id
 	server_data = str(body.decode("utf-8"))
-	status = server_data[0:5]
-	if status == 'VALID':
-		print('LOGGED IN')
-		ch.basic_ack(delivery_tag = method.delivery_tag)
-		channel.stop_consuming()
-	elif status == "INVLD":
-		print("Invalid creds")
-		ch.basic_ack(delivery_tag = method.delivery_tag)
-		channel.stop_consuming()
-		sys.exit()
-	elif status == 'JUDGE':
-		run_id = server_data[6:11]
-		message = 'VRDCT+' + str(run_id) + '+AC+No_error'
+	json_data = json.loads(server_data)
+
+	code = json_data["Code"]
+	if code == 'JUDGE':
+		run_id = json_data['Run ID']
+		username = json_data['Client Username'] 
+		client_id = json_data['Client ID']
+		language = json_data['Language']
+		PCode = json_data['PCode']
+		Source = json_data['Source']
+
+		message = {
+		'Code' : 'VRDCT', 
+		'Client Username' : username,
+		'Client ID' : client_id,
+		'Status' : 'AC',
+		'Run ID' : run_id,
+		'Message' : 'No Error'
+		}
+		message = json.dumps(message)
+
+
 		ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
 		print('[ JUDGE ] Sent ' + message)
-		return
 	
-	
+	elif code =='VALID':
+		client_id = json_data['Client ID']
+		message = json_data['Message']
+		print('[ ' + code + ' ] ::: ' + client_id + ' ::: ' + message  )
+	elif code == 'INVLD':
+		print("[ INVALID LOGIN ]")
+
+	return
+
+
+
+
 def listen(queue_name):
 	global username
 	global password

@@ -41,6 +41,7 @@ QPushButton#sidebar_button::hover::focus
 QPushButton#sidebar_button::pressed
 {
 	color : #23B2EE;
+	border-right : 4px solid #B2FF59;
 }
 
 QPushButton#sidebar_button::hover
