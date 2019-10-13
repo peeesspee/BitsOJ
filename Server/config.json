@@ -4,7 +4,7 @@
     "Server IP": "localhost",
     "Judge Username": "judge1",
     "Judge Password": "judge1",
-    "Login Allowed": "False",
+    "Login Allowed": "True",
     "Submission Allowed": "False",
     "Judge Key": "ahSuuiWQ12SthD1",
     "Client Key": "1sadHGAD379qKKq"

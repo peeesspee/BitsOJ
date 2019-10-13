@@ -31,3 +31,8 @@ try:
 				print(page.extractText())
 		except Exception as Error:
 			print(str(Error))
+
+
+
+# final_data = {'Type' : 'LOGIN', 'username' : username, 'password' : password}
+		# final_data = str(final_data)

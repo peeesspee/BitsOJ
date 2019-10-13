@@ -10,6 +10,7 @@ from functools import partial
 from manage_code import send_code
 
 
+
 with open("config.json", "r") as read_config:
 	config = json.load(read_config)
 
@@ -161,11 +162,11 @@ class ui_widgets():
 		top.setObjectName('about_screen_heading')
 		top.setAlignment(Qt.AlignCenter)
 
-		self.ask_query = QLineEdit(self)
-		self.ask_query.setFixedWidth(600)
-		self.ask_query.setFixedHeight(70)
-		self.ask_query.setPlaceholderText('Type Your Question')
-		self.ask_query.setObjectName('ask_query')
+		ui_widgets.ask_query = QLineEdit(self)
+		ui_widgets.ask_query.setFixedWidth(600)
+		ui_widgets.ask_query.setFixedHeight(70)
+		ui_widgets.ask_query.setPlaceholderText('Type Your Question')
+		ui_widgets.ask_query.setObjectName('ask_query')
 
 		self.send_query = QPushButton('Send', self)
 		self.send_query.setFixedSize(200, 50)
@@ -175,7 +176,7 @@ class ui_widgets():
 
 		main_layout.addWidget(heading)
 		main_layout.addWidget(top)
-		main_layout.addWidget(self.ask_query, alignment=Qt.AlignCenter)
+		main_layout.addWidget(ui_widgets.ask_query, alignment=Qt.AlignCenter)
 		main_layout.addWidget(self.send_query, alignment=Qt.AlignCenter)
 		main_layout.addStretch(5)
 
@@ -245,7 +246,14 @@ class ui_widgets():
 
 
 	def sending(self):
-		print('OK')
+		query = ui_widgets.ask_query.text()
+		if(query == ''):
+			QMessageBox.about(self, 'Warning', "Don't be stupid")
+		else:
+			send_code.query_request(
+				query,
+				)
+		
 	###################################################################################
 
 

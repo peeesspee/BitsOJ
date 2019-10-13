@@ -37,5 +37,15 @@ class send_code():
 
 		print("Your code is running \nWait for the judgement")
 
-	def extension_return():
-		return send_code.extention
+
+
+	def query_request(query):
+		final_data = 'QUERY '+query
+		print('[QUERY] Sending.....')
+		authenticate_login.channel.basic_publish(
+			exchange = 'connection_manager',
+			routing_key = 'client_requests',
+			body = final_data,
+			)
+		print('[QUERY] Successfully Send')
+		print('[QUERY] Waiting for response .....')
