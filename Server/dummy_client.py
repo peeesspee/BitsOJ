@@ -11,10 +11,14 @@ global client_id
 client_id = 'Null'
 
 username = 'team00001'
-password = 'KtmW7C'
+password = 'LBVTCy'
 
 try:
-	connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
+	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
+	params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+	connection = pika.BlockingConnection(params)
+
+	#connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
 	channel = connection.channel()
 except:
 	print("Error")
@@ -71,7 +75,7 @@ def handler(ch, method, properties, body):
 		status = json_data['Status']
 		run_id = json_data['Run ID']
 		message = json_data['Message']
-		print("[ Status ] " + status + "\n[ Run ID ] : " + run_id + "\n[ Message ] : " + message)
+		print("[ Status ] " + status + "\n[ Run ID ] : " + str(run_id) + "\n[ Message ] : " + message)
 	elif code =='VALID':
 		client_id = json_data['Client ID']
 		message = json_data['Message']
@@ -100,10 +104,11 @@ def listen():
 		channel.start_consuming()
 	except (KeyboardInterrupt, SystemExit):
 		channel.stop_consuming()
-		#channel.queue_delete(username)
+		print('[ DELETE ] Queue ' + username + ' deleted...')
+		channel.queue_delete(username)
 		connection.close()
 		print("[ STOP ] Keyboard interrupt")
-		sys.exit()
+		return
 
 
 def main():
@@ -124,8 +129,6 @@ def main():
 		else:
 			break;
 	
-	print('[ DELETE ] Queue ' + username + ' deleted...')
-	channel.queue_delete(username)
-
+	
 
 main()

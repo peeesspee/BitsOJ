@@ -13,7 +13,12 @@ class manage_clients():
 	def prepare(superuser_username, superuser_password, host, data_changed_flags2):
 		manage_clients.data_changed_flags = data_changed_flags2
 		try:
-			connection = pika.BlockingConnection(pika.URLParameters('amqp://' + superuser_username + ':' + superuser_password + '@' + host + '/%2f'))
+			creds = pika.PlainCredentials(superuser_username, superuser_password)
+			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+			connection = pika.BlockingConnection(params)
+
+
+			#connection = pika.BlockingConnection(pika.URLParameters('amqp://' + superuser_username + ':' + superuser_password + '@' + host + '/%2f'))
 			channel = connection.channel()
 			manage_clients.channel = channel
 			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
@@ -231,6 +236,7 @@ class manage_clients():
 				run_id, source_file_name = submission.new_submission(client_id, problem_code, language, time_stamp, source_code)
 				# Update database
 				status = 'Running'
+				
 				submissions_management.insert_submission(run_id, client_id, language, source_file_name, problem_code, status, time_stamp)
 				manage_clients.data_changed_flags[0] = 1
 				
@@ -258,7 +264,7 @@ class manage_clients():
 	
 		message = json.dumps(message)
 
-		manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = 'judge_requests', body = message) 
+		manage_clients.channel.basic_publish(exchange = 'connection_manager', routing_key = 'judge_requests', body = message, properties = pika.BasicProperties(delivery_mode = 2)) 
 		print('[ REQUEST ] New judging request sent')
 		return
 

@@ -55,7 +55,11 @@ class manage_judges():
 		manage_judges.data_changed_flag = data_changed_flag1
 		# Create a connection with rabbitmq and declare exchanges and queues
 		try:
-			connection = pika.BlockingConnection(pika.URLParameters('amqp://' + superuser_username + ':' + superuser_password + '@' + host + '/%2f'))
+			creds = pika.PlainCredentials(superuser_username, superuser_password)
+			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+			connection = pika.BlockingConnection(params)
+
+			#connection = pika.BlockingConnection(pika.URLParameters('amqp://' + superuser_username + ':' + superuser_password + '@' + host + '/%2f'))
 			channel = connection.channel()
 			manage_judges.channel = channel
 			

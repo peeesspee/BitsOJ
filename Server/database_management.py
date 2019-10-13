@@ -22,7 +22,7 @@ class manage_database():
 		try:	
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
 			cur.execute("create table if not exists connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
-			cur.execute("create table if not exists submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
+			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Table creation error : " + str(error))
@@ -152,6 +152,7 @@ class submissions_management(manage_database):
 		#cur.execute("create table submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(4))")
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
+		run_id = int(run_id)
 		try:
 			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?)", (run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, ))
 			conn.commit()
@@ -162,22 +163,13 @@ class submissions_management(manage_database):
 	def update_submission_status(run_id, verdict):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
+		run_id = int(run_id)
 		try:
 			cur.execute("UPDATE submissions SET verdict = ? WHERE run_id = ?", (verdict, run_id,))
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not update submission submission : " + str(error))
 		return
-
-	def view_submissions():
-		cur = manage_database.get_cursor()
-		try:
-			cur.execute("SELECT * FROM submissions")
-			submission_data = cur.fetchall()
-			return submission_data
-		except:
-			print("[ ERROR ] Could not view submissions")
-			return Null
 
 class user_management(manage_database):
 	def generate_n_users(no_of_clients, no_of_judges, password_type):

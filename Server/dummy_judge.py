@@ -11,10 +11,13 @@ global client_id
 client_id = 'Nul'
 
 username = 'judge00001'
-password = 'RR9ZES'
+password = 'cV8gvY'
 
 try:
-	connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
+	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
+	params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+	connection = pika.BlockingConnection(params)
+
 	channel = connection.channel()
 	channel.queue_declare(queue = username, durable = True)
 	channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
@@ -47,10 +50,10 @@ def handler(ch, method, properties, body):
 	if(server_data == ''):
 		print("Empty!")
 		return
-	print(server_data)
+	
 	try:
 		json_data = json.loads(server_data)
-		print(json_data)
+		
 
 		code = json_data['Code']
 		if code == 'JUDGE':
@@ -73,16 +76,20 @@ def handler(ch, method, properties, body):
 
 
 			ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
+
 			print('[ JUDGE ] Sent ' + message)
 		
 		elif code =='VALID':
 			client_id = json_data['Client ID']
 			message = json_data['Message']
 			print('[ ' + code + ' ] ::: ' + client_id + ' ::: ' + message  )
+			ch.stop_consuming()
+
 		elif code == 'INVLD':
 			print("[ INVALID LOGIN ]")
+			ch.stop_consuming()
 
-		ch.stop_consuming()
+		ch.basic_ack(delivery_tag = method.delivery_tag)
 		return
 	except Exception as error:
 		print('Error : ' + str(error))
@@ -93,14 +100,17 @@ def listen(queue_name):
 	global username
 	global password
 	print("[ LISTEN ] " + queue_name)
+	channel.basic_qos(prefetch_count = 1)
 	channel.basic_consume(queue = queue_name, on_message_callback = handler)
 	try:
 		channel.start_consuming()
 	except (KeyboardInterrupt, SystemExit):
 		channel.stop_consuming()
+		print('[ DELETE ] Queue ' + username + ' deleted...')
+		channel.queue_delete(username)
 		connection.close()
 		print("[ STOP ] Keyboard interrupt")
-		sys.exit()
+		return
 
 
 def main():
@@ -118,8 +128,7 @@ def main():
 		else:
 			break;
 	
-	print('[ DELETE ] Queue ' + username + ' deleted...')
-	channel.queue_delete(username)
+	
 
 
 main()

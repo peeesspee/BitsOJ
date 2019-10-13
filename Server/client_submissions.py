@@ -6,7 +6,7 @@ class submission():
 	def new_submission(client_id, problem_code, language, time_stamp, source_code):
 		print("[ SUBMIT ] "+ client_id + " for problem " + problem_code)
 		run_id = submission.generate_run_id()
-		temp_file_name = run_id
+		temp_file_name = str(run_id)
 		file_name = submission.make_local_source_file(temp_file_name, source_code, language)
 		print ("[ FILE ] New file created for client : "+ client_id + " File name:  " + file_name)
 		return run_id, file_name
@@ -29,7 +29,7 @@ class submission():
 
 		# w : Write mode, + : Create file if not exists
 		new_file_name = file_name + file_extension
-		print("[ WRITE ] Wrote a new file : " + new_file_name)
+		print("[ WRITE ] Write a new file : " + new_file_name)
 		client_local_file = open("Client_Submissions/" + new_file_name, "w+")
 		client_local_file.write(source_code)
 		client_local_file.close()
@@ -37,7 +37,7 @@ class submission():
 
 	def generate_run_id():
 		global run_id_counter
-		run_id = str(run_id_counter)
+		run_id = run_id_counter
 		run_id_counter = run_id_counter + 1
 		return run_id
 
