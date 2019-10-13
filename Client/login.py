@@ -15,6 +15,8 @@ class authenticate_login():
 		password = password
 
 		print("[ Validating ] : " + authenticate_login.username + "@" + password)
+		# final_data = {'Type' : 'LOGIN','client_id' : authenticate_login.client_id, 'username' : username, 'password' : password}
+		# final_data = str(final_data)
 
 		# Declaring queue for the new client
 		authenticate_login.channel.queue_declare(
@@ -28,6 +30,7 @@ class authenticate_login():
 			queue = authenticate_login.username
 			)
 
+		channel.confirm_delivery()
 		# Publishing the message ( Username and Password )
 		authenticate_login.channel.basic_publish(
 			exchange = 'connection_manager', 
@@ -41,9 +44,17 @@ class authenticate_login():
 			on_message_callback = authenticate_login.server_response_handler,
 			auto_ack = True
 			)
+		
 		print("[ Listening ] @ " + authenticate_login.host)
+		while True:
+			if pika.exceptions.UnroutableError:
+				break;
+			else:
+				print('try again')
 		# Started listening
 		authenticate_login.channel.start_consuming()
+		# while channel._consumer_infos:
+			# channel.connection.process_data_events(time_limit=15) # 2 Seconds
 
 		
 

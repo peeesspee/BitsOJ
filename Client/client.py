@@ -23,7 +23,6 @@ rabbitmq_password = config["rabbitmq_password"]
 host = config["host"]
 
 
-
 def main():
 	#################################
 	# Initialize the database and returns the cursor 
@@ -33,6 +32,9 @@ def main():
 	##################################
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 10)
+	# index    value     meaning
+	# 0        0/1       Contest Not Started/Contest has been started
+	# 1        0/1       
 
 	##################################
 	# Makes connection with RabbitMQ
