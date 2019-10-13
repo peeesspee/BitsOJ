@@ -61,24 +61,11 @@ def handler(ch, method, properties, body):
 		return
 	
 	
-def listen():
+def listen(queue_name):
 	global username
 	global password
-	print("[ LISTEN ]")
-	channel.basic_consume(queue = 'judge_requests', on_message_callback = handler)
-	try:
-		channel.start_consuming()
-	except (KeyboardInterrupt, SystemExit):
-		channel.stop_consuming()
-		connection.close()
-		print("[ STOP ] Keyboard interrupt")
-		sys.exit()
-
-def listen1():
-	global username
-	global password
-	print("[ LISTEN ]")
-	channel.basic_consume(queue = username, on_message_callback = handler)
+	print("[ LISTEN ] " + queue_name)
+	channel.basic_consume(queue = queue_name, on_message_callback = handler)
 	try:
 		channel.start_consuming()
 	except (KeyboardInterrupt, SystemExit):
@@ -97,9 +84,9 @@ def main():
 		a = int(a)
 		if a == 1:
 			login()
-			listen1()
+			listen(username)
 		elif a == 2:
-			listen()
+			listen('judge_requests')
 		else:
 			break;
 	
