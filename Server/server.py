@@ -16,6 +16,9 @@ sys.path.append('../')
 def main():
 	# Initialize server
 	print('[ SETUP ] Initialising server...')
+
+	#save_status.write_config('BitsOJ', 'root', 'judge1', 'judge1', 'localhost', 'True', 'True', 'abcdefghij12345', 'abcdefghij12345')
+
 	initialize_server.read_config()
 	superuser_username, superuser_password = initialize_server.get_superuser_details()
 	judge_username, judge_password = initialize_server.get_judge_details()

@@ -35,7 +35,7 @@ class manage_judges():
 		'Message' : message
 		}
 		message = json.dumps(message)
-				
+			 	
 
 		try:
 			manage_judges.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = judge_message) 
