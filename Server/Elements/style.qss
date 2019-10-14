@@ -12,8 +12,7 @@ QMessageBox{
 	color: #FF0000;
 }
 
-
-
+/*################################################### BUTTONS #########################################################*/
 /* Style of buttons in the sidebar  START  */
 
 QPushButton#sidebar_button{
@@ -55,7 +54,6 @@ QPushButton#sidebar_button::hover
 /* Style of buttons in the sidebar  END  */
 
 
-
 /* Style of buttons in the topbar  START  */
 
 QPushButton#topbar_button{
@@ -92,6 +90,48 @@ QPushButton#topbar_button::hover
 }
 
 /* Style of buttons in the topbar  END  */
+
+
+
+
+/* Style of interior buttons  START  */
+
+QPushButton#interior_button{
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 0px; 
+	font-size : 14px;
+	text-align : center; 	
+	border : 1px solid #ADFF2F;
+	background-color : #202428 ;
+	color : #838383;
+}
+
+QPushButton#interior_button::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+}
+
+QPushButton#interior_button::hover::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+}
+
+QPushButton#interior_button::pressed
+{
+	color : #23B2EE;
+	background-color : #202428;
+}
+
+QPushButton#interior_button::hover
+{
+	color : #0892D0;
+	background-color : #202428 ;
+}
+
+/* Style of interior buttons END  */
+
 
 
 
@@ -143,9 +183,24 @@ QTabBar::tab
 	margin: 0; 
 	padding-top: 10; 
 }
-/* Style of tabs in tab-bar (basically invisible)  START  */
+/* Style of tabs in tab-bar (basically invisible)  END  */
 
 
+QPushButton#account_button
+{
+	color : #AAAAAA;
+	text-align : center;
+	margin-left : 70px;
+	background-color : #171B1F;
+	border : 1px solid #ADFF2F;
+	border-radius : 25px;
+}
+
+
+/*################################################### /BUTTONS #########################################################*/
+
+
+/*################################################ LAYOUT OBJECTS ######################################################*/
 
 
 /*--------------MAIN LAYOUT STARTS----------------*/
@@ -167,8 +222,8 @@ QTabWidget#main_tabs{
 QTabWidget::pane{
 	color : #AAAAAA;
 }
-
 /* Right panes style END */
+
 
 /* Style of background */
 QWidget#screen_widget
@@ -183,21 +238,71 @@ QWidget#main_widget{
 	color: #AAAAAA;
 }
 
-/* Style of content marked as main-screen-content and main-screen-heading*/
+/* Style of content boxes*/
+QWidget#content_box{
+	border: 1px solid #888888;
+}
+
+
+/* Style of content */
+
 QLabel#main_screen_content{
 	color : #999999;
-	font-size : 24px;
+	font-size : 20px;
 }
+
 QLabel#main_screen_heading{
 	color : #ADFF2F;
 	font-size : 30px;
 }
+
+QLabel#main_screen_sub_heading{
+	color : #23B2EE;
+	font-size : 26px;
+}
+
 QLabel#about_screen_heading{
 	margin-top : 200px;
 	color : #E91E63;
 	font-size : 30px;
 }
 
+/*--------------MAIN LAYOUT ENDS----------------*/
+
+
+
+
+
+/*--------------ADD USERS LAYOUT STARTS---------*/
+QLabel#account_label
+{
+	color : #23B2EE;
+}
+
+QSpinBox#account_spinbox
+{
+	color : #AAAAAA;
+	background-color : #474B4F;
+}
+
+QComboBox#account_combobox
+{
+	color : #AAAAAA;
+	background-color : #474B4F;
+}
+
+QWidget#account_window
+{
+	background-color : #171B1F;
+}
+
+/*--------------ADD USERS LAYOUT ENDS---------*/
+
+/*################################################ /LAYOUT OBJECTS ######################################################*/
+
+
+
+/*################################################ TABLE OBJECTS ######################################################*/
 
 /* Table styles */
 QTableView{
@@ -245,43 +350,5 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 	height : 0px;
 }
 
+/*################################################ /TABLE OBJECTS ######################################################*/
 
-/*--------------MAIN LAYOUT ENDS----------------*/
-
-
-
-
-/*--------------ADD USERS LAYOUT STARTS---------*/
-QLabel#account_label
-{
-	color : #23B2EE;
-}
-
-QSpinBox#account_spinbox
-{
-	color : #AAAAAA;
-	background-color : #474B4F;
-}
-
-QComboBox#account_combobox
-{
-	color : #AAAAAA;
-	background-color : #474B4F;
-}
-
-QPushButton#account_button
-{
-	color : #AAAAAA;
-	text-align : center;
-	margin-left : 70px;
-	background-color : #171B1F;
-	border : 1px solid #ADFF2F;
-	border-radius : 25px;
-}
-
-QWidget#account_window
-{
-	background-color : #171B1F;
-}
-
-/*--------------ADD USERS LAYOUT ENDS---------*/

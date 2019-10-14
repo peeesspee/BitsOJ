@@ -11,7 +11,7 @@ global client_id
 client_id = 'Null'
 
 username = 'team00001'
-password = 'LBVTCy'
+password = 'Tgs15H'
 
 try:
 	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
@@ -79,7 +79,7 @@ def handler(ch, method, properties, body):
 	elif code =='VALID':
 		client_id = json_data['Client ID']
 		message = json_data['Message']
-		print("[ Response ] " + code + "\n[ Client ID ] : " + client_id + "\n[ Message ] : " + message)
+		print("[ Response ] " + code + "\n[ Client ID ] : " + str(client_id) + "\n[ Message ] : " + message)
 
 	elif code == 'INVLD':
 		print("Invalid creds")
