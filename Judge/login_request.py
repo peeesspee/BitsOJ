@@ -1,4 +1,5 @@
 import pika
+import json
 
 class authenticate_judge():
 	username = ''
@@ -11,7 +12,8 @@ class authenticate_judge():
 	def login(channel, host):
 		authenticate_judge.channel = channel
 		authenticate_judge.username = input("Enter Judge's Username \n") or "judge1"
-		authenticate_judge.password = input("Enter Judge's Password\n") or "judge1"
+		authenticate_judge.password = input("Enter Judge's Password\n") or "Bits1"
+		client_id = 'Nul'
 
 		print("\n[Validating] : " + authenticate_judge.username + "@" + authenticate_judge.password )
 
@@ -26,11 +28,22 @@ class authenticate_judge():
 			queue = authenticate_judge.username
 			)
 
+		message = {
+			'Code': 'LOGIN',
+			'Username': authenticate_judge.username,
+			'Password': authenticate_judge.password,
+			'ID': authenticate_judge.client_id,
+			'Type': 'JUDGE'
+
+		}
+
+		message = json.dumps(message)
+
 
 		authenticate_judge.channel.basic_publish(
 			exchange = 'connection_manager',
 			routing_key = 'client_requests',
-			body = 'LOGIN ' + authenticate_judge.username + ' ' + authenticate_judge.password + ' ' + authenticate_judge.client_id + ' ' + "JUDGE"
+			body = message
 			)
 
 
@@ -50,19 +63,29 @@ class authenticate_judge():
 
 	def response_handler(ch, method, properties, body):
 		server_data = body.decode('utf-8')
-		print(server_data)
+		if server_data == '':
+			print("Empty!!!")
+			return
 
-		status = server_data
+		json_data = json.loads(server_data)
+		
+		#   json_data = {
+		#					'Code': 'VALID', 
+		#					'Client ID': 'Null', 
+		#					'Message': 'Hello Judge!'
+		#				}  
+
+
+		status = json_data['Code']
+		# print(status)
 
 		if(status == 'VALID'):
-			status = server_data
+		# 	status = server_data
 			print("[status]: " + status  )
 			authenticate_judge.channel.stop_consuming()
 			authenticate_judge.login_status = status
 			authenticate_judge.channel.stop_consuming()
 
-
-			
 
 		elif(status == 'INVLD'):
 			print("\nINVALID USER !!!\n")

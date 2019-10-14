@@ -18,7 +18,6 @@ status = ''
 while (status != 'VALID'):
 	authenticate_judge.login(channel, host)
 	status = authenticate_judge.login_status
-	print(status)
 
 	
 
