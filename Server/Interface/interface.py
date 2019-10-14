@@ -9,9 +9,6 @@ from init_server import initialize_server
 from database_management import user_management
 
 
-global current_status 
-current_status = "STOPPED"
-
 # This is to ignore some warnings which were thrown when gui exited and 
 # python deleted some assests in wrong order
 # Nothing critical :)
@@ -31,7 +28,7 @@ class server_window(QMainWindow):
 		# Make  the app run full-screen
 		# Initialize status bar (Bottom Bar)
 		self.status = self.statusBar()
-		self.resize(800, 600)
+		self.resize(1024, 768)
 
 		# Timer to update GUI every 1 second
 		self.timer = QTimer()
@@ -136,7 +133,7 @@ class server_window(QMainWindow):
 	
 
 	def init_UI(self):
-		self.set_status()
+		self.set_status('STOPPED')
 		# Define Layout for sidebar
 		side_bar_layout = QVBoxLayout()
 
@@ -172,8 +169,15 @@ class server_window(QMainWindow):
 		logo.setPixmap(logo_image2)
 
 		top_bar_layout = QHBoxLayout()
-		top_bar_layout.setContentsMargins(15, 5, 1, 0);
+		top_bar_layout.setContentsMargins(15, 5, 20, 0);
 		top_bar_layout.addWidget(logo)
+		# top_bar_layout.addWidget(start_button)
+		# top_bar_layout.addWidget(pause_button)
+		# top_bar_layout.addWidget(stop_button)
+		top_bar_layout.setStretch(0, 70)
+		# top_bar_layout.setStretch(1, 10)
+		# top_bar_layout.setStretch(2, 10)
+		# top_bar_layout.setStretch(3, 10)
 
 		top_bar_widget = QWidget()
 		top_bar_widget.setLayout(top_bar_layout)
@@ -201,7 +205,7 @@ class server_window(QMainWindow):
 		
 
 		# Screen 1 will be our initial screen 
-		self.right_widget.setCurrentIndex(0)
+		self.right_widget.setCurrentIndex(9)
 
 		# Define the combined layout for sidebar + right side screens
 		main_layout = QHBoxLayout()
@@ -435,9 +439,8 @@ class server_window(QMainWindow):
 	
 	###################################################
 
-	def set_status(self):
-		global current_status
-		self.status.showMessage(current_status)
+	def set_status(self, message = 'STOPPED'):
+		self.status.showMessage(message)
 	###################################################
 
 	def closeEvent(self, event):

@@ -66,6 +66,7 @@ class manage_clients():
 		print('\n[ PING ] Recieved a new client message...')
 		# Decode the message sent by client
 		client_message = str(body.decode('utf-8'))
+
 		# JSON Parsing here
 		try:
 			json_data = json.loads(client_message)
@@ -98,7 +99,7 @@ class manage_clients():
 		# Client sends the username, password, clientID as 'username+password+clientID', so we split it.
 		# Default value of clientID is 'Null' (String)
 		
-		print('[ LOGIN REQUEST ] ::: ' + client_id + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
+		print('[ LOGIN REQUEST ] ::: ' + str(client_id) + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
 
 		# Declare queue with same name as client_username
 		manage_clients.channel.queue_declare(queue = client_username, durable = True)
@@ -131,7 +132,7 @@ class manage_clients():
 				# If client has NOT logged in for the first time
 				if previously_connected_status == True:
 					client_id = client_authentication.get_client_id(client_username)
-					print('[ ' + client_username + ' ] Previous Client ID : ' + client_id )
+					print('[ ' + client_username + ' ] Previous Client ID : ' + str(client_id) )
 
 				# If client has logged in for the first time
 				else:
@@ -139,7 +140,7 @@ class manage_clients():
 					client_id = client_authentication.generate_new_client_id()
 					# Add client to connected users database
 					client_authentication.add_connected_client(client_id, client_username, client_password)
-					print('[ ' + client_username + ' ] Assigned : ' + client_id )
+					print('[ ' + client_username + ' ] Assigned : ' + str(client_id) )
 
 				# Update GUI to indicate new data
 				manage_clients.data_changed_flags[1] = 1
@@ -205,7 +206,7 @@ class manage_clients():
 
 
 	def client_submission_handler(client_id, problem_code, language, time_stamp, source_code):
-		print('[ SUBMISSION ] Client ID :' + client_id + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp)
+		print('[ SUBMISSION ] Client ID :' + str(client_id) + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp)
 
 		# Get client username from database
 		# TO BE OPTIMISED LATER

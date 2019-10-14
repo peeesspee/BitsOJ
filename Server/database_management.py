@@ -21,9 +21,10 @@ class manage_database():
 		
 		try:	
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
-			cur.execute("create table if not exists connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
+			cur.execute("create table if not exists connected_clients(client_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
 			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
+			cur.execute("create table if not exists connected_judges(judge_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Table creation error : " + str(error))
 
@@ -77,10 +78,11 @@ class previous_data(manage_database):
 			if(data[0][0] != ''):
 				client_id_counter = int(data[0][0])
 			else:
-				client_id_counter = 1
+				client_id_counter = 0
 
 		except:
-			client_id_counter = 1
+			print('[ ERROR ] Client ID could not be initialised')
+			client_id_counter = 0
 
 
 class client_authentication(manage_database):
@@ -100,24 +102,25 @@ class client_authentication(manage_database):
 	#This function generates a new client_id for new connections
 	def generate_new_client_id():
 		global client_id_counter
-		client_id = str(client_id_counter)
 		client_id_counter = client_id_counter + 1
+		client_id = int(client_id_counter)
 		return client_id
 
 	def add_connected_client(client_id, user_name, password):
-		cur = manage_database.get_cursor()
-		conn = manage_database.get_connection_object()
 		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
 			cur.execute("INSERT INTO connected_clients values(?, ?, ?)", (client_id, user_name, password, ))
-		except:
-			pass
-		conn.commit()
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Could not add client : " + str(error))
+		
 		return	
 		
 	# Get client_id when user_name is known
 	def get_client_id(user_name):
-		cur = manage_database.get_cursor()
 		try:
+			cur = manage_database.get_cursor()
 			cur.execute("SELECT client_id FROM connected_clients WHERE user_name = ?", (user_name, ))
 			client_id = cur.fetchall()
 			return client_id[0][0]
@@ -126,8 +129,9 @@ class client_authentication(manage_database):
 
 	# Get user_name when client_id is known
 	def get_client_username(client_id):
-		cur = manage_database.get_cursor()
 		try:
+			cur = manage_database.get_cursor()
+			client_id = int(client_id)
 			cur.execute("SELECT user_name FROM connected_clients WHERE client_id = ?", (client_id, ))
 			client_username = cur.fetchall()
 			return client_username[0][0]
@@ -153,6 +157,7 @@ class submissions_management(manage_database):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
 		run_id = int(run_id)
+		client_id = int(client_id)
 		try:
 			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?)", (run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, ))
 			conn.commit()

@@ -224,12 +224,74 @@ class ui_widgets:
 
 
 	def settings_ui(self):
-		main_layout = QVBoxLayout()
 		heading = QLabel('Server Settings')
 		heading.setObjectName('main_screen_heading')
 
+		# Contest Time Management
+		## Contest Time Settings Label:
+		contest_time_label = QLabel('Contest Time Settings:')
+		contest_time_label.setObjectName('main_screen_sub_heading')
+
+		# Set contest time 
+		contest_time_layout = QHBoxLayout()
+		contest_duration_label = QLabel('> Contest Duration :')
+		contest_duration_label.setObjectName('main_screen_content')
+		contest_duration_label.setFixedSize(200, 20)
+		contest_time_entry = QLineEdit()
+		contest_time_entry.setPlaceholderText('HH:MM')
+		contest_time_entry.setFixedSize(100, 25)
+		contest_time_layout.addWidget(contest_duration_label)
+		contest_time_layout.addWidget(contest_time_entry)
+		contest_time_layout.addStretch(1)
+		contest_time_layout.setSpacing(5)
+		contest_time_layout.setContentsMargins(5, 0, 10, 0)
+		contest_time_widget = QWidget()
+		contest_time_widget.setLayout(contest_time_layout)
+
+		# Start, Stop, Pause contest
+		set_button = QPushButton('Set')
+		set_button.setFixedSize(70, 25)
+		set_button.setObjectName('interior_button')
+		#set_button.clicked.connect(self.contest_settings)
+		start_button = QPushButton('Start', self)
+		start_button.setFixedSize(70, 25)
+		start_button.setObjectName('interior_button')
+		#start_button.clicked.connect(self.contest_settings)
+		pause_button = QPushButton('Pause', self)
+		pause_button.setFixedSize(70, 25)
+		pause_button.setObjectName('interior_button')
+		#pause_button.clicked.connect(self.contest_settings)
+		stop_button = QPushButton('Stop', self)
+		stop_button.setFixedSize(70, 25)
+		stop_button.setObjectName('interior_button')
+		#stop_button.clicked.connect(self.contest_settings)
+		
+		
+		contest_buttons_layout = QHBoxLayout()
+		contest_buttons_layout.addWidget(set_button)
+		contest_buttons_layout.addWidget(start_button)
+		contest_buttons_layout.addWidget(pause_button)
+		contest_buttons_layout.addWidget(stop_button)
+		contest_buttons_layout.addStretch(1)
+		contest_buttons_layout.setSpacing(10)
+		contest_buttons_widget = QWidget()
+		contest_buttons_widget.setLayout(contest_buttons_layout)
+
+		time_management_layout = QVBoxLayout()
+		time_management_layout.addWidget(contest_time_label)
+		time_management_layout.addWidget(contest_time_widget)
+		time_management_layout.addWidget(contest_buttons_widget)
+		time_management_widget = QWidget()
+		time_management_widget.setLayout(time_management_layout)
+		time_management_widget.setObjectName('content_box')
+
+
+
+		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
+		main_layout.addWidget(time_management_widget)
+		main_layout.setSpacing(10)
+		main_layout.addStretch(1)
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
