@@ -3,13 +3,13 @@ import os
 import json
 from login import authenticate_login
 from connection import manage_connection
-
+ 
 class send_code():
 	client_id, username = authenticate_login.get_user_details()
 	channel,host = manage_connection.channel_host()
 	extention = None
 
-	def solution_request(problem_Code,selected_language,time_stamp,code):
+	def solution_request(problem_Code,selected_language,time_stamp,code,local_run_id):
 		if(selected_language == 'C'):
 			send_code.extention = '.c'
 			language_code = 'GCC'
@@ -28,6 +28,7 @@ class send_code():
 		print(authenticate_login.client_id)
 		final_data = {
 			'Code' : 'SUBMT',
+			'Local Run ID' : local_run_id,
 			'ID' : authenticate_login.client_id,
 			'PCode' : problem_Code,
 			'Language' : language_code,
