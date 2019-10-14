@@ -2,6 +2,7 @@ import pika
 import time
 import threading
 import sys
+import json
 rabbitmq_username = 'judge1'
 rabbitmq_password = 'judge1'
 host = 'localhost'
@@ -9,11 +10,14 @@ host = 'localhost'
 global client_id
 client_id = 'Nul'
 
-username = 'judge1'
-password = 'judge1'
+username = 'judge00001'
+password = '3Khyvu'
 
 try:
-	connection = pika.BlockingConnection(pika.URLParameters("amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"))
+	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
+	params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+	connection = pika.BlockingConnection(params)
+
 	channel = connection.channel()
 	channel.queue_declare(queue = username, durable = True)
 	channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
@@ -22,55 +26,91 @@ except:
 	print("Error")
 
 def login():
-	username = input('Enter judge username: ') or 'judge1'
-	password = input('Enter judge password: ') or 'judge1'
+	global username
+	global password
+	username = input('Enter judge username: ') or username
+	password = input('Enter judge password: ') or password
 	print("Sending")
-	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = 'LOGIN ' + username + ' ' + password + ' ' + client_id + ' JUDGE')
+	message = {
+		'Code' : 'LOGIN', 
+		'Username' : username, 
+		'Password' : password,
+		'ID' : client_id,
+		'Type' : 'JUDGE'
+		}
+	
+	message = json.dumps(message)
+	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
 	print("Sent")
 
 
 def handler(ch, method, properties, body):
 	global client_id
 	server_data = str(body.decode("utf-8"))
-	status = server_data[0:5]
-	if status == "VALID" :
-		print('LOGGED IN')
-		ch.basic_ack(delivery_tag = method.delivery_tag)
-		channel.stop_consuming()
-	elif status == "INVLD":
-		print("Invalid creds")
-		ch.basic_ack(delivery_tag = method.delivery_tag)
-		channel.stop_consuming()
-		sys.exit()
-	elif status == 'JUDGE':
-		run_id = server_data[6:11]
-		message = 'VRDCT+' + str(run_id) + '+AC+No_error'
-		ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
-		print('[ JUDGE ] Sent ' + message)
+	if(server_data == ''):
+		print("Empty!")
 		return
 	
-	
-def listen():
-	print("[ LISTEN ]")
-	channel.basic_consume(queue = 'judge_requests', on_message_callback = handler)
 	try:
-		channel.start_consuming()
-	except (KeyboardInterrupt, SystemExit):
-		channel.stop_consuming()
-		connection.close()
-		print("[ STOP ] Keyboard interrupt")
-		sys.exit()
+		json_data = json.loads(server_data)
+		
 
-def listen1():
-	print("[ LISTEN ]")
-	channel.basic_consume(queue = username, on_message_callback = handler)
+		code = json_data['Code']
+		if code == 'JUDGE':
+			run_id = json_data['Run ID']
+			username = json_data['Client Username'] 
+			client_id = json_data['Client ID']
+			language = json_data['Language']
+			PCode = json_data['PCode']
+			Source = json_data['Source']
+
+			message = {
+			'Code' : 'VRDCT', 
+			'Client Username' : username,
+			'Client ID' : client_id,
+			'Status' : 'AC',
+			'Run ID' : run_id,
+			'Message' : 'No Error'
+			}
+			message = json.dumps(message)
+
+
+			ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
+
+			print('[ JUDGE ] Sent ' + message)
+		
+		elif code =='VALID':
+			client_id = json_data['Client ID']
+			message = json_data['Message']
+			print('[ ' + code + ' ] ::: ' + client_id + ' ::: ' + message  )
+			ch.stop_consuming()
+
+		elif code == 'INVLD':
+			print("[ INVALID LOGIN ]")
+			ch.stop_consuming()
+
+		ch.basic_ack(delivery_tag = method.delivery_tag)
+		return
+	except Exception as error:
+		print('Error : ' + str(error))
+
+
+
+def listen(queue_name):
+	global username
+	global password
+	print("[ LISTEN ] " + queue_name)
+	channel.basic_qos(prefetch_count = 1)
+	channel.basic_consume(queue = queue_name, on_message_callback = handler)
 	try:
 		channel.start_consuming()
 	except (KeyboardInterrupt, SystemExit):
 		channel.stop_consuming()
+		print('[ DELETE ] Queue ' + username + ' deleted...')
+		channel.queue_delete(username)
 		connection.close()
 		print("[ STOP ] Keyboard interrupt")
-		sys.exit()
+		return
 
 
 def main():
@@ -82,14 +122,13 @@ def main():
 		a = int(a)
 		if a == 1:
 			login()
-			listen1()
+			listen(username)
 		elif a == 2:
-			listen()
+			listen('judge_requests')
 		else:
 			break;
 	
-	print('[ DELETE ] Queue ' + username + ' deleted...')
-	channel.queue_delete(username)
+	
 
 
 main()

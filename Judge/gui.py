@@ -8,6 +8,8 @@
 # from init_server import initialize_server
 
 from  database import manage_database
+from compile_run import verdict
+import os
 
 # import sqlite3
 # conn = sqlite3.connect(":memory:")
@@ -15,15 +17,26 @@ from  database import manage_database
 # c = conn.cursor()
 # print(c)
 
-a="132"
-b="BDSM"
-c="PYTHON2"
-d="AC"
+# a="132"
+# b="BDSM"
+# c="PYTHON2"
+# d="AC"
 
-manage_database.initialize_database()
-# manage_database.insert_record(a, b, c, d)
-# x = manage_database.get_record()
+# manage_database.initialize_database()
+# # manage_database.insert_record(a, b, c, d)
+# # x = manage_database.get_record()
+# print(x)
+# manage_database.reset_database()
+
+# manage_database.close_db()
+
+PATH = "./A/test"
+
+x = verdict.find_file()
+y = verdict.lang_compiler(x[0], x[1], x[2])
+z = verdict.compile_file(y[0])
+verdict.run_file(y[1])
+verdict.remove_object(x[0], x[2], x[1])
+verdict.compare_outputs()
 print(x)
-manage_database.reset_database()
-
-manage_database.close_db()
+print(y)

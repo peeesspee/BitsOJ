@@ -1,5 +1,6 @@
 import pika
 import sys
+import json
 from database_management import submissions_management
 
 class manage_judges():
@@ -9,35 +10,44 @@ class manage_judges():
 	def judge_message_handler(ch, method, properties, body):
 		# Decode the message sent by judge
 		judge_message = str(body.decode('utf-8'))
-		
 		print('\n[ PING ] Recieved a new judge message : ' + judge_message)
-		judge_code = judge_message[0:5]
-		if judge_code == 'VRDCT':
+		try:
+			json_data = json.loads(judge_message)
+			code = json_data["Code"]
+			if code == 'VRDCT':
+				client_username = json_data['Client Username']
+				client_id = json_data['Client ID']
+				status = json_data['Status']
+				run_id = json_data['Run ID']
+				message = json_data['Message']
+			else:
+				print('[ ERROR ] Judge sent garbage data. Trust me you don\'t wanna see it! ')
+				print(judge_message)
 
-			########################################
-			# Get username here
-			client_username = 'team1'
-			status = 'AC'
-			run_id = '00001'
-			message = 'No Error'
-			########################################
+		except Exception as error:
+			print('[ ERROR ] Could not parse judge JSON data : ' + str(error))
+			return
 
-			status = judge_message[0:5]
-			run_id = judge_message[6:11]
-			verdict = judge_message[12:14]
-			message = judge_message[15:]
+		message = {
+		'Code' : 'VRDCT', 
+		'Run ID' : run_id,
+		'Status' : status,
+		'Message' : message
+		}
+		message = json.dumps(message)
+			 	
 
-			
-			# Fetch client username based on run id
+		try:
 			manage_judges.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = judge_message) 
 			print('[ VERDICT ] New verdict sent to ' + client_username)
-			submissions_management.update_submission_status(run_id, verdict)
+			submissions_management.update_submission_status(run_id, status)
 			# Update GUI
 			manage_judges.data_changed_flag[0] = 1
+		except Exception as error:
+			print('[ ERROR ] Could not publish result to client : ' + str(error))
+			return
 
-		else:
-			print('[ ERROR ] Judge sent garbage data. Trust me you don\'t wanna see it! ')
-			print(judge_message)
+			
 		return
 
 	# This function continously listens for judge verdicts
@@ -45,7 +55,11 @@ class manage_judges():
 		manage_judges.data_changed_flag = data_changed_flag1
 		# Create a connection with rabbitmq and declare exchanges and queues
 		try:
-			connection = pika.BlockingConnection(pika.URLParameters('amqp://' + superuser_username + ':' + superuser_password + '@' + host + '/%2f'))
+			creds = pika.PlainCredentials(superuser_username, superuser_password)
+			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+			connection = pika.BlockingConnection(params)
+
+			#connection = pika.BlockingConnection(pika.URLParameters('amqp://' + superuser_username + ':' + superuser_password + '@' + host + '/%2f'))
 			channel = connection.channel()
 			manage_judges.channel = channel
 			

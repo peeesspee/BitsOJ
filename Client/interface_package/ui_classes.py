@@ -5,8 +5,11 @@ from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex,
 import os
 import time
 import json
+import webbrowser
 from functools import partial
 from manage_code import send_code
+from database_management import submission_management, manage_local_ids
+
 
 
 with open("config.json", "r") as read_config:
@@ -18,6 +21,7 @@ class ui_widgets():
 	# Handle UI for various button presses
 	var = {}
 	def problems_ui(self):
+
 		main_layout = QVBoxLayout() 
 		heading = QLabel('Problems')
 		heading.setObjectName('main_screen_heading')
@@ -37,8 +41,8 @@ class ui_widgets():
 		while(number_of_buttons <= config["No_of_Problems"]):
 		# for i in range(config["No_of_Problems"]):
 			ui_widgets.var['Problem_{}'.format(number_of_buttons)] = QPushButton('Problem_'+str(number_of_buttons),self)
-			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setObjectName('submit')
-			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setFixedSize(250, 90)
+			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setObjectName('problem_buttons')
+			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setFixedSize(500, 200)
 			ui_widgets.var['Problem_{}'.format(number_of_buttons)].clicked.connect(partial(ui_widgets.show_problem, number_of_buttons))
 			problems_layout.addWidget(ui_widgets.var['Problem_{}'.format(number_of_buttons)],row,column)
 			if(column==1):
@@ -69,12 +73,13 @@ class ui_widgets():
 
 		submission_model = self.manage_models(self.db, 'my_submissions')
 
-		submission_model.setHeaderData(0, Qt.Horizontal, 'Run Id')
-		submission_model.setHeaderData(1, Qt.Horizontal, 'Verdict')
-		submission_model.setHeaderData(2, Qt.Horizontal, 'Source File')
-		submission_model.setHeaderData(3, Qt.Horizontal, 'Language')
-		submission_model.setHeaderData(4, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(5, Qt.Horizontal, 'Time')
+		submission_model.setHeaderData(0, Qt.Horizontal, 'Local Id')
+		submission_model.setHeaderData(1, Qt.Horizontal, 'Run Id')
+		submission_model.setHeaderData(2, Qt.Horizontal, 'Verdict')
+		submission_model.setHeaderData(3, Qt.Horizontal, 'Source File')
+		submission_model.setHeaderData(4, Qt.Horizontal, 'Language')
+		submission_model.setHeaderData(5, Qt.Horizontal, 'Problem Code')
+		submission_model.setHeaderData(6, Qt.Horizontal, 'Time')
 
 		submission_table = self.generate_view(submission_model)
 
@@ -92,6 +97,7 @@ class ui_widgets():
 		return main, submission_model
 
 	def submit_ui(self):
+
 		heading = QLabel('Submit Solution')
 		heading.setObjectName('main_screen_heading')
 
@@ -129,7 +135,7 @@ class ui_widgets():
 		self.submit_solution = QPushButton('Submit', self)
 		self.submit_solution.setObjectName('submit')
 		self.submit_solution.setFixedSize(200, 50)
-		self.submit_solution.clicked.connect(ui_widgets.submit_call)
+		self.submit_solution.clicked.connect(lambda:ui_widgets.submit_call(self.data_changed_flag))
 		self.horizontal_layout.addWidget(self.submit_solution,  alignment=Qt.AlignRight)
 
 		self.horizontal_widget = QWidget()
@@ -156,7 +162,26 @@ class ui_widgets():
 		heading = QLabel('Query')
 		heading.setObjectName('main_screen_heading')
 
+		top = QLabel('Ask Your Question')
+		top.setObjectName('about_screen_heading')
+		top.setAlignment(Qt.AlignCenter)
+
+		ui_widgets.ask_query = QLineEdit(self)
+		ui_widgets.ask_query.setFixedWidth(600)
+		ui_widgets.ask_query.setFixedHeight(70)
+		ui_widgets.ask_query.setPlaceholderText('Type Your Question')
+		ui_widgets.ask_query.setObjectName('ask_query')
+
+		self.send_query = QPushButton('Send', self)
+		self.send_query.setFixedSize(200, 50)
+		self.send_query.clicked.connect(ui_widgets.sending)
+		self.send_query.setObjectName('ask')
+
+
 		main_layout.addWidget(heading)
+		main_layout.addWidget(top)
+		main_layout.addWidget(ui_widgets.ask_query, alignment=Qt.AlignCenter)
+		main_layout.addWidget(self.send_query, alignment=Qt.AlignCenter)
 		main_layout.addStretch(5)
 
 		main = QWidget()
@@ -206,21 +231,68 @@ class ui_widgets():
 
 
 
-	def submit_call(self):
+	def submit_call(data_changed_flag):
 		local_time = time.localtime()
 		time_stamp = time.strftime("%H:%M:%S", local_time)
 		textbox_value = ui_widgets.text_area.toPlainText()
 		selected_language = str(ui_widgets.language_box.currentText())
 		problem_code = config["Problems"][str(ui_widgets.problem_box.currentText())]
+		if(selected_language == 'C'):
+			extention = '.c'
+			language_code = 'GCC'
+		elif(selected_language == 'C++'):
+			extention = '.cpp'
+			language_code = 'CPP'
+		elif(selected_language == 'JAVA'):
+			extention = '.java'
+			language_code = 'JVA'
+		elif(selected_language == 'PYTHON-3'):
+			extention = '.py'
+			language_code = 'PY3'
+		else:
+			extention = '.py'
+			language_code = 'PY2'
+		local_id = manage_local_ids.get_new_id()
+		client_id = config["client_id"]
+		submission_management.insert_verdict(
+			local_id,
+			client_id,
+			'-',
+			'Queued',
+			selected_language,
+			language_code,
+			problem_code,
+			time_stamp,
+			textbox_value,
+			extention
+			)
+		data_changed_flag[1] = 1
+		print('sachinam')
 		send_code.solution_request(
 			problem_code,
 			selected_language,
 			time_stamp,
-			textbox_value)
+			textbox_value,
+			local_id
+			)
+
+
 
 
 	def show_problem(i):
-		print('Button {0} clicked'.format(i))
+		webbrowser.open('Problems/Problem_'+str(i)+'.pdf')
+		# print('Button {0} clicked'.format(i))
+
+
+	def sending(self):
+		query = ui_widgets.ask_query.text()
+		if(query == ''):
+			QMessageBox.about(self, 'Warning', "Don't be stupid")
+		else:
+			send_code.query_request(
+				query,
+				)
+		
 	###################################################################################
 
 

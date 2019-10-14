@@ -68,6 +68,7 @@ class Login(QWidget):
 
 	# Function for handling the login of the user  
 	def handle_login(self):
+		# QApplication.quit()
 		# Username and Password are not empty the check credentials
 		if (self.username.text() != '' and self.password.text() != ''):
 

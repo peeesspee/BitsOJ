@@ -1,4 +1,5 @@
 from connection import manage_connection
+import json
 
 class authenticate_login():
 	username = None
@@ -15,11 +16,19 @@ class authenticate_login():
 		password = password
 
 		print("[ Validating ] : " + authenticate_login.username + "@" + password)
+		final_data = { 
+			'Code' : 'LOGIN',
+			'Username' : username,
+			'Password' : password, 
+			'ID' : authenticate_login.client_id,
+			'Type' : 'CLIENT'
+			}
+		final_data = json.dumps(final_data)
 
 		# Declaring queue for the new client
 		authenticate_login.channel.queue_declare(
 			queue = authenticate_login.username, 
-			durable = True
+			durable = True,
 			)
 
 		# Binding the queue for listening from the server 
@@ -28,11 +37,12 @@ class authenticate_login():
 			queue = authenticate_login.username
 			)
 
+		
 		# Publishing the message ( Username and Password )
 		authenticate_login.channel.basic_publish(
 			exchange = 'connection_manager', 
 			routing_key = 'client_requests', 
-			body = 'LOGIN ' + authenticate_login.username + ' ' + password + ' ' + authenticate_login.client_id + ' CLIENT'
+			body = final_data
 			)
 
 		# Listening from the server whether the credentials are valid or not
@@ -41,28 +51,45 @@ class authenticate_login():
 			on_message_callback = authenticate_login.server_response_handler,
 			auto_ack = True
 			)
+		
 		print("[ Listening ] @ " + authenticate_login.host)
+		# while True:
+		# 	if pika.exceptions.UnroutableError:
+		# 		break;
+		# 	else:
+		# 		print('try again')
 		# Started listening
 		authenticate_login.channel.start_consuming()
+		# while channel._consumer_infos:
+			# channel.connection.process_data_events(time_limit=15) # 2 Seconds
 
 		
 
 	def server_response_handler(ch,method,properties,body):
 		# Decoding the data 
-		server_data = body.decode('utf-8')
+		json_data = str(body.decode('utf-8'))
+		server_data = json.loads(json_data)
 
 		# Extracting the status whether valid or invalid 
-		status = server_data[0:5]
+		status = server_data['Code']
 
 		print("[ STATUS ] " + status)
 		if (status == 'VALID'):
 			print('[ ClientID ] receiving ......')
-			status,authenticate_login.client_id,server_message = server_data.split('+')
+			with open('config.json', 'r') as read_config:
+				config = json.load(read_config)
 
-			print("[ Status ] " + status + "\n[ ClientID ] : " + authenticate_login.client_id + "\n[ Server ] : " + server_message)
+			config["client_id"] = str(server_data["Client ID"])
+			with open('config.json', 'w') as read_config:
+				json.dump(config, read_config, indent = 4) 
+			with open('client_data.json', 'w') as data:
+				json.dump(server_data, data, indent=4)
+
+			print("[ Status ] " + status + "\n[ ClientID ] : " + str(server_data["Client ID"]) + "\n[ Server ] : " + server_data["Message"])
 			
 			# Changing login status to valid
 			authenticate_login.login_status = 'VALID'
+			authenticate_login.client_id = server_data["Client ID"]
 			authenticate_login.channel.stop_consuming()
 
 		elif (status == 'REJCT'):

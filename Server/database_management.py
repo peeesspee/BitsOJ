@@ -3,6 +3,8 @@ import sys
 import random
 import string
 
+
+
 global client_id_counter
 
 class manage_database():
@@ -19,9 +21,10 @@ class manage_database():
 		
 		try:	
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
-			cur.execute("create table if not exists connected_clients(client_id varchar2(3) PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
-			cur.execute("create table if not exists submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
+			cur.execute("create table if not exists connected_clients(client_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
+			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
+			cur.execute("create table if not exists connected_judges(judge_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Table creation error : " + str(error))
 
@@ -35,7 +38,7 @@ class manage_database():
 			cur.execute("drop table if exists scoreboard")
 			cur.execute("drop table if exists connected_clients")
 		except:
-			print("Database drop error")
+			print("[ CRITICAL ERROR ] Table drop error")
 
 
 
@@ -75,10 +78,11 @@ class previous_data(manage_database):
 			if(data[0][0] != ''):
 				client_id_counter = int(data[0][0])
 			else:
-				client_id_counter = 1
+				client_id_counter = 0
 
 		except:
-			client_id_counter = 1
+			print('[ ERROR ] Client ID could not be initialised')
+			client_id_counter = 0
 
 
 class client_authentication(manage_database):
@@ -98,24 +102,25 @@ class client_authentication(manage_database):
 	#This function generates a new client_id for new connections
 	def generate_new_client_id():
 		global client_id_counter
-		client_id = str("{:03d}".format(client_id_counter))
 		client_id_counter = client_id_counter + 1
+		client_id = int(client_id_counter)
 		return client_id
 
 	def add_connected_client(client_id, user_name, password):
-		cur = manage_database.get_cursor()
-		conn = manage_database.get_connection_object()
 		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
 			cur.execute("INSERT INTO connected_clients values(?, ?, ?)", (client_id, user_name, password, ))
-		except:
-			pass
-		conn.commit()
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Could not add client : " + str(error))
+		
 		return	
 		
 	# Get client_id when user_name is known
 	def get_client_id(user_name):
-		cur = manage_database.get_cursor()
 		try:
+			cur = manage_database.get_cursor()
 			cur.execute("SELECT client_id FROM connected_clients WHERE user_name = ?", (user_name, ))
 			client_id = cur.fetchall()
 			return client_id[0][0]
@@ -124,13 +129,15 @@ class client_authentication(manage_database):
 
 	# Get user_name when client_id is known
 	def get_client_username(client_id):
-		cur = manage_database.get_cursor()
 		try:
+			cur = manage_database.get_cursor()
+			client_id = int(client_id)
 			cur.execute("SELECT user_name FROM connected_clients WHERE client_id = ?", (client_id, ))
 			client_username = cur.fetchall()
 			return client_username[0][0]
 		except Exception as error:
 			print("[ ERROR ] : Could not fetch username.")
+			return 'Null'
 
 	# Check if a client with given client_id is connected in the system
 	def check_connected_client(user_name ):
@@ -149,6 +156,8 @@ class submissions_management(manage_database):
 		#cur.execute("create table submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(4))")
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
+		run_id = int(run_id)
+		client_id = int(client_id)
 		try:
 			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?)", (run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, ))
 			conn.commit()
@@ -159,22 +168,13 @@ class submissions_management(manage_database):
 	def update_submission_status(run_id, verdict):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
+		run_id = int(run_id)
 		try:
 			cur.execute("UPDATE submissions SET verdict = ? WHERE run_id = ?", (verdict, run_id,))
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not update submission submission : " + str(error))
 		return
-
-	def view_submissions():
-		cur = manage_database.get_cursor()
-		try:
-			cur.execute("SELECT * FROM submissions")
-			submission_data = cur.fetchall()
-			return submission_data
-		except:
-			print("[ ERROR ] Could not view submissions")
-			return Null
 
 class user_management(manage_database):
 	def generate_n_users(no_of_clients, no_of_judges, password_type):
@@ -218,14 +218,16 @@ class user_management(manage_database):
 	def generate_clients(no_of_clients, max_so_far):
 		client_list = list()
 		for i in range(max_so_far+1, max_so_far+no_of_clients+1):
-			client_list.append('team' + str(i))
+			team_number = "{:05d}".format(i)
+			client_list.append('team' + str(team_number))
 
 		return client_list
 	
 	def generate_judges(no_of_judges, max_so_far):
 		judge_list = list()
 		for i in range(max_so_far+1, max_so_far+no_of_judges+1):
-			judge_list.append('judge' + str(i))
+			judge_number = "{:05d}".format(i)
+			judge_list.append('judge' + str(judge_number))
 		return judge_list
 		
 	def generate_passwords(prev, number, type):
@@ -244,9 +246,23 @@ class user_management(manage_database):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
+			# Check if client is logged in : 
+			if client_authentication.check_connected_client(user_name) == True:
+				
+				cur.execute("SELECT * FROM accounts WHERE user_name = ?", (user_name,))
+				data = cur.fetchall()
+				client_type = data[0][2]
+				if client_type == 'CLIENT':
+					print("[ DISCONNECT ] " + username)
+					
+
+					cur.execute("DELETE FROM connected_clients WHERE user_name = ?",(user_name,))
+
+
+
 			cur.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
 			conn.commit()
 		except Exception as error:
-			print("[ CRITICAL ERROR ] Database deletion error : " + str(error))
+			print("[ ERROR ] Database deletion error : " + str(error))
 
 

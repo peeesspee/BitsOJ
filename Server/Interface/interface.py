@@ -4,19 +4,19 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-from interface_packages.ui_classes import *
+from Interface.ui_classes import *
 from init_server import initialize_server
+from database_management import user_management
 
 
-global current_status 
-current_status = "STOPPED"
-
-# This is to ignore some warnings which were thrown when gui exited and python deleted some assests in wrong order
-# Nothing critical 
+# This is to ignore some warnings which were thrown when gui exited and 
+# python deleted some assests in wrong order
+# Nothing critical :)
 def handler(msg_type, msg_log_context, msg_string):
 	pass
 qInstallMessageHandler(handler)
 
+# This class handles the main window of server
 class server_window(QMainWindow):
 	def __init__(self, data_changed_flags2):
 		super().__init__()
@@ -28,7 +28,7 @@ class server_window(QMainWindow):
 		# Make  the app run full-screen
 		# Initialize status bar (Bottom Bar)
 		self.status = self.statusBar()
-		self.resize(800, 600)
+		self.resize(1024, 768)
 
 		# Timer to update GUI every 1 second
 		self.timer = QTimer()
@@ -133,7 +133,7 @@ class server_window(QMainWindow):
 	
 
 	def init_UI(self):
-		self.set_status()
+		self.set_status('STOPPED')
 		# Define Layout for sidebar
 		side_bar_layout = QVBoxLayout()
 
@@ -169,8 +169,15 @@ class server_window(QMainWindow):
 		logo.setPixmap(logo_image2)
 
 		top_bar_layout = QHBoxLayout()
-		top_bar_layout.setContentsMargins(15, 5, 1, 0);
+		top_bar_layout.setContentsMargins(15, 5, 20, 0);
 		top_bar_layout.addWidget(logo)
+		# top_bar_layout.addWidget(start_button)
+		# top_bar_layout.addWidget(pause_button)
+		# top_bar_layout.addWidget(stop_button)
+		top_bar_layout.setStretch(0, 70)
+		# top_bar_layout.setStretch(1, 10)
+		# top_bar_layout.setStretch(2, 10)
+		# top_bar_layout.setStretch(3, 10)
 
 		top_bar_widget = QWidget()
 		top_bar_widget.setLayout(top_bar_layout)
@@ -198,7 +205,7 @@ class server_window(QMainWindow):
 		
 
 		# Screen 1 will be our initial screen 
-		self.right_widget.setCurrentIndex(0)
+		self.right_widget.setCurrentIndex(9)
 
 		# Define the combined layout for sidebar + right side screens
 		main_layout = QHBoxLayout()
@@ -380,11 +387,19 @@ class server_window(QMainWindow):
 
 	@pyqtSlot()
 	def delete_account(self, selected_rows):
-		if self.data_changed_flags[4] == 0:
-			self.data_changed_flags[4] = 1
+		if self.data_changed_flags[6] == 0:
+			# Set critical flag
+			self.data_changed_flags[6] = 1
 		else:
+			# If one data deletion window is already opened, process it first.
 			return
-		username = str(selected_rows[0].data())
+		# If no row is selected, return
+		try:
+			username = str(selected_rows[0].data())
+		except: 
+			# Reset data_changed_flag for deletion of account
+			self.data_changed_flags[6] = 0
+			return
 		message = "Are you sure you want to delete : " + username + " ? "
 	
 		custom_close_box = QMessageBox()
@@ -410,23 +425,22 @@ class server_window(QMainWindow):
 
 		if custom_close_box.clickedButton() == button_yes:
 			user_management.delete_user(username)
+			# Update Accounts View
+			self.data_changed_flags[5] = 1
 		elif custom_close_box.clickedButton() == button_no : 
 			pass
 
-		# Reset flag
-		self.data_changed_flags[4] = 0
+		# Reset critical flag
+		self.data_changed_flags[6] = 0
 
-		# Update Accounts View
-		self.data_changed_flags[5] = 1
 		return
 
 	###################################################
 	
 	###################################################
 
-	def set_status(self):
-		global current_status
-		self.status.showMessage(current_status)
+	def set_status(self, message = 'STOPPED'):
+		self.status.showMessage(message)
 	###################################################
 
 	def closeEvent(self, event):
