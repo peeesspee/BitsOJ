@@ -6,6 +6,7 @@ from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from interface_package.ui_classes import *
 
+
 global current_status 
 current_status = "STOPPED" 
 
@@ -31,10 +32,11 @@ class client_window(QMainWindow):
 		self.timer = QTimer()
 		self.change_flag = True
 		self.timer.timeout.connect(self.update_data)
-		self.timer.start(2000)
+		self.timer.start(1000)
 
 		# Make data_changed_flag accessible from the class methods
 		self.data_changed_flag = data_changed_flag2
+
 
 		####################################################################
 		self.db = self.init_qt_database()
@@ -201,10 +203,10 @@ class client_window(QMainWindow):
 
 	def update_data(self):
 		# If data has changed in submission table
-		if self.data_changed_flag[0] ==1:
+		if self.data_changed_flag[1] ==1:
 			self.sub_model.select()
 			# reset data_changed_flag
-			self.data_changed_flag[0] = 0
+			self.data_changed_flag[1] = 0
 		return
 
 	####################################################################################

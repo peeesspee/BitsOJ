@@ -1,4 +1,4 @@
-from database_management import manage_database
+from database_management import submission_management
 from login import authenticate_login
 
 class start_listening():
@@ -42,11 +42,12 @@ class start_listening():
 
 
 	def submission_verdict(server_data):
-		run_id = server_data[6:11]
-		code_result = server_data[12:14]
-		error = server_data[15:]
-		print('[ Run ID : ' + run_id + ' ] [ Result : ' + code_result + ' ] [ error : ' + error + ' ]')
-		manage_database.insert_verdict(
+		run_id = server_data["Run Id"]
+		code_result = server_data["Status"]
+		message = server_data["Message"]
+		print(message)
+		print('[ Run ID : ' + run_id + ' ] [ Result : ' + code_result + ' ] [ error : ' + message + ' ]')
+		submission_management.update_verdict(
 			authenticate_login.client_id,
 			run_id,
 			code_result,

@@ -1,5 +1,6 @@
 import time
 import os
+import json
 from login import authenticate_login
 from connection import manage_connection
 
@@ -24,7 +25,16 @@ class send_code():
 		else:
 			send_code.extention = '.py'
 			language_code = 'PY2'
-		final_data = 'SUBMT ' + authenticate_login.client_id + ' '  + problem_Code + ' ' + language_code + ' ' + time_stamp + ' ' + code
+		print(authenticate_login.client_id)
+		final_data = {
+			'Code' : 'SUBMT',
+			'ID' : authenticate_login.client_id,
+			'PCode' : problem_Code,
+			'Language' : language_code,
+			'Time' : time_stamp,
+			'Source' : code
+		}
+		final_data = json.dumps(final_data)
 		print("[ Sending CODE ] " + problem_Code + ' ' + language_code + ' ' + time_stamp)
 		try:
 			authenticate_login.channel.basic_publish(
@@ -33,7 +43,7 @@ class send_code():
 				body = final_data,
 				)
 		except:
-			print("Error in channel.basic_publish ")
+			print("Error in sending code ")
 
 		print("Your code is running \nWait for the judgement")
 
