@@ -8,6 +8,7 @@ import json
 import webbrowser
 from functools import partial
 from manage_code import send_code
+from database_management import submission_management
 
 
 
@@ -20,6 +21,7 @@ class ui_widgets():
 	# Handle UI for various button presses
 	var = {}
 	def problems_ui(self):
+
 		main_layout = QVBoxLayout() 
 		heading = QLabel('Problems')
 		heading.setObjectName('main_screen_heading')
@@ -94,6 +96,7 @@ class ui_widgets():
 		return main, submission_model
 
 	def submit_ui(self):
+
 		heading = QLabel('Submit Solution')
 		heading.setObjectName('main_screen_heading')
 
@@ -131,7 +134,7 @@ class ui_widgets():
 		self.submit_solution = QPushButton('Submit', self)
 		self.submit_solution.setObjectName('submit')
 		self.submit_solution.setFixedSize(200, 50)
-		self.submit_solution.clicked.connect(ui_widgets.submit_call)
+		self.submit_solution.clicked.connect(lambda:ui_widgets.submit_call(self.data_changed_flag))
 		self.horizontal_layout.addWidget(self.submit_solution,  alignment=Qt.AlignRight)
 
 		self.horizontal_widget = QWidget()
@@ -227,17 +230,48 @@ class ui_widgets():
 
 
 
-	def submit_call(self):
+	def submit_call(data_changed_flag):
 		local_time = time.localtime()
 		time_stamp = time.strftime("%H:%M:%S", local_time)
 		textbox_value = ui_widgets.text_area.toPlainText()
 		selected_language = str(ui_widgets.language_box.currentText())
 		problem_code = config["Problems"][str(ui_widgets.problem_box.currentText())]
+		if(selected_language == 'C'):
+			extention = '.c'
+			language_code = 'GCC'
+		elif(selected_language == 'C++'):
+			extention = '.cpp'
+			language_code = 'CPP'
+		elif(selected_language == 'JAVA'):
+			extention = '.java'
+			language_code = 'JVA'
+		elif(selected_language == 'PYTHON-3'):
+			extention = '.py'
+			language_code = 'PY3'
+		else:
+			extention = '.py'
+			language_code = 'PY2'
+		submission_management.insert_verdict(
+			config["client_id"],
+			'-',
+			'Queued',
+			selected_language,
+			language_code,
+			problem_code,
+			time_stamp,
+			textbox_value,
+			extention
+			)
+		data_changed_flag[1] = 1
+		print('sachinam')
 		send_code.solution_request(
 			problem_code,
 			selected_language,
 			time_stamp,
-			textbox_value)
+			textbox_value
+			)
+
+
 
 
 	def show_problem(i):
