@@ -1,7 +1,6 @@
 import pika 
 import sys
 
-
 # Class to handle connection establishment requests
 class manage_connection():
 	channel = ''

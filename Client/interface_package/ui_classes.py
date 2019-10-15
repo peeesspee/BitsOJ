@@ -8,7 +8,7 @@ import json
 import webbrowser
 from functools import partial
 from manage_code import send_code
-from database_management import submission_management, manage_local_ids
+from database_management import submission_management, query_management, manage_local_ids
 
 
 
@@ -162,9 +162,12 @@ class ui_widgets():
 		heading = QLabel('Query')
 		heading.setObjectName('main_screen_heading')
 
-		top = QLabel('Ask Your Question')
-		top.setObjectName('about_screen_heading')
-		top.setAlignment(Qt.AlignCenter)
+		query_model = self.manage_models(self.db, 'my_query')
+
+		query_model.setHeaderData(0, Qt.Horizontal, 'query')
+		query_model.setHeaderData(1, Qt.Horizontal, 'response')
+
+		query_table = self.generate_view(query_model)
 
 		ui_widgets.ask_query = QLineEdit(self)
 		ui_widgets.ask_query.setFixedWidth(600)
@@ -174,21 +177,21 @@ class ui_widgets():
 
 		self.send_query = QPushButton('Send', self)
 		self.send_query.setFixedSize(200, 50)
-		self.send_query.clicked.connect(ui_widgets.sending)
+		self.send_query.clicked.connect(lambda:ui_widgets.sending(self.data_changed_flag))
 		self.send_query.setObjectName('ask')
 
 
 		main_layout.addWidget(heading)
-		main_layout.addWidget(top)
-		main_layout.addWidget(ui_widgets.ask_query, alignment=Qt.AlignCenter)
-		main_layout.addWidget(self.send_query, alignment=Qt.AlignCenter)
+		main_layout.addWidget(query_table)
+		main_layout.addWidget(ui_widgets.ask_query, alignment=Qt.AlignLeft)
+		main_layout.addWidget(self.send_query, alignment=Qt.AlignLeft)
 		main_layout.addStretch(5)
 
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen")
 
-		return main
+		return main, query_model
 
 	def leaderboard_ui(self):
 		main_layout = QVBoxLayout()
@@ -266,6 +269,7 @@ class ui_widgets():
 			textbox_value,
 			extention
 			)
+		print("no")
 		data_changed_flag[1] = 1
 		print('sachinam')
 		send_code.solution_request(
@@ -284,12 +288,19 @@ class ui_widgets():
 		# print('Button {0} clicked'.format(i))
 
 
-	def sending(self):
+	def sending(data_changed_flag):
+		client_id = config["client_id"]
 		query = ui_widgets.ask_query.text()
 		if(query == ''):
-			QMessageBox.about(self, 'Warning', "Don't be stupid")
+			# QMessageBox.about(self, 'Warning', "Don't be stupid")
+			print("Don't be stupid")
+		elif(len(query) > 499):
+			print('Length of query cannot exceed 500 words')
 		else:
+			query_management.insert_query(query,'Waiting for response')
+			data_changed_flag[2] = 1
 			send_code.query_request(
+				client_id,
 				query,
 				)
 		

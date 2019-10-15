@@ -25,7 +25,6 @@ class send_code():
 		else:
 			send_code.extention = '.py'
 			language_code = 'PY2'
-		print(authenticate_login.client_id)
 		final_data = {
 			'Code' : 'SUBMT',
 			'Local Run ID' : local_run_id,
@@ -50,8 +49,14 @@ class send_code():
 
 
 
-	def query_request(query):
-		final_data = 'QUERY '+query
+	def query_request(client_id,query):
+		final_data ={
+			'Code' : 'QUERY',
+			'Client ID' : client_id,
+			'Query' : query,
+			'Response' : ''
+		}
+		final_data = json.dumps(final_data)
 		print('[QUERY] Sending.....')
 		authenticate_login.channel.basic_publish(
 			exchange = 'connection_manager',

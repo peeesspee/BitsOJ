@@ -84,7 +84,7 @@ class client_window(QMainWindow):
 		self.tab1 = ui_widgets.problems_ui(self)
 		self.tab2, self.sub_model = ui_widgets.submissions_ui(self)
 		self.tab3 = ui_widgets.submit_ui(self)
-		self.tab4 = ui_widgets.query_ui(self)
+		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5 = ui_widgets.leaderboard_ui(self)
 		self.tab6 = ui_widgets.about_ui(self)
 
@@ -208,8 +208,10 @@ class client_window(QMainWindow):
 			# reset data_changed_flag
 			self.data_changed_flag[1] = 0
 		if(self.data_changed_flag[2] == 1):
-			# raise KeyboardInterrupt
-			print('Hellllllo')
+			self.query_model.select()
+			# reset data_changed_flag
+			self.data_changed_flag[2] =0
+		
 		return
 
 	####################################################################################

@@ -68,37 +68,37 @@ class Login(QWidget):
 
 	# Function for handling the login of the user  
 	def handle_login(self):
-		QApplication.quit()
-		# # Username and Password are not empty the check credentials
-		# if (self.username.text() != '' and self.password.text() != ''):
+		# QApplication.quit()
+		# Username and Password are not empty the check credentials
+		if (self.username.text() != '' and self.password.text() != ''):
 
-		# 	# login function to send the username and password to the server for authentication
-		# 	authenticate_login.login(self.username.text(),self.password.text())
+			# login function to send the username and password to the server for authentication
+			authenticate_login.login(self.username.text(),self.password.text())
 
-		# 	# If authentication is successful then close login window and open main window 
-		# 	if( authenticate_login.login_status == 'VALID'):
-		# 		try:
-		# 			QApplication.quit()
-		# 		except Exception as error:
-		# 			print('[ ERROR ] Could not exit properly : ' + str(error) )
+			# If authentication is successful then close login window and open main window 
+			if( authenticate_login.login_status == 'VALID'):
+				try:
+					QApplication.quit()
+				except Exception as error:
+					print('[ ERROR ] Could not exit properly : ' + str(error) )
 
-		# 	# If server is not accepting login request then show an alert
-		# 	elif( authenticate_login.login_status == 'LRJCT' ):
-		# 		QMessageBox.warning(self, 'Error', 'Login Rejected by admin.')
-		# 	else:
-		# 		QMessageBox.warning(self, 'Error', 'Wrong credentials')
+			# If server is not accepting login request then show an alert
+			elif( authenticate_login.login_status == 'LRJCT' ):
+				QMessageBox.warning(self, 'Error', 'Login Rejected by admin.')
+			else:
+				QMessageBox.warning(self, 'Error', 'Wrong credentials')
 
-		# # If username is empty then show an alert
-		# elif (self.username.text() == ''):
-		# 	QMessageBox.warning(self, 'Error', 'Username cannot be empty')
+		# If username is empty then show an alert
+		elif (self.username.text() == ''):
+			QMessageBox.warning(self, 'Error', 'Username cannot be empty')
 
-		# # If password is empty then show an alert
-		# elif (self.password.text() == ''):
-		# 	QMessageBox.warning(self, 'Error', 'Password cannot be empty')
+		# If password is empty then show an alert
+		elif (self.password.text() == ''):
+			QMessageBox.warning(self, 'Error', 'Password cannot be empty')
 			
-		# # If authentication failed 
-		# else:
-		# 	QMessageBox.warning(self, 'Error', 'Wrong credentials')
+		# If authentication failed 
+		else:
+			QMessageBox.warning(self, 'Error', 'Wrong credentials')
 
 	def closeEvent(self, event):
 		# If user clicks on close button on login form, exit the whole application

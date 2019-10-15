@@ -1,4 +1,4 @@
-from database_management import submission_management
+from database_management import submission_management, query_management
 from login import authenticate_login
 import pika
 import json
@@ -36,7 +36,6 @@ class start_listening():
 			print('[ DELETE ] Queue ' + authenticate_login.username + ' deleted...')
 			print("[ STOP ] Keyboard interrupt")
 		finally:
-			print('Cleanup')
 			start_listening.channel.stop_consuming()
 			start_listening.channel.queue_delete(authenticate_login.username)
 			
@@ -56,6 +55,8 @@ class start_listening():
 			local_id = json_data["Local Run ID"]
 			print("[ Status ] " + status + "\n[ Run ID ] : " + str(run_id) + "\n[ Message ] : " + message)
 			start_listening.submission_verdict(json_data)
+		elif code == 'QUERY':
+			start_listening.query_verdict(json_data)
 		elif code == 'SRJCT':
 			print('Submission Rejected')
 		elif code == "CLRFN":
@@ -85,3 +86,14 @@ class start_listening():
 			code_result,
 			)
 		start_listening.data_changed_flags[1] = 1
+
+
+	def query_verdict(server_data):
+		query = server_data["Query"]
+		response = server_data["Response"]
+		print("[QUERY] Response received")
+		query_management.update_query(
+			query,
+			response,
+			)
+		start_listening.data_changed_flags2[2] = 1

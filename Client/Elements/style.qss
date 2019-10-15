@@ -135,10 +135,11 @@ QPushButton#submit::hover
 
 
 QPushButton#ask{
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 25px;
 	font-size : 18px;
 	text-align : center; 	
 	border : 1px solid #ADFF2F;
-	border-radius : 25px;
 	background-color : #202428 ;
 	color : #838383;
 }
@@ -396,9 +397,10 @@ QWidget#myobject
 
 QLineEdit#ask_query
 {
-	border : 1px solid #ADFF2F;
-	border-radius : 25px;
+	border-top-right-radius: 25px;
+	border-bottom-right-radius: 0px;
 	background-color : #202428 ;
+	border : 1px solid #ADFF2F;
 	color : #FFF8DC;
 	font-size : 20px;
 } 
