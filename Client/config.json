@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-    "client_id": 1,
-=======
-    "client_id": "1",
->>>>>>> 9ce342408b038539c823f92b596a6a4ba58ef0ee
+    "client_id": "Nul",
     "client_key": "139728abcder65bf",
     "rabbitmq_username": "client",
     "rabbitmq_password": "client",
