@@ -27,7 +27,7 @@ class client_window(QMainWindow):
 		
 		# Initialize status bar
 		self.status = self.statusBar()
-		self.setFixedSize(1500,900)
+		self.setFixedSize(1200,700)
 
 		self.timer = QTimer()
 		self.change_flag = True
