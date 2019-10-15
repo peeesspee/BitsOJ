@@ -8,7 +8,7 @@ import json
 import webbrowser
 from functools import partial
 from manage_code import send_code
-from database_management import submission_management
+from database_management import submission_management, manage_local_ids
 
 
 
@@ -73,12 +73,13 @@ class ui_widgets():
 
 		submission_model = self.manage_models(self.db, 'my_submissions')
 
-		submission_model.setHeaderData(0, Qt.Horizontal, 'Run Id')
-		submission_model.setHeaderData(1, Qt.Horizontal, 'Verdict')
-		submission_model.setHeaderData(2, Qt.Horizontal, 'Source File')
-		submission_model.setHeaderData(3, Qt.Horizontal, 'Language')
-		submission_model.setHeaderData(4, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(5, Qt.Horizontal, 'Time')
+		submission_model.setHeaderData(0, Qt.Horizontal, 'Local Id')
+		submission_model.setHeaderData(1, Qt.Horizontal, 'Run Id')
+		submission_model.setHeaderData(2, Qt.Horizontal, 'Verdict')
+		submission_model.setHeaderData(3, Qt.Horizontal, 'Source File')
+		submission_model.setHeaderData(4, Qt.Horizontal, 'Language')
+		submission_model.setHeaderData(5, Qt.Horizontal, 'Problem Code')
+		submission_model.setHeaderData(6, Qt.Horizontal, 'Time')
 
 		submission_table = self.generate_view(submission_model)
 
@@ -251,8 +252,11 @@ class ui_widgets():
 		else:
 			extention = '.py'
 			language_code = 'PY2'
+		local_id = manage_local_ids.get_new_id()
+		client_id = config["client_id"]
 		submission_management.insert_verdict(
-			config["client_id"],
+			local_id,
+			client_id,
 			'-',
 			'Queued',
 			selected_language,
@@ -268,7 +272,8 @@ class ui_widgets():
 			problem_code,
 			selected_language,
 			time_stamp,
-			textbox_value
+			textbox_value,
+			local_id
 			)
 
 

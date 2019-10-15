@@ -79,13 +79,13 @@ class authenticate_login():
 			with open('config.json', 'r') as read_config:
 				config = json.load(read_config)
 
-			config["client_id"] = server_data["Client ID"]
+			config["client_id"] = str(server_data["Client ID"])
 			with open('config.json', 'w') as read_config:
 				json.dump(config, read_config, indent = 4) 
 			with open('client_data.json', 'w') as data:
 				json.dump(server_data, data, indent=4)
 
-			print("[ Status ] " + status + "\n[ ClientID ] : " + server_data["Client ID"] + "\n[ Server ] : " + server_data["Message"])
+			print("[ Status ] " + status + "\n[ ClientID ] : " + str(server_data["Client ID"]) + "\n[ Server ] : " + server_data["Message"])
 			
 			# Changing login status to valid
 			authenticate_login.login_status = 'VALID'

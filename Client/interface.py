@@ -207,6 +207,9 @@ class client_window(QMainWindow):
 			self.sub_model.select()
 			# reset data_changed_flag
 			self.data_changed_flag[1] = 0
+		if(self.data_changed_flag[2] == 1):
+			# raise KeyboardInterrupt
+			print('Hellllllo')
 		return
 
 	####################################################################################

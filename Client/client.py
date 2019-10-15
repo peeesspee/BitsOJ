@@ -7,7 +7,7 @@ import json
 
 from time import sleep
 from connection import manage_connection
-from database_management import manage_database
+from database_management import manage_database, manage_local_ids
 from interface import init_gui
 from login_interface import start_interface
 from listen_server import start_listening
@@ -28,12 +28,14 @@ def main():
 	# Initialize the database and returns the cursor 
 	print("[ SETUP ] INITIALISING DATABASE ............")
 	cursor = manage_database.initialize_table()
+	manage_local_ids.initialize_local_id(cursor)
 
 	##################################
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 10)
 	data_changed_flags[0] = 0
 	data_changed_flags[1] = 0
+	data_changed_flags[2] = 0
 	# index    value     meaning
 	# 0        0/1       Contest Not Started/Contest has been started
 	# 1        0/1       
@@ -59,7 +61,7 @@ def main():
 
 		# Manage Threads
 		print('[ SETUP ] Initialising threads....')
-		# listen_pid = manage_process(channel,connection,cursor,host,data_changed_flags)
+		listen_pid = manage_process(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags)
 
 		# After successful login 
 		# Starting Main GUI
@@ -68,7 +70,8 @@ def main():
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 
 	print("[EXIT] Signal Passed")
-	# os.kill(listen_pid, signal.SIGINT)
+	os.kill(listen_pid, signal.SIGINT)
+
 	
 
 	sleep(1)
@@ -77,8 +80,8 @@ def main():
 	print("  ################################################")
 
 
-def manage_process(channel, connection, cursor, host, data_changed_flags):
-	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (channel, connection, cursor, host, data_changed_flags))
+def manage_process(rabbitmq_username, rabbitmq_password, cursor, host, data_changed_flags):
+	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (rabbitmq_username,rabbitmq_password, cursor, host, data_changed_flags))
 
 	listen_from_server.start()
 
