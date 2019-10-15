@@ -15,6 +15,7 @@ class manage_judges():
 			json_data = json.loads(judge_message)
 			code = json_data["Code"]
 			if code == 'VRDCT':
+				local_run_id = json_data['Local Run ID']
 				client_username = json_data['Client Username']
 				client_id = json_data['Client ID']
 				status = json_data['Status']
@@ -30,6 +31,7 @@ class manage_judges():
 
 		message = {
 		'Code' : 'VRDCT', 
+		'Local Run ID' : local_run_id,
 		'Run ID' : run_id,
 		'Status' : status,
 		'Message' : message

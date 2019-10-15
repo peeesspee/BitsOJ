@@ -79,13 +79,14 @@ class manage_clients():
 
 				manage_clients.client_login_handler(client_username, client_password, client_id, client_type)
 			elif client_code == 'SUBMT':
+				local_run_id = json_data["Local Run ID"]
 				client_id = json_data["ID"]		
 				problem_code = json_data["PCode"]		
 				language = json_data["Language"]		
 				time_stamp = json_data["Time"]		
 				source_code = json_data["Source"]	
 
-				manage_clients.client_submission_handler(client_id, problem_code, language, time_stamp, source_code)
+				manage_clients.client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code)
 			else:
 				print('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
 				# Raise Security Exception maybe?
@@ -205,7 +206,7 @@ class manage_clients():
 		return
 
 
-	def client_submission_handler(client_id, problem_code, language, time_stamp, source_code):
+	def client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code):
 		print('[ SUBMISSION ] Client ID :' + str(client_id) + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp)
 
 		# Get client username from database
@@ -238,12 +239,12 @@ class manage_clients():
 				# Update database
 				status = 'Running'
 				
-				submissions_management.insert_submission(run_id, client_id, language, source_file_name, problem_code, status, time_stamp)
+				submissions_management.insert_submission(run_id, local_run_id, client_id, language, source_file_name, problem_code, status, time_stamp)
 				manage_clients.data_changed_flags[0] = 1
 				
 				# Push the submission in judging queue
 				print('[ JUDGE ] Requesting a new judgement')
-				manage_clients.send_new_request(client_id, client_username, run_id, problem_code, language, source_code)
+				manage_clients.send_new_request(client_id, client_username, run_id, local_run_id, problem_code, language, source_code)
 				#######################################################################
 				
 		except Exception as error:
@@ -252,7 +253,7 @@ class manage_clients():
 		return
 
 
-	def send_new_request(client_id, client_username, run_id, p_code, language, source_code):
+	def send_new_request(client_id, client_username, run_id, local_run_id, p_code, language, source_code):
 		message = {
 		'Code' : 'JUDGE', 
 		'Client ID' : client_id, 
@@ -260,7 +261,8 @@ class manage_clients():
 		'Run ID' : run_id,
 		'Language' : language,
 		'PCode' : p_code,
-		'Source' : source_code
+		'Source' : source_code,
+		'Local Run ID' : local_run_id
 		}
 	
 		message = json.dumps(message)

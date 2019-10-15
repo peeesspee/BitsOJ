@@ -4,11 +4,12 @@ global run_id_counter
 class submission():
 	# Manage a new submission
 	def new_submission(client_id, problem_code, language, time_stamp, source_code):
-		print("[ SUBMIT ] "+ client_id + " for problem " + problem_code)
+		client_id = str(client_id)
+		print("[ SUBMIT ] "+ str(client_id) + " for problem " + problem_code)
 		run_id = submission.generate_run_id()
 		temp_file_name = str(run_id)
 		file_name = submission.make_local_source_file(temp_file_name, source_code, language)
-		print ("[ FILE ] New file created for client : "+ client_id + " File name:  " + file_name)
+		print ("[ FILE ] New file created for client : "+ str(client_id) + " File name:  " + file_name)
 		return run_id, file_name
 
 	# Make a local backup file for the client run id

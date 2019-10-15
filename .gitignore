@@ -8,3 +8,4 @@ __pycache__/
 server_database.db
 Client_Submissions/
 diary
+*.json

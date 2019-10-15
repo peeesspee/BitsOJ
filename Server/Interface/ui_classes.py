@@ -65,12 +65,13 @@ class ui_widgets:
 		submission_model = self.manage_models(self.db, 'submissions')
 
 		submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
-		submission_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
-		submission_model.setHeaderData(2, Qt.Horizontal, 'Language')
-		submission_model.setHeaderData(3, Qt.Horizontal, 'Source File')
-		submission_model.setHeaderData(4, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(5, Qt.Horizontal, 'Status')
-		submission_model.setHeaderData(6, Qt.Horizontal, 'Time')
+		submission_model.setHeaderData(1, Qt.Horizontal, 'Local ID')
+		submission_model.setHeaderData(2, Qt.Horizontal, 'Client ID')
+		submission_model.setHeaderData(3, Qt.Horizontal, 'Language')
+		submission_model.setHeaderData(4, Qt.Horizontal, 'Source File')
+		submission_model.setHeaderData(5, Qt.Horizontal, 'Problem Code')
+		submission_model.setHeaderData(6, Qt.Horizontal, 'Status')
+		submission_model.setHeaderData(7, Qt.Horizontal, 'Time')
 
 		submission_table = self.generate_view(submission_model)
 

@@ -22,7 +22,7 @@ class manage_database():
 		try:	
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
 			cur.execute("create table if not exists connected_clients(client_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
-			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
+			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
 			cur.execute("create table if not exists connected_judges(judge_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
 		except Exception as error:
@@ -152,14 +152,14 @@ class client_authentication(manage_database):
 
 
 class submissions_management(manage_database):
-	def insert_submission(run_id, client_id, language, source_file_name, problem_code, verdict, timestamp):
-		#cur.execute("create table submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(4))")
+	def insert_submission(run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
 		run_id = int(run_id)
 		client_id = int(client_id)
+		local_run_id = int(local_run_id)
 		try:
-			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?)", (run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, ))
+			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, ))
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not insert into submission : " + str(error))

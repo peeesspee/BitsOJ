@@ -11,7 +11,7 @@ global client_id
 client_id = 'Nul'
 
 username = 'judge00001'
-password = '3Khyvu'
+password = 'Bits1'
 
 try:
 	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
@@ -63,6 +63,7 @@ def handler(ch, method, properties, body):
 			language = json_data['Language']
 			PCode = json_data['PCode']
 			Source = json_data['Source']
+			local_run_id = json_data['Local Run ID']
 
 			message = {
 			'Code' : 'VRDCT', 
@@ -70,7 +71,8 @@ def handler(ch, method, properties, body):
 			'Client ID' : client_id,
 			'Status' : 'AC',
 			'Run ID' : run_id,
-			'Message' : 'No Error'
+			'Message' : 'No Error',
+			'Local Run ID' : local_run_id
 			}
 			message = json.dumps(message)
 
@@ -78,6 +80,7 @@ def handler(ch, method, properties, body):
 			ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
 
 			print('[ JUDGE ] Sent ' + message)
+			time.sleep(1)
 		
 		elif code =='VALID':
 			client_id = json_data['Client ID']
