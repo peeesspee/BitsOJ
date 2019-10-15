@@ -45,9 +45,9 @@ class manage_local_ids():
 class submission_management(manage_database):
 
 	def insert_verdict(local_run_id,client_id,run_id,verdict,language,language_code,problem_code,time_stamp,code,extension):
-		source_file = "Solution/" + client_id + '_' + run_id + '.' + extension
-		file = open("Solution/" + client_id + '_' + run_id + '.' + extension, 'w+')
-		# file.write(code)
+		source_file = client_id + '_' + local_run_id + '.' + extension
+		file = open("Solution/" + client_id + '_' + local_run_id + '.' + extension, 'w+')
+		file.write(code)
 		# print("yes")
 		manage_database.cur.execute("insert into my_submissions values (?,?,?,?,?,?,?,?)",(local_run_id,run_id,verdict,source_file,language,language_code,problem_code,time_stamp))
 		manage_database.conn.commit()
