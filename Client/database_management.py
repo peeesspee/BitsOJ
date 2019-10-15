@@ -1,6 +1,9 @@
 import sqlite3
 import os
 global local_run_id 
+import json
+
+
 class manage_database():
 	cur = None
 	conn = None
@@ -77,10 +80,15 @@ class query_management(manage_database):
 		manage_database.conn.commit()
 
 
-	def update_query(query,response):
-		try:
-			manage_database.cur.execute("UPDATE my_query SET response = ? WHERE query = ?",(response,query,))
-			manage_database.conn.commit()
-		except Exception as Error:
-			print("[ ERROR ] Could not update submission submission : " + str(error))
+	def update_query(client_id,query,response):
+		with open('config.json', 'r') as read_file:
+			config = json.loads(read_file)
+		if (client_id == config["client_id"]):
+			try:
+				manage_database.cur.execute("UPDATE my_query SET response = ? WHERE query = ?",(response,query,))
+				manage_database.conn.commit()
+			except Exception as Error:
+				print("[ ERROR ] Could not update submission submission : " + str(error))
+		else:
+			pass
 		return

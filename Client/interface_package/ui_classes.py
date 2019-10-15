@@ -172,7 +172,7 @@ class ui_widgets():
 		ui_widgets.ask_query = QLineEdit(self)
 		ui_widgets.ask_query.setFixedWidth(600)
 		ui_widgets.ask_query.setFixedHeight(70)
-		ui_widgets.ask_query.setPlaceholderText('Type Your Question')
+		ui_widgets.ask_query.setPlaceholderText('    Type Your Question')
 		ui_widgets.ask_query.setObjectName('ask_query')
 
 		self.send_query = QPushButton('Send', self)

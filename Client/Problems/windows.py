@@ -36,3 +36,5 @@ try:
 
 # final_data = {'Type' : 'LOGIN', 'username' : username, 'password' : password}
 		# final_data = str(final_data)
+
+pdftk input.pdf output output.pdf owner_pw xyz user_pw abc

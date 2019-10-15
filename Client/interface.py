@@ -207,11 +207,15 @@ class client_window(QMainWindow):
 			self.sub_model.select()
 			# reset data_changed_flag
 			self.data_changed_flag[1] = 0
+
 		if(self.data_changed_flag[2] == 1):
 			self.query_model.select()
 			# reset data_changed_flag
 			self.data_changed_flag[2] =0
-		
+
+		if(self.data_changed_flag[3] == 1):
+			QMessageBox.warning(self, 'Error', 'Right Now Admin is not accepting Submission.\nContact Administrator')
+			self.data_changed_flag[3] = 0
 		return
 
 	####################################################################################
