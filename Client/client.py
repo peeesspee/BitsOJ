@@ -39,6 +39,7 @@ def main():
 	# 0        0/1       Contest Not Started/Contest has been started
 	# 1        0/1       Verdict Not received/Verdict Received
 	# 2        0/1       Query response Not received/Query response received
+	
 
 	##################################
 	# Makes connection with RabbitMQ

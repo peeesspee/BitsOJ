@@ -5,10 +5,14 @@ from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from interface_package.ui_classes import *
+from decrypt_problem import decrypt
 
 
 global current_status 
 current_status = "STOPPED" 
+
+global Timer
+# Timer = 00:00:00
 
 # This is to ignore some warnings which were thrown when gui exited and python deleted some assests in wrong order
 # Nothing critical 
@@ -27,7 +31,8 @@ class client_window(QMainWindow):
 		
 		# Initialize status bar
 		self.status = self.statusBar()
-		self.setFixedSize(1200,700)
+		# self.setFixedSize(1200,700)
+		self.resize(1200,700)
 
 		self.timer = QTimer()
 		self.change_flag = True
@@ -202,12 +207,16 @@ class client_window(QMainWindow):
 	##################################################################################
 
 	def update_data(self):
+		if self.data_changed_flag[0] == 1:
+			self.start_contest()
+
 		# If data has changed in submission table
 		if self.data_changed_flag[1] ==1:
 			self.sub_model.select()
 			# reset data_changed_flag
 			self.data_changed_flag[1] = 0
 
+		# If data has changed in query table
 		if(self.data_changed_flag[2] == 1):
 			self.query_model.select()
 			# reset data_changed_flag
@@ -313,6 +322,16 @@ class client_window(QMainWindow):
 	#########################################################################################
 
 
+	def start_contest(self):
+		global current_status
+		global Timer
+		with open('contest.json', 'r') as contest:
+			data = json.loads(contest)
+		current_status = ' CONTEST RUNNING'
+		Timer = data["Time Duration"]
+		decrypt.decrypting()
+
+
 
 class init_gui(client_window):
 	def __init__(self, data_changed_flag):
@@ -333,7 +352,7 @@ class init_gui(client_window):
 		# server_app.setFixedSize(width, height)
 
 		# server_app.showFullScreen()
-		client_app.show()
+		client_app.showMaximized()
 		# server_app.showNormal()
 		# Close the server as soon as close buton is clicked
 		app.exec_()

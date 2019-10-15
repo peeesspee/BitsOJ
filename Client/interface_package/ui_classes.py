@@ -172,7 +172,8 @@ class ui_widgets():
 		ui_widgets.ask_query = QLineEdit(self)
 		ui_widgets.ask_query.setFixedWidth(600)
 		ui_widgets.ask_query.setFixedHeight(70)
-		ui_widgets.ask_query.setPlaceholderText('    Type Your Question')
+		ui_widgets.ask_query.setPlaceholderText('    Problem 1 : Your Query ')
+		ui_widgets.ask_query.setToolTip(" Send the query in this format only.\n Else it might get ignored.")
 		ui_widgets.ask_query.setObjectName('ask_query')
 
 		self.send_query = QPushButton('Send', self)

@@ -79,8 +79,6 @@ class authenticate_login():
 			config["client_id"] = str(server_data["Client ID"])
 			with open('config.json', 'w') as read_config:
 				json.dump(config, read_config, indent = 4) 
-			with open('client_data.json', 'w') as data:
-				json.dump(server_data, data, indent=4)
 
 			print("[ Status ] " + status + "\n[ ClientID ] : " + str(server_data["Client ID"]) + "\n[ Server ] : " + server_data["Message"])
 			

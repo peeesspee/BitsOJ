@@ -103,4 +103,6 @@ class start_listening():
 		start_listening.data_changed_flags2[2] = 1
 
 	def contest_status(server_data):
+		with open('contest.json', 'r') as contest:
+			json.dumps(server_data, contest, indent = 4)
 		start_listening.data_changed_flags2[0] =1

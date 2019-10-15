@@ -37,4 +37,4 @@ try:
 # final_data = {'Type' : 'LOGIN', 'username' : username, 'password' : password}
 		# final_data = str(final_data)
 
-pdftk input.pdf output output.pdf owner_pw xyz user_pw abc
+pdftk Problem_2.pdf output /home/sj1328/Desktop/BitsOJ/Client/Problems/Problem_2.pdf user_pw papa
