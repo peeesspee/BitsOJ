@@ -86,7 +86,7 @@ class broadcast_manager():
 				'Type' : data['Mode'],
 				}
 				message = json.dumps(message)
-
+				
 			broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
 
 		s.enter(1, 1, broadcast_manager.poll, (s, data_from_interface, ))

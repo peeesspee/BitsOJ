@@ -6,6 +6,7 @@ import string
 
 
 global client_id_counter
+global query_id_counter
 
 class manage_database():
 	cur = None
@@ -89,6 +90,23 @@ class previous_data(manage_database):
 		except:
 			print('[ ERROR ] Client ID could not be initialised')
 			client_id_counter = 0
+
+	def get_last_query_id():
+		global query_id_counter
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT max(query_id) FROM queries")
+			data =  cur.fetchall()
+			if(data[0][0] != ''):
+				query_id_counter = int(data[0][0])
+			else:
+				query_id_counter = 0
+
+		except:
+			print('[ ERROR ] Client ID could not be initialised')
+			client_id_counter = 0
+
+
 
 
 class client_authentication(manage_database):
@@ -181,6 +199,7 @@ class submissions_management(manage_database):
 		except Exception as error:
 			print("[ ERROR ] Could not update submission submission : " + str(error))
 		return
+
 class query_management(manage_database):
 	def insert_query(query_id, client_id, query):
 		cur = manage_database.get_cursor()
@@ -201,6 +220,12 @@ class query_management(manage_database):
 		except Exception as error:
 			print("[ ERROR ] Could not insert into submission : " + str(error))
 		return
+
+	def generate_new_query_id():
+		global query_id_counter
+		query_id_counter = query_id_counter + 1
+		query_id = int(query_id_counter)
+		return query_id
 
 class user_management(manage_database):
 	def generate_n_users(no_of_clients, no_of_judges, password_type):

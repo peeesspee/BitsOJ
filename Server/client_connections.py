@@ -51,6 +51,12 @@ class manage_clients():
 		except:
 			print('[ ERROR ] Could not fetch previous client_id')
 
+
+		try:
+			previous_data.get_last_query_id()
+		except:
+			print('[ ERROR ] Could not fetch previous query_id')
+
 		# Start listening to client_requests
 		manage_clients.listen_clients(connection, channel, superuser_username, superuser_password, host, data_changed_flags2)
 		broadcast_thread.join()
@@ -271,7 +277,8 @@ class manage_clients():
 
 	def client_query_handler(client_id, query):
 		print('[ QUERY ] From ' + str(client_id) + ' : ' + query)
-		query_management.insert_query(0, client_id, query)
+		query_id = query_management.generate_new_query_id() 
+		query_management.insert_query(query_id, client_id, query)
 		manage_clients.data_changed_flags[9] = 1
 
 

@@ -474,7 +474,7 @@ class query_reply_ui(QMainWindow):
 	query = ''
 	query_id = ''
 	client_id = ''
-	def __init__(self, data_changed_flags,data_to_client, query,client_id, query_id, parent=None):
+	def __init__(self, data_changed_flags,data_to_client, query, client_id, query_id, parent=None):
 		super(query_reply_ui, self).__init__(parent)
 
 		self.data_changed_flags = data_changed_flags
@@ -573,13 +573,15 @@ class query_reply_ui(QMainWindow):
 		return
 
 	def final_status(self, response):
-		print(query_reply_ui.button_mode)
-		print(response)
+		if query_reply_ui.button_mode == 1:
+			send_type = 'Client'
+		else:
+			send_type = 'Broadcast'
 		message ={
 		'Code' : 'QUERY',
-		'Query' : query_reply_ui.query_id,
+		'Query' : query_reply_ui.query,
 		'Response' : response,
-		'Mode' : query_reply_ui.button_mode,
+		'Mode' : send_type,
 		'Query ID' : query_reply_ui.query_id,
 		'Client ID' : query_reply_ui.client_id
 		}
