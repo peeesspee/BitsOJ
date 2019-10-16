@@ -2,16 +2,23 @@ import pika
 import sys
 import time
 import json
-from database_management import client_authentication, submissions_management, previous_data
+import threading
+from database_management import client_authentication, submissions_management, previous_data, query_management
 from client_submissions import submission
+from client_broadcasts import broadcast_manager
  
 
 class manage_clients():
 	channel = ''
 	data_changed_flags = ''
 
-	def prepare(superuser_username, superuser_password, host, data_changed_flags2):
+	def prepare(superuser_username, superuser_password, host, data_changed_flags2, data_from_interface):
 		manage_clients.data_changed_flags = data_changed_flags2
+
+		broadcast_thread = threading.Thread(target = broadcast_manager.init_broadcast, args = (data_changed_flags2, data_from_interface, superuser_username, superuser_password, host, ))
+		broadcast_thread.start()
+
+
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
 			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
@@ -22,7 +29,8 @@ class manage_clients():
 			channel = connection.channel()
 			manage_clients.channel = channel
 			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
-			#channel.exchange_declare(exchange = 'client_broadcasts', exchange_type = '')
+			channel.exchange_declare(exchange = 'broadcast_manager', exchange_type = 'fanout', durable = True)
+
 			channel.queue_declare(queue = 'client_requests', durable = True)
 			channel.queue_declare(queue = 'judge_requests', durable = True)
 			channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
@@ -43,7 +51,16 @@ class manage_clients():
 		except:
 			print('[ ERROR ] Could not fetch previous client_id')
 
+
+		try:
+			previous_data.get_last_query_id()
+		except:
+			print('[ ERROR ] Could not fetch previous query_id')
+
+		# Start listening to client_requests
 		manage_clients.listen_clients(connection, channel, superuser_username, superuser_password, host, data_changed_flags2)
+		broadcast_thread.join()
+
 	# This function continously listens for client messages 
 	def listen_clients(connection, channel, superuser_username, superuser_password, host, data_changed_flags2):
 		try:
@@ -58,7 +75,7 @@ class manage_clients():
 			print('[ LISTEN ] STOPPED listening to client channel')
 			connection.close()
 			print('[ STOP ] Client subprocess terminated successfully!')
-		
+			manage_clients.data_changed_flags[7] = 1
 			return
 
 	# This function works on client messages and passes them on to their respective handler function
@@ -79,13 +96,22 @@ class manage_clients():
 
 				manage_clients.client_login_handler(client_username, client_password, client_id, client_type)
 			elif client_code == 'SUBMT':
+				local_run_id = json_data["Local Run ID"]
 				client_id = json_data["ID"]		
 				problem_code = json_data["PCode"]		
 				language = json_data["Language"]		
 				time_stamp = json_data["Time"]		
 				source_code = json_data["Source"]	
 
-				manage_clients.client_submission_handler(client_id, problem_code, language, time_stamp, source_code)
+				manage_clients.client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code)
+			elif client_code == 'QUERY':
+				client_id = json_data['Client ID']
+				query = json_data['Query']
+				if client_id == 'Nul':
+					print('[ REJECT ] Client has not logged in.')
+					return
+
+				manage_clients.client_query_handler(client_id, query)
 			else:
 				print('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
 				# Raise Security Exception maybe?
@@ -105,6 +131,7 @@ class manage_clients():
 		manage_clients.channel.queue_declare(queue = client_username, durable = True)
 		#Bind the connection_manager exchange to client queue (que name is same as username)
 		manage_clients.channel.queue_bind(exchange = 'connection_manager', queue = client_username)
+		manage_clients.channel.queue_bind(exchange = 'broadcast_manager', queue = client_username)
 
 		if client_type == 'CLIENT':
 			# If client logins have been halted by the Admin, Send a rejection message to the client
@@ -205,7 +232,7 @@ class manage_clients():
 		return
 
 
-	def client_submission_handler(client_id, problem_code, language, time_stamp, source_code):
+	def client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code):
 		print('[ SUBMISSION ] Client ID :' + str(client_id) + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp)
 
 		# Get client username from database
@@ -226,24 +253,24 @@ class manage_clients():
 			try:
 				response.publish_message(manage_clients.channel, client_username, message)
 			except Exception as error:
-				print('[ ERROR ] Client has no username so could not send error code.' )
+				print('[ ERROR ][ SECURITY ] Client has no username so could not send error code.' )
 			return
 
 		try:
 			if client_id == 'Nul':
-				print('[ REJECT ] Client has not logged in. This should not happen, please check the client for ambiguity.')
+				print('[ REJECT ][ SECURITY ] Client has not logged in. Please check the client for ambiguity.')
 
 			else:
 				run_id, source_file_name = submission.new_submission(client_id, problem_code, language, time_stamp, source_code)
 				# Update database
 				status = 'Running'
 				
-				submissions_management.insert_submission(run_id, client_id, language, source_file_name, problem_code, status, time_stamp)
+				submissions_management.insert_submission(run_id, local_run_id, client_id, language, source_file_name, problem_code, status, time_stamp)
 				manage_clients.data_changed_flags[0] = 1
 				
 				# Push the submission in judging queue
 				print('[ JUDGE ] Requesting a new judgement')
-				manage_clients.send_new_request(client_id, client_username, run_id, problem_code, language, source_code)
+				manage_clients.send_new_request(client_id, client_username, run_id, local_run_id, problem_code, language, source_code)
 				#######################################################################
 				
 		except Exception as error:
@@ -251,8 +278,15 @@ class manage_clients():
 
 		return
 
+	def client_query_handler(client_id, query):
+		print('[ QUERY ] From ' + str(client_id) + ' : ' + query)
+		query_id = query_management.generate_new_query_id() 
+		query_management.insert_query(query_id, client_id, query)
+		manage_clients.data_changed_flags[9] = 1
 
-	def send_new_request(client_id, client_username, run_id, p_code, language, source_code):
+
+
+	def send_new_request(client_id, client_username, run_id, local_run_id, p_code, language, source_code):
 		message = {
 		'Code' : 'JUDGE', 
 		'Client ID' : client_id, 
@@ -260,7 +294,8 @@ class manage_clients():
 		'Run ID' : run_id,
 		'Language' : language,
 		'PCode' : p_code,
-		'Source' : source_code
+		'Source' : source_code,
+		'Local Run ID' : local_run_id
 		}
 	
 		message = json.dumps(message)

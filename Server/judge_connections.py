@@ -6,50 +6,6 @@ from database_management import submissions_management
 class manage_judges():
 	channel = ''
 	data_changed_flag = ''
-	# This function works on judge messages and passes them on to their respective handler function
-	def judge_message_handler(ch, method, properties, body):
-		# Decode the message sent by judge
-		judge_message = str(body.decode('utf-8'))
-		print('\n[ PING ] Recieved a new judge message : ' + judge_message)
-		try:
-			json_data = json.loads(judge_message)
-			code = json_data["Code"]
-			if code == 'VRDCT':
-				client_username = json_data['Client Username']
-				client_id = json_data['Client ID']
-				status = json_data['Status']
-				run_id = json_data['Run ID']
-				message = json_data['Message']
-			else:
-				print('[ ERROR ] Judge sent garbage data. Trust me you don\'t wanna see it! ')
-				print(judge_message)
-
-		except Exception as error:
-			print('[ ERROR ] Could not parse judge JSON data : ' + str(error))
-			return
-
-		message = {
-		'Code' : 'VRDCT', 
-		'Run ID' : run_id,
-		'Status' : status,
-		'Message' : message
-		}
-		message = json.dumps(message)
-			 	
-
-		try:
-			manage_judges.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = judge_message) 
-			print('[ VERDICT ] New verdict sent to ' + client_username)
-			submissions_management.update_submission_status(run_id, status)
-			# Update GUI
-			manage_judges.data_changed_flag[0] = 1
-		except Exception as error:
-			print('[ ERROR ] Could not publish result to client : ' + str(error))
-			return
-
-			
-		return
-
 	# This function continously listens for judge verdicts
 	def listen_judges(superuser_username, superuser_password, host, data_changed_flag1):
 		manage_judges.data_changed_flag = data_changed_flag1
@@ -81,7 +37,54 @@ class manage_judges():
 		except (KeyboardInterrupt, SystemExit):
 			channel.stop_consuming()
 			print('[ LISTEN ] STOPPED listening to judge channel')
+			
 			connection.close()
 			print('[ STOP ] Judge subprocess terminated successfully!')	
 			return
+
+	#This function works on judge messages and passes them on to their respective handler function
+	def judge_message_handler(ch, method, properties, body):
+		# Decode the message sent by judge
+		judge_message = str(body.decode('utf-8'))
+		print('\n[ PING ] Recieved a new judge message : ' + judge_message)
+		try:
+			json_data = json.loads(judge_message)
+			code = json_data["Code"]
+			if code == 'VRDCT':
+				local_run_id = json_data['Local Run ID']
+				client_username = json_data['Client Username']
+				client_id = json_data['Client ID']
+				status = json_data['Status']
+				run_id = json_data['Run ID']
+				message = json_data['Message']
+			else:
+				print('[ ERROR ] Judge sent garbage data. Trust me you don\'t wanna see it! ')
+				print(judge_message)
+
+		except Exception as error:
+			print('[ ERROR ] Could not parse judge JSON data : ' + str(error))
+			return
+
+		message = {
+		'Code' : 'VRDCT', 
+		'Local Run ID' : local_run_id,
+		'Run ID' : run_id,
+		'Status' : status,
+		'Message' : message
+		}
+		message = json.dumps(message)
+			 	
+
+		try:
+			manage_judges.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = judge_message) 
+			print('[ VERDICT ] New verdict sent to ' + client_username)
+			submissions_management.update_submission_status(run_id, status)
+			# Update GUI
+			manage_judges.data_changed_flag[0] = 1
+		except Exception as error:
+			print('[ ERROR ] Could not publish result to client : ' + str(error))
+			return
+
+			
+		return
 			

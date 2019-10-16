@@ -27,18 +27,19 @@ def main():
 	#################################
 	# Initialize the database and returns the cursor 
 	print("[ SETUP ] INITIALISING DATABASE ............")
-	cursor = manage_database.initialize_table()
+	conn, cursor = manage_database.initialize_table()
 	manage_local_ids.initialize_local_id(cursor)
 
 	##################################
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 10)
-	data_changed_flags[0] = 0
-	data_changed_flags[1] = 0
-	data_changed_flags[2] = 0
-	# index    value     meaning
-	# 0        0/1       Contest Not Started/Contest has been started
-	# 1        0/1       
+	for i in range(10):
+		data_changed_flags[i] = 0
+	# index    value         meaning
+	# 0        0/1/2/3/4     Contest Not Started/Contest has been started/Running/Contest Stopped/Time Up
+	# 1        0/1           Verdict Not received/Verdict Received
+	# 2        0/1           Query response Not received/Query response received
+	
 
 	##################################
 	# Makes connection with RabbitMQ

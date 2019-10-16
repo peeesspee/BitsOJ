@@ -196,7 +196,23 @@ QPushButton#account_button
 	border-radius : 25px;
 }
 
+QRadioButton{
+	color : #999999;
+}
+QRadioButton#interior_rbutton::indicator{
+	width :16px;
+	height: 16px;
+	border-radius : 8px;
 
+
+}
+QRadioButton#interior_rbutton::indicator::unchecked{
+	image: url(./Elements/radio_unchecked.png);
+}
+
+QRadioButton#interior_rbutton::indicator::checked{
+	image: url(./Elements/radio_checked.png);
+}
 /*################################################### /BUTTONS #########################################################*/
 
 
@@ -273,7 +289,7 @@ QLabel#about_screen_heading{
 
 
 
-/*--------------ADD USERS LAYOUT STARTS---------*/
+/*--------------SUB LAYOUT STARTS---------*/
 QLabel#account_label
 {
 	color : #23B2EE;
@@ -295,8 +311,11 @@ QWidget#account_window
 {
 	background-color : #171B1F;
 }
-
-/*--------------ADD USERS LAYOUT ENDS---------*/
+QTextEdit{
+	background : #2D353D;
+	color : #AAAAAA;
+}
+/*--------------SUB LAYOUT ENDS---------*/
 
 /*################################################ /LAYOUT OBJECTS ######################################################*/
 

@@ -2,7 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-from database_management import user_management
+from database_management import user_management, query_management
+import json 
 
 class ui_widgets:
 
@@ -65,12 +66,13 @@ class ui_widgets:
 		submission_model = self.manage_models(self.db, 'submissions')
 
 		submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
-		submission_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
-		submission_model.setHeaderData(2, Qt.Horizontal, 'Language')
-		submission_model.setHeaderData(3, Qt.Horizontal, 'Source File')
-		submission_model.setHeaderData(4, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(5, Qt.Horizontal, 'Status')
-		submission_model.setHeaderData(6, Qt.Horizontal, 'Time')
+		submission_model.setHeaderData(1, Qt.Horizontal, 'Local ID')
+		submission_model.setHeaderData(2, Qt.Horizontal, 'Client ID')
+		submission_model.setHeaderData(3, Qt.Horizontal, 'Language')
+		submission_model.setHeaderData(4, Qt.Horizontal, 'Source File')
+		submission_model.setHeaderData(5, Qt.Horizontal, 'Problem Code')
+		submission_model.setHeaderData(6, Qt.Horizontal, 'Status')
+		submission_model.setHeaderData(7, Qt.Horizontal, 'Time')
 
 		submission_table = self.generate_view(submission_model)
 
@@ -159,16 +161,36 @@ class ui_widgets:
 
 
 	def query_ui(self):
-		main_layout = QVBoxLayout()
 		heading = QLabel('All Clarifications')
 		heading.setObjectName('main_screen_heading')
 
-		main_layout.addWidget(heading)
+		reply_button = QPushButton('Reply')
+		reply_button.setFixedSize(200, 50)
+		reply_button.clicked.connect(lambda: self.query_reply(query_view.selectionModel().currentIndex().row()))
+		reply_button.setObjectName("topbar_button")
+
+		query_model = self.manage_models(self.db, 'queries')
+		query_model.setHeaderData(0, Qt.Horizontal, 'Query ID')
+		query_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
+		query_model.setHeaderData(2, Qt.Horizontal, 'Query')
+		query_model.setHeaderData(3, Qt.Horizontal, 'Response')
+
+		query_view = self.generate_view(query_model)
+
+		head_layout = QHBoxLayout()
+		head_layout.addWidget(heading)
+		head_layout.addWidget(reply_button)
+		head_widget = QWidget()
+		head_widget.setLayout(head_layout)
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(head_widget)
+		main_layout.addWidget(query_view)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main
+		return main, query_model
 
 
 	def leaderboard_ui(self):
@@ -256,22 +278,25 @@ class ui_widgets:
 		start_button = QPushButton('Start', self)
 		start_button.setFixedSize(70, 25)
 		start_button.setObjectName('interior_button')
-		#start_button.clicked.connect(self.contest_settings)
-		pause_button = QPushButton('Pause', self)
-		pause_button.setFixedSize(70, 25)
-		pause_button.setObjectName('interior_button')
-		#pause_button.clicked.connect(self.contest_settings)
+		start_button.clicked.connect(lambda: self.send_data_to_client_thread('START'))
+
+		update_button = QPushButton('Update', self)
+		update_button.setFixedSize(70, 25)
+		update_button.setObjectName('interior_button')
+		update_button.clicked.connect(lambda: self.send_data_to_client_thread('UPDATE'))
+
 		stop_button = QPushButton('Stop', self)
 		stop_button.setFixedSize(70, 25)
 		stop_button.setObjectName('interior_button')
-		#stop_button.clicked.connect(self.contest_settings)
+		stop_button.clicked.connect(lambda: self.send_data_to_client_thread('STOP'))
 		
 		
 		contest_buttons_layout = QHBoxLayout()
 		contest_buttons_layout.addWidget(set_button)
 		contest_buttons_layout.addWidget(start_button)
-		contest_buttons_layout.addWidget(pause_button)
+		contest_buttons_layout.addWidget(update_button)
 		contest_buttons_layout.addWidget(stop_button)
+
 		contest_buttons_layout.addStretch(1)
 		contest_buttons_layout.setSpacing(10)
 		contest_buttons_widget = QWidget()
@@ -442,6 +467,134 @@ class new_accounts_ui(QMainWindow):
 		self.data_changed_flags[4] = 0
 		# Indicate new insertions in accounts
 		self.data_changed_flags[5] = 1
+		self.close()
+
+class query_reply_ui(QMainWindow):
+	button_mode = 1
+	query = ''
+	query_id = ''
+	client_id = ''
+	def __init__(self, data_changed_flags,data_to_client, query, client_id, query_id, parent=None):
+		super(query_reply_ui, self).__init__(parent)
+		query_reply_ui.button_mode = 1
+
+		self.data_changed_flags = data_changed_flags
+		self.data_to_client = data_to_client
+		query_reply_ui.query = query
+		query_reply_ui.query_id = query_id
+		query_reply_ui.client_id = client_id
+
+		self.setWindowTitle('Reply')
+		self.setFixedSize(400,350)
+		main = self.main_query_reply_ui()
+		self.setCentralWidget(main)
+		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
+		return
+
+	def main_query_reply_ui(self):
+		query_heading = QLabel('Response')
+		query_sub_heading = QLabel('Query:')
+		response_sub_heading = QLabel('Response:')
+		query = query_reply_ui.query
+		query_label = QLabel(query_reply_ui.query)
+
+		response_entry = QTextEdit()
+		response_entry.setPlaceholderText('Max. 500 Characters')
+
+		
+		broadcast_setting_label = QLabel('Reply to: ')
+		send_to_client_rbutton = QRadioButton('Client')
+		send_to_all_rbutton = QRadioButton('All')
+		send_to_client_rbutton.setChecked(True)
+		send_to_all_rbutton.setChecked(False)
+		send_to_client_rbutton.toggled.connect(lambda: query_reply_ui.send_mode_setter(self, send_to_client_rbutton))
+		send_to_all_rbutton.toggled.connect(lambda: query_reply_ui.send_mode_setter(self, send_to_all_rbutton))
+
+		radiobutton_layout = QHBoxLayout()
+		radiobutton_layout.addWidget(broadcast_setting_label)
+		radiobutton_layout.addWidget(send_to_client_rbutton)
+		radiobutton_layout.addWidget(send_to_all_rbutton)
+		radiobutton_layout.addStretch(1)
+		radiobutton_layout.setSpacing(50)
+		radiobutton_widget = QWidget()
+		radiobutton_widget.setLayout(radiobutton_layout)
+
+
+		confirm_button = QPushButton('Confirm')
+		confirm_button.setFixedSize(150, 30)
+		confirm_button.clicked.connect(lambda:query_reply_ui.final_status(self, response_entry.toPlainText()))
+		confirm_button.setDefault(True)
+
+		cancel_button = QPushButton('Cancel')
+		cancel_button.setFixedSize(150, 30)
+		cancel_button.clicked.connect(lambda:query_reply_ui.cancel(self))
+		cancel_button.setDefault(True)
+
+		button_layout = QHBoxLayout()
+		button_layout.addWidget(confirm_button)
+		button_layout.addWidget(cancel_button)
+		button_layout.addStretch(1)
+		#button_layout.setSpacing(5)
+
+		button_widget = QWidget()
+		button_widget.setLayout(button_layout)
+
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(query_heading)
+		main_layout.addWidget(query_sub_heading)
+		main_layout.addWidget(query_label)
+		main_layout.addWidget(response_sub_heading)
+		main_layout.addWidget(response_entry)
+		main_layout.addWidget(radiobutton_widget)
+		main_layout.addWidget(button_widget)
+		main = QWidget()
+		main.setLayout(main_layout)
+
+		confirm_button.setObjectName('account_button')
+		cancel_button.setObjectName('account_button')
+		query_heading.setObjectName('main_screen_heading')
+		query_label.setObjectName('main_screen_content')
+		broadcast_setting_label.setObjectName('main_screen_content')
+		main.setObjectName('account_window')
+		query_sub_heading.setObjectName('main_screen_sub_heading')
+		response_sub_heading.setObjectName('main_screen_sub_heading')
+		send_to_all_rbutton.setObjectName('interior_rbutton')
+		send_to_client_rbutton.setObjectName('interior_rbutton')
+		return main
+
+	def send_mode_setter(self, rbutton):
+		if rbutton.text() == 'Client':
+			if rbutton.isChecked() == True:
+				query_reply_ui.button_mode = 1
+		else:
+			if rbutton.isChecked() == True:
+				query_reply_ui.button_mode = 2
+
+		return
+
+	def final_status(self, response):
+		if query_reply_ui.button_mode == 2:
+			send_type = 'Broadcast'
+		else:
+			send_type = 'Client'
+		message ={
+		'Code' : 'QUERY',
+		'Query' : query_reply_ui.query,
+		'Response' : response,
+		'Mode' : send_type,
+		'Query ID' : query_reply_ui.query_id,
+		'Client ID' : query_reply_ui.client_id
+		}
+		message = json.dumps(message)
+		self.data_to_client.put(message)
+		query_management.update_query(query_reply_ui.query_id, response)
+		self.data_changed_flags[8] = 0
+		self.data_changed_flags[9] = 1
+		self.close()
+
+	def cancel(self):
+		self.data_changed_flags[8] = 0
 		self.close()
 
  

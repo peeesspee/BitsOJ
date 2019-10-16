@@ -5,10 +5,14 @@ from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from interface_package.ui_classes import *
+from decrypt_problem import decrypt
 
 
 global current_status 
 current_status = "STOPPED" 
+
+global Timer
+# Timer = 00:00:00
 
 # This is to ignore some warnings which were thrown when gui exited and python deleted some assests in wrong order
 # Nothing critical 
@@ -27,7 +31,8 @@ class client_window(QMainWindow):
 		
 		# Initialize status bar
 		self.status = self.statusBar()
-		self.setFixedSize(1500,900)
+		# self.setFixedSize(1200,700)
+		self.resize(1200,700)
 
 		self.timer = QTimer()
 		self.change_flag = True
@@ -84,7 +89,7 @@ class client_window(QMainWindow):
 		self.tab1 = ui_widgets.problems_ui(self)
 		self.tab2, self.sub_model = ui_widgets.submissions_ui(self)
 		self.tab3 = ui_widgets.submit_ui(self)
-		self.tab4 = ui_widgets.query_ui(self)
+		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5 = ui_widgets.leaderboard_ui(self)
 		self.tab6 = ui_widgets.about_ui(self)
 
@@ -202,14 +207,24 @@ class client_window(QMainWindow):
 	##################################################################################
 
 	def update_data(self):
+		if self.data_changed_flag[0] == 1:
+			self.start_contest()
+			self.data_changed_flag[0] = 2
 		# If data has changed in submission table
 		if self.data_changed_flag[1] ==1:
 			self.sub_model.select()
 			# reset data_changed_flag
 			self.data_changed_flag[1] = 0
+
+		# If data has changed in query table
 		if(self.data_changed_flag[2] == 1):
-			# raise KeyboardInterrupt
-			print('Hellllllo')
+			self.query_model.select()
+			# reset data_changed_flag
+			self.data_changed_flag[2] =0
+
+		if(self.data_changed_flag[3] == 1):
+			QMessageBox.warning(self, 'Error', 'Right Now Admin is not accepting Submission.\nContact Administrator')
+			self.data_changed_flag[3] = 0
 		return
 
 	####################################################################################
@@ -307,6 +322,17 @@ class client_window(QMainWindow):
 	#########################################################################################
 
 
+	def start_contest(self):
+		global current_status
+		global Timer
+		with open('contest.json', 'r') as contest:
+			data = json.load(contest)
+		current_status = 'CONTEST RUNNING'
+		Timer = data["Duration"]
+		decrypt.decrypting()
+		QMessageBox.warning(self, 'Info', 'Contest has been STARTED.\nNow you can view problems.')
+
+
 
 class init_gui(client_window):
 	def __init__(self, data_changed_flag):
@@ -327,7 +353,7 @@ class init_gui(client_window):
 		# server_app.setFixedSize(width, height)
 
 		# server_app.showFullScreen()
-		client_app.show()
+		client_app.showMaximized()
 		# server_app.showNormal()
 		# Close the server as soon as close buton is clicked
 		app.exec_()

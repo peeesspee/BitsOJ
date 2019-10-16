@@ -1,5 +1,6 @@
 import time
 import sys
+import json
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
@@ -18,7 +19,7 @@ qInstallMessageHandler(handler)
 
 # This class handles the main window of server
 class server_window(QMainWindow):
-	def __init__(self, data_changed_flags2):
+	def __init__(self, data_changed_flags2, data_to_client):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
@@ -38,6 +39,7 @@ class server_window(QMainWindow):
 		
 		# make data_changed_flag accessible from the class methods
 		self.data_changed_flags = data_changed_flags2
+		self.data_to_client = data_to_client
 		
 		###########################################################
 		self.db = self.init_qt_database()
@@ -116,7 +118,7 @@ class server_window(QMainWindow):
 		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
 		self.tab2 = ui_widgets.judge_ui(self)
 		self.tab3, self.client_model = ui_widgets.client_ui(self)
-		self.tab4 = ui_widgets.query_ui(self)
+		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5 = ui_widgets.leaderboard_ui(self)
 		self.tab6 = ui_widgets.problem_ui(self)
 		self.tab7 = ui_widgets.language_ui(self)
@@ -298,6 +300,40 @@ class server_window(QMainWindow):
 		if self.data_changed_flags[5] == 1:
 			self.account_model.select()
 			self.set_flags(5, 0)
+		if self.data_changed_flags[9] == 1:
+			self.query_model.select()
+			self.set_flags(9, 0)
+		return
+
+	def send_data_to_client_thread(self, data, extra_data = '02:00'):
+		if data == 'START':
+			message = {
+			'Code' : 'START',
+			'Time' : extra_data
+			}
+			message = json.dumps(message)
+			# Send START signal, HIGHEST priority
+
+			self.data_to_client.put(message)
+		elif data == 'STOP':
+			# Send STOP signal, HIGHEST priority
+			message = {
+			'Code' : 'STOP'
+			}
+			message = json.dumps(message)
+			self.data_to_client.put(message)
+		elif data == 'UPDATE':
+			# Send UPDATE signal
+			message = {
+			'Code' : 'UPDATE',
+			'Time' : extra_data
+			}
+			message = json.dumps(message)
+			self.data_to_client.put(message)
+		elif data == 'QUERY RESPONSE':
+			#process extra data (dictionary or maybe json)
+			self.data_to_client.put('QUERY')
+			
 		return
 
 	def allow_login_handler(self, state):
@@ -380,6 +416,26 @@ class server_window(QMainWindow):
 			# CRITICAL section flag set
 			self.data_changed_flags[4] = 1
 			self.window = new_accounts_ui(self.data_changed_flags)
+			self.window.show()			
+		else:
+			pass
+		return
+
+	@pyqtSlot()
+	def query_reply(self, selected_row):
+		if self.data_changed_flags[8] == 0:
+			# CRITICAL section flag set
+			self.data_changed_flags[8] = 1
+			try:
+				query = self.query_model.index(selected_row, 2).data()
+				client_id = self.query_model.index(selected_row, 1).data()
+				query_id = self.query_model.index(selected_row, 0).data()
+			except Exception as error: 
+				# Reset data_changed_flag for deletion of account
+				print('[ ERROR ] : ' + str(error))
+				self.data_changed_flags[8] = 0
+				return
+			self.window = query_reply_ui(self.data_changed_flags,self.data_to_client ,query,client_id, query_id)
 			self.window.show()			
 		else:
 			pass
@@ -476,7 +532,8 @@ class server_window(QMainWindow):
 
 
 class init_gui(server_window):
-	def __init__(self, data_changed_flags):
+	# data_from_interface queue is data_to_client queue with respect to interface
+	def __init__(self, data_changed_flags, data_to_client):
 		# make a reference of App class
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
@@ -484,7 +541,7 @@ class init_gui(server_window):
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
-		server_app = server_window(data_changed_flags)
+		server_app = server_window(data_changed_flags, data_to_client)
 
 		# Splash screen
 		# splash = QSplashScreen(QPixmap("Elements/bitwise.png"))

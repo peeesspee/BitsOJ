@@ -53,15 +53,12 @@ class authenticate_login():
 			)
 		
 		print("[ Listening ] @ " + authenticate_login.host)
-		# while True:
-		# 	if pika.exceptions.UnroutableError:
-		# 		break;
-		# 	else:
-		# 		print('try again')
-		# Started listening
-		authenticate_login.channel.start_consuming()
-		# while channel._consumer_infos:
-			# channel.connection.process_data_events(time_limit=15) # 2 Seconds
+
+		# authenticate_login.channel.start_consuming()
+		try:
+			authenticate_login.channel.start_consuming()
+		except(KeyboardInterrupt, SystemExit):
+			authenticate_login.channel.stop_consuming()
 
 		
 
@@ -82,8 +79,6 @@ class authenticate_login():
 			config["client_id"] = str(server_data["Client ID"])
 			with open('config.json', 'w') as read_config:
 				json.dump(config, read_config, indent = 4) 
-			with open('client_data.json', 'w') as data:
-				json.dump(server_data, data, indent=4)
 
 			print("[ Status ] " + status + "\n[ ClientID ] : " + str(server_data["Client ID"]) + "\n[ Server ] : " + server_data["Message"])
 			

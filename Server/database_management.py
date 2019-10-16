@@ -6,6 +6,7 @@ import string
 
 
 global client_id_counter
+global query_id_counter
 
 class manage_database():
 	cur = None
@@ -22,9 +23,11 @@ class manage_database():
 		try:	
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
 			cur.execute("create table if not exists connected_clients(client_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
-			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
+			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
 			cur.execute("create table if not exists connected_judges(judge_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
+			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
+			
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Table creation error : " + str(error))
 
@@ -37,6 +40,10 @@ class manage_database():
 			cur.execute("drop table if exists submissions")
 			cur.execute("drop table if exists scoreboard")
 			cur.execute("drop table if exists connected_clients")
+			cur.execute("drop table if exists connected_judges")
+			cur.execute("drop table if exists queries")
+
+			
 		except:
 			print("[ CRITICAL ERROR ] Table drop error")
 
@@ -83,6 +90,23 @@ class previous_data(manage_database):
 		except:
 			print('[ ERROR ] Client ID could not be initialised')
 			client_id_counter = 0
+
+	def get_last_query_id():
+		global query_id_counter
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT max(query_id) FROM queries")
+			data =  cur.fetchall()
+			if(data[0][0] != ''):
+				query_id_counter = int(data[0][0])
+			else:
+				query_id_counter = 0
+
+		except:
+			print('[ ERROR ] Query ID could not be initialised')
+			query_id_counter = 0
+
+
 
 
 class client_authentication(manage_database):
@@ -152,14 +176,14 @@ class client_authentication(manage_database):
 
 
 class submissions_management(manage_database):
-	def insert_submission(run_id, client_id, language, source_file_name, problem_code, verdict, timestamp):
-		#cur.execute("create table submissions(run_id varchar2(5) PRIMARY KEY, client_id varchar2(3), language varchar2(3), source_file varchar2(30), verdict varchar2(2), timestamp text, problem_code varchar(4))")
+	def insert_submission(run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
 		run_id = int(run_id)
 		client_id = int(client_id)
+		local_run_id = int(local_run_id)
 		try:
-			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?)", (run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, ))
+			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, ))
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not insert into submission : " + str(error))
@@ -175,6 +199,33 @@ class submissions_management(manage_database):
 		except Exception as error:
 			print("[ ERROR ] Could not update submission submission : " + str(error))
 		return
+
+class query_management(manage_database):
+	def insert_query(query_id, client_id, query):
+		cur = manage_database.get_cursor()
+		conn = manage_database.get_connection_object()
+		try:
+			cur.execute("INSERT INTO queries values(?, ?, ?, ?)", (query_id,client_id, query,'TO BE ANSWERED', ))
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Could not insert into submission : " + str(error))
+		return
+
+	def update_query(query_id, response):
+		cur = manage_database.get_cursor()
+		conn = manage_database.get_connection_object()
+		try:
+			cur.execute("UPDATE queries SET response = ? WHERE query_id = ?", (response, query_id,))
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Could not insert into submission : " + str(error))
+		return
+
+	def generate_new_query_id():
+		global query_id_counter
+		query_id_counter = query_id_counter + 1
+		query_id = int(query_id_counter)
+		return query_id
 
 class user_management(manage_database):
 	def generate_n_users(no_of_clients, no_of_judges, password_type):
@@ -235,7 +286,7 @@ class user_management(manage_database):
 		chars=string.ascii_uppercase + string.digits+string.ascii_lowercase
 		for i in range(0, number):
 			if type == 'Easy':
-				password = 'Bits'+str(i + prev + 1)
+				password = 'bits'+str(i + prev + 1)
 			elif type == 'Random':
 				password = ''.join(random.choice(chars) for _ in range(6))
 

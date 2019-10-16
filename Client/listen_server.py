@@ -1,4 +1,4 @@
-from database_management import submission_management
+from database_management import submission_management, query_management
 from login import authenticate_login
 import pika
 import json
@@ -36,7 +36,6 @@ class start_listening():
 			print('[ DELETE ] Queue ' + authenticate_login.username + ' deleted...')
 			print("[ STOP ] Keyboard interrupt")
 		finally:
-			print('Cleanup')
 			start_listening.channel.stop_consuming()
 			start_listening.channel.queue_delete(authenticate_login.username)
 			
@@ -56,14 +55,18 @@ class start_listening():
 			local_id = json_data["Local Run ID"]
 			print("[ Status ] " + status + "\n[ Run ID ] : " + str(run_id) + "\n[ Message ] : " + message)
 			start_listening.submission_verdict(json_data)
+		elif code == 'QUERY':
+			start_listening.query_verdict(json_data)
 		elif code == 'SRJCT':
 			print('Submission Rejected')
-		elif code == "CLRFN":
-			print("UNDER DEVELOPMENT")
+			start_listening.data_changed_flags[3] = 1
 		elif code == "SCRBD":
 			print("UNDER DEVELOPMENT")
-		elif code == "START" or code == "CSTOP" or code == "PAUSE":
-			print("UNDER DEVELOPMENT")
+		elif code == "START":
+			start_listening.start_status(json_data)
+		elif code == "STOP":
+			start_listening.stop_status(json_data)
+			print('UNDER DEVELOPMENT')
 		elif code == "UPDTE":
 			print("UNDER DEVELOPMENT")
 		else:
@@ -85,3 +88,31 @@ class start_listening():
 			code_result,
 			)
 		start_listening.data_changed_flags[1] = 1
+
+
+	def query_verdict(server_data):
+		print(server_data)
+		client_id = server_data["Client ID"]
+		query = server_data["Query"]
+		response = server_data["Response"]
+		Type = server_data["Type"]
+		print("[QUERY] Response received")
+		query_management.update_query(
+			client_id,
+			query,
+			response,
+			Type,
+			)
+		start_listening.data_changed_flags[2] = 1
+
+	def start_status(server_data):
+		with open('contest.json', 'w') as contest:
+			json.dump(server_data, contest, indent = 4)
+		start_listening.data_changed_flags[0] =1
+		print("[START] Signal received")
+		print("Contest Duration : " + server_data["Duration"])
+
+	def stop_status(server_data):
+		start_listening.data_changed_flags[0] = 3
+		print("[STOP] Signal received")
+
