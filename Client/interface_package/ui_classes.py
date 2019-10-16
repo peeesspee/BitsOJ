@@ -10,10 +10,9 @@ from functools import partial
 from manage_code import send_code
 from database_management import submission_management, query_management, manage_local_ids
 
-
-
 with open("config.json", "r") as read_config:
 	config = json.load(read_config)
+
 
 
 class ui_widgets():
@@ -236,6 +235,7 @@ class ui_widgets():
 
 
 	def submit_call(self, data_changed_flag):
+
 		if data_changed_flag[0] == 0:
 			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
 		elif data_changed_flag[0] == 3:
@@ -243,6 +243,8 @@ class ui_widgets():
 		elif data_changed_flag[0] == 4:
 			QMessageBox.warning(self, 'Message', 'Your Time Up.\n Now you cannot submit solution')
 		else:
+			with open("config.json", "r") as read_config:
+				config = json.load(read_config)
 			local_time = time.localtime()
 			time_stamp = time.strftime("%H:%M:%S", local_time)
 			textbox_value = ui_widgets.text_area.toPlainText()
@@ -310,7 +312,10 @@ class ui_widgets():
 		elif data_changed_flag[0] == 4:
 			QMessageBox.warning(self, 'Message', 'Your Time Up.\n Now you cannot submit any query')
 		else:
+			with open("config.json", "r") as read_config:
+				config = json.load(read_config)
 			client_id = config["client_id"]
+			print(config["client_id"])
 			query = ui_widgets.ask_query.text()
 			if(query == ''):
 				QMessageBox.warning(self, 'Message', "Query Cannot be empty")

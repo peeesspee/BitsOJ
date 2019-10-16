@@ -83,23 +83,14 @@ class query_management(manage_database):
 	def update_query(client_id,query,response,Type):
 		with open('config.json', 'r') as read_file:
 			config = json.load(read_file)
-		print('step1')
 		if Type == 'Broadcast':
-			print('step2')
 			manage_database.cur.execute("SELECT exists(SELECT * FROM my_query WHERE Query = ?)", (query,))
-			print('step3')
 			existence_result = manage_database.cur.fetchall()
-			print('step4')
 			if (existence_result[0][0]):
-				print('step5')
 				manage_database.cur.execute("UPDATE my_query SET Response = ? WHERE Query = ?",(response,query,))
-				print('step6')
 				manage_database.conn.commit()
-				print('step7')
 			else:
-				print('step8')
 				manage_database.cur.execute("INSERT into my_query values(?,?)",(query,response))
-				print('step9')
 				manage_database.conn.commit()
 		else:
 			print(client_id)
@@ -108,15 +99,12 @@ class query_management(manage_database):
 			print(type(config["client_id"]))
 			if (str(client_id) == config["client_id"]):
 				try:
-					print('step10')
 					print(query)
 					manage_database.cur.execute("SELECT * FROM my_query WHERE Query = ?",(query,))
 					existence_result = manage_database.cur.fetchall()
 					print(existence_result)
 					manage_database.cur.execute("UPDATE my_query SET Response = ? WHERE Query = ?",(response,query,))
-					print('step11')
 					manage_database.conn.commit()
-					print('step12')
 				except Exception as Error:
 					print("[ ERROR ] Could not update submission submission : " + str(error))
 			else:
