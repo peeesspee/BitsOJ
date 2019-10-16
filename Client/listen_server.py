@@ -66,7 +66,6 @@ class start_listening():
 			print("UNDER DEVELOPMENT")
 		elif code == "START":
 			start_listening.contest_status(json_data)
-			print("UNDER DEVELOPMENT")
 		elif code == "UPDTE":
 			print("UNDER DEVELOPMENT")
 		else:
@@ -103,6 +102,8 @@ class start_listening():
 		start_listening.data_changed_flags2[2] = 1
 
 	def contest_status(server_data):
-		with open('contest.json', 'r') as contest:
-			json.dumps(server_data, contest, indent = 4)
-		start_listening.data_changed_flags2[0] =1
+		with open('contest.json', 'w') as contest:
+			json.dump(server_data, contest, indent = 4)
+		start_listening.data_changed_flags[0] =1
+		print("[START] Signal received")
+		print("Contest Duration : " + server_data["Duration"])

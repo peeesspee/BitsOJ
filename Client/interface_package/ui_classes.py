@@ -43,7 +43,7 @@ class ui_widgets():
 			ui_widgets.var['Problem_{}'.format(number_of_buttons)] = QPushButton('Problem_'+str(number_of_buttons),self)
 			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setObjectName('problem_buttons')
 			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setFixedSize(500, 200)
-			ui_widgets.var['Problem_{}'.format(number_of_buttons)].clicked.connect(partial(ui_widgets.show_problem, number_of_buttons))
+			ui_widgets.var['Problem_{}'.format(number_of_buttons)].clicked.connect(partial(ui_widgets.show_problem, number_of_buttons, self.data_changed_flag, self))
 			problems_layout.addWidget(ui_widgets.var['Problem_{}'.format(number_of_buttons)],row,column)
 			if(column==1):
 				row+=1;
@@ -135,7 +135,7 @@ class ui_widgets():
 		self.submit_solution = QPushButton('Submit', self)
 		self.submit_solution.setObjectName('submit')
 		self.submit_solution.setFixedSize(200, 50)
-		self.submit_solution.clicked.connect(lambda:ui_widgets.submit_call(self.data_changed_flag))
+		self.submit_solution.clicked.connect(lambda:ui_widgets.submit_call(self, self.data_changed_flag))
 		self.horizontal_layout.addWidget(self.submit_solution,  alignment=Qt.AlignRight)
 
 		self.horizontal_widget = QWidget()
@@ -178,7 +178,7 @@ class ui_widgets():
 
 		self.send_query = QPushButton('Send', self)
 		self.send_query.setFixedSize(200, 50)
-		self.send_query.clicked.connect(lambda:ui_widgets.sending(self.data_changed_flag))
+		self.send_query.clicked.connect(lambda:ui_widgets.sending(self,self.data_changed_flag))
 		self.send_query.setObjectName('ask')
 
 
@@ -236,74 +236,84 @@ class ui_widgets():
 
 
 	def submit_call(data_changed_flag):
-		local_time = time.localtime()
-		time_stamp = time.strftime("%H:%M:%S", local_time)
-		textbox_value = ui_widgets.text_area.toPlainText()
-		selected_language = str(ui_widgets.language_box.currentText())
-		problem_code = config["Problems"][str(ui_widgets.problem_box.currentText())]
-		if(selected_language == 'C'):
-			extention = '.c'
-			language_code = 'GCC'
-		elif(selected_language == 'C++'):
-			extention = '.cpp'
-			language_code = 'CPP'
-		elif(selected_language == 'JAVA'):
-			extention = '.java'
-			language_code = 'JVA'
-		elif(selected_language == 'PYTHON-3'):
-			extention = '.py'
-			language_code = 'PY3'
+		if data_changed_flag[0] == 0:
+			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
 		else:
-			extention = '.py'
-			language_code = 'PY2'
-		local_id = manage_local_ids.get_new_id()
-		client_id = config["client_id"]
-		submission_management.insert_verdict(
-			local_id,
-			client_id,
-			'-',
-			'Queued',
-			selected_language,
-			language_code,
-			problem_code,
-			time_stamp,
-			textbox_value,
-			extention
-			)
-		print("no")
-		data_changed_flag[1] = 1
-		print('sachinam')
-		send_code.solution_request(
-			problem_code,
-			selected_language,
-			time_stamp,
-			textbox_value,
-			local_id
-			)
+			local_time = time.localtime()
+			time_stamp = time.strftime("%H:%M:%S", local_time)
+			textbox_value = ui_widgets.text_area.toPlainText()
+			selected_language = str(ui_widgets.language_box.currentText())
+			problem_code = config["Problems"][str(ui_widgets.problem_box.currentText())]
+			if(selected_language == 'C'):
+				extention = '.c'
+				language_code = 'GCC'
+			elif(selected_language == 'C++'):
+				extention = '.cpp'
+				language_code = 'CPP'
+			elif(selected_language == 'JAVA'):
+				extention = '.java'
+				language_code = 'JVA'
+			elif(selected_language == 'PYTHON-3'):
+				extention = '.py'
+				language_code = 'PY3'
+			else:
+				extention = '.py'
+				language_code = 'PY2'
+			local_id = manage_local_ids.get_new_id()
+			client_id = config["client_id"]
+			submission_management.insert_verdict(
+				local_id,
+				client_id,
+				'-',
+				'Queued',
+				selected_language,
+				language_code,
+				problem_code,
+				time_stamp,
+				textbox_value,
+				extention
+				)
+			print("no")
+			data_changed_flag[1] = 1
+			print('sachinam')
+			send_code.solution_request(
+				problem_code,
+				selected_language,
+				time_stamp,
+				textbox_value,
+				local_id
+				)
 
 
 
 
-	def show_problem(i):
-		webbrowser.open('Problems/Problem_'+str(i)+'.pdf')
+	def show_problem(i,data_changed_flag,self):
+		if data_changed_flag[0] == 0:
+			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
+		else:
+			webbrowser.open('Problems/Problem_'+str(i)+'.pdf')
 		# print('Button {0} clicked'.format(i))
 
 
-	def sending(data_changed_flag):
-		client_id = config["client_id"]
-		query = ui_widgets.ask_query.text()
-		if(query == ''):
-			# QMessageBox.about(self, 'Warning', "Don't be stupid")
-			print("Don't be stupid")
-		elif(len(query) > 499):
-			print('Length of query cannot exceed 500 words')
+	def sending(self,data_changed_flag):
+		if data_changed_flag[0] == 0:
+			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
 		else:
-			query_management.insert_query(query,'Waiting for response')
-			data_changed_flag[2] = 1
-			send_code.query_request(
-				client_id,
-				query,
-				)
+			client_id = config["client_id"]
+			query = ui_widgets.ask_query.text()
+			if(query == ''):
+				QMessageBox.warning(self, 'Message', "Query Cannot be empty")
+				# print("Don't be stupid")
+			elif(len(query) > 499):
+				QMessageBox.warning(self, 'Message', "Length of query cannot exceed 500 words")
+				# print('Length of query cannot exceed 500 words')
+			else:
+				query_management.insert_query(query,'Waiting for response')
+				data_changed_flag[2] = 1
+				send_code.query_request(
+					client_id,
+					query,
+					)
 		
 	###################################################################################
 

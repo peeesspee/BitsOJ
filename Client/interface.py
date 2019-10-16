@@ -209,7 +209,7 @@ class client_window(QMainWindow):
 	def update_data(self):
 		if self.data_changed_flag[0] == 1:
 			self.start_contest()
-
+			self.data_changed_flag[0] = 2
 		# If data has changed in submission table
 		if self.data_changed_flag[1] ==1:
 			self.sub_model.select()
@@ -326,10 +326,11 @@ class client_window(QMainWindow):
 		global current_status
 		global Timer
 		with open('contest.json', 'r') as contest:
-			data = json.loads(contest)
-		current_status = ' CONTEST RUNNING'
-		Timer = data["Time Duration"]
+			data = json.load(contest)
+		current_status = 'CONTEST RUNNING'
+		Timer = data["Duration"]
 		decrypt.decrypting()
+		QMessageBox.warning(self, 'Error', 'Contest has been started.\nNow you can view problems.')
 
 
 
