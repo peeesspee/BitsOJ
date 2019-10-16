@@ -17,13 +17,19 @@ def main():
 	# Initialize server
 	print('[ SETUP ] Initialising server...')
 
-	#save_status.write_config('BitsOJ', 'root', 'judge1', 'judge1', 'localhost', 'True', 'True', 'abcdefghij12345', 'abcdefghij12345')
+	#save_status.write_config('BitsOJ', 'root', 'judge1', 'judge1', 'localhost', 'True', 'True', 'abcdefghij12345', 'abcdefghij12345', 'papa')
 
-	initialize_server.read_config()
-	superuser_username, superuser_password = initialize_server.get_superuser_details()
-	judge_username, judge_password = initialize_server.get_judge_details()
-	host = initialize_server.get_host()
-	client_key, judge_key = initialize_server.get_keys()
+	config = initialize_server.read_config()
+	superuser_username = config["Server Username"]
+	superuser_password = config["Server Password"]
+	judge_username = config["Judge Username"]
+	judge_password = config["Judge Password"]
+	host = config["Server IP"]
+	client_key = config["Client Key"]
+	judge_key = config["Judge Key"]
+	login_status = config["Login Allowed"]
+	submission_status = config["Submission Allowed"]
+	file_password = config["File Password"]
 	####################################################
 	# TODO : Validate client and server keys when any message is sent, to maintain security 
 	# (As project is open source)
@@ -45,20 +51,23 @@ def main():
 	#	3		0/1			0/1: Disallow/Allow submissions
 	#	4		0/1			1: A create accounts window is open
 	#	5		0/1			1: New users generated, update view
+	#   6		0/1			1: Account deletion under progress
+	#	7		0/1			1: Server shutdown
 
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
-	login_status = initialize_server.get_login_flag()
-	if login_status == True:
+	
+	if login_status == 'True':
 		data_changed_flags[2] = 1
 	else:
 		data_changed_flags[2] = 0
 
 	# Do not allow new submissions unless timer is active or admin begins contest
-	submission_status = initialize_server.get_submission_flag()
-	if submission_status == True:
+	
+	if submission_status == 'True':
 		data_changed_flags[3] = 1
 	else:
 		data_changed_flags[3] = 0
+
 	data_changed_flags[4] = 0
 	# SYSTEM SHUT flag
 	data_changed_flags[7] = 0
@@ -92,7 +101,7 @@ def main():
 		submission_status = True
 	else:
 		submission_status = False
-	save_status.write_config(superuser_username, superuser_password, judge_username, judge_password, host, login_status, submission_status, client_key, judge_key)
+	save_status.write_config(superuser_username, superuser_password, judge_username, judge_password, host, login_status, submission_status, client_key, judge_key, file_password)
 
 	# EXIT
 	sleep(2)
