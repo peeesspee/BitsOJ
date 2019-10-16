@@ -89,6 +89,8 @@ def handler(ch, method, properties, body):
 		
 	elif code == 'SRJCT':
 		print('Submission Rejected')
+	else:
+		print(json_data)
 
 	print("[ ACK ]")
 	ch.basic_ack(delivery_tag = method.delivery_tag)

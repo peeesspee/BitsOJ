@@ -36,6 +36,8 @@ def main():
 	##################################
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 10)
+	data_from_interface = multiprocessing.Queue(maxsize = 100)    # This queue will be polled for info from interface
+
 	#index		value		meaning
 	#	0		0/1			0/1: No new/ New submission data to refresh
 	#	1		0/1			0/1: No new/ New login : Refresh login view
@@ -58,17 +60,19 @@ def main():
 	else:
 		data_changed_flags[3] = 0
 	data_changed_flags[4] = 0
+	# SYSTEM SHUT flag
+	data_changed_flags[7] = 0
 	##################################
 
 	# Manage Threads
 	print('[ SETUP ] Initialising subprocesses...')
-	client_pid, judge_pid = manage_process(superuser_username, superuser_password, judge_username, judge_password, host, data_changed_flags)
+	client_pid, judge_pid = manage_process(superuser_username, superuser_password, judge_username, judge_password, host, data_changed_flags, data_from_interface)
 
 	# Initialize GUI handler
 	print('[ SETUP ] Initialising GUI....')
 	try:
 		print("----------------BitsOJ v1.0----------------")
-		init_gui(data_changed_flags)
+		init_gui(data_changed_flags, data_from_interface)
 
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
@@ -91,15 +95,15 @@ def main():
 	save_status.write_config(superuser_username, superuser_password, judge_username, judge_password, host, login_status, submission_status, client_key, judge_key)
 
 	# EXIT
-	sleep(1)
+	sleep(2)
 	print("  ################################################")
 	print("  #----------SERVER CLOSED SUCCESSFULLY----------#")
 	print("  ################################################")
 
 
-def manage_process(superuser_username, superuser_password, judge_username, judge_password, host, data_changed_flags):
-	client_handler_process = multiprocessing.Process(target = manage_clients.prepare, args = (superuser_username, superuser_password, host, data_changed_flags,))
-	judge_handler_process = multiprocessing.Process(target = manage_judges.listen_judges, args = (judge_username, judge_password, host, data_changed_flags,))
+def manage_process(superuser_username, superuser_password, judge_username, judge_password, host, data_changed_flags, data_from_interface):
+	client_handler_process = multiprocessing.Process(target = manage_clients.prepare, args = (superuser_username, superuser_password, host, data_changed_flags, data_from_interface, ))
+	judge_handler_process = multiprocessing.Process(target = manage_judges.listen_judges, args = (judge_username, judge_password, host, data_changed_flags, ))
 
 	client_handler_process.start()
 	judge_handler_process.start()

@@ -18,7 +18,7 @@ qInstallMessageHandler(handler)
 
 # This class handles the main window of server
 class server_window(QMainWindow):
-	def __init__(self, data_changed_flags2):
+	def __init__(self, data_changed_flags2, data_to_client):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
@@ -38,6 +38,7 @@ class server_window(QMainWindow):
 		
 		# make data_changed_flag accessible from the class methods
 		self.data_changed_flags = data_changed_flags2
+		self.data_to_client = data_to_client
 		
 		###########################################################
 		self.db = self.init_qt_database()
@@ -300,6 +301,23 @@ class server_window(QMainWindow):
 			self.set_flags(5, 0)
 		return
 
+	def send_data_to_client_thread(self, data, extra_data = 'NONE'):
+		if data == 'START':
+			# Send START signal, HIGHEST priority
+			self.data_to_client.put('START')
+		elif data == 'STOP':
+			# Send STOP signal, HIGHEST priority
+			self.data_to_client.put('STOP')
+		elif data == 'PAUSE':
+			# Send PAUSE signal, HIGHEST priority
+			self.data_to_client.put('PAUSE')
+		elif data == 'QUERY RESPONSE':
+			#process extra data (dictionary or maybe json)
+			self.data_to_client.put('QUERY')
+			
+
+		return
+
 	def allow_login_handler(self, state):
 		if(state == Qt.Checked):
 			# Allow logins
@@ -476,7 +494,8 @@ class server_window(QMainWindow):
 
 
 class init_gui(server_window):
-	def __init__(self, data_changed_flags):
+	# data_from_interface queue is data_to_client queue with respect to interface
+	def __init__(self, data_changed_flags, data_to_client):
 		# make a reference of App class
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
@@ -484,7 +503,7 @@ class init_gui(server_window):
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
-		server_app = server_window(data_changed_flags)
+		server_app = server_window(data_changed_flags, data_to_client)
 
 		# Splash screen
 		# splash = QSplashScreen(QPixmap("Elements/bitwise.png"))

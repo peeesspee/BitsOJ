@@ -2,16 +2,23 @@ import pika
 import sys
 import time
 import json
+import threading
 from database_management import client_authentication, submissions_management, previous_data
 from client_submissions import submission
+from client_broadcasts import broadcast_manager
  
 
 class manage_clients():
 	channel = ''
 	data_changed_flags = ''
 
-	def prepare(superuser_username, superuser_password, host, data_changed_flags2):
+	def prepare(superuser_username, superuser_password, host, data_changed_flags2, data_from_interface):
 		manage_clients.data_changed_flags = data_changed_flags2
+
+		broadcast_thread = threading.Thread(target = broadcast_manager.init_broadcast, args = (data_changed_flags2, data_from_interface, superuser_username, superuser_password, host, ))
+		broadcast_thread.start()
+
+
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
 			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
@@ -22,7 +29,8 @@ class manage_clients():
 			channel = connection.channel()
 			manage_clients.channel = channel
 			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
-			#channel.exchange_declare(exchange = 'client_broadcasts', exchange_type = '')
+			channel.exchange_declare(exchange = 'broadcast_manager', exchange_type = 'fanout', durable = True)
+
 			channel.queue_declare(queue = 'client_requests', durable = True)
 			channel.queue_declare(queue = 'judge_requests', durable = True)
 			channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
@@ -43,7 +51,10 @@ class manage_clients():
 		except:
 			print('[ ERROR ] Could not fetch previous client_id')
 
+		# Start listening to client_requests
 		manage_clients.listen_clients(connection, channel, superuser_username, superuser_password, host, data_changed_flags2)
+		broadcast_thread.join()
+
 	# This function continously listens for client messages 
 	def listen_clients(connection, channel, superuser_username, superuser_password, host, data_changed_flags2):
 		try:
@@ -58,7 +69,7 @@ class manage_clients():
 			print('[ LISTEN ] STOPPED listening to client channel')
 			connection.close()
 			print('[ STOP ] Client subprocess terminated successfully!')
-		
+			manage_clients.data_changed_flags[7] = 1
 			return
 
 	# This function works on client messages and passes them on to their respective handler function
@@ -106,6 +117,7 @@ class manage_clients():
 		manage_clients.channel.queue_declare(queue = client_username, durable = True)
 		#Bind the connection_manager exchange to client queue (que name is same as username)
 		manage_clients.channel.queue_bind(exchange = 'connection_manager', queue = client_username)
+		manage_clients.channel.queue_bind(exchange = 'broadcast_manager', queue = client_username)
 
 		if client_type == 'CLIENT':
 			# If client logins have been halted by the Admin, Send a rejection message to the client
