@@ -258,10 +258,12 @@ class ui_widgets:
 		start_button.setFixedSize(70, 25)
 		start_button.setObjectName('interior_button')
 		start_button.clicked.connect(lambda: self.send_data_to_client_thread('START'))
-		pause_button = QPushButton('Pause', self)
-		pause_button.setFixedSize(70, 25)
-		pause_button.setObjectName('interior_button')
-		pause_button.clicked.connect(lambda: self.send_data_to_client_thread('PAUSE'))
+
+		update_button = QPushButton('Update', self)
+		update_button.setFixedSize(70, 25)
+		update_button.setObjectName('interior_button')
+		update_button.clicked.connect(lambda: self.send_data_to_client_thread('UPDATE'))
+
 		stop_button = QPushButton('Stop', self)
 		stop_button.setFixedSize(70, 25)
 		stop_button.setObjectName('interior_button')
@@ -271,8 +273,9 @@ class ui_widgets:
 		contest_buttons_layout = QHBoxLayout()
 		contest_buttons_layout.addWidget(set_button)
 		contest_buttons_layout.addWidget(start_button)
-		contest_buttons_layout.addWidget(pause_button)
+		contest_buttons_layout.addWidget(update_button)
 		contest_buttons_layout.addWidget(stop_button)
+
 		contest_buttons_layout.addStretch(1)
 		contest_buttons_layout.setSpacing(10)
 		contest_buttons_widget = QWidget()

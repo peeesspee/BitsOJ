@@ -11,6 +11,10 @@ class initialize_server():
 	submission_allowed_flag = 'False'
 	client_key = '000000000000000'
 	judge_key = '000000000000000'
+	file_password = '0000'
+
+	def get_password():
+		return initialize_server.file_password
 
 	def get_keys():
 		return initialize_server.client_key, initialize_server.judge_key
@@ -56,11 +60,12 @@ class initialize_server():
 		initialize_server.submission_allowed_flag = config["Submission Allowed"]
 		initialize_server.judge_key = config["Judge Key"]
 		initialize_server.client_key = config["Client Key"]
-		return
+		initialize_server.file_password = config["File Password"]
+		return config
 
 	# To be moved to setup.py
 class save_status():
-	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, client_key, judge_key):
+	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, client_key, judge_key, file_password):
 		print('[ WRITE ] config.json')
 
 		allow_login = str(allow_login)
@@ -75,7 +80,8 @@ class save_status():
 		'Login Allowed' : allow_login,
 		'Submission Allowed' : allow_submission,
 		'Judge Key' : judge_key,
-		'Client Key' : client_key
+		'Client Key' : client_key,
+		'File Password' : file_password
 		}
 
 		with open("config.json", "w") as data_file:

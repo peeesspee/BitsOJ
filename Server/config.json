@@ -7,5 +7,6 @@
     "Login Allowed": "True",
     "Submission Allowed": "True",
     "Judge Key": "abcdefghij12345",
-    "Client Key": "abcdefghij12345"
+    "Client Key": "abcdefghij12345",
+    "File Password": "papa"
 }

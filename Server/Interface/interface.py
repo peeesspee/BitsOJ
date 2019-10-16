@@ -1,5 +1,6 @@
 import time
 import sys
+import json
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
@@ -301,16 +302,31 @@ class server_window(QMainWindow):
 			self.set_flags(5, 0)
 		return
 
-	def send_data_to_client_thread(self, data, extra_data = 'NONE'):
+	def send_data_to_client_thread(self, data, extra_data = '02:00'):
 		if data == 'START':
+			message = {
+			'Code' : 'START',
+			'Time' : extra_data
+			}
+			message = json.dumps(message)
 			# Send START signal, HIGHEST priority
-			self.data_to_client.put('START')
+
+			self.data_to_client.put(message)
 		elif data == 'STOP':
 			# Send STOP signal, HIGHEST priority
-			self.data_to_client.put('STOP')
-		elif data == 'PAUSE':
-			# Send PAUSE signal, HIGHEST priority
-			self.data_to_client.put('PAUSE')
+			message = {
+			'Code' : 'STOP'
+			}
+			message = json.dumps(message)
+			self.data_to_client.put(message)
+		elif data == 'UPDATE':
+			# Send UPDATE signal
+			message = {
+			'Code' : 'UPDATE',
+			'Time' : extra_data
+			}
+			message = json.dumps(message)
+			self.data_to_client.put(message)
 		elif data == 'QUERY RESPONSE':
 			#process extra data (dictionary or maybe json)
 			self.data_to_client.put('QUERY')
