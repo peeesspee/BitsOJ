@@ -107,6 +107,9 @@ class manage_clients():
 			elif client_code == 'QUERY':
 				client_id = json_data['Client ID']
 				query = json_data['Query']
+				if client_id == 'Nul':
+					print('[ REJECT ] Client has not logged in.')
+					return
 
 				manage_clients.client_query_handler(client_id, query)
 			else:

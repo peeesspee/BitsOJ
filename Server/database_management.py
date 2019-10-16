@@ -103,8 +103,8 @@ class previous_data(manage_database):
 				query_id_counter = 0
 
 		except:
-			print('[ ERROR ] Client ID could not be initialised')
-			client_id_counter = 0
+			print('[ ERROR ] Query ID could not be initialised')
+			query_id_counter = 0
 
 
 
@@ -286,7 +286,7 @@ class user_management(manage_database):
 		chars=string.ascii_uppercase + string.digits+string.ascii_lowercase
 		for i in range(0, number):
 			if type == 'Easy':
-				password = 'Bits'+str(i + prev + 1)
+				password = 'bits'+str(i + prev + 1)
 			elif type == 'Random':
 				password = ''.join(random.choice(chars) for _ in range(6))
 
