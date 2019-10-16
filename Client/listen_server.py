@@ -102,7 +102,7 @@ class start_listening():
 			response,
 			Type,
 			)
-		start_listening.data_changed_flags2[2] = 1
+		start_listening.data_changed_flags[2] = 1
 
 	def start_status(server_data):
 		with open('contest.json', 'w') as contest:
