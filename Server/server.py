@@ -17,7 +17,7 @@ def main():
 	# Initialize server
 	print('[ SETUP ] Initialising server...')
 
-	#save_status.write_config('BitsOJ', 'root', 'judge1', 'judge1', 'localhost', 'True', 'True', 'abcdefghij12345', 'abcdefghij12345', 'papa')
+	# save_status.write_config('BitsOJ', 'root', 'judge1', 'judge1', 'localhost', 'True', 'True', 'abcdefghij12345', 'abcdefghij12345', 'papa')
 
 	config = initialize_server.read_config()
 	superuser_username = config["Server Username"]

@@ -54,7 +54,6 @@ class send_code():
 			'Code' : 'QUERY',
 			'Client ID' : client_id,
 			'Query' : query,
-			'Response' : ''
 		}
 		final_data = json.dumps(final_data)
 		print('[QUERY] Sending.....')

@@ -164,14 +164,14 @@ class ui_widgets():
 
 		query_model = self.manage_models(self.db, 'my_query')
 
-		query_model.setHeaderData(0, Qt.Horizontal, 'query')
-		query_model.setHeaderData(1, Qt.Horizontal, 'response')
+		query_model.setHeaderData(0, Qt.Horizontal, 'Query')
+		query_model.setHeaderData(1, Qt.Horizontal, 'Response')
 
 		query_table = self.generate_view(query_model)
 
 		ui_widgets.ask_query = QLineEdit(self)
-		ui_widgets.ask_query.setFixedWidth(600)
-		ui_widgets.ask_query.setFixedHeight(70)
+		ui_widgets.ask_query.setFixedWidth(500)
+		ui_widgets.ask_query.setFixedHeight(50)
 		ui_widgets.ask_query.setPlaceholderText('    Problem 1 : Your Query ')
 		ui_widgets.ask_query.setToolTip(" Send the query in this format only.\n Else it might get ignored.")
 		ui_widgets.ask_query.setObjectName('ask_query')
@@ -235,9 +235,13 @@ class ui_widgets():
 
 
 
-	def submit_call(data_changed_flag):
+	def submit_call(self, data_changed_flag):
 		if data_changed_flag[0] == 0:
 			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
+		elif data_changed_flag[0] == 3:
+			QMessageBox.warning(self, 'Message', 'Contest has been STOPPED')
+		elif data_changed_flag[0] == 4:
+			QMessageBox.warning(self, 'Message', 'Your Time Up.\n Now you cannot submit solution')
 		else:
 			local_time = time.localtime()
 			time_stamp = time.strftime("%H:%M:%S", local_time)
@@ -283,6 +287,8 @@ class ui_widgets():
 				textbox_value,
 				local_id
 				)
+			QMessageBox.warning(self, 'Message', 'Your Solution has been successfully send')
+		return
 
 
 
@@ -292,12 +298,17 @@ class ui_widgets():
 			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
 		else:
 			webbrowser.open('Problems/Problem_'+str(i)+'.pdf')
+		return
 		# print('Button {0} clicked'.format(i))
 
 
 	def sending(self,data_changed_flag):
 		if data_changed_flag[0] == 0:
 			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
+		elif data_changed_flag[0] == 3:
+			QMessageBox.warning(self, 'Message', 'Contest has been STOPPED')
+		elif data_changed_flag[0] == 4:
+			QMessageBox.warning(self, 'Message', 'Your Time Up.\n Now you cannot submit any query')
 		else:
 			client_id = config["client_id"]
 			query = ui_widgets.ask_query.text()
@@ -314,6 +325,7 @@ class ui_widgets():
 					client_id,
 					query,
 					)
+		return
 		
 	###################################################################################
 

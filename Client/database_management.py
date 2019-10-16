@@ -14,7 +14,7 @@ class manage_database():
 			cur = conn.cursor()
 			manage_database.cur = cur
 			cur.execute("create table if not exists my_submissions(local_run_id varchar2(5),run_id varchar2(5),verdict varchar2(10),source_file varchar2(30),language varchar2(10),language_code varchar2(5), problem_code varchar2(8), time_stamp text)")
-			cur.execute("create table if not exists my_query(query varchar2(500), response varchar2(100))")
+			cur.execute("create table if not exists my_query(Query varchar2(500), Response varchar2(100))")
 		except Exception as Error: 
 			print(Error)
 		try:
@@ -57,10 +57,10 @@ class manage_local_ids():
 class submission_management(manage_database):
 
 	def insert_verdict(local_run_id,client_id,run_id,verdict,language,language_code,problem_code,time_stamp,code,extension):
-		source_file = "Solution/" + client_id + '_' + str(local_run_id) + '.' + extension
-		file = open("Solution/" + client_id + '_' + str(local_run_id) + '.' + extension, 'w+')
+		source_file = client_id + '_' + str(local_run_id) + extension
+		file = open("Solution/" + client_id + '_' + str(local_run_id) + extension, 'w+')
 		file.write(code)
-		manage_database.cur.execute("insert into my_submissions values (?,?,?,?,?,?,?,?)",(local_run_id,run_id,verdict,source_file,language,language_code,problem_code,time_stamp))
+		manage_database.cur.execute("INSERT INTO my_submissions VALUES (?,?,?,?,?,?,?,?)",(local_run_id,run_id,verdict,source_file,language,language_code,problem_code,time_stamp))
 		manage_database.conn.commit()
 
 
@@ -76,19 +76,28 @@ class submission_management(manage_database):
 class query_management(manage_database):
 	
 	def insert_query(query,response):
-		manage_database.cur.execute("insert into my_query values(?,?)",(query,response))
+		manage_database.cur.execute("INSERT INTO my_query VALUES(?,?)",(query,response))
 		manage_database.conn.commit()
 
 
-	def update_query(client_id,query,response):
+	def update_query(client_id,query,response,Type):
 		with open('config.json', 'r') as read_file:
 			config = json.loads(read_file)
-		if (client_id == config["client_id"]):
-			try:
+		if Type == 'Broadcast':
+			database_query = "SELECT EXISTS(SELECT * FROM my_query WHERE Query = ?)"
+			if (manage_database.cur.execute(database_query,(query,))):
 				manage_database.cur.execute("UPDATE my_query SET response = ? WHERE query = ?",(response,query,))
 				manage_database.conn.commit()
-			except Exception as Error:
-				print("[ ERROR ] Could not update submission submission : " + str(error))
+			else:
+				manage_database.cur.execute("INSERT into my_query values(?,?)",(query,response))
+				manage_database.conn.commit()
 		else:
-			pass
+			if (client_id == config["client_id"]):
+				try:
+					manage_database.cur.execute("UPDATE my_query SET Response = ? WHERE Query = ?",(response,query,))
+					manage_database.conn.commit()
+				except Exception as Error:
+					print("[ ERROR ] Could not update submission submission : " + str(error))
+			else:
+				pass
 		return

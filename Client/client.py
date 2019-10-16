@@ -35,10 +35,10 @@ def main():
 	data_changed_flags = multiprocessing.Array('i', 10)
 	for i in range(10):
 		data_changed_flags[i] = 0
-	# index    value     meaning
-	# 0        0/1/2     Contest Not Started/Contest has been started/Running
-	# 1        0/1       Verdict Not received/Verdict Received
-	# 2        0/1       Query response Not received/Query response received
+	# index    value         meaning
+	# 0        0/1/2/3/4     Contest Not Started/Contest has been started/Running/Contest Stopped/Time Up
+	# 1        0/1           Verdict Not received/Verdict Received
+	# 2        0/1           Query response Not received/Query response received
 	
 
 	##################################
