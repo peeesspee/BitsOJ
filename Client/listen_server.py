@@ -91,6 +91,7 @@ class start_listening():
 
 
 	def query_verdict(server_data):
+		print(server_data)
 		client_id = server_data["Client ID"]
 		query = server_data["Query"]
 		response = server_data["Response"]

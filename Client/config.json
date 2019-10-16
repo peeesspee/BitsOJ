@@ -1,9 +1,9 @@
 {
-    "client_id": "1",
+    "client_id": "3",
     "client_key": "139728abcder65bf",
     "rabbitmq_username": "client",
     "rabbitmq_password": "client",
-    "host": "localhost",
+    "host": "192.168.43.239",
     "No_of_Problems": 5,
     "Problems": {
         "Problem_1": "qwer",
