@@ -82,7 +82,7 @@ class query_management(manage_database):
 
 	def update_query(client_id,query,response,Type):
 		with open('config.json', 'r') as read_file:
-			config = json.loads(read_file)
+			config = json.load(read_file)
 		if Type == 'Broadcast':
 			database_query = "SELECT EXISTS(SELECT * FROM my_query WHERE Query = ?)"
 			if (manage_database.cur.execute(database_query,(query,))):
