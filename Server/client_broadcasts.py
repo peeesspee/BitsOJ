@@ -45,7 +45,7 @@ class broadcast_manager():
 				message = {
 				'Code' : 'START',
 				'Duration' : '02:00',
-				'Problem Key' : 'Papa'
+				'Problem Key' : 'papa'
 				}
 				message = json.dumps(message)
 				broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)

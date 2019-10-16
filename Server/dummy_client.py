@@ -114,7 +114,7 @@ def listen():
 
 
 def main():
-	print('1.Login\n2.Send solution\n3.Send Query\n4.Exit')
+	print('1.Login\n2.Send solution\n3.Listen\n4.Exit')
 	while True:
 		a = input('> ')
 		if(a == ''):
@@ -127,7 +127,7 @@ def main():
 			send()
 			listen()
 		elif a == 3:
-			pass
+			listen()
 		else:
 			break;
 	
