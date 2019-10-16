@@ -63,6 +63,21 @@ def send():
 	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
 	print("sent code")
 
+def query():
+	global client_id
+	print("Sending Query")
+	code = 'Hello server! How are you?'
+
+	message = {
+		'Code' : 'QUERY', 
+		'ID' : client_id,
+		'Query' : code
+		}
+	message = json.dumps(message)
+	
+	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
+	print("sent code")
+
 
 
 def handler(ch, method, properties, body):
@@ -114,7 +129,7 @@ def listen():
 
 
 def main():
-	print('1.Login\n2.Send solution\n3.Listen\n4.Exit')
+	print('1.Login\n2.Send solution\n3.Listen\n4.Query\n5.Exit')
 	while True:
 		a = input('> ')
 		if(a == ''):
@@ -128,6 +143,8 @@ def main():
 			listen()
 		elif a == 3:
 			listen()
+		elif a == 4:
+			query()
 		else:
 			break;
 	

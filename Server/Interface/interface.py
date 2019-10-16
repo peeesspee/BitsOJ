@@ -118,7 +118,7 @@ class server_window(QMainWindow):
 		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
 		self.tab2 = ui_widgets.judge_ui(self)
 		self.tab3, self.client_model = ui_widgets.client_ui(self)
-		self.tab4 = ui_widgets.query_ui(self)
+		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5 = ui_widgets.leaderboard_ui(self)
 		self.tab6 = ui_widgets.problem_ui(self)
 		self.tab7 = ui_widgets.language_ui(self)
@@ -300,6 +300,9 @@ class server_window(QMainWindow):
 		if self.data_changed_flags[5] == 1:
 			self.account_model.select()
 			self.set_flags(5, 0)
+		if self.data_changed_flags[9] == 1:
+			self.query_model.select()
+			self.set_flags(9, 0)
 		return
 
 	def send_data_to_client_thread(self, data, extra_data = '02:00'):
@@ -331,7 +334,6 @@ class server_window(QMainWindow):
 			#process extra data (dictionary or maybe json)
 			self.data_to_client.put('QUERY')
 			
-
 		return
 
 	def allow_login_handler(self, state):
@@ -414,6 +416,26 @@ class server_window(QMainWindow):
 			# CRITICAL section flag set
 			self.data_changed_flags[4] = 1
 			self.window = new_accounts_ui(self.data_changed_flags)
+			self.window.show()			
+		else:
+			pass
+		return
+
+	@pyqtSlot()
+	def query_reply(self, selected_row):
+		if self.data_changed_flags[8] == 0:
+			# CRITICAL section flag set
+			self.data_changed_flags[8] = 1
+			try:
+				query = self.query_model.index(selected_row, 2).data()
+				client_id = self.query_model.index(selected_row, 1).data()
+				query_id = self.query_model.index(selected_row, 0).data()
+			except Exception as error: 
+				# Reset data_changed_flag for deletion of account
+				print('[ ERROR ] : ' + str(error))
+				self.data_changed_flags[8] = 0
+				return
+			self.window = query_reply_ui(self.data_changed_flags,self.data_to_client ,query,client_id, query_id)
 			self.window.show()			
 		else:
 			pass

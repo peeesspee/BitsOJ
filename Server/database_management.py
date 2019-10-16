@@ -25,6 +25,8 @@ class manage_database():
 			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
 			cur.execute("create table if not exists connected_judges(judge_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
+			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
+			
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Table creation error : " + str(error))
 
@@ -37,6 +39,10 @@ class manage_database():
 			cur.execute("drop table if exists submissions")
 			cur.execute("drop table if exists scoreboard")
 			cur.execute("drop table if exists connected_clients")
+			cur.execute("drop table if exists connected_judges")
+			cur.execute("drop table if exists queries")
+
+			
 		except:
 			print("[ CRITICAL ERROR ] Table drop error")
 
@@ -174,6 +180,26 @@ class submissions_management(manage_database):
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not update submission submission : " + str(error))
+		return
+class query_management(manage_database):
+	def insert_query(query_id, client_id, query):
+		cur = manage_database.get_cursor()
+		conn = manage_database.get_connection_object()
+		try:
+			cur.execute("INSERT INTO queries values(?, ?, ?, ?)", (query_id,client_id, query,'TO BE ANSWERED', ))
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Could not insert into submission : " + str(error))
+		return
+
+	def update_query(query_id, response):
+		cur = manage_database.get_cursor()
+		conn = manage_database.get_connection_object()
+		try:
+			cur.execute("UPDATE queries SET response = ? WHERE query_id = ?", (response, query_id,))
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Could not insert into submission : " + str(error))
 		return
 
 class user_management(manage_database):

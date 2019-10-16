@@ -3,7 +3,7 @@ import sys
 import time
 import json
 import threading
-from database_management import client_authentication, submissions_management, previous_data
+from database_management import client_authentication, submissions_management, previous_data, query_management
 from client_submissions import submission
 from client_broadcasts import broadcast_manager
  
@@ -98,6 +98,11 @@ class manage_clients():
 				source_code = json_data["Source"]	
 
 				manage_clients.client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code)
+			elif client_code == 'QUERY':
+				client_id = json_data['Client ID']
+				query = json_data['Query']
+
+				manage_clients.client_query_handler(client_id, query)
 			else:
 				print('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
 				# Raise Security Exception maybe?
@@ -239,12 +244,12 @@ class manage_clients():
 			try:
 				response.publish_message(manage_clients.channel, client_username, message)
 			except Exception as error:
-				print('[ ERROR ] Client has no username so could not send error code.' )
+				print('[ ERROR ][ SECURITY ] Client has no username so could not send error code.' )
 			return
 
 		try:
 			if client_id == 'Nul':
-				print('[ REJECT ] Client has not logged in. This should not happen, please check the client for ambiguity.')
+				print('[ REJECT ][ SECURITY ] Client has not logged in. Please check the client for ambiguity.')
 
 			else:
 				run_id, source_file_name = submission.new_submission(client_id, problem_code, language, time_stamp, source_code)
@@ -263,6 +268,12 @@ class manage_clients():
 			print('[ ERROR ] Client submisssion could not be processed : ' + str(error))
 
 		return
+
+	def client_query_handler(client_id, query):
+		print('[ QUERY ] From ' + str(client_id) + ' : ' + query)
+		query_management.insert_query(0, client_id, query)
+		manage_clients.data_changed_flags[9] = 1
+
 
 
 	def send_new_request(client_id, client_username, run_id, local_run_id, p_code, language, source_code):

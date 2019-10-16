@@ -46,6 +46,3 @@ class submission():
 		global run_id_counter
 		# Get max run_id from submissions and add 1 to it, to initialize run_id counter
 		run_id_counter = int(previous_data.get_last_run_id()) + 1
-		
-	
-	

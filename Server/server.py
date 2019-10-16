@@ -41,7 +41,7 @@ def main():
 	
 	##################################
 	# Create variables/lists that will be shared between processes
-	data_changed_flags = multiprocessing.Array('i', 10)
+	data_changed_flags = multiprocessing.Array('i', 20)
 	data_from_interface = multiprocessing.Queue(maxsize = 100)    # This queue will be polled for info from interface
 
 	#index		value		meaning

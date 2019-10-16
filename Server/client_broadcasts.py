@@ -55,7 +55,7 @@ class broadcast_manager():
 				'Problem Key' : broadcast_manager.file_password
 				}
 				message = json.dumps(message)
-				broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
+	
 			elif data['Code'] == 'STOP':
 				# Don't allow Submissions
 				print('[ EVENT ] STOP Contest')
@@ -63,7 +63,7 @@ class broadcast_manager():
 				'Code' : 'STOP'
 				}
 				message = json.dumps(message)
-				broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
+				
 			elif data['Code'] == 'UPDATE':
 				# Don't allow Submissions
 				print('[ EVENT ] UPDATE Contest')
@@ -72,13 +72,22 @@ class broadcast_manager():
 				'Time' : data['Time']
 				}
 				message = json.dumps(message)
-				broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
-			
-			
-			
+				
+			elif data['Code'] == 'QUERY':
+				if data['Mode'] == 1:
+					print('[ EVENT ] New Query response to client')
+				else:
+					print('[ EVENT ] New Query response broadcast')
+				message = {
+				'Code' : 'QUERY',
+				'Client ID' : data['Client ID'],
+				'Query' : data['Query'],
+				'Response' : data['Response'],
+				'Type' : data['Mode'],
+				}
+				message = json.dumps(message)
 
+			broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
 
-
-		
 		s.enter(1, 1, broadcast_manager.poll, (s, data_from_interface, ))
 		return
