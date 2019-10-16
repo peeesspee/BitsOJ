@@ -46,7 +46,7 @@ class broadcast_manager():
 		while data_from_interface.empty() == False:
 			data = data_from_interface.get()
 			data = json.loads(data)
-			print('[ DATA ] Recieved a new broadcast')
+			print('\n[ DATA ] Recieved a new broadcast')
 			if data['Code'] == 'START':
 				print('[ EVENT ] START Contest')
 				message = {
@@ -86,7 +86,7 @@ class broadcast_manager():
 				'Type' : data['Mode'],
 				}
 				message = json.dumps(message)
-				
+
 			broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
 
 		s.enter(1, 1, broadcast_manager.poll, (s, data_from_interface, ))

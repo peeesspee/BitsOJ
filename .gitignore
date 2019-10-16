@@ -11,3 +11,5 @@ diary
 *.json
 *.pdf
 Problems/
+Client/Problems/
+/Client/Problems/*.pdf

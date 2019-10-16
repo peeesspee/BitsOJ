@@ -103,8 +103,8 @@ class previous_data(manage_database):
 				query_id_counter = 0
 
 		except:
-			print('[ ERROR ] Client ID could not be initialised')
-			client_id_counter = 0
+			print('[ ERROR ] Query ID could not be initialised')
+			query_id_counter = 0
 
 
 
