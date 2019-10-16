@@ -476,6 +476,7 @@ class query_reply_ui(QMainWindow):
 	client_id = ''
 	def __init__(self, data_changed_flags,data_to_client, query, client_id, query_id, parent=None):
 		super(query_reply_ui, self).__init__(parent)
+		query_reply_ui.button_mode = 1
 
 		self.data_changed_flags = data_changed_flags
 		self.data_to_client = data_to_client
@@ -566,17 +567,17 @@ class query_reply_ui(QMainWindow):
 		if rbutton.text() == 'Client':
 			if rbutton.isChecked() == True:
 				query_reply_ui.button_mode = 1
-		elif rbutton.text() == 'All':
+		else:
 			if rbutton.isChecked() == True:
 				query_reply_ui.button_mode = 2
 
 		return
 
 	def final_status(self, response):
-		if query_reply_ui.button_mode == 1:
-			send_type = 'Client'
-		else:
+		if query_reply_ui.button_mode == 2:
 			send_type = 'Broadcast'
+		else:
+			send_type = 'Client'
 		message ={
 		'Code' : 'QUERY',
 		'Query' : query_reply_ui.query,
