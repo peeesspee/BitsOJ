@@ -60,12 +60,13 @@ class start_listening():
 		elif code == 'SRJCT':
 			print('Submission Rejected')
 			start_listening.data_changed_flags[3] = 1
-		elif code == "CLRFN":
-			print("UNDER DEVELOPMENT")
 		elif code == "SCRBD":
 			print("UNDER DEVELOPMENT")
 		elif code == "START":
-			start_listening.contest_status(json_data)
+			start_listening.start_status(json_data)
+		elif code == "STOP":
+			start_listening.stop_status(json_data)
+			print('UNDER DEVELOPMENT')
 		elif code == "UPDTE":
 			print("UNDER DEVELOPMENT")
 		else:
@@ -93,17 +94,24 @@ class start_listening():
 		client_id = server_data["Client ID"]
 		query = server_data["Query"]
 		response = server_data["Response"]
+		Type = server_data["Type"]
 		print("[QUERY] Response received")
 		query_management.update_query(
 			client_id,
 			query,
 			response,
+			Type,
 			)
 		start_listening.data_changed_flags2[2] = 1
 
-	def contest_status(server_data):
+	def start_status(server_data):
 		with open('contest.json', 'w') as contest:
 			json.dump(server_data, contest, indent = 4)
 		start_listening.data_changed_flags[0] =1
 		print("[START] Signal received")
 		print("Contest Duration : " + server_data["Duration"])
+
+	def stop_status(server_data):
+		start_listening.data_changed_flags[0] = 3
+		print("[STOP] Signal received")
+

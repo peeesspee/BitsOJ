@@ -330,7 +330,7 @@ class client_window(QMainWindow):
 		current_status = 'CONTEST RUNNING'
 		Timer = data["Duration"]
 		decrypt.decrypting()
-		QMessageBox.warning(self, 'Error', 'Contest has been started.\nNow you can view problems.')
+		QMessageBox.warning(self, 'Info', 'Contest has been STARTED.\nNow you can view problems.')
 
 
 
