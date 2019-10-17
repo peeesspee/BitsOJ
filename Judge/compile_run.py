@@ -4,7 +4,7 @@ import os,sys
 
 class verdict():
 
-	PATH = "./A/test"
+	PATH = "./submission_files/"
 
 	def find_file():
 
@@ -18,66 +18,76 @@ class verdict():
 						return (file, pos, lang)		
 
 
-	def lang_compiler(file, pos, lang):
+	def lang_compiler(file_name, file_with_ext, lang):
+
+		#############################################
+		#              example 						# 
+		# 		file_name = ABCD18					#
+		# 		file_with_ext = ABCD18            	#
+		#############################################
 
 		classfile = ''
 		runfile = ''
 
-		if lang == 'cpp':
-			classfile = 'g++ -o ' + file[:pos] + ' ' + file
-			runfile = './' + file[:pos]
+		if lang == 'CPP':
+			classfile = 'g++ -o ' + file_name + ' ' + file_with_ext
+			runfile = './' + file_name
 
-		if lang == 'c':
-			classfile = 'gcc -o ' + file[:pos] + ' ' + file
-			runfile = './' + file[:pos]
+		if lang == 'C':
+			classfile = 'gcc -o ' + file_name + ' ' + file_with_ext
+			runfile = './' + file_name
 
-		if lang == 'java':
-			classfile = 'javac ' + file
-			runfile = 'java' + file[:pos]
+		if lang == 'JVA':
+			classfile = 'javac ' + file_with_ext
+			runfile = 'java' + file_name
 
-		if lang == 'py':
+		if lang == 'PY':
 			if file.split('.')[0][-1] == '2':
 				classfile = 'python'
-				runfile = 'python2 ' + file
+				runfile = 'python2 ' + file_with_ext
 
 			if file.split('.')[0][-1] == '3':
 				classfile = 'python'
-				runfile = 'python3 ' + file
+				runfile = 'python3 ' + file_with_ext
 
+		# print(classfile,runfile)
 		return(classfile, runfile)
 
-	def compile_file(classfile):
+	def compile_file(classfile,lang):
 
 		print(os.listdir(verdict.PATH))
 		cwd = os.getcwd()
 		# print(cwd)
-		if classfile != 'python':
+		if lang != 'PY2' or lang != 'PY3':
 			try:
 				os.chdir(verdict.PATH)
 			except Exception as error:
 				print(str(error))
 			try:
 				os.system(classfile)
+				print(classfile)
 			except Exception as error:
 				print(str(error))
-			
+	
 			os.chdir(cwd)
 
-	def run_file(runfile):
+	def run_file(runfile, problem_code, run_id):
 
 		# print(os.listdir(verdict.PATH))
 		cwd = os.getcwd()
 		print("in run file CUrrent->",cwd)
 		os.chdir(verdict.PATH)
 		pwd = os.getcwd()
+		input_file_count = ''
 		i = 1
 		for file in os.listdir(pwd):
 			print(file)
 			try:	# in try block because name of the file which does'nt contain '.' will throw error
 				pos = file.index('.')
 				ext = file[pos+1:]
-				if ext == 'in':
-					os.system(runfile + ' < ' + file + ' > ' + 'output_' + file[:pos] )
+				if ext == 'in' and file == (problem_code + input_file_count  + '.in'):
+					os.system(runfile + ' < ' + file + ' > ' + 'output_' + run_id )
+					input_file_count = str(i)
 					i = i + 1
 			except:
 				pass
@@ -86,25 +96,25 @@ class verdict():
 		print("CUrrent->",cwd)
 
 
-	def remove_object(file, lang, pos):
+	def remove_object(file_name, file_with_ext, lang):
 
 		cwd = os.getcwd()
-		if lang == 'c' or lang == 'cpp':
+		if lang == 'C' or lang == 'CPP':
 			for files in os.listdir(cwd):
-				if files == file[:pos]:
-					os.remove(file[:pos])
+				if files == file_with_ext:
+					os.remove(file_name)
 
-		elif lang == 'java':
-			for files in os.listdir(verdict.PATH):
-				if files == file[:pos] + '.class':
-					os.remove(file[:pos] + '.class')
+		# elif lang == 'java':
+		# 	for files in os.listdir(verdict.PATH):
+		# 		if files == file[:pos] + '.class':
+		# 			os.remove(file[:pos] + '.class')
 
 	def remove_white_space(data):
 		return data.strip()
 
 
 
-	def compare_outputs():
+	def compare_outputs(problem_code, run_id):
 
 		i = 1
 		passed = 0
@@ -115,7 +125,7 @@ class verdict():
 		print(list_0f_files)
 		for files in list_0f_files:
 			if files[len(files)-3:] == 'ans':
-				f = open('output_' + files[:len(files) - 4], 'r')
+				f = open('output_' + run_id , 'r')
 				data = f.read()
 
 				g = open(files, 'r')
@@ -129,16 +139,16 @@ class verdict():
 				f.close()
 				i = i + 1
 
-		verdict = ''
+		result = ''
 				
 
 		if passed + 1 == i and passed != 0:
 			print("\nAll test cases passed")
-			verdict = 'AC'
-			return verdict
+			result = 'AC'
+			return result
 
 		else :
 			print("No of passed test cases ->", passed)
-			verdict = 'WA'
-			return verdict
+			result = 'WA'
+			return result
 

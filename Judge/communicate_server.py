@@ -47,54 +47,78 @@ class communicate_server():
 
 		message = json.loads(server_data)
 
-		run_id = message["Run ID"]
+		run_id = str(message["Run ID"])
 		problem_code = message["PCode"]
 		language = message["Language"]
 		source_code = message["Source"]
+		client_id = message["Client ID"]
+		client_username = message["Client Username"]
 
-		print("I am in verdict")
-		communicate_server.make_submission_file(run_id, problem_code, language, source_code)
-		print("verdict completed")
+		file_name,file_with_ext = communicate_server.make_submission_file(run_id, problem_code, language, source_code)
+		result,error = communicate_server.verdict_of_submission(run_id, problem_code, language, source_code, file_name, file_with_ext)
 
-		file,pos,lang = verdict.find_file()
-		classfile,runfile = verdict.lang_compiler(file, pos, lang)
-		try:
-			verdict.compile_file(classfile)
-		except Exception as error:
-			print("error in compiling")
-		verdict.run_file(runfile)
-		verdict.remove_object(file, lang, pos)
-		verdict = verdict.compare_outputs()
-		print(file,pos,lang)
-		print(classfile,runfile)
-		print(verdict)
+
+		#						 message = {
+		#						 	'Code' : 'VRDCT', 
+		#						 	'Client Username' : username,
+		#						 	'Client ID' : client_id,
+		#						 	'Status' : 'AC',
+		#						 	'Run ID' : run_id,
+		#						 	'Message' : 'No Error',
+		#						 	'Local Run ID' : local_run_id
+		#						 	}
+		#						 	message = json.dumps(message)
+
+		message = {
+			'Code' : 'VRDCT', 
+			'Client Username' : client_username,
+			'Client ID' : client_id,
+			'Status' : result,
+			'Run ID' : run_id,
+			'Message' : 'No Error',
+			'Local Run ID' : run_id
+			}
+		message = json.dumps(message)
+		
 
 		# print(message)
 		# x = message[6:11]
 		# print(x)
-		communicate_server.message = verdict
+		# communicate_server.message = verdict
 		time.sleep(5)
 
 		ch.basic_publish(
 			exchange = 'judge_manager',
 			routing_key = 'judge_verdicts',
-			body = communicate_server.message
+			body = message
 			)
 
 	def make_submission_file(run_id, problem_code, language, source_code):
 
-		file_name = file_manager.file_name(run_id, problem_code, language, source_code)
-		file_manager.create_file(source_code, language, file_name)
-		
+		file_name,file_with_ext = file_manager.file_name(run_id, problem_code, language, source_code)
+		if file_with_ext != "INVALID FILENAME":
+			file_manager.create_file(source_code, language, file_with_ext)
+			return file_name,file_with_ext
 
 
 
+	def verdict_of_submission(run_id, problem_code, language, source_code, file_name, file_with_ext):
 
+		# file,pos,lang = verdict.find_file()
+		result = ''
+		error = ''
+		classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, language)
+		try:
+			verdict.compile_file(classfile,language)
+		except Exception as error:
+			print("error in compiling")
+			result = ''
+			error = 'Compilation Error'
+		verdict.run_file(runfile, problem_code, run_id)
+		verdict.remove_object(file_name, file_with_ext, language)
+		result = verdict.compare_outputs(problem_code, run_id)
+		# print(file,pos,lang)
+		# print(classfile,runfile)
+		print(result)
 
-
-		
-
-
-
-
-
+		return result,error
