@@ -4,7 +4,7 @@ class file_manager():
 	def create_file(source_code, language, file_name):
 		# if code is in C++
 	    if language == 'C++':
-	        with open(file_name , "w") as file:
+	        with open("./A/test/file_name" , "w") as file:
 	            file.write(source_code)
 	            return file_name
 
@@ -52,5 +52,5 @@ class file_manager():
 	        file_name = run_id + 'P3' + '.py'
 
 
-	    return file_name   
+	    return file_name
 

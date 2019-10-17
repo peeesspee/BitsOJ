@@ -22,7 +22,6 @@ while (status != 'VALID'):
 	
 
 while (status == 'VALID'):
-	print("\nJudge Authenticated")
 	communicate_server.listen_server()
 
 

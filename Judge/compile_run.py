@@ -128,11 +128,17 @@ class verdict():
 				g.close()
 				f.close()
 				i = i + 1
+
+		verdict = ''
 				
 
 		if passed + 1 == i and passed != 0:
 			print("\nAll test cases passed")
+			verdict = 'AC'
+			return verdict
 
 		else :
 			print("No of passed test cases ->", passed)
+			verdict = 'WA'
+			return verdict
 
