@@ -54,6 +54,7 @@ class communicate_server():
 		source_code = message["Source"]
 		client_id = message["Client ID"]
 		client_username = message["Client Username"]
+		local_run_id = message["Local Run ID"]
 
 		file_name,file_with_ext = communicate_server.make_submission_file(run_id, problem_code, language, source_code)
 		result,error = communicate_server.verdict_of_submission(run_id, problem_code, language, source_code, file_name, file_with_ext)
