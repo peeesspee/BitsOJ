@@ -506,7 +506,7 @@ class server_window(QMainWindow):
 	###################################################
 
 	def set_status(self, message = 'STOPPED'):
-		self.status.showMessage(message)
+		self.status.showMessage('BitsOJ > ' + message)
 	###################################################
 
 	def closeEvent(self, event):

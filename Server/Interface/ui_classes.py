@@ -262,7 +262,7 @@ class ui_widgets:
 		contest_time_entry = QLineEdit()
 		contest_time_entry.setText(self.config["Contest Duration"])
 		contest_time_entry.setPlaceholderText('HH:MM')
-		contest_time_entry.setFixedSize(100, 25)
+		contest_time_entry.setFixedSize(80, 30)
 
 		contest_time_layout = QHBoxLayout()
 		contest_time_layout.addWidget(contest_duration_label)

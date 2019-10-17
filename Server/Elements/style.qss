@@ -1,9 +1,10 @@
 QStatusBar
 { 
 	/*color : #BB86FC ;*/
-	color : #FF0000;
+	color : #E91E63;;
 	border-top : 1px solid #1F2C65;
 	background-color : #202020;
+	font : 20px;
 
 }
 
