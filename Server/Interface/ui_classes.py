@@ -255,13 +255,16 @@ class ui_widgets:
 		contest_time_label.setObjectName('main_screen_sub_heading')
 
 		# Set contest time 
-		contest_time_layout = QHBoxLayout()
-		contest_duration_label = QLabel('> Contest Duration :')
+		
+		contest_duration_label = QLabel('> Contest Duration: ')
 		contest_duration_label.setObjectName('main_screen_content')
 		contest_duration_label.setFixedSize(200, 20)
 		contest_time_entry = QLineEdit()
+		contest_time_entry.setText(self.config["Contest Duration"])
 		contest_time_entry.setPlaceholderText('HH:MM')
-		contest_time_entry.setFixedSize(100, 25)
+		contest_time_entry.setFixedSize(80, 30)
+
+		contest_time_layout = QHBoxLayout()
 		contest_time_layout.addWidget(contest_duration_label)
 		contest_time_layout.addWidget(contest_time_entry)
 		contest_time_layout.addStretch(1)
@@ -269,6 +272,27 @@ class ui_widgets:
 		contest_time_layout.setContentsMargins(5, 0, 10, 0)
 		contest_time_widget = QWidget()
 		contest_time_widget.setLayout(contest_time_layout)
+
+		contest_extension_label = QLabel("> Extend/Shorten contest by: ")
+		contest_extension_label.setObjectName('main_screen_content')
+		minutes_label = QLabel(" Minutes")
+		minutes_label.setObjectName('main_screen_content')
+
+		change_time_entry = QSpinBox()
+		change_time_entry.setMinimum(-30)
+		change_time_entry.setMaximum(30)
+		change_time_entry.setValue(0)
+
+		change_time_layout = QHBoxLayout()
+		change_time_layout.addWidget(contest_extension_label)
+		change_time_layout.addWidget(change_time_entry)
+		change_time_layout.addWidget(minutes_label)
+		change_time_layout.addStretch(1)
+		change_time_layout.setSpacing(5)
+		change_time_layout.setContentsMargins(5, 0, 10, 0)
+		change_time_widget = QWidget()
+		change_time_widget.setLayout(change_time_layout)
+
 
 		# Start, Stop, Pause contest
 		set_button = QPushButton('Set')
@@ -305,6 +329,7 @@ class ui_widgets:
 		time_management_layout = QVBoxLayout()
 		time_management_layout.addWidget(contest_time_label)
 		time_management_layout.addWidget(contest_time_widget)
+		time_management_layout.addWidget(change_time_widget)
 		time_management_layout.addWidget(contest_buttons_widget)
 		time_management_widget = QWidget()
 		time_management_widget.setLayout(time_management_layout)
@@ -485,18 +510,20 @@ class query_reply_ui(QMainWindow):
 		query_reply_ui.client_id = client_id
 
 		self.setWindowTitle('Reply')
-		self.setFixedSize(400,350)
+		self.setFixedSize(400,400)
 		main = self.main_query_reply_ui()
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		return
 
 	def main_query_reply_ui(self):
-		query_heading = QLabel('Response')
+		query_heading = QLabel('New Clarification')
 		query_sub_heading = QLabel('Query:')
 		response_sub_heading = QLabel('Response:')
-		query = query_reply_ui.query
-		query_label = QLabel(query_reply_ui.query)
+		
+		query_text = QTextEdit()
+		query_text.setText(query_reply_ui.query)
+		query_text.setReadOnly(True)
 
 		response_entry = QTextEdit()
 		response_entry.setPlaceholderText('Max. 500 Characters')
@@ -516,8 +543,10 @@ class query_reply_ui(QMainWindow):
 		radiobutton_layout.addWidget(send_to_all_rbutton)
 		radiobutton_layout.addStretch(1)
 		radiobutton_layout.setSpacing(50)
+		
 		radiobutton_widget = QWidget()
 		radiobutton_widget.setLayout(radiobutton_layout)
+		radiobutton_widget.setContentsMargins(25,0,0,0)
 
 
 		confirm_button = QPushButton('Confirm')
@@ -543,7 +572,7 @@ class query_reply_ui(QMainWindow):
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(query_heading)
 		main_layout.addWidget(query_sub_heading)
-		main_layout.addWidget(query_label)
+		main_layout.addWidget(query_text)
 		main_layout.addWidget(response_sub_heading)
 		main_layout.addWidget(response_entry)
 		main_layout.addWidget(radiobutton_widget)
@@ -554,7 +583,6 @@ class query_reply_ui(QMainWindow):
 		confirm_button.setObjectName('account_button')
 		cancel_button.setObjectName('account_button')
 		query_heading.setObjectName('main_screen_heading')
-		query_label.setObjectName('main_screen_content')
 		broadcast_setting_label.setObjectName('main_screen_content')
 		main.setObjectName('account_window')
 		query_sub_heading.setObjectName('main_screen_sub_heading')
