@@ -1,4 +1,4 @@
-import json
+import json 
  
 # This class reads server configuration file and initializes server's variables
 class initialize_server():
@@ -15,34 +15,6 @@ class initialize_server():
 
 	def get_password():
 		return initialize_server.file_password
-
-	def get_keys():
-		return initialize_server.client_key, initialize_server.judge_key
-
-	def get_login_flag():
-		flag = initialize_server.login_allowed_flag
-		if flag == 'True' or flag == 'true':
-			return True
-		else:
-			return False
-		
-
-	def get_submission_flag():
-		flag = initialize_server.submission_allowed_flag
-		if flag == 'True' or flag == 'true':
-			return True
-		else:
-			return False
-		
-
-	def get_superuser_details():
-		return initialize_server.superuser_username, initialize_server.superuser_password
-
-	def get_judge_details():
-		return initialize_server.judge_username, initialize_server.judge_password
-
-	def get_host():
-		return initialize_server.host
 
 	# Read Server config file 
 	def read_config():
@@ -65,7 +37,7 @@ class initialize_server():
 
 	# To be moved to setup.py
 class save_status():
-	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, client_key, judge_key, file_password):
+	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, client_key, judge_key, file_password, contest_duration):
 		print('[ WRITE ] config.json')
 
 		allow_login = str(allow_login)
@@ -81,8 +53,31 @@ class save_status():
 		'Submission Allowed' : allow_submission,
 		'Judge Key' : judge_key,
 		'Client Key' : client_key,
-		'File Password' : file_password
+		'File Password' : file_password,
+		'Contest Duration' : contest_duration
 		}
 
 		with open("config.json", "w") as data_file:
 			json.dump(json_data, data_file, indent=4)
+
+	def update_entry(entry, new_value):
+		print('[ UPDATE ] ' + str(entry) + ':' + str(new_value))
+		try:
+			with open("config.json", "r") as read_json:
+				config = json.load(read_json)
+		except Exception  as error:
+			print("[ ERROR ] Could not read json file : "  + str(error))
+			return
+		
+		try:
+			config[entry] = new_value
+			print('[ WRITE ] config.json')
+			# config = json.dumps(config)
+			with open("config.json", "w") as data_file:
+				json.dump(config, data_file, indent=4)
+		except Exception as error:
+			print('[ ERROR ] Could not update json file : ' + str(error))
+		finally:
+			return
+
+
