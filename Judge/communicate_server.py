@@ -41,6 +41,7 @@ class communicate_server():
 		#						"Language": "CPP", 
 		#						"PCode": "ABCD", 
 		#						"Source": "#include<iostream>\n int main(void){ std::cout<<\"Hello\"; return 0; }"
+		#						"Local Run ID": 12
 		#					}
 
 		
@@ -76,7 +77,7 @@ class communicate_server():
 			'Status' : result,
 			'Run ID' : run_id,
 			'Message' : 'No Error',
-			'Local Run ID' : run_id
+			'Local Run ID' : local_run_id
 			}
 		message = json.dumps(message)
 		
