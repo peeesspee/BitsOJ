@@ -13,8 +13,8 @@ class broadcast_manager():
 		channel = broadcast_manager.init_connection(superuser_username, superuser_password, host)
 		broadcast_manager.channel = channel
 
-		#initialize_server.read_config()
-		broadcast_manager.file_password = initialize_server.get_password()
+		config = initialize_server.read_config()
+		broadcast_manager.file_password = config["File Password"]
 		
 		s = sched.scheduler(time.time, time.sleep)
 		s.enter(0.5, 1, broadcast_manager.poll, (s, data_from_interface, ))

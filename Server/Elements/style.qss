@@ -283,6 +283,7 @@ QLabel#about_screen_heading{
 	font-size : 30px;
 }
 
+
 /*--------------MAIN LAYOUT ENDS----------------*/
 
 
@@ -290,21 +291,71 @@ QLabel#about_screen_heading{
 
 
 /*--------------SUB LAYOUT STARTS---------*/
-QLabel#account_label
-{
-	color : #23B2EE;
-}
-
-QSpinBox#account_spinbox
-{
+QSpinBox{
+	background : #2D353D;
 	color : #AAAAAA;
-	background-color : #474B4F;
+	border : 1px solid #171B1F;
+	height : 30px;
+}
+QSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right; 
+    width: 16px; 
+    border : 1px solid #171B1F;
+    border-width: 1px;
+}
+QSpinBox::up-arrow {
+    image: url(./Elements/up_arrow.png);
+    width: 10px;
+    height: 10px;
+}
+QSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    width: 16px; 
+    border : 1px solid #171B1F;
+    border-width: 1px;
+}
+QSpinBox::down-arrow {
+    image: url(./Elements/down_arrow.png);
+    width: 10px;
+    height: 10px;
 }
 
 QComboBox#account_combobox
 {
+	background : #2D353D;
 	color : #AAAAAA;
-	background-color : #474B4F;
+	selection-background : #777777;
+	border: 1px solid #171B1F;
+    border-radius: 3px;
+    height : 30px;
+}
+QComboBox#account_combobox::drop-down {
+	background : #777777;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid; 
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+QComboBox QAbstractItemView {		/* This is the style of dropdown menu*/
+    background-color : #1D2227;
+	color : #AAAAAA;
+	border : 1px solid #2D353D;
+	selection-background-color : #171B1F;
+}
+QComboBox::down-arrow {
+    image: url(./Elements/down_arrow.png);
+    width: 10px;
+    height: 10px;
+}
+
+QLabel#account_label
+{
+	color : #23B2EE;
 }
 
 QWidget#account_window
@@ -315,6 +366,17 @@ QTextEdit{
 	background : #2D353D;
 	color : #AAAAAA;
 }
+
+QLineEdit{
+	height : 30px;
+	background : #2D353D;
+	color : #AAAAAA;
+	border : 1px solid #171B1F;
+}
+
+
+
+
 /*--------------SUB LAYOUT ENDS---------*/
 
 /*################################################ /LAYOUT OBJECTS ######################################################*/

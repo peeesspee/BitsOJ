@@ -106,7 +106,8 @@ class manage_clients():
 				manage_clients.client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code)
 			elif client_code == 'QUERY':
 				client_id = json_data['Client ID']
-				query = json_data['Query']
+				query = json_data['Query'][:100]
+
 				if client_id == 'Nul':
 					print('[ REJECT ] Client has not logged in.')
 					return

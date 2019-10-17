@@ -1,4 +1,4 @@
-import time
+import time 
 import sys
 import json
 from PyQt5.QtWidgets import *
@@ -44,6 +44,7 @@ class server_window(QMainWindow):
 		###########################################################
 		self.db = self.init_qt_database()
 		###########################################################
+		self.config = initialize_server.read_config()
 		# Define Sidebar Buttons and their actions
 		button_width = 200
 		button_height = 50
@@ -135,7 +136,7 @@ class server_window(QMainWindow):
 	
 
 	def init_UI(self):
-		self.set_status('STOPPED')
+		self.set_status('SETUP')
 		# Define Layout for sidebar
 		side_bar_layout = QVBoxLayout()
 
@@ -303,20 +304,25 @@ class server_window(QMainWindow):
 		if self.data_changed_flags[9] == 1:
 			self.query_model.select()
 			self.set_flags(9, 0)
+		if self.data_changed_flags[10] == 1:
+			self.set_status('RUNNING')
+			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ RUNNING ]')
+		elif self.data_changed_flags[10] == 2:
+			self.set_status('STOPPED')
+			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ STOPPED ]')
 		return
 
 	def send_data_to_client_thread(self, data, extra_data = '02:00'):
 		if data == 'START':
+			self.data_changed_flags[10] = 1
 			message = {
 			'Code' : 'START',
 			'Time' : extra_data
 			}
 			message = json.dumps(message)
-			# Send START signal, HIGHEST priority
-
 			self.data_to_client.put(message)
 		elif data == 'STOP':
-			# Send STOP signal, HIGHEST priority
+			self.data_changed_flags[10] = 2
 			message = {
 			'Code' : 'STOP'
 			}
@@ -355,10 +361,14 @@ class server_window(QMainWindow):
 		return
 
 	def check_login_allowed(self):
-		return initialize_server.get_login_flag()
+		if self.data_changed_flags[2] == 1:
+			return True
+		return False
 
 	def check_submission_allowed(self):
-		return initialize_server.get_submission_flag()
+		if self.data_changed_flags[3] == 1:
+			return True
+		return False
 
 	def set_flags(self, index, value):
 		self.data_changed_flags[index] = value
