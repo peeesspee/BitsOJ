@@ -56,7 +56,8 @@ def send():
 		'PCode' : 'ABCD',
 		'Language' : 'CPP',
 		'Time' : '04:05:06',
-		'Source' : code
+		'Source' : code,
+		'Local Run ID' : 1
 		}
 	message = json.dumps(message)
 	
@@ -70,8 +71,8 @@ def query():
 
 	message = {
 		'Code' : 'QUERY', 
-		'ID' : client_id,
-		'Query' : code
+		'Query' : code,
+		'Client ID' : client_id
 		}
 	message = json.dumps(message)
 	
