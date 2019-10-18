@@ -18,7 +18,7 @@ Add the Apt repository to your Apt source list directory (/etc/apt/sources.list.
 1. `wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -`  
 2. `sudo apt-get update`  
 3. `sudo apt-get install rabbitmq-server`  
-#### 4.Start the server:  
+#### 4.Start the RabbitMQ server:  
 1. `sudo systemctl start rabbitmq-server.service`  
 2. `sudo systemctl enable rabbitmq-server.service`  
 To check status of RabbitMQ server,  
