@@ -41,6 +41,7 @@ class communicate_server():
 		#						"Language": "CPP", 
 		#						"PCode": "ABCD", 
 		#						"Source": "#include<iostream>\n int main(void){ std::cout<<\"Hello\"; return 0; }"
+		#						"Local Run ID": 12
 		#					}
 
 		
@@ -53,6 +54,7 @@ class communicate_server():
 		source_code = message["Source"]
 		client_id = message["Client ID"]
 		client_username = message["Client Username"]
+		local_run_id = message["Local Run ID"]
 
 		file_name,file_with_ext = communicate_server.make_submission_file(run_id, problem_code, language, source_code)
 		result,error = communicate_server.verdict_of_submission(run_id, problem_code, language, source_code, file_name, file_with_ext)
@@ -76,7 +78,7 @@ class communicate_server():
 			'Status' : result,
 			'Run ID' : run_id,
 			'Message' : 'No Error',
-			'Local Run ID' : run_id
+			'Local Run ID' : local_run_id
 			}
 		message = json.dumps(message)
 		
