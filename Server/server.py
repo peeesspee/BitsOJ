@@ -17,19 +17,30 @@ def main():
 	# Initialize server
 	print('[ SETUP ] Initialising server...')
 
-	# save_status.write_config('BitsOJ', 'root', 'judge1', 'judge1', 'localhost', 'True', 'True', 'abcdefghij12345', 'abcdefghij12345', 'papa')
+	# save_status.write_config(
+	# 	'BitsOJ', 
+	# 	'root', 
+	# 	'judge1', 
+	# 	'judge1', 
+	# 	'localhost', 
+	# 	'True', 
+	# 	'True', 
+	# 	'abcdefghij12345', 
+	# 	'abcdefghij12345', 
+	# 	'papa', 
+	# 	'02:00'
+	# 	)
 
 	config = initialize_server.read_config()
+
 	superuser_username = config["Server Username"]
 	superuser_password = config["Server Password"]
 	judge_username = config["Judge Username"]
 	judge_password = config["Judge Password"]
 	host = config["Server IP"]
-	client_key = config["Client Key"]
-	judge_key = config["Judge Key"]
 	login_status = config["Login Allowed"]
 	submission_status = config["Submission Allowed"]
-	file_password = config["File Password"]
+	
 	####################################################
 	# TODO : Validate client and server keys when any message is sent, to maintain security 
 	# (As project is open source)
@@ -55,15 +66,14 @@ def main():
 	#	7		0/1			1: Server shutdown
 
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
-	
-	if login_status == 'True':
+	if login_status == 'True' or login_status == 'true':
 		data_changed_flags[2] = 1
 	else:
 		data_changed_flags[2] = 0
 
 	# Do not allow new submissions unless timer is active or admin begins contest
 	
-	if submission_status == 'True':
+	if submission_status == 'True' or submission_status == 'true':
 		data_changed_flags[3] = 1
 	else:
 		data_changed_flags[3] = 0
@@ -93,16 +103,20 @@ def main():
 	os.kill(judge_pid, signal.SIGINT)
 
 	# Write config file
+	
 	if data_changed_flags[2] == 1:
-		login_status = True
+		login_status = 'True'
 	else:
-		login_status = False
-	if data_changed_flags[3] == 1:
-		submission_status = True
-	else:
-		submission_status = False
-	save_status.write_config(superuser_username, superuser_password, judge_username, judge_password, host, login_status, submission_status, client_key, judge_key, file_password)
+		login_status = 'False'
 
+	if data_changed_flags[3] == 1:
+		submission_status = 'True'
+	else:
+		submission_status = 'False'
+
+	save_status.update_entry('Login Allowed', login_status)
+	save_status.update_entry('Submission Allowed', submission_status)
+	
 	# EXIT
 	sleep(2)
 	print("  ################################################")

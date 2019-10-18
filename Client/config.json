@@ -3,10 +3,10 @@
     "client_key": "139728abcder65bf",
     "rabbitmq_username": "client",
     "rabbitmq_password": "client",
-    "host": "192.168.43.239",
+    "host": "localhost",
     "No_of_Problems": 5,
     "Problems": {
-        "Problem_1": "qwer",
+        "Problem_1": "ABCD",
         "Problem_2": "asdf",
         "Problem_3": "rtyu",
         "Problem_4": "tgbf",

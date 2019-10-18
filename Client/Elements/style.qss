@@ -244,6 +244,12 @@ QWidget#screen_widget
 	background-color : #131217;
 }
 
+QWidget#query_submission_widget
+{
+	color : #FOECE2;
+	background-color : #222831;
+}
+
 QWidget#main_widget{
 	
 	background-color: #050505;
@@ -258,17 +264,27 @@ QLabel#main_screen_content{
 	color : #AAAAAA;
 }
 
-
-
-QTableView{
-	background-color : #171B1F;
-	alternate-background-color : #474B4F;
-	color : #AAAAAA;
-	border : 0px;
-	gridline-color : #505050;
-
-	selection-background-color : #777777;
+QLabel#view
+{
+	color : #29A19C;
 }
+
+QLabel#view1
+{
+	color : #A7D129;
+}
+
+QLabel#view2
+{
+	color : #D72323;
+}
+
+QLabel#view3
+{
+	color : #FF5722;
+}
+
+
 
 QHeaderView::section{
 	background-color : #171B1F;
@@ -300,15 +316,20 @@ QLabel#about_screen_heading{
 }
 
 /* Table styles */
+
 QTableView{
-	background-color : #171B1F;
-	alternate-background-color : #474B4F;
+	background-color : #1D2227;
+	alternate-background-color : #242A31;
 	color : #AAAAAA;
 	border : 0px;
-	gridline-color : #505050;
-
-	selection-background-color : #777777;
+	gridline-color : #transparent;
+	selection-background-color : #171B1F;
 }
+
+QTableView::item:selected{
+	border : 2px solid #0891D4;
+}
+
 
 QHeaderView::section{
 	background-color : #171B1F;
@@ -352,6 +373,15 @@ QTextEdit#text_area_content
 	color : #3DC774;
 	font-size : 20px;
 }
+
+QPlainTextEdit#text
+{
+	background-color : #393E46;
+	color : #AAAAAA;
+	/*color : #3DC774;*/
+	font-size : 18px;
+}
+
 
 /* Drop Down Menu */
 QComboBox#language_box_content

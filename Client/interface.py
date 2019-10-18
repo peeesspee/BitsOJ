@@ -209,16 +209,31 @@ class client_window(QMainWindow):
 	def update_data(self):
 		if self.data_changed_flag[0] == 1:
 			self.start_contest()
+			self.set_status()
 			self.data_changed_flag[0] = 2
 		# If data has changed in submission table
 		if self.data_changed_flag[1] ==1:
 			self.sub_model.select()
+			# self.notify()
+			# reset data_changed_flag
+			self.data_changed_flag[1] = 0
+
+		if self.data_changed_flag[1] == 2:
+			self.sub_model.select()
+			self.notify()
 			# reset data_changed_flag
 			self.data_changed_flag[1] = 0
 
 		# If data has changed in query table
 		if(self.data_changed_flag[2] == 1):
 			self.query_model.select()
+			# self.notify()
+			# reset data_changed_flag
+			self.data_changed_flag[2] =0
+
+		if(self.data_changed_flag[2] == 2):
+			self.query_model.select()
+			self.notify()
 			# reset data_changed_flag
 			self.data_changed_flag[2] =0
 
@@ -229,9 +244,6 @@ class client_window(QMainWindow):
 
 	####################################################################################
 
-	def set_status(self):
-		global current_status
-		self.status.showMessage(current_status)
 
 	#####################################################################################
 
@@ -313,6 +325,38 @@ class client_window(QMainWindow):
 
 	#########################################################################################
 
+	def view_submission(self, selected_row):
+		try:
+			source_file = self.sub_model.index(selected_row, 3).data()
+			run = self.sub_model.index(selected_row, 1).data()
+			verdict = self.sub_model.index(selected_row, 2).data()
+			language = self.sub_model.index(selected_row, 4).data()
+		except Exception as Error:
+			print(" [ Error ] : " + str(Error))
+		if source_file == None:
+			QMessageBox.warning(self, 'Message', 'Please select submission to view. ')
+		else:
+			try:
+				self.window = view_submission_ui(self.data_changed_flag,source_file,verdict,language,run)
+				self.window.show()
+			except Exception as Error:
+				print(str(Error))
+		
+
+
+	def view_reply(self,selected_row):
+		try:
+			query = self.query_model.index(selected_row, 0).data()
+			response = self.query_model.index(selected_row, 1).data()
+		except Exception as Error:
+			print(' [ Error ] : ' + str(Error))
+		if query == None:
+			QMessageBox.warning(self, 'Message', 'Please select query to view. ')
+		else:
+			self.window = view_query_ui(self.data_changed_flag, query, response)
+			self.window.show()
+		
+
 	#########################################################################################
 
 	def set_status(self):
@@ -327,11 +371,17 @@ class client_window(QMainWindow):
 		global Timer
 		with open('contest.json', 'r') as contest:
 			data = json.load(contest)
-		current_status = 'CONTEST RUNNING'
+		current_status = 'RUNNING'
 		Timer = data["Duration"]
 		decrypt.decrypting()
 		QMessageBox.warning(self, 'Info', 'Contest has been STARTED.\nNow you can view problems.')
 
+
+	def notify(self):
+		if self.data_changed_flag[1] == 2:
+			QMessageBox.warning(self, 'Message', 'Submission verdict received ')
+		if self.data_changed_flag[2] == 2:
+			QMessageBox.warning(self, 'Message', 'Query Response received ')
 
 
 class init_gui(client_window):

@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QTextCursor, QCursor, QFont
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase 
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QSize, QRect
 import os
@@ -15,15 +15,20 @@ with open("config.json", "r") as read_config:
 
 
 
+
 class ui_widgets():
 	#############################################################################
 	# Handle UI for various button presses
+
+	newfont = QFont("Times", 10, QFont.Bold)
+
 	var = {}
 	def problems_ui(self):
 
 		main_layout = QVBoxLayout() 
 		heading = QLabel('Problems')
 		heading.setObjectName('main_screen_heading')
+		heading.setFont(ui_widgets.newfont)
 
 		main_layout.addWidget(heading)
 		
@@ -69,6 +74,12 @@ class ui_widgets():
 	def submissions_ui(self):
 		heading = QLabel('My Submissions')
 		heading.setObjectName('main_screen_heading')
+		heading.setFont(ui_widgets.newfont)
+
+		view_submission_button = QPushButton('View Submission')
+		view_submission_button.setFixedSize(200, 50)
+		view_submission_button.clicked.connect(lambda: self.view_submission(submission_table.selectionModel().currentIndex().row()))
+		view_submission_button.setObjectName('submit')
 
 		submission_model = self.manage_models(self.db, 'my_submissions')
 
@@ -77,14 +88,22 @@ class ui_widgets():
 		submission_model.setHeaderData(2, Qt.Horizontal, 'Verdict')
 		submission_model.setHeaderData(3, Qt.Horizontal, 'Source File')
 		submission_model.setHeaderData(4, Qt.Horizontal, 'Language')
-		submission_model.setHeaderData(5, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(6, Qt.Horizontal, 'Time')
+		submission_model.setHeaderData(5, Qt.Horizontal, 'Language Code')
+		submission_model.setHeaderData(6, Qt.Horizontal, 'Problem Code')
+		submission_model.setHeaderData(7, Qt.Horizontal, 'Time')
 
 		submission_table = self.generate_view(submission_model)
 
 
+		head_layout = QHBoxLayout()
+		head_layout.addWidget(heading)
+		head_layout.addWidget(view_submission_button,  alignment=Qt.AlignRight)
+		head_widget = QWidget()
+		head_widget.setLayout(head_layout)
+
+
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(heading)
+		main_layout.addWidget(head_widget)
 		main_layout.addWidget(submission_table)
 		main_layout.setStretch(0, 5)
 		main_layout.setStretch(1, 95)
@@ -99,6 +118,7 @@ class ui_widgets():
 
 		heading = QLabel('Submit Solution')
 		heading.setObjectName('main_screen_heading')
+		heading.setFont(ui_widgets.newfont)
 
 		self.drop_down = QHBoxLayout()
 		ui_widgets.language_box = QComboBox()
@@ -116,7 +136,7 @@ class ui_widgets():
 		ui_widgets.problem_box.setGeometry(QRect(10, 10, 491, 31))
 		ui_widgets.problem_box.setFixedWidth(250)
 		ui_widgets.problem_box.setFixedHeight(40)
-		ui_widgets.problem_box.setObjectName(("language_box_content"))
+		ui_widgets.problem_box.setObjectName("language_box_content")
 		for i in range(config["No_of_Problems"]):
 			ui_widgets.problem_box.addItem("Problem_"+str(i+1))
 
@@ -157,16 +177,26 @@ class ui_widgets():
 		return main
 
 	def query_ui(self):
-		main_layout = QVBoxLayout()
 		heading = QLabel('Query')
 		heading.setObjectName('main_screen_heading')
+		heading.setFont(ui_widgets.newfont)
+
+		view_query_button = QPushButton('View Query')
+		view_query_button.setFixedSize(200, 50)
+		view_query_button.clicked.connect(lambda: self.view_reply(query_table.selectionModel().currentIndex().row()))
+		view_query_button.setObjectName('submit')
 
 		query_model = self.manage_models(self.db, 'my_query')
-
 		query_model.setHeaderData(0, Qt.Horizontal, 'Query')
 		query_model.setHeaderData(1, Qt.Horizontal, 'Response')
 
 		query_table = self.generate_view(query_model)
+
+		head_layout = QHBoxLayout()
+		head_layout.addWidget(heading)
+		head_layout.addWidget(view_query_button,  alignment=Qt.AlignRight)
+		head_widget = QWidget()
+		head_widget.setLayout(head_layout)
 
 		ui_widgets.ask_query = QLineEdit(self)
 		ui_widgets.ask_query.setFixedWidth(500)
@@ -180,8 +210,8 @@ class ui_widgets():
 		self.send_query.clicked.connect(lambda:ui_widgets.sending(self,self.data_changed_flag))
 		self.send_query.setObjectName('ask')
 
-
-		main_layout.addWidget(heading)
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(head_widget)
 		main_layout.addWidget(query_table)
 		main_layout.addWidget(ui_widgets.ask_query, alignment=Qt.AlignLeft)
 		main_layout.addWidget(self.send_query, alignment=Qt.AlignLeft)
@@ -197,6 +227,7 @@ class ui_widgets():
 		main_layout = QVBoxLayout()
 		heading = QLabel('Leaderboard')
 		heading.setObjectName('main_screen_heading')
+		heading.setFont(ui_widgets.newfont)
 
 		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
@@ -330,10 +361,157 @@ class ui_widgets():
 					client_id,
 					query,
 					)
+				QMessageBox.warning(self, 'Message', 'Your Query has been successfully send')
 		return
 		
 	###################################################################################
 
 
+class view_query_ui(QMainWindow):
+	query = ''
+	response = ''
+	def __init__(self,data_changed_flags, query, response,parent=None):
+		super(view_query_ui, self).__init__(parent)
+
+		self.data_changed_flags = data_changed_flags
+		view_query_ui.query = query
+		view_query_ui.response = response
+		self.setWindowTitle('View Query')
+		self.setFixedSize(600,550)
+		main = self.main_query_view_ui()
+		self.setCentralWidget(main)
+		# self.setStyleSheet(open('Elements/style.qss', "r").read())
+		# self.setWindowFlag(Qt.WindowCloseButtonHint, False)
+		return
+
+	def main_query_view_ui(self):
+		head = QLabel('View')
+		query_heading = QLabel('Query: ')
+		response_heading = QLabel('Response: ')
+
+		cursor = QTextCursor()
+		cursor.setPosition(0)
+
+		query = view_query_ui.query
+		query_text = QPlainTextEdit()
+		query_text.appendPlainText(view_query_ui.query)
+		query_text.setReadOnly(True)
+		query_text.setTextCursor(cursor)
+		# query_text.setObjectName('text_area_content')
+		response = view_query_ui.response
+		response_text = QPlainTextEdit()
+		response_text.appendPlainText(view_query_ui.response)
+		response_text.setReadOnly(True)
+		response_text.setTextCursor(cursor)
+		# response_text.setObjectName('text_area_content')
+
+		cancel_button = QPushButton('Close')
+		cancel_button.setFixedSize(150, 30)
+		cancel_button.clicked.connect(lambda:view_query_ui.cancel(self))
+		cancel_button.setDefault(True)
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(head, alignment=Qt.AlignCenter)
+		main_layout.addWidget(query_heading)
+		main_layout.addWidget(query_text)
+		main_layout.addWidget(response_heading)
+		main_layout.addWidget(response_text)
+		main_layout.addWidget(cancel_button, alignment=Qt.AlignRight)
+
+		main = QWidget()
+		main.setLayout(main_layout)
+
+		newfont = QFont("Times", 12, QFont.Bold)
+
+		head.setObjectName('view3')
+		head.setFont(newfont)
+		query_heading.setObjectName('view')
+		query_heading.setFont(newfont)
+		response_heading.setObjectName('view')
+		response_heading.setFont(newfont)
+		query_text.setObjectName('text')
+		response_text.setObjectName('text')
+		cancel_button.setObjectName('submit')
+		main.setObjectName('query_submission_widget')
+
+
+
+		return main
+
+	def cancel(self):
+		self.close()
+
+
+class view_submission_ui(QMainWindow):
+	source_file = ''
+	verdict = ''
+	language = ''
+
+	def __init__(self,data_changed_flags, source_file, verdict, language, run_id, parent=None):
+		super(view_submission_ui, self).__init__(parent)
+
+		self.data_changed_flags = data_changed_flags
+		view_submission_ui.source_file = source_file
+		view_submission_ui.verdict = verdict
+		view_submission_ui.language = language
+		self.setWindowTitle('Run ID : ' + run_id)
+		self.setFixedSize(900,800)
+		main = self.main_submission_view_ui()
+		self.setCentralWidget(main)
+		# self.setStyleSheet(open('Elements/style.qss', "r").read())
+		return
+
+	def main_submission_view_ui(self):
+		with open('Solution/'+view_submission_ui.source_file, 'r') as solu:
+			data = solu.read()
+
+
+		cursor = QTextCursor()
+		cursor.setPosition(0)
+
+		submission_text = QPlainTextEdit()
+		submission_text.appendPlainText(data)
+		submission_text.setReadOnly(True)
+		submission_text.setTextCursor(cursor)
+		# submission_text.cursorForPosition(0)
+		# submission_text.QCursor.pos(0)
+
+		bottom_layout = QHBoxLayout()
+		verdict = QLabel("Judge's Verdict :")
+		verdict_layout = QLabel(view_submission_ui.verdict)
+		language = QLabel('Language : ')
+		language_layout = QLabel(view_submission_ui.language)
+		bottom_layout.addWidget(verdict)
+		bottom_layout.addWidget(verdict_layout)
+		bottom_layout.addWidget(language)
+		bottom_layout.addWidget(language_layout)
+		bottom_widget = QWidget()
+		bottom_widget.setLayout(bottom_layout)
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(submission_text)
+		main_layout.addWidget(bottom_widget)
+		main = QWidget()
+		main.setLayout(main_layout)
+
+		newfont = QFont("Times", 12, QFont.Bold)
+
+
+		submission_text.setObjectName('text')
+		verdict.setObjectName('view')
+		verdict.setFont(newfont)
+		if view_submission_ui.verdict == 'AC':
+			verdict_layout.setObjectName('view1')
+		else:
+			verdict_layout.setObjectName('view2')
+		verdict_layout.setFont(newfont)
+		language.setObjectName('view')
+		language.setFont(newfont)
+		language_layout.setObjectName('view3')
+		language_layout.setFont(newfont)
+		main.setObjectName('query_submission_widget')
+
+
+		return main
 
 
