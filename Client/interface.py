@@ -214,12 +214,26 @@ class client_window(QMainWindow):
 		# If data has changed in submission table
 		if self.data_changed_flag[1] ==1:
 			self.sub_model.select()
+			# self.notify()
+			# reset data_changed_flag
+			self.data_changed_flag[1] = 0
+
+		if self.data_changed_flag[1] == 2:
+			self.sub_model.select()
+			self.notify()
 			# reset data_changed_flag
 			self.data_changed_flag[1] = 0
 
 		# If data has changed in query table
 		if(self.data_changed_flag[2] == 1):
 			self.query_model.select()
+			# self.notify()
+			# reset data_changed_flag
+			self.data_changed_flag[2] =0
+
+		if(self.data_changed_flag[2] == 2):
+			self.query_model.select()
+			self.notify()
 			# reset data_changed_flag
 			self.data_changed_flag[2] =0
 
@@ -314,6 +328,7 @@ class client_window(QMainWindow):
 	def view_submission(self, selected_row):
 		try:
 			source_file = self.sub_model.index(selected_row, 3).data()
+			run = self.sub_model.index(selected_row, 1).data()
 			verdict = self.sub_model.index(selected_row, 2).data()
 			language = self.sub_model.index(selected_row, 4).data()
 		except Exception as Error:
@@ -322,7 +337,7 @@ class client_window(QMainWindow):
 			QMessageBox.warning(self, 'Message', 'Please select submission to view. ')
 		else:
 			try:
-				self.window = view_submission_ui(self.data_changed_flag,source_file,verdict,language)
+				self.window = view_submission_ui(self.data_changed_flag,source_file,verdict,language,run)
 				self.window.show()
 			except Exception as Error:
 				print(str(Error))
@@ -361,6 +376,12 @@ class client_window(QMainWindow):
 		decrypt.decrypting()
 		QMessageBox.warning(self, 'Info', 'Contest has been STARTED.\nNow you can view problems.')
 
+
+	def notify(self):
+		if self.data_changed_flag[1] == 2:
+			QMessageBox.warning(self, 'Message', 'Submission verdict received ')
+		if self.data_changed_flag[2] == 2:
+			QMessageBox.warning(self, 'Message', 'Query Response received ')
 
 
 class init_gui(client_window):

@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QPixmap, QTextCursor, QCursor
+from PyQt5.QtGui import QIcon, QPixmap, QTextCursor, QCursor, QFont
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase 
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QSize, QRect
 import os
@@ -19,12 +19,16 @@ with open("config.json", "r") as read_config:
 class ui_widgets():
 	#############################################################################
 	# Handle UI for various button presses
+
+	newfont = QFont("Times", 10, QFont.Bold)
+
 	var = {}
 	def problems_ui(self):
 
 		main_layout = QVBoxLayout() 
 		heading = QLabel('Problems')
 		heading.setObjectName('main_screen_heading')
+		heading.setFont(ui_widgets.newfont)
 
 		main_layout.addWidget(heading)
 		
@@ -70,6 +74,7 @@ class ui_widgets():
 	def submissions_ui(self):
 		heading = QLabel('My Submissions')
 		heading.setObjectName('main_screen_heading')
+		heading.setFont(ui_widgets.newfont)
 
 		view_submission_button = QPushButton('View Submission')
 		view_submission_button.setFixedSize(200, 50)
@@ -113,6 +118,7 @@ class ui_widgets():
 
 		heading = QLabel('Submit Solution')
 		heading.setObjectName('main_screen_heading')
+		heading.setFont(ui_widgets.newfont)
 
 		self.drop_down = QHBoxLayout()
 		ui_widgets.language_box = QComboBox()
@@ -173,6 +179,7 @@ class ui_widgets():
 	def query_ui(self):
 		heading = QLabel('Query')
 		heading.setObjectName('main_screen_heading')
+		heading.setFont(ui_widgets.newfont)
 
 		view_query_button = QPushButton('View Query')
 		view_query_button.setFixedSize(200, 50)
@@ -220,6 +227,7 @@ class ui_widgets():
 		main_layout = QVBoxLayout()
 		heading = QLabel('Leaderboard')
 		heading.setObjectName('main_screen_heading')
+		heading.setFont(ui_widgets.newfont)
 
 		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
@@ -353,6 +361,7 @@ class ui_widgets():
 					client_id,
 					query,
 					)
+				QMessageBox.warning(self, 'Message', 'Your Query has been successfully send')
 		return
 		
 	###################################################################################
@@ -396,7 +405,7 @@ class view_query_ui(QMainWindow):
 		response_text.setTextCursor(cursor)
 		# response_text.setObjectName('text_area_content')
 
-		cancel_button = QPushButton('Cancel')
+		cancel_button = QPushButton('Close')
 		cancel_button.setFixedSize(150, 30)
 		cancel_button.clicked.connect(lambda:view_query_ui.cancel(self))
 		cancel_button.setDefault(True)
@@ -412,11 +421,18 @@ class view_query_ui(QMainWindow):
 		main = QWidget()
 		main.setLayout(main_layout)
 
+		newfont = QFont("Times", 12, QFont.Bold)
+
+		head.setObjectName('view3')
+		head.setFont(newfont)
 		query_heading.setObjectName('view')
+		query_heading.setFont(newfont)
 		response_heading.setObjectName('view')
+		response_heading.setFont(newfont)
 		query_text.setObjectName('text')
 		response_text.setObjectName('text')
 		cancel_button.setObjectName('submit')
+		main.setObjectName('query_submission_widget')
 
 
 
@@ -431,14 +447,14 @@ class view_submission_ui(QMainWindow):
 	verdict = ''
 	language = ''
 
-	def __init__(self,data_changed_flags, source_file, verdict, language, parent=None):
+	def __init__(self,data_changed_flags, source_file, verdict, language, run_id, parent=None):
 		super(view_submission_ui, self).__init__(parent)
 
 		self.data_changed_flags = data_changed_flags
 		view_submission_ui.source_file = source_file
 		view_submission_ui.verdict = verdict
 		view_submission_ui.language = language
-		self.setWindowTitle('View Submission')
+		self.setWindowTitle('Run ID : ' + run_id)
 		self.setFixedSize(900,800)
 		main = self.main_submission_view_ui()
 		self.setCentralWidget(main)
@@ -478,12 +494,22 @@ class view_submission_ui(QMainWindow):
 		main = QWidget()
 		main.setLayout(main_layout)
 
+		newfont = QFont("Times", 12, QFont.Bold)
+
 
 		submission_text.setObjectName('text')
 		verdict.setObjectName('view')
-		verdict_layout.setObjectName('view')
+		verdict.setFont(newfont)
+		if view_submission_ui.verdict == 'AC':
+			verdict_layout.setObjectName('view1')
+		else:
+			verdict_layout.setObjectName('view2')
+		verdict_layout.setFont(newfont)
 		language.setObjectName('view')
-		language_layout.setObjectName('view')
+		language.setFont(newfont)
+		language_layout.setObjectName('view3')
+		language_layout.setFont(newfont)
+		main.setObjectName('query_submission_widget')
 
 
 		return main

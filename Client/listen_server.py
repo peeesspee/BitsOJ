@@ -79,7 +79,6 @@ class start_listening():
 		code_result = server_data["Status"]
 		message = server_data["Message"]
 		local_id = server_data["Local Run ID"]
-		print(message)
 		print('[ Run ID : ' + run_id + ' ] [ Result : ' + code_result + ' ] [ error : ' + message + ' ]')
 		submission_management.update_verdict(
 			local_id,
@@ -87,7 +86,7 @@ class start_listening():
 			run_id,
 			code_result,
 			)
-		start_listening.data_changed_flags[1] = 1
+		start_listening.data_changed_flags[1] = 2
 
 
 	def query_verdict(server_data):
@@ -103,7 +102,7 @@ class start_listening():
 			response,
 			Type,
 			)
-		start_listening.data_changed_flags[2] = 1
+		start_listening.data_changed_flags[2] = 2
 
 	def start_status(server_data):
 		with open('contest.json', 'w') as contest:
@@ -115,4 +114,5 @@ class start_listening():
 	def stop_status(server_data):
 		start_listening.data_changed_flags[0] = 3
 		print("[STOP] Signal received")
+
 
