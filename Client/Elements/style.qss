@@ -267,21 +267,25 @@ QLabel#main_screen_content{
 QLabel#view
 {
 	color : #29A19C;
+	font : 20px;
 }
 
 QLabel#view1
 {
 	color : #A7D129;
+	font : 20px;
 }
 
 QLabel#view2
 {
 	color : #D72323;
+	font : 20px;
 }
 
 QLabel#view3
 {
 	color : #FF5722;
+	font : 20px;
 }
 
 

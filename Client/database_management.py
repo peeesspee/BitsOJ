@@ -13,7 +13,7 @@ class manage_database():
 			manage_database.conn = conn
 			cur = conn.cursor()
 			manage_database.cur = cur
-			cur.execute("create table if not exists my_submissions(local_run_id varchar2(5),run_id varchar2(5),verdict varchar2(10),source_file varchar2(30),language varchar2(10),language_code varchar2(5), problem_code varchar2(8), time_stamp text)")
+			cur.execute("create table if not exists my_submissions(local_run_id varchar2(5),run_id varchar2(5),verdict varchar2(20),source_file varchar2(30),language varchar2(10),language_code varchar2(5), problem_code varchar2(8), time_stamp text)")
 			cur.execute("create table if not exists my_query(Query varchar2(500), Response varchar2(100))")
 		except Exception as Error: 
 			print(Error)

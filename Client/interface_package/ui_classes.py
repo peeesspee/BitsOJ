@@ -20,7 +20,7 @@ class ui_widgets():
 	#############################################################################
 	# Handle UI for various button presses
 
-	newfont = QFont("Times", 10, QFont.Bold)
+	
 
 	var = {}
 	def problems_ui(self):
@@ -28,7 +28,6 @@ class ui_widgets():
 		main_layout = QVBoxLayout() 
 		heading = QLabel('Problems')
 		heading.setObjectName('main_screen_heading')
-		heading.setFont(ui_widgets.newfont)
 
 		main_layout.addWidget(heading)
 		
@@ -44,7 +43,9 @@ class ui_widgets():
 		# problems_layout.setSpacing(20)
 		while(number_of_buttons <= config["No_of_Problems"]):
 		# for i in range(config["No_of_Problems"]):
-			ui_widgets.var['Problem_{}'.format(number_of_buttons)] = QPushButton('Problem_'+str(number_of_buttons),self)
+			problem_name = eval(config["Problems"]['Problem_' + str(number_of_buttons)])
+			problem_name = problem_name[0]
+			ui_widgets.var['Problem_{}'.format(number_of_buttons)] = QPushButton('Problem '+str(number_of_buttons) + '\n' + problem_name,self)
 			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setObjectName('problem_buttons')
 			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setFixedSize(500, 200)
 			ui_widgets.var['Problem_{}'.format(number_of_buttons)].clicked.connect(partial(ui_widgets.show_problem, number_of_buttons, self.data_changed_flag, self))
@@ -74,7 +75,6 @@ class ui_widgets():
 	def submissions_ui(self):
 		heading = QLabel('My Submissions')
 		heading.setObjectName('main_screen_heading')
-		heading.setFont(ui_widgets.newfont)
 
 		view_submission_button = QPushButton('View Submission')
 		view_submission_button.setFixedSize(200, 50)
@@ -118,19 +118,16 @@ class ui_widgets():
 
 		heading = QLabel('Submit Solution')
 		heading.setObjectName('main_screen_heading')
-		heading.setFont(ui_widgets.newfont)
 
 		self.drop_down = QHBoxLayout()
 		ui_widgets.language_box = QComboBox()
 		ui_widgets.language_box.setGeometry(QRect(10, 10, 491, 31))
-		ui_widgets.language_box.setFixedWidth(250)
+		ui_widgets.language_box.setFixedWidth(200)
 		ui_widgets.language_box.setFixedHeight(40)
 		ui_widgets.language_box.setObjectName(("language_box_content"))
-		ui_widgets.language_box.addItem("PYTHON-3")
-		ui_widgets.language_box.addItem("PYTHON-2")
-		ui_widgets.language_box.addItem("C")
-		ui_widgets.language_box.addItem("C++")
-		ui_widgets.language_box.addItem("JAVA")
+		allowed_problems = eval(config["Languages"])
+		for i in allowed_problems:
+			ui_widgets.language_box.addItem(i)
 
 		ui_widgets.problem_box = QComboBox()
 		ui_widgets.problem_box.setGeometry(QRect(10, 10, 491, 31))
@@ -138,11 +135,14 @@ class ui_widgets():
 		ui_widgets.problem_box.setFixedHeight(40)
 		ui_widgets.problem_box.setObjectName("language_box_content")
 		for i in range(config["No_of_Problems"]):
-			ui_widgets.problem_box.addItem("Problem_"+str(i+1))
+			ui_widgets.problem_box.addItem("Problem "+str(i+1))
 
 		self.drop_down.addWidget(ui_widgets.language_box)
 		self.drop_down.addWidget(ui_widgets.problem_box)
+		self.drop_down.addStretch(1)
+		self.drop_down.setSpacing(10)
 		self.drop_widget = QWidget()
+		self.drop_widget.setContentsMargins(10, 0, 0, 0)
 		self.drop_widget.setLayout(self.drop_down)
 
 		ui_widgets.text_area = QTextEdit()
@@ -179,7 +179,6 @@ class ui_widgets():
 	def query_ui(self):
 		heading = QLabel('Query')
 		heading.setObjectName('main_screen_heading')
-		heading.setFont(ui_widgets.newfont)
 
 		view_query_button = QPushButton('View Query')
 		view_query_button.setFixedSize(200, 50)
@@ -227,7 +226,6 @@ class ui_widgets():
 		main_layout = QVBoxLayout()
 		heading = QLabel('Leaderboard')
 		heading.setObjectName('main_screen_heading')
-		heading.setFont(ui_widgets.newfont)
 
 		main_layout.addWidget(heading)
 		main_layout.addStretch(5)
@@ -421,14 +419,11 @@ class view_query_ui(QMainWindow):
 		main = QWidget()
 		main.setLayout(main_layout)
 
-		newfont = QFont("Times", 12, QFont.Bold)
+		
 
 		head.setObjectName('view3')
-		head.setFont(newfont)
 		query_heading.setObjectName('view')
-		query_heading.setFont(newfont)
 		response_heading.setObjectName('view')
-		response_heading.setFont(newfont)
 		query_text.setObjectName('text')
 		response_text.setObjectName('text')
 		cancel_button.setObjectName('submit')
@@ -494,21 +489,15 @@ class view_submission_ui(QMainWindow):
 		main = QWidget()
 		main.setLayout(main_layout)
 
-		newfont = QFont("Times", 12, QFont.Bold)
-
 
 		submission_text.setObjectName('text')
 		verdict.setObjectName('view')
-		verdict.setFont(newfont)
 		if view_submission_ui.verdict == 'AC':
 			verdict_layout.setObjectName('view1')
 		else:
 			verdict_layout.setObjectName('view2')
-		verdict_layout.setFont(newfont)
 		language.setObjectName('view')
-		language.setFont(newfont)
 		language_layout.setObjectName('view3')
-		language_layout.setFont(newfont)
 		main.setObjectName('query_submission_widget')
 
 

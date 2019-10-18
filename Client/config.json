@@ -6,10 +6,11 @@
     "host": "localhost",
     "No_of_Problems": 5,
     "Problems": {
-        "Problem_1": "ABCD",
-        "Problem_2": "asdf",
-        "Problem_3": "rtyu",
-        "Problem_4": "tgbf",
-        "Problem_5": "yuio"
-    }
+        "Problem_1": "('Sachinam Srivastava','ABCD')",
+        "Problem_2": "('Prakhar Pandey','asdf')",
+        "Problem_3": "('Prashant Singh','rtyu')",
+        "Problem_4": "('Priyesh Rathore','tgbf')",
+        "Problem_5": "('Sanidhya Samadhiya','yuio')"
+    },
+    "Languages": "('C','C++','JAVA','PYTHON-2')"
 }
