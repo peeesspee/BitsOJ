@@ -60,38 +60,38 @@ Visit : http://localhost:15672/ and login using user_name and user_password
 ### Check List
 #### Admins
 1.Can set problems, their time limits and IO files.  
-2.Can generate users profiles.  
+2.Can generate users profiles.[DONE]    
 3.Can manually view and judge user solutions.  
-4.Can block users from the contest.  
-5.Can start and stop the contest, and set its duration.  
-6.Can broadcast messages and respond to queries.  
+4.Can block users from the contest.[DONE]  
+5.Can start and stop the contest, and set its duration.[PROGRESS 50%]    
+6.Can broadcast messages and respond to queries.[DONE]  
 
 #### Users  
-0.Can Login
-1.Can view problems.  
-2.Can submit solution, and view result.   
-3.Can view their submission results.   
-4.Can send queries.   
-5.Can request a rejudge and get NO as a reply.  
-6.Can view ranklist locally.  
+0.Can Login[DONE]
+1.Can view problems.[DONE]  
+2.Can submit solution, and view result.[DONE]   
+3.Can view their submission results.[DONE]   
+4.Can send queries.[DONE]   
+5.Can request a rejudge and get NO as a reply.[DONE]  
+6.Can view ranklist locally.[NOT YET STARTED]  
   
 #### OJ:Interface  
-1.Assign a run ID to each code.  
-2.Execute the code in a sandbox, according to their run IDs.  
-3.Allow for rejudge but assign a new run ID.  
-4.Allow only one active session per user ID.  
-5.Implement time limit per solution.  
-6.Update the result in database.  
-7.Maintain a scoreboard.  
-8.Maintain 1 submission per minute rule, to avoid spam.  
-9.As soon as contest time is over, it must not accept any new solutions.  
+1.Assign a run ID to each code.[DONE]  
+2.Execute the code in a sandbox, according to their run IDs.[PROGRESS 50%]  
+3.Allow for rejudge but assign a new run ID.[CANCELLED]  
+4.Allow only one active session per user ID.[NOT YET STARTED]  
+5.Implement time limit per solution.[IN PROGRESS]  
+6.Update the result in database.[DONE]  
+7.Maintain a scoreboard.[NOT YET STARTED]  
+8.Maintain 1 submission per minute rule, to avoid spam.[NOT YET STARTED]  
+9.As soon as contest time is over, it must not accept any new solutions.[IN PROGRESS]  
 
 #### OJ:Innards
-0.Manage connections.  (Work in progress : 70%)    
-1.Verify user details.  (Work in progress : 30%)  
-2.Implement client data queue.  (Completed)  
-3.Manage Judge queue.  (Scheduled for later)  
-4.Database manager  (Scheduled for later)  
+0.Manage connections.[DONE]    
+1.Verify user details.[DONE]  
+2.Implement client data queue.[DONE]  
+3.Manage Judge queue.[DONE]  
+4.Database manager[DONE]  
 
 #### Error Interface
 0.If no judges are active (Critical)  
