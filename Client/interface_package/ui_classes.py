@@ -278,7 +278,8 @@ class ui_widgets():
 			time_stamp = time.strftime("%H:%M:%S", local_time)
 			textbox_value = ui_widgets.text_area.toPlainText()
 			selected_language = str(ui_widgets.language_box.currentText())
-			problem_code = config["Problems"][str(ui_widgets.problem_box.currentText())]
+			problem_code = eval(config["Problems"][str(ui_widgets.problem_box.currentText())])
+			problem_code = problem_code[1]
 			if(selected_language == 'C'):
 				extention = '.c'
 				language_code = 'GCC'
