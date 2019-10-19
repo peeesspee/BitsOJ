@@ -43,13 +43,13 @@ class ui_widgets():
 		# problems_layout.setSpacing(20)
 		while(number_of_buttons <= config["No_of_Problems"]):
 		# for i in range(config["No_of_Problems"]):
-			problem_name = eval(config["Problems"]['Problem_' + str(number_of_buttons)])
+			problem_name = eval(config["Problems"]['Problem ' + str(number_of_buttons)])
 			problem_name = problem_name[0]
-			ui_widgets.var['Problem_{}'.format(number_of_buttons)] = QPushButton('Problem '+str(number_of_buttons) + '\n' + problem_name,self)
-			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setObjectName('problem_buttons')
-			ui_widgets.var['Problem_{}'.format(number_of_buttons)].setFixedSize(500, 200)
-			ui_widgets.var['Problem_{}'.format(number_of_buttons)].clicked.connect(partial(ui_widgets.show_problem, number_of_buttons, self.data_changed_flag, self))
-			problems_layout.addWidget(ui_widgets.var['Problem_{}'.format(number_of_buttons)],row,column)
+			ui_widgets.var['Problem {}'.format(number_of_buttons)] = QPushButton('Problem '+str(number_of_buttons) + '\n' + problem_name,self)
+			ui_widgets.var['Problem {}'.format(number_of_buttons)].setObjectName('problem_buttons')
+			ui_widgets.var['Problem {}'.format(number_of_buttons)].setFixedSize(500, 200)
+			ui_widgets.var['Problem {}'.format(number_of_buttons)].clicked.connect(partial(ui_widgets.show_problem, number_of_buttons, self.data_changed_flag, self))
+			problems_layout.addWidget(ui_widgets.var['Problem {}'.format(number_of_buttons)],row,column)
 			if(column==1):
 				row+=1;
 				column=0;
@@ -272,54 +272,57 @@ class ui_widgets():
 		elif data_changed_flag[0] == 4:
 			QMessageBox.warning(self, 'Message', 'Your Time Up.\n Now you cannot submit solution')
 		else:
-			with open("config.json", "r") as read_config:
-				config = json.load(read_config)
-			local_time = time.localtime()
-			time_stamp = time.strftime("%H:%M:%S", local_time)
-			textbox_value = ui_widgets.text_area.toPlainText()
-			selected_language = str(ui_widgets.language_box.currentText())
-			problem_code = eval(config["Problems"][str(ui_widgets.problem_box.currentText())])
-			problem_code = problem_code[1]
-			if(selected_language == 'C'):
-				extention = '.c'
-				language_code = 'GCC'
-			elif(selected_language == 'C++'):
-				extention = '.cpp'
-				language_code = 'CPP'
-			elif(selected_language == 'JAVA'):
-				extention = '.java'
-				language_code = 'JVA'
-			elif(selected_language == 'PYTHON-3'):
-				extention = '.py'
-				language_code = 'PY3'
-			else:
-				extention = '.py'
-				language_code = 'PY2'
-			local_id = manage_local_ids.get_new_id()
-			client_id = config["client_id"]
-			submission_management.insert_verdict(
-				local_id,
-				client_id,
-				'-',
-				'Queued',
-				selected_language,
-				language_code,
-				problem_code,
-				time_stamp,
-				textbox_value,
-				extention
-				)
-			print("no")
-			data_changed_flag[1] = 1
-			print('sachinam')
-			send_code.solution_request(
-				problem_code,
-				selected_language,
-				time_stamp,
-				textbox_value,
-				local_id
-				)
-			QMessageBox.warning(self, 'Message', 'Your Solution has been successfully send')
+			try:
+				with open("config.json", "r") as read_config:
+					config = json.load(read_config)
+				local_time = time.localtime()
+				time_stamp = time.strftime("%H:%M:%S", local_time)
+				textbox_value = ui_widgets.text_area.toPlainText()
+				selected_language = str(ui_widgets.language_box.currentText())
+				problem_code = eval(config["Problems"][str(ui_widgets.problem_box.currentText())])
+				problem_code = problem_code[1]
+				if(selected_language == 'C'):
+					extention = '.c'
+					language_code = 'GCC'
+				elif(selected_language == 'C++'):
+					extention = '.cpp'
+					language_code = 'CPP'
+				elif(selected_language == 'JAVA'):
+					extention = '.java'
+					language_code = 'JVA'
+				elif(selected_language == 'PYTHON-3'):
+					extention = '.py'
+					language_code = 'PY3'
+				else:
+					extention = '.py'
+					language_code = 'PY2'
+				local_id = manage_local_ids.get_new_id()
+				client_id = config["client_id"]
+				submission_management.insert_verdict(
+					local_id,
+					client_id,
+					'-',
+					'Queued',
+					selected_language,
+					language_code,
+					problem_code,
+					time_stamp,
+					textbox_value,
+					extention
+					)
+				print("no")
+				data_changed_flag[1] = 1
+				print('sachinam')
+				send_code.solution_request(
+					problem_code,
+					selected_language,
+					time_stamp,
+					textbox_value,
+					local_id
+					)
+				QMessageBox.warning(self, 'Message', 'Your Solution has been successfully send')
+			except Exception as Error:
+				print(str(Error))
 		return
 
 
