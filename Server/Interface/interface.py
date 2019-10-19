@@ -36,6 +36,7 @@ class server_window(QMainWindow):
 		self.change_flag = True
 		self.timer.timeout.connect(self.update_data)
 		self.timer.start(1000)
+		self.contest_start_time = ''
 		
 		# make data_changed_flag accessible from the class methods
 		self.data_changed_flags = data_changed_flags2
@@ -181,16 +182,19 @@ class server_window(QMainWindow):
 		logo_image2 = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image2)
 
+		self.timer_widget = QLCDNumber()
+		self.timer_widget.setSegmentStyle(QLCDNumber.Flat)
+		self.timer_widget.setDigitCount(8)
+		self.timer_widget.display('00:00:00')
+		self.timer_widget.setFixedSize(150,40)
+		
+
 		top_bar_layout = QHBoxLayout()
 		top_bar_layout.setContentsMargins(15, 5, 20, 0);
 		top_bar_layout.addWidget(logo)
-		# top_bar_layout.addWidget(start_button)
-		# top_bar_layout.addWidget(pause_button)
-		# top_bar_layout.addWidget(stop_button)
+		top_bar_layout.addWidget(self.timer_widget)
 		top_bar_layout.setStretch(0, 70)
-		# top_bar_layout.setStretch(1, 10)
-		# top_bar_layout.setStretch(2, 10)
-		# top_bar_layout.setStretch(3, 10)
+		
 
 		top_bar_widget = QWidget()
 		top_bar_widget.setLayout(top_bar_layout)
@@ -322,6 +326,15 @@ class server_window(QMainWindow):
 		elif self.data_changed_flags[10] == 1:
 			self.set_status('RUNNING')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ RUNNING ]')
+			# Find time elapsed since contest start
+			start_time = self.contest_start_time
+			current_time = time.time()
+
+			elapsed_time = time.strftime('%H:%M:%S', time.gmtime(current_time - start_time))
+			
+			#Update timer
+			self.timer_widget.display(elapsed_time)
+
 		# Recieved contest stop signal
 		elif self.data_changed_flags[10] == 2:
 			self.set_status('STOPPED')
@@ -335,7 +348,7 @@ class server_window(QMainWindow):
 
 		elif data == 'START':
 			current_time = time.localtime()
-
+			self.contest_start_time = time.time()
 			message = {
 			'Code' : 'START',
 			'Duration' : extra_data

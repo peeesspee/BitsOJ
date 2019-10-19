@@ -291,7 +291,10 @@ QLabel#about_screen_heading{
 	color : #E91E63;
 	font-size : 30px;
 }
-
+QLCDNumber{
+	color: #AAAAAA;
+	border : 0px;
+}
 
 /*--------------MAIN LAYOUT ENDS----------------*/
 

@@ -6,18 +6,27 @@ import threading
 from database_management import client_authentication, submissions_management, previous_data, query_management
 from client_submissions import submission
 from client_broadcasts import broadcast_manager
+from init_server import initialize_server
  
 
 class manage_clients():
 	channel = ''
 	data_changed_flags = ''
 
-	def prepare(superuser_username, superuser_password, host, data_changed_flags2, data_from_interface):
+	def prepare(data_changed_flags2, data_from_interface):
 		manage_clients.data_changed_flags = data_changed_flags2
+		
+		config = initialize_server.read_config()
+		superuser_username = config["Server Username"]
+		superuser_password = config["Server Password"]
+		judge_username = config["Judge Username"]
+		judge_password = config["Judge Password"]
+		host = config["Server IP"]
 
 		broadcast_thread = threading.Thread(target = broadcast_manager.init_broadcast, args = (data_changed_flags2, data_from_interface, superuser_username, superuser_password, host, ))
 		broadcast_thread.start()
 
+		
 
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
@@ -158,6 +167,8 @@ class manage_clients():
 				# Check if client has logged in for the first time:
 				previously_connected_status = client_authentication.check_connected_client(client_username)
 				# If client has NOT logged in for the first time
+				# MAYBE A SECURITY EVENT?
+				# Raise a confirmation box to ADMIN maybe?
 				if previously_connected_status == True:
 					client_id = client_authentication.get_client_id(client_username)
 					print('[ ' + client_username + ' ] Previous Client ID : ' + str(client_id) )
@@ -187,6 +198,9 @@ class manage_clients():
 				# Send login_successful signal to client. 
 				response.publish_message(manage_clients.channel, client_username, message)
 				
+				# Check if contest has started, also send client the 
+				# contest START signal alog with remaining time.
+
 			# If login is not successful:
 			elif status == False:
 				print('[ ' + client_username + ' ] NOT verified.')
