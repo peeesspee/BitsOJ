@@ -72,7 +72,7 @@ class manage_clients():
 		# Handle keyboard interrupt ctrl+c and terminate successfully
 		except (KeyboardInterrupt, SystemExit):
 			channel.stop_consuming()
-			print('[ LISTEN ] STOPPED listening to client channel')
+			print('\n[ LISTEN ] STOPPED listening to client channel')
 			connection.close()
 			print('[ STOP ] Client subprocess terminated successfully!')
 			manage_clients.data_changed_flags[7] = 1

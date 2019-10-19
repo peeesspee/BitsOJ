@@ -146,8 +146,20 @@ def main():
 			listen()
 		elif a == 4:
 			query()
+		elif a == 5:
+			try:
+				channel.stop_consuming()
+			except:
+				print("Could not stop listening to the Server.")
+			finally:
+				print('[ DELETE ] Queue ' + username + ' deleted...')
+				channel.queue_delete(username)
+				connection.close()
+				break;
 		else:
-			break;
+			continue;
+
+
 	
 	
 

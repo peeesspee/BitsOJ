@@ -36,7 +36,7 @@ class manage_judges():
 
 		except (KeyboardInterrupt, SystemExit):
 			channel.stop_consuming()
-			print('[ LISTEN ] STOPPED listening to judge channel')
+			print('\n[ LISTEN ] STOPPED listening to judge channel')
 			
 			connection.close()
 			print('[ STOP ] Judge subprocess terminated successfully!')	

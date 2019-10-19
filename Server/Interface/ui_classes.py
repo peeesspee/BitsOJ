@@ -284,7 +284,8 @@ class ui_widgets:
 		change_time_entry.setMinimum(-30)
 		change_time_entry.setMaximum(30)
 		change_time_entry.setValue(0)
-		change_time_entry.setToolTip('Extend or Shorten contest (in minutes.)')
+		change_time_entry.setReadOnly(True)
+		change_time_entry.setToolTip('You will be able to use it when contest is STARTED')
 
 
 		change_time_layout = QHBoxLayout()
@@ -302,20 +303,27 @@ class ui_widgets:
 		set_button = QPushButton('Set')
 		set_button.setFixedSize(70, 25)
 		set_button.setObjectName('interior_button')
-		#set_button.clicked.connect(self.contest_settings)
+		set_button.setToolTip('Set contest time. This does NOT broadcast to clients.')
+		set_button.clicked.connect(lambda: ui_widgets.preprocess_contest_broadcasts(self, 'SET', contest_time_entry.text()))
+
 		start_button = QPushButton('Start', self)
 		start_button.setFixedSize(70, 25)
 		start_button.setObjectName('interior_button')
+		start_button.setToolTip('START the contest and broadcast to all clients.')
 		start_button.clicked.connect(lambda: ui_widgets.preprocess_contest_broadcasts(self, 'START', contest_time_entry.text()))
 
 		update_button = QPushButton('Update', self)
+		update_button.setEnabled(False)
 		update_button.setFixedSize(70, 25)
 		update_button.setObjectName('interior_button')
-		update_button.clicked.connect(lambda: ui_widgets.preprocess_contest_broadcasts(self, 'UPDATE'))
+		update_button.setToolTip('UPDATE contest time and broadcast to all clients. Disabled until contest Starts')
+		update_button.clicked.connect(lambda: ui_widgets.preprocess_contest_broadcasts(self, 'UPDATE', change_time_entry.value()))
 
 		stop_button = QPushButton('Stop', self)
+		stop_button.setEnabled(False)
 		stop_button.setFixedSize(70, 25)
 		stop_button.setObjectName('interior_button')
+		stop_button.setToolTip('STOP the contest and broadcast to all clients. Disabled until contest Starts')
 		stop_button.clicked.connect(lambda: ui_widgets.preprocess_contest_broadcasts(self, 'STOP'))
 		
 		
@@ -349,15 +357,18 @@ class ui_widgets:
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main, contest_time_entry
+		return main, contest_time_entry, change_time_entry, set_button, start_button, update_button, stop_button
 
 	def preprocess_contest_broadcasts(self, signal, extra_data = 'NONE'):
-		if signal == 'START':
+		if signal == 'SET':
+			self.process_event('SET', extra_data)
+		elif signal == 'START':
 			self.process_event('START', extra_data)	#In interface file
 		elif signal == 'UPDATE':
 			self.process_event('UPDATE', extra_data)
 		elif signal == 'STOP':
 			self.process_event('STOP', extra_data)
+
 
 		return
 
