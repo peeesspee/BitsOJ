@@ -51,7 +51,7 @@ class broadcast_manager():
 				print('[ EVENT ] START Contest')
 				message = {
 				'Code' : 'START',
-				'Duration' : data['Time'],
+				'Duration' : data['Duration'],
 				'Problem Key' : broadcast_manager.file_password
 				}
 				message = json.dumps(message)

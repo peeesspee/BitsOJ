@@ -11,7 +11,7 @@ global client_id
 client_id = 'Null'
 
 username = 'team00001'
-password = 'Tgs15H'
+password = 'bits1'
 
 try:
 	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
@@ -146,8 +146,20 @@ def main():
 			listen()
 		elif a == 4:
 			query()
+		elif a == 5:
+			try:
+				channel.stop_consuming()
+			except:
+				print("Could not stop listening to the Server.")
+			finally:
+				print('[ DELETE ] Queue ' + username + ' deleted...')
+				channel.queue_delete(username)
+				connection.close()
+				break;
 		else:
-			break;
+			continue;
+
+
 	
 	
 

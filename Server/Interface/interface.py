@@ -6,7 +6,7 @@ from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from Interface.ui_classes import *
-from init_server import initialize_server
+from init_server import initialize_server, save_status
 from database_management import user_management
 
 
@@ -124,17 +124,27 @@ class server_window(QMainWindow):
 		self.tab6 = ui_widgets.problem_ui(self)
 		self.tab7 = ui_widgets.language_ui(self)
 		self.tab8 = ui_widgets.stats_ui(self)
-		self.tab9 = ui_widgets.settings_ui(self)
+		self.tab9, self.contest_time_entry, self.change_time_entry, self.set_button, self.start_button, self.update_button, self.stop_button = ui_widgets.settings_ui(self)
 		self.tab10 = ui_widgets.reports_ui(self)
 		self.tab11 = ui_widgets.about_us_ui(self)
 		
 		###########################################################
 		
-		# Add widgets to our main window
+		# Load previous state in case of server restart
+		#server_window.load_previous_state(self)
+		# Initialize GUI elements
 		server_window.init_UI(self)
 		return
 	
-
+	def load_previous_state(self):
+		if self.config["Contest Status"] == "RUNNING":
+			self.contest_time_entry.setReadOnly(1)
+			self.contest_time_entry.setToolTip('Contest has STARTED. You can\'t edit this value now.')
+		elif self.config["Contest Status"] == "STOPPED":
+			self.contest_time_entry.setReadOnly(1)
+			self.contest_time_entry.setToolTip('Contest has STOPPED. You can\'t edit this value now.')
+		
+		return
 	def init_UI(self):
 		self.set_status('SETUP')
 		# Define Layout for sidebar
@@ -304,30 +314,86 @@ class server_window(QMainWindow):
 		if self.data_changed_flags[9] == 1:
 			self.query_model.select()
 			self.set_flags(9, 0)
-		if self.data_changed_flags[10] == 1:
+
+		# Recieved contest start signal
+		if self.data_changed_flags[10] == 0:
+			self.set_status('SETUP')
+			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ SETUP ]')
+		elif self.data_changed_flags[10] == 1:
 			self.set_status('RUNNING')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ RUNNING ]')
+		# Recieved contest stop signal
 		elif self.data_changed_flags[10] == 2:
 			self.set_status('STOPPED')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ STOPPED ]')
 		return
 
-	def send_data_to_client_thread(self, data, extra_data = '02:00'):
-		if data == 'START':
-			self.data_changed_flags[10] = 1
+	def process_event(self, data, extra_data):
+		if data == 'SET':
+			print('\n[ SET ] Contest Duration : ' + str(extra_data))
+			save_status.update_entry('Contest Duration', str(extra_data))
+
+		elif data == 'START':
+			current_time = time.localtime()
+
 			message = {
 			'Code' : 'START',
-			'Time' : extra_data
+			'Duration' : extra_data
 			}
 			message = json.dumps(message)
 			self.data_to_client.put(message)
+
+			# Update GUI
+			self.data_changed_flags[10] = 1
+			self.contest_time_entry.setReadOnly(1)
+			self.contest_time_entry.setToolTip('Contest has STARTED. You can\'t edit this value now.')
+			self.change_time_entry.setReadOnly(False)
+			self.change_time_entry.setToolTip('Extend/Shorten contest (in minutes)')
+			self.set_button.setEnabled(False)
+			self.set_button.setToolTip('Contest has STARTED. You can not set time now!')
+			self.start_button.setEnabled(False)
+			self.start_button.setToolTip('Contest is already running!')
+			self.stop_button.setEnabled(True)
+			self.stop_button.setToolTip('STOP the contest.')
+			self.update_button.setEnabled(True)
+			self.update_button.setToolTip('Update the contest.')
+
+			# Update config file
+			current_time = str(time.strftime("%H:%M:%S", current_time))
+			save_status.update_entry('Contest Start Time', current_time)
+			save_status.update_entry('Contest Status', 'RUNNING')
+			save_status.update_entry('Contest Duration', extra_data)
+
+			
+
 		elif data == 'STOP':
-			self.data_changed_flags[10] = 2
+			current_time = time.localtime()
+			
 			message = {
 			'Code' : 'STOP'
 			}
 			message = json.dumps(message)
 			self.data_to_client.put(message)
+
+			# Update GUI
+			self.data_changed_flags[10] = 2
+			self.contest_time_entry.setReadOnly(1)
+			self.contest_time_entry.setToolTip('Contest has STOPPED. You can\'t edit this value now.')
+			self.update_button.setEnabled(False)
+			self.update_button.setToolTip('Contest has STOPPED. You can not extend it now.')
+			self.stop_button.setEnabled(False)
+			self.stop_button.setToolTip('Contest has already STOPPED!')
+			self.start_button.setToolTip('Contest has STOPPED!')
+			self.set_button.setToolTip('Contest has STOPPED!')
+			self.change_time_entry.setReadOnly(True)
+			self.change_time_entry.setToolTip('Contest has STOPPED. You can not change time now!')
+			# Update config file
+			current_time = str(time.strftime("%H:%M:%S", current_time))
+			save_status.update_entry('Contest End Time', current_time)
+			save_status.update_entry('Contest Status', 'STOPPED')
+
+			
+
 		elif data == 'UPDATE':
 			# Send UPDATE signal
 			message = {
@@ -336,9 +402,6 @@ class server_window(QMainWindow):
 			}
 			message = json.dumps(message)
 			self.data_to_client.put(message)
-		elif data == 'QUERY RESPONSE':
-			#process extra data (dictionary or maybe json)
-			self.data_to_client.put('QUERY')
 			
 		return
 
@@ -505,7 +568,7 @@ class server_window(QMainWindow):
 	
 	###################################################
 
-	def set_status(self, message = 'STOPPED'):
+	def set_status(self, message = 'PREPARE'):
 		self.status.showMessage('BitsOJ > ' + message)
 	###################################################
 

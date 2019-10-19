@@ -104,7 +104,7 @@ QPushButton#interior_button{
 	text-align : center; 	
 	border : 1px solid #ADFF2F;
 	background-color : #202428 ;
-	color : #838383;
+	color : #62C9F3;
 }
 
 QPushButton#interior_button::focus
@@ -130,6 +130,14 @@ QPushButton#interior_button::hover
 	color : #0892D0;
 	background-color : #202428 ;
 }
+
+QPushButton#interior_button::disabled{
+	color: #E91E63;
+}
+QPushButton#interior_button::!enabled{
+	color: #E91E63;
+}
+
 
 /* Style of interior buttons END  */
 

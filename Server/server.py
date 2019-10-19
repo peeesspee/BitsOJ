@@ -81,6 +81,7 @@ def main():
 	data_changed_flags[4] = 0
 	# SYSTEM SHUT flag
 	data_changed_flags[7] = 0
+	data_changed_flags[10] = -1
 	##################################
 
 	# Manage Threads
