@@ -327,10 +327,10 @@ class server_window(QMainWindow):
 			self.set_status('RUNNING')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ RUNNING ]')
 			# Find time elapsed since contest start
-			start_time = self.contest_start_time
+			total_time = self.contest_start_time
 			current_time = time.time()
 
-			elapsed_time = time.strftime('%H:%M:%S', time.gmtime(current_time - start_time))
+			elapsed_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
 			
 			#Update timer
 			self.timer_widget.display(elapsed_time)
@@ -341,14 +341,24 @@ class server_window(QMainWindow):
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ STOPPED ]')
 		return
 
+	def convert_to_seconds(time_str):
+		print(time_str)
+		h, m = time_str.split(':')
+		return int(h) * 3600 + int(m) * 60 
+
+
 	def process_event(self, data, extra_data):
 		if data == 'SET':
 			print('\n[ SET ] Contest Duration : ' + str(extra_data))
 			save_status.update_entry('Contest Duration', str(extra_data))
+			self.timer_widget.display(initialize_server.get_duration())
 
 		elif data == 'START':
 			current_time = time.localtime()
 			self.contest_start_time = time.time()
+			print("Duration : " + initialize_server.get_duration())
+			self.contest_duration_seconds = server_window.convert_to_seconds(initialize_server.get_duration())
+			self.contest_start_time += self.contest_duration_seconds
 			message = {
 			'Code' : 'START',
 			'Duration' : extra_data

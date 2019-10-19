@@ -2,36 +2,24 @@ import json
  
 # This class reads server configuration file and initializes server's variables
 class initialize_server():
-	superuser_username = 'BitsOJ'
-	superuser_password = 'root'
-	judge_username = 'judge1'
-	judge_password = 'judge1'
-	host = 'localhost'
-	login_allowed_flag = 'False'
-	submission_allowed_flag = 'False'
-	client_key = '000000000000000'
-	judge_key = '000000000000000'
 	file_password = '0000'
+	duration = '02:00'	#Default Value
 
 	def get_password():
 		return initialize_server.file_password
+	def get_duration():
+		return initialize_server.duration
+
 
 	# Read Server config file 
 	def read_config():
 		print('\n[ READ ] config.json')
 		with open("config.json", "r") as read_json:
 			config = json.load(read_json)
+		initialize_server.config = config
 
 		# Basic credentials for login to RabbitMQ Server
-		initialize_server.superuser_username = config["Server Username"]
-		initialize_server.superuser_password = config["Server Password"]
-		initialize_server.host = config["Server IP"]
-		initialize_server.judge_username = config["Judge Username"]
-		initialize_server.judge_password = config["Judge Password"]
-		initialize_server.login_allowed_flag = config["Login Allowed"]
-		initialize_server.submission_allowed_flag = config["Submission Allowed"]
-		initialize_server.judge_key = config["Judge Key"]
-		initialize_server.client_key = config["Client Key"]
+		initialize_server.duration = config["Contest Duration"]
 		initialize_server.file_password = config["File Password"]
 		return config
 
@@ -75,6 +63,8 @@ class save_status():
 			# config = json.dumps(config)
 			with open("config.json", "w") as data_file:
 				json.dump(config, data_file, indent=4)
+			if entry == "Contest Duration":
+				initialize_server.duration = new_value
 		except Exception as error:
 			print('[ ERROR ] Could not update json file : ' + str(error))
 		finally:
