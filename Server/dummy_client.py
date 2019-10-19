@@ -11,7 +11,7 @@ global client_id
 client_id = 'Null'
 
 username = 'team00001'
-password = 'Tgs15H'
+password = 'bits1'
 
 try:
 	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)

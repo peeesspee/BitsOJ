@@ -18,7 +18,7 @@ class initialize_server():
 
 	# Read Server config file 
 	def read_config():
-		print('[ READ ] config.json')
+		print('\n[ READ ] config.json')
 		with open("config.json", "r") as read_json:
 			config = json.load(read_json)
 
@@ -38,7 +38,7 @@ class initialize_server():
 	# To be moved to setup.py
 class save_status():
 	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, client_key, judge_key, file_password, contest_duration):
-		print('[ WRITE ] config.json')
+		print('\n[ WRITE ] config.json')
 
 		allow_login = str(allow_login)
 		allow_submission = str(allow_submission) 
@@ -61,7 +61,7 @@ class save_status():
 			json.dump(json_data, data_file, indent=4)
 
 	def update_entry(entry, new_value):
-		print('[ UPDATE ] ' + str(entry) + ':' + str(new_value))
+		print('\n[ UPDATE ] ' + str(entry) + ':' + str(new_value))
 		try:
 			with open("config.json", "r") as read_json:
 				config = json.load(read_json)

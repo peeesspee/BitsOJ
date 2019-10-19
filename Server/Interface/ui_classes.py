@@ -259,10 +259,12 @@ class ui_widgets:
 		contest_duration_label = QLabel('> Contest Duration: ')
 		contest_duration_label.setObjectName('main_screen_content')
 		contest_duration_label.setFixedSize(200, 20)
+
 		contest_time_entry = QLineEdit()
 		contest_time_entry.setText(self.config["Contest Duration"])
 		contest_time_entry.setPlaceholderText('HH:MM')
 		contest_time_entry.setFixedSize(80, 30)
+		contest_time_entry.setToolTip('You will not be able to edit this when contest starts.')
 
 		contest_time_layout = QHBoxLayout()
 		contest_time_layout.addWidget(contest_duration_label)
@@ -282,6 +284,8 @@ class ui_widgets:
 		change_time_entry.setMinimum(-30)
 		change_time_entry.setMaximum(30)
 		change_time_entry.setValue(0)
+		change_time_entry.setToolTip('Extend or Shorten contest (in minutes.)')
+
 
 		change_time_layout = QHBoxLayout()
 		change_time_layout.addWidget(contest_extension_label)
@@ -302,17 +306,17 @@ class ui_widgets:
 		start_button = QPushButton('Start', self)
 		start_button.setFixedSize(70, 25)
 		start_button.setObjectName('interior_button')
-		start_button.clicked.connect(lambda: self.send_data_to_client_thread('START'))
+		start_button.clicked.connect(lambda: ui_widgets.preprocess_contest_broadcasts(self, 'START', contest_time_entry.text()))
 
 		update_button = QPushButton('Update', self)
 		update_button.setFixedSize(70, 25)
 		update_button.setObjectName('interior_button')
-		update_button.clicked.connect(lambda: self.send_data_to_client_thread('UPDATE'))
+		update_button.clicked.connect(lambda: ui_widgets.preprocess_contest_broadcasts(self, 'UPDATE'))
 
 		stop_button = QPushButton('Stop', self)
 		stop_button.setFixedSize(70, 25)
 		stop_button.setObjectName('interior_button')
-		stop_button.clicked.connect(lambda: self.send_data_to_client_thread('STOP'))
+		stop_button.clicked.connect(lambda: ui_widgets.preprocess_contest_broadcasts(self, 'STOP'))
 		
 		
 		contest_buttons_layout = QHBoxLayout()
@@ -345,7 +349,17 @@ class ui_widgets:
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main
+		return main, contest_time_entry
+
+	def preprocess_contest_broadcasts(self, signal, extra_data = 'NONE'):
+		if signal == 'START':
+			self.process_event('START', extra_data)	#In interface file
+		elif signal == 'UPDATE':
+			self.process_event('UPDATE', extra_data)
+		elif signal == 'STOP':
+			self.process_event('STOP', extra_data)
+
+		return
 
 
 	def reports_ui(self):

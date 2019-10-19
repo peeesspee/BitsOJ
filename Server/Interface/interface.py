@@ -6,7 +6,7 @@ from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from Interface.ui_classes import *
-from init_server import initialize_server
+from init_server import initialize_server, save_status
 from database_management import user_management
 
 
@@ -124,17 +124,27 @@ class server_window(QMainWindow):
 		self.tab6 = ui_widgets.problem_ui(self)
 		self.tab7 = ui_widgets.language_ui(self)
 		self.tab8 = ui_widgets.stats_ui(self)
-		self.tab9 = ui_widgets.settings_ui(self)
+		self.tab9, self.contest_time_entry = ui_widgets.settings_ui(self)
 		self.tab10 = ui_widgets.reports_ui(self)
 		self.tab11 = ui_widgets.about_us_ui(self)
 		
 		###########################################################
 		
-		# Add widgets to our main window
+		# Load previous state in case of server restart
+		server_window.load_previous_state(self)
+		# Initialize GUI elements
 		server_window.init_UI(self)
 		return
 	
-
+	def load_previous_state(self):
+		if self.config["Contest Status"] == "RUNNING":
+			self.contest_time_entry.setReadOnly(1)
+			self.contest_time_entry.setToolTip('Contest has STARTED. You can\'t edit this value now.')
+		elif self.config["Contest Status"] == "STOPPED":
+			self.contest_time_entry.setReadOnly(1)
+			self.contest_time_entry.setToolTip('Contest has STOPPED. You can\'t edit this value now.')
+		
+		return
 	def init_UI(self):
 		self.set_status('SETUP')
 		# Define Layout for sidebar
@@ -304,24 +314,39 @@ class server_window(QMainWindow):
 		if self.data_changed_flags[9] == 1:
 			self.query_model.select()
 			self.set_flags(9, 0)
+
+		# Recieved contest start signal
 		if self.data_changed_flags[10] == 1:
 			self.set_status('RUNNING')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ RUNNING ]')
+		# Recieved contest stop signal
 		elif self.data_changed_flags[10] == 2:
 			self.set_status('STOPPED')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ STOPPED ]')
 		return
 
-	def send_data_to_client_thread(self, data, extra_data = '02:00'):
+	def process_event(self, data, extra_data):
 		if data == 'START':
+			# Update config file
+			current_time = time.localtime()
+			current_time = str(time.strftime("%H:%M:%S", current_time))
+			save_status.update_entry('Contest Start Time', current_time)
+			save_status.update_entry('Contest Status', 'RUNNING')
+			save_status.update_entry('Contest Duration', extra_data)
+
 			self.data_changed_flags[10] = 1
 			message = {
 			'Code' : 'START',
-			'Time' : extra_data
+			'Duration' : extra_data
 			}
 			message = json.dumps(message)
 			self.data_to_client.put(message)
 		elif data == 'STOP':
+			current_time = time.localtime()
+			current_time = str(time.strftime("%H:%M:%S", current_time))
+			save_status.update_entry('Contest End Time', current_time)
+			save_status.update_entry('Contest Status', 'STOPPED')
+
 			self.data_changed_flags[10] = 2
 			message = {
 			'Code' : 'STOP'
@@ -336,9 +361,6 @@ class server_window(QMainWindow):
 			}
 			message = json.dumps(message)
 			self.data_to_client.put(message)
-		elif data == 'QUERY RESPONSE':
-			#process extra data (dictionary or maybe json)
-			self.data_to_client.put('QUERY')
 			
 		return
 
