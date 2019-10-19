@@ -67,9 +67,10 @@ class start_listening():
 		elif code == "STOP":
 			start_listening.stop_status(json_data)
 			print('UNDER DEVELOPMENT')
-		elif code == "UPDTE":
+		elif code == "UPDATE":
 			print("UNDER DEVELOPMENT")
 		else:
+			print(code)
 			print("WRONG INPUT")
 
 
