@@ -17,19 +17,24 @@ def main():
 	# Initialize server
 	print('[ SETUP ] Initialising server...')
 
-	# save_status.write_config(
-	# 	'BitsOJ', 
-	# 	'root', 
-	# 	'judge1', 
-	# 	'judge1', 
-	# 	'localhost', 
-	# 	'True', 
-	# 	'True', 
-	# 	'abcdefghij12345', 
-	# 	'abcdefghij12345', 
-	# 	'papa', 
-	# 	'02:00'
-	# 	)
+# save_status.write_config(
+# 		'BitsOJ', 
+# 		'root', 
+# 		'judge1', 
+# 		'judge1', 
+# 		'localhost', 
+# 		'True', 
+# 		'True', 
+# 		'abcdefghij12345', 
+# 		'abcdefghij12345', 
+# 		'papa', 
+# 		'02:00',
+# 		'SETUP',
+# 		'00:00:00',
+# 		'00:00:00',
+#		'0'
+# 		)
+
 
 	config = initialize_server.read_config()
 	judge_username = config["Judge Username"]

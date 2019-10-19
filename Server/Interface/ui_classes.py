@@ -262,7 +262,7 @@ class ui_widgets:
 
 		contest_time_entry = QLineEdit()
 		contest_time_entry.setText(self.config["Contest Duration"])
-		contest_time_entry.setPlaceholderText('HH:MM')
+		contest_time_entry.setPlaceholderText('HH:MM:SS')
 		contest_time_entry.setFixedSize(80, 30)
 		contest_time_entry.setToolTip('You will not be able to edit this when contest starts.')
 
