@@ -316,4 +316,13 @@ class user_management(manage_database):
 		except Exception as error:
 			print("[ ERROR ] Database deletion error : " + str(error))
 
+	def delete_all():
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute("DELETE FROM accounts")
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Database deletion error : " + str(error))
+
 

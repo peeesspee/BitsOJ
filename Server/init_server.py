@@ -25,7 +25,7 @@ class initialize_server():
 
 	# To be moved to setup.py
 class save_status():
-	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, client_key, judge_key, file_password, contest_duration):
+	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, client_key, judge_key, file_password, contest_duration, status, contest_start_time, contest_end_time, contest_set_time):
 		print('\n[ WRITE ] config.json')
 
 		allow_login = str(allow_login)
@@ -42,11 +42,16 @@ class save_status():
 		'Judge Key' : judge_key,
 		'Client Key' : client_key,
 		'File Password' : file_password,
-		'Contest Duration' : contest_duration
+		'Contest Duration' : contest_duration,
+		"Contest Status": status,
+    	"Contest Start Time": contest_start_time,
+    	"Contest End Time": contest_end_time,
+    	"Contest Set Time" : contest_set_time
 		}
 
 		with open("config.json", "w") as data_file:
 			json.dump(json_data, data_file, indent=4)
+
 
 	def update_entry(entry, new_value):
 		print('\n[ UPDATE ] ' + str(entry) + ':' + str(new_value))
