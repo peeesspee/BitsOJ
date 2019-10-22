@@ -300,39 +300,12 @@ class server_window(QMainWindow):
 	# Functions related to GUI updates
 	def load_previous_state(self):
 		if self.config["Contest Status"] == "RUNNING":
-			self.data_changed_flags[10] = 1
-			self.contest_time_entry.setReadOnly(1)
-			self.contest_time_entry.setToolTip('Contest has STARTED. You can\'t edit this value now.')
-			self.contest_time_entry.setReadOnly(1)
-			self.contest_time_entry.setToolTip('Contest has STARTED. You can\'t edit this value now.')
-			self.change_time_entry.setReadOnly(False)
-			self.change_time_entry.setToolTip('Extend/Shorten contest (in minutes)')
-			self.set_button.setEnabled(False)
-			self.set_button.setToolTip('Contest has STARTED. You can not set time now!')
-			self.start_button.setEnabled(False)
-			self.start_button.setToolTip('Contest is already running!')
-			self.stop_button.setEnabled(True)
-			self.stop_button.setToolTip('STOP the contest.')
-			self.update_button.setEnabled(True)
-			self.update_button.setToolTip('Update the contest.')
+			server_window.set_button_behavior(self, 'RUNNING')
 		elif self.config["Contest Status"] == "STOPPED":
-			self.data_changed_flags[10] = 2
-			self.contest_time_entry.setReadOnly(1)
-			self.contest_time_entry.setToolTip('Contest has STOPPED. You can\'t edit this value now.')
-			self.contest_time_entry.setReadOnly(1)
-			self.contest_time_entry.setToolTip('Contest has STOPPED. You can\'t edit this value now.')
-			self.update_button.setEnabled(False)
-			self.update_button.setToolTip('Contest has STOPPED. You can not extend it now.')
-			self.stop_button.setEnabled(False)
-			self.stop_button.setToolTip('Contest has already STOPPED!')
-			self.start_button.setEnabled(False)
-			self.start_button.setToolTip('Contest has STOPPED!')
-			self.set_button.setEnabled(False)
-			self.set_button.setToolTip('Contest has STOPPED!')
-			self.change_time_entry.setReadOnly(True)
-			self.change_time_entry.setToolTip('Contest has STOPPED. You can not change time now!')
-			
+			server_window.set_button_behavior(self, 'STOPPED')
 
+		return
+			
 	def update_data(self):
 		# If data has changed in submission table
 		if self.data_changed_flags[0] == 1:
@@ -380,6 +353,36 @@ class server_window(QMainWindow):
 		h, m, s = time_str.split(':')
 		return int(h) * 3600 + int(m) * 60 + int(s)
 
+	def set_button_behavior(self, status):
+		if status == "RUNNING":
+			self.data_changed_flags[10] = 1
+			self.contest_time_entry.setReadOnly(1)
+			self.contest_time_entry.setToolTip('Contest has STARTED.\nYou can\'t edit this value now.')
+			self.change_time_entry.setReadOnly(False)
+			self.change_time_entry.setToolTip('Extend/Shorten contest (in minutes)')
+			self.set_button.setEnabled(False)
+			self.set_button.setToolTip('Contest has STARTED.\nYou can not set time now!')
+			self.start_button.setEnabled(False)
+			self.start_button.setToolTip('Contest is already running!')
+			self.stop_button.setEnabled(True)
+			self.stop_button.setToolTip('STOP the contest.')
+			self.update_button.setEnabled(True)
+			self.update_button.setToolTip('Update the contest.')
+		elif status == "STOPPED":
+			self.data_changed_flags[10] = 2
+			self.contest_time_entry.setReadOnly(1)
+			self.contest_time_entry.setToolTip('Contest has STOPPED.\nYou can\'t edit this value now.')
+			self.update_button.setEnabled(False)
+			self.update_button.setToolTip('Contest has STOPPED.\nYou can not extend it now.')
+			self.stop_button.setEnabled(False)
+			self.stop_button.setToolTip('Contest has already STOPPED!')
+			self.start_button.setEnabled(False)
+			self.start_button.setToolTip('Contest has STOPPED!')
+			self.set_button.setEnabled(False)
+			self.set_button.setToolTip('Contest has STOPPED!')
+			self.change_time_entry.setReadOnly(True)
+			self.change_time_entry.setToolTip('Contest has STOPPED.\nYou can not change time now!')
+		return
 
 	def process_event(self, data, extra_data):
 		if data == 'SET':
@@ -401,19 +404,7 @@ class server_window(QMainWindow):
 			self.data_to_client.put(message)
 
 			# Update GUI
-			self.data_changed_flags[10] = 1
-			self.contest_time_entry.setReadOnly(1)
-			self.contest_time_entry.setToolTip('Contest has STARTED. You can\'t edit this value now.')
-			self.change_time_entry.setReadOnly(False)
-			self.change_time_entry.setToolTip('Extend/Shorten contest (in minutes)')
-			self.set_button.setEnabled(False)
-			self.set_button.setToolTip('Contest has STARTED. You can not set time now!')
-			self.start_button.setEnabled(False)
-			self.start_button.setToolTip('Contest is already running!')
-			self.stop_button.setEnabled(True)
-			self.stop_button.setToolTip('STOP the contest.')
-			self.update_button.setEnabled(True)
-			self.update_button.setToolTip('Update the contest.')
+			server_window.set_button_behavior(self, 'RUNNING')
 
 			# Update config file
 			current_time = str(time.strftime("%H:%M:%S", current_time))
@@ -434,17 +425,7 @@ class server_window(QMainWindow):
 			self.data_to_client.put(message)
 
 			# Update GUI
-			self.data_changed_flags[10] = 2
-			self.contest_time_entry.setReadOnly(1)
-			self.contest_time_entry.setToolTip('Contest has STOPPED. You can\'t edit this value now.')
-			self.update_button.setEnabled(False)
-			self.update_button.setToolTip('Contest has STOPPED. You can not extend it now.')
-			self.stop_button.setEnabled(False)
-			self.stop_button.setToolTip('Contest has already STOPPED!')
-			self.start_button.setToolTip('Contest has STOPPED!')
-			self.set_button.setToolTip('Contest has STOPPED!')
-			self.change_time_entry.setReadOnly(True)
-			self.change_time_entry.setToolTip('Contest has STOPPED. You can not change time now!')
+			self.set_button_behavior('STOPPED')
 			# Update config file
 			current_time = str(time.strftime("%H:%M:%S", current_time))
 			save_status.update_entry('Contest End Time', current_time)
@@ -619,6 +600,54 @@ class server_window(QMainWindow):
 
 		# Reset critical flag
 		self.data_changed_flags[6] = 0
+
+		return
+
+	@pyqtSlot()
+	def reset_accounts(self):
+		if self.data_changed_flags[11] == 0:
+			# Set critical flag
+			self.data_changed_flags[11] = 1
+		else:
+			# If one data deletion window is already opened, process it first.
+			return
+		# If no row is selected, return
+		try:
+			message = "Are you sure you want to DELETE ALL accounts?"
+		
+			custom_close_box = QMessageBox()
+			custom_close_box.setIcon(QMessageBox.Critical)
+			custom_close_box.setWindowTitle('Confirm RESET')
+			custom_close_box.setText(message)
+
+			custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
+			custom_close_box.setDefaultButton(QMessageBox.No)
+
+			button_yes = custom_close_box.button(QMessageBox.Yes)
+			button_yes.setText('Yes')
+			button_no = custom_close_box.button(QMessageBox.No)
+			button_no.setText('No')
+
+			button_yes.setObjectName("close_button_yes")
+			button_no.setObjectName("close_button_no")
+
+			button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
+			button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+
+			custom_close_box.exec_()
+
+			if custom_close_box.clickedButton() == button_yes:
+				user_management.delete_all()
+				# Update Accounts View
+				self.data_changed_flags[5] = 1
+			elif custom_close_box.clickedButton() == button_no : 
+				pass
+		except:
+			print('Could not reset database!')
+
+		finally:
+			# Reset critical flag
+			self.data_changed_flags[11] = 0
 
 		return
 

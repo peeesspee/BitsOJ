@@ -52,6 +52,7 @@ class save_status():
 		with open("config.json", "w") as data_file:
 			json.dump(json_data, data_file, indent=4)
 
+
 	def update_entry(entry, new_value):
 		print('\n[ UPDATE ] ' + str(entry) + ':' + str(new_value))
 		try:
