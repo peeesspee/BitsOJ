@@ -9,7 +9,8 @@ Offline Judge for competitive programming contests.
 #### 2.Install ErLang
 1. `cd ~  `  
 2. `wget http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_general/esl-erlang_20.1-1~ubuntu~xenial_amd64.deb`  
-3. `sudo dpkg -i esl-erlang_20.1-1\~ubuntu\~xenial_amd64.deb`  
+3. `sudo dpkg -i esl-erlang_20.1-1\~ubuntu\~xenial_amd64.deb`   
+Check your ErLang installation by running:  
 4. `erl`  
 #### 3.Install RabbitMQ  
 Add the Apt repository to your Apt source list directory (/etc/apt/sources.list.d):  
@@ -20,7 +21,7 @@ Add the Apt repository to your Apt source list directory (/etc/apt/sources.list.
 3. `sudo apt-get install rabbitmq-server`  
 #### 4.Start the RabbitMQ server:  
 1. `sudo systemctl start rabbitmq-server.service`  
-2. `sudo systemctl enable rabbitmq-server.service`  
+2. `sudo systemctl enable rabbitmq-server.service`    
 To check status of RabbitMQ server,  
 3. `sudo rabbitmqctl status`  
 #### 5.Create a new admin account  
