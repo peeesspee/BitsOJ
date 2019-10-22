@@ -9,6 +9,8 @@ server_database.db
 Client_Submissions/
 diary
 *.json
+Server/config.json
+Client/Config.json
 *.pdf
 Problems/
 Client/Problems/
