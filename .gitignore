@@ -10,7 +10,7 @@ Client_Submissions/
 diary
 *.json
 Server/config.json
-Client/Config.json
+Client/config.json
 *.pdf
 Problems/
 Client/Problems/

@@ -1,4 +1,5 @@
 from connection import manage_connection
+from init_client import handle_config
 import json
 
 class authenticate_login():
@@ -16,6 +17,9 @@ class authenticate_login():
 		password = password
 
 		print("[ Validating ] : " + authenticate_login.username + "@" + password)
+		conf = handle_config.read_config_json()
+		if conf["client_id"] != 'Nul' 
+		authenticate_login.client_id = conf["client_id"]
 		final_data = { 
 			'Code' : 'LOGIN',
 			'Username' : username,
@@ -73,12 +77,10 @@ class authenticate_login():
 		print("[ STATUS ] " + status)
 		if (status == 'VALID'):
 			print('[ ClientID ] receiving ......')
-			with open('config.json', 'r') as read_config:
-				config = json.load(read_config)
+			config = handle_config.read_config_json()
 
 			config["client_id"] = str(server_data["Client ID"])
-			with open('config.json', 'w') as read_config:
-				json.dump(config, read_config, indent = 4) 
+			handle_config.write_config_json(config) 
 
 			print("[ Status ] " + status + "\n[ ClientID ] : " + str(server_data["Client ID"]) + "\n[ Server ] : " + server_data["Message"])
 			
