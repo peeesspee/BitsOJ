@@ -1,0 +1,69 @@
+
+/*-------------- Top Bar ----------------*/
+
+QWidget#main_widget{
+	background-color: #0E0F12;
+	color: #AAAAAA;
+}
+
+/*----------------------------------------*/
+
+/*----------------Top Tab-----------------*/
+
+QTabWidget#top_tab{
+	background-color: #080808;
+	color: #AAAAAA;
+}
+
+/*----------------------------------------*/
+
+/*-------------Client Tab-----------------*/
+
+QTabWidget#client_tabs{
+	background-color: #080808;
+	color: #AAAAAA;
+}
+
+/*-----------------------------------------*/
+
+
+/*--------------Default Tab-----------------*/
+
+QTabWidget::tab-bar {
+ background-color: red;
+}
+
+QTabBar::tab {
+    background-color: #4094da;
+    border : 1px solid #0E0F12;
+    border-radius : 25px;
+    font: bold 12px 'Arial';
+    color: white;
+    height:40px;
+
+}
+QTabBar::tab:!selected {
+	border : 1px solid #0E0F12;
+    border-radius : 25px;
+    background-color: #8B8589;
+    color: #010203;
+ }
+
+
+QTabBar::close-button {
+    background-position: center;
+    background-image: url(":/Appearance/close_chat_item");
+}
+
+ QTabWidget::pane { 
+     position: absolute;
+ }
+
+QTabBar::tab:selected {
+    border : 1px solid #0E0F12;
+    border-radius : 25px;
+    background-color: #737373;
+    color: white;
+}
+
+/*---------------------------------------------*/

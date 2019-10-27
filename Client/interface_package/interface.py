@@ -270,10 +270,7 @@ class client_window(QMainWindow):
 		if(self.data_changed_flag[4] == 1):
 			try:
 				total_time = initialize_contest.return_contest_end_time()
-				print(type(total_time))
 				current_time = time.time()
-				print(total_time)
-				print(current_time)
 				elapsed_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
 				self.timer_widget.display(elapsed_time)
 				self.set_status()

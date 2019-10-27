@@ -1,5 +1,3 @@
-organized
-stop signal
 disconnect signal
 leaderboard
 update

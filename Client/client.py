@@ -8,8 +8,8 @@ import json
 from time import sleep
 from connection import manage_connection
 from database_management import manage_database, manage_local_ids
-from interface import init_gui
-from login_interface import start_interface
+from interface_package.interface import init_gui
+from interface_package.login_interface import start_interface
 from listen_server import start_listening
 from init_client import handle_config,rabbitmq_detail
 

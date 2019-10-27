@@ -8,6 +8,7 @@ class manage_connection():
 
 	# Function to establish connection
 	def initialize_connection(rabbitmq_username,rabbitmq_password,host):
+		# Credential for rabbitmq management
 		creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
 		params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
 		connection = pika.BlockingConnection(params)
@@ -24,6 +25,7 @@ class manage_connection():
 			return channel,connection
 		except Exception as Error:
 			print("Server is Not yet started Please wait")
+			print(str(Error))
 			connection.close()
 			sys.exit()
 
