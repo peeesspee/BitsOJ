@@ -134,7 +134,7 @@ class manage_clients():
 	def client_login_handler(client_username, client_password, client_id, client_type):
 		# Client sends the username, password, clientID as 'username+password+clientID', so we split it.
 		# Default value of clientID is 'Null' (String)
-		
+		message = ''
 		print('[ LOGIN REQUEST ] ::: ' + str(client_id) + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
 
 		# Declare queue with same name as client_username
@@ -146,9 +146,10 @@ class manage_clients():
 		if client_type == 'CLIENT':
 			# If client logins have been halted by the Admin, Send a rejection message to the client
 			if(manage_clients.data_changed_flags[2] == 0):
-				print('[ LOGIN ] Rejected by ADMIN')
+				print('[ LOGIN ][ REJECT ] Rejected by ADMIN')
 				message = {
-				'Code' : 'LRJCT'
+				'Code' : 'LRJCT',
+				'Message' : 'Logins are not allowed right now.\nPlease wait for announcement.'
 				}
 				message = json.dumps(message)
 				response.publish_message(manage_clients.channel, client_username, message)
@@ -164,52 +165,73 @@ class manage_clients():
 
 			# If login is successful:
 			if status == True:
-				# Check if client has logged in for the first time:
-				previously_connected_status = client_authentication.check_connected_client(client_username)
+				# Check if client has logged in for the first time or is already connected:
+				previously_connected_state = client_authentication.check_connected_client(client_username)
 				# If client has NOT logged in for the first time
 				# MAYBE A SECURITY EVENT?
 				# Raise a confirmation box to ADMIN maybe?
-				if previously_connected_status == True:
+				if previously_connected_state == 'Connected':
 					client_id = client_authentication.get_client_id(client_username)
-					print('[ ' + client_username + ' ] Previous Client ID : ' + str(client_id) )
+					print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Previous Client ID : ' + str(client_id) )
+					# Reject client login
+					message = {
+					'Code' : 'LRJCT',
+					'Message' : 'Maximum Login limit is 1 per user.'
+					}
+					message = json.dumps(message)
+
+					# Raise a security event?
+
 
 				# If client has logged in for the first time
-				else:
+				elif previously_connected_state == 'New':
 					# Fetch new client ID
 					client_id = client_authentication.generate_new_client_id()
 					# Add client to connected users database
-					client_authentication.add_connected_client(client_id, client_username, client_password)
-					print('[ ' + client_username + ' ] Assigned : ' + str(client_id) )
+					client_authentication.add_client(client_id, client_username, client_password, 'Connected')
+					print('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
 
-				# Update GUI to indicate new data
-				manage_clients.data_changed_flags[1] = 1
+					# Update GUI to indicate new data
+					manage_clients.data_changed_flags[1] = 1
 
-				# Reply to be sent to client
-				server_message = 'Hello_buddy!!'
-				
-				message = {
-				'Code' : 'VALID', 
-				'Client ID' : client_id, 
-				'Message' : server_message
-				}
-				message = json.dumps(message)
+					# Reply to be sent to client
+					server_message = 'Hello_buddy!!'
+					
+					message = {
+					'Code' : 'VALID', 
+					'Client ID' : client_id, 
+					'Message' : server_message
+					}
+					message = json.dumps(message)
 
-				print('[ SENT ] VALID to ' + client_username)
-				# Send login_successful signal to client. 
-				response.publish_message(manage_clients.channel, client_username, message)
-				
-				# Check if contest has started, also send client the 
-				# contest START signal alog with remaining time.
+					print('[ LOGIN ][ SENT ] VALID to ' + client_username)
+					
+					# Check if contest has started, also send client the 
+					# contest START signal alog with remaining time.
+
+				elif previously_connected_state == 'Deleted':
+					print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
+					# Reject client login
+					message = {
+					'Code' : 'LRJCT',
+					'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
+					}
+					message = json.dumps(message)
+
 
 			# If login is not successful:
 			elif status == False:
-				print('[ ' + client_username + ' ] NOT verified.')
+				print('[ ' + client_username + ' ][ REJECT ] NOT verified.')
 				message = {
 				'Code' : 'INVLD'
 				}
 				message = json.dumps(message)
 				# Reply 'Invalid credentials' to client
-				response.publish_message(manage_clients.channel, client_username, message)
+
+
+			# Send response to client
+
+			response.publish_message(manage_clients.channel, client_username, message)
 
 
 		# Judge login is handled as a client to avoid redundancy in code
