@@ -1,3 +1,7 @@
 disconnect signal
 leaderboard
 update
+logout signal
+
+
+

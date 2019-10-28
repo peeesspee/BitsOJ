@@ -74,3 +74,28 @@ QTabBar::tab:selected {
 }
 
 /*---------------------------------------------*/
+
+
+/*--------------Radio Button-------------------*/
+
+QRadioButton {
+    color:                  white;
+}
+
+QRadioButton::indicator {
+    width:                  18px;
+    height:                 17px;
+    border-radius:          10px;
+}
+
+QRadioButton::indicator:checked {
+    background-color:       #00FF41;
+    border:                 10px solid #000000;
+}
+
+QRadioButton::indicator:unchecked {
+    background-color:       #FFFFFF;
+    border:                 10px solid #000000;
+}
+
+/*----------------------------------------------*/
