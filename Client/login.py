@@ -1,6 +1,8 @@
 from connection import manage_connection
+from init_client import handle_config, user_detail
 import json
 
+# Class to manage authenticate login 
 class authenticate_login():
 	username = None
 	channel = None
@@ -8,16 +10,19 @@ class authenticate_login():
 	host = ''
 	login_status = 'INVLD'
  
-
+	# function to authenticate login from the server 
 	def login(username, password):
 		authenticate_login.channel = manage_connection.channel
 		authenticate_login.host = manage_connection.host
 		authenticate_login.username = username
-		password = password
 
 		print("[ Validating ] : " + authenticate_login.username + "@" + password)
+		conf = handle_config.read_config_json()
+		if conf["client_id"] != 'Null': 
+			authenticate_login.client_id = conf["client_id"]
 		final_data = { 
 			'Code' : 'LOGIN',
+			'Client Key' : config["client_key"]
 			'Username' : username,
 			'Password' : password, 
 			'ID' : authenticate_login.client_id,
@@ -69,16 +74,20 @@ class authenticate_login():
 
 		# Extracting the status whether valid or invalid 
 		status = server_data['Code']
-
 		print("[ STATUS ] " + status)
+		# If authentication is valid 
 		if (status == 'VALID'):
 			print('[ ClientID ] receiving ......')
-			with open('config.json', 'r') as read_config:
-				config = json.load(read_config)
+			# read config file config.json
+			config = handle_config.read_config_json()
 
+			# Add client id in the config file received by the server
 			config["client_id"] = str(server_data["Client ID"])
-			with open('config.json', 'w') as read_config:
-				json.dump(config, read_config, indent = 4) 
+			config["Username"] = authenticate_login.username
+			# update data in config file
+			handle_config.write_config_json(config)
+			# insert user detail for future use
+			user_detail.insert_detail(server_data["Client ID"], authenticate_login.username) 
 
 			print("[ Status ] " + status + "\n[ ClientID ] : " + str(server_data["Client ID"]) + "\n[ Server ] : " + server_data["Message"])
 			
@@ -87,13 +96,16 @@ class authenticate_login():
 			authenticate_login.client_id = server_data["Client ID"]
 			authenticate_login.channel.stop_consuming()
 
+		# If login is rejected by the server 
 		elif (status == 'REJCT'):
 			# Changing login status to rejected
 			print('[ Authentication ]  REJECTED ......')
 			authenticate_login.login_status = 'LRJCT'
+			# Delete the queue 
 			authenticate_login.channel.queue_delete(
 				queue = authenticate_login.username
 				)
+		# If login authentication is not valid 
 		else:
 			print("Invalid Login!!!!")
 			authenticate_login.login_status = 'INVLD'

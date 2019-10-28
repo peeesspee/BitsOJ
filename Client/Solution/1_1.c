@@ -9,7 +9,6 @@ import webbrowser
 from functools import partial
 from manage_code import send_code
 from database_management import submission_management, query_management, manage_local_ids
-from init_client import handle_config
 
 with open("config.json", "r") as read_config:
 	config = json.load(read_config)
@@ -269,12 +268,13 @@ class ui_widgets():
 		if data_changed_flag[0] == 0:
 			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
 		elif data_changed_flag[0] == 4:
-			QMessageBox.warning(self, 'Message', 'Contest has been ENDED')
+			QMessageBox.warning(self, 'Message', 'Contest has been STOPPED')
 		elif data_changed_flag[0] == 3:
 			QMessageBox.warning(self, 'Message', 'Your Time Up.\n Now you cannot submit solution')
 		else:
 			try:
-				config = handle_config.read_config_json()
+				with open("config.json", "r") as read_config:
+					config = json.load(read_config)
 				local_time = time.localtime()
 				time_stamp = time.strftime("%H:%M:%S", local_time)
 				textbox_value = ui_widgets.text_area.toPlainText()
@@ -298,7 +298,6 @@ class ui_widgets():
 					language_code = 'PY2'
 				local_id = manage_local_ids.get_new_id()
 				client_id = config["client_id"]
-				client_key = config["client_key"]
 				submission_management.insert_verdict(
 					local_id,
 					client_id,
@@ -319,8 +318,7 @@ class ui_widgets():
 					selected_language,
 					time_stamp,
 					textbox_value,
-					local_id,
-					client_key
+					local_id
 					)
 				QMessageBox.warning(self, 'Message', 'Your Solution has been successfully send')
 			except Exception as Error:
@@ -343,13 +341,14 @@ class ui_widgets():
 		if data_changed_flag[0] == 0:
 			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
 		elif data_changed_flag[0] == 4:
-			QMessageBox.warning(self, 'Message', 'Contest has been ENDED')
+			QMessageBox.warning(self, 'Message', 'Contest has been STOPPED')
 		elif data_changed_flag[0] == 3:
 			QMessageBox.warning(self, 'Message', 'Your Time Up.\n Now you cannot submit any query')
 		else:
-			config = handle_config.read_config_json()
+			with open("config.json", "r") as read_config:
+				config = json.load(read_config)
 			client_id = config["client_id"]
-			client_key = config["client_key"]
+			print(config["client_id"])
 			query = ui_widgets.ask_query.text()
 			if(query == ''):
 				QMessageBox.warning(self, 'Message', "Query Cannot be empty")
@@ -362,7 +361,6 @@ class ui_widgets():
 				data_changed_flag[2] = 1
 				send_code.query_request(
 					client_id,
-					client_key,
 					query,
 					)
 				QMessageBox.warning(self, 'Message', 'Your Query has been successfully send')

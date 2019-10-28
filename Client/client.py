@@ -8,19 +8,20 @@ import json
 from time import sleep
 from connection import manage_connection
 from database_management import manage_database, manage_local_ids
-from interface import init_gui
-from login_interface import start_interface
+from interface_package.interface import init_gui
+from interface_package.login_interface import start_interface
 from listen_server import start_listening
-from manage_code import send_code
+from init_client import handle_config,rabbitmq_detail
 
 
-with open("config.json", "r") as read_config:
-	config = json.load(read_config)
+config = handle_config.read_config_json()
 
 # Basic credentials for login to RabbitMQ Server
 rabbitmq_username = config["rabbitmq_username"]
 rabbitmq_password = config["rabbitmq_password"]
 host = config["host"]
+
+rabbitmq_detail.fill_detail(rabbitmq_username,rabbitmq_password,host)
 
 
 def main():
@@ -37,9 +38,10 @@ def main():
 		data_changed_flags[i] = 0
 	# index    value         meaning
 	# 0        0/1/2/3/4     Contest Not Started/Contest has been started/Running/Contest Stopped/Time Up
-	# 1        0/1           Verdict Not received/Verdict Received
-	# 2        0/1           Query response Not received/Query response received
-	
+	# 1        0/1/2         Initialize/Verdict Not received/Verdict Received
+	# 2        0/1/2         Initiaize/Query response Not received/Query response received
+	# 3        1             Server NOt Accepting Submission
+	# 4        0/1           Timer Stopped/ Timer running   
 
 	##################################
 	# Makes connection with RabbitMQ
@@ -81,13 +83,16 @@ def main():
 	print("  ################################################")
 
 
+# Manageing process
 def manage_process(rabbitmq_username, rabbitmq_password, cursor, host, data_changed_flags):
+	# this is from continuously listening from the server
 	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (rabbitmq_username,rabbitmq_password, cursor, host, data_changed_flags))
 
 	listen_from_server.start()
 
 	listen_pid = listen_from_server.pid
 
+	# returning process id 
 	return listen_pid
 
 main()

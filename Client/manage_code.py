@@ -3,13 +3,15 @@ import os
 import json
 from login import authenticate_login
 from connection import manage_connection
- 
+
+# Class to handle sending of code 
 class send_code():
 	client_id, username = authenticate_login.get_user_details()
 	channel,host = manage_connection.channel_host()
 	extention = None
 
-	def solution_request(problem_Code,selected_language,time_stamp,code,local_run_id):
+	# Solution request function 
+	def solution_request(problem_Code,selected_language,time_stamp,code,local_run_id,client_key):
 		if(selected_language == 'C'):
 			send_code.extention = '.c'
 			language_code = 'GCC'
@@ -27,6 +29,7 @@ class send_code():
 			language_code = 'PY2'
 		final_data = {
 			'Code' : 'SUBMT',
+			'Client Key': client_key,
 			'Local Run ID' : local_run_id,
 			'ID' : authenticate_login.client_id,
 			'PCode' : problem_Code,
@@ -49,10 +52,11 @@ class send_code():
 
 
 
-	def query_request(client_id,query):
+	def query_request(client_id,client_key,query):
 		final_data ={
 			'Code' : 'QUERY',
 			'Client ID' : client_id,
+			'Client Key': client_key,
 			'Query' : query,
 		}
 		final_data = json.dumps(final_data)

@@ -16,6 +16,7 @@ class Login(QWidget):
 		# Window Icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 
+		# Frame Geometry
 		qtRectangle = self.frameGeometry()
 		centerPoint = QDesktopWidget().availableGeometry().center()
 		qtRectangle.moveCenter(centerPoint)

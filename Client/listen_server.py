@@ -3,6 +3,8 @@ from login import authenticate_login
 import pika
 import json
 import sys
+import time
+from init_client import initialize_contest
 
 class start_listening():
 	# client_id, username = authenticate_login.get_user_details()
@@ -58,7 +60,6 @@ class start_listening():
 		elif code == 'QUERY':
 			start_listening.query_verdict(json_data)
 		elif code == 'SRJCT':
-			print('Submission Rejected')
 			start_listening.data_changed_flags[3] = 1
 		elif code == "SCRBD":
 			print("UNDER DEVELOPMENT")
@@ -106,9 +107,21 @@ class start_listening():
 		start_listening.data_changed_flags[2] = 2
 
 	def start_status(server_data):
-		with open('contest.json', 'w') as contest:
-			json.dump(server_data, contest, indent = 4)
+		print(server_data)
+		with open('config.json', 'r') as contest:
+			config = json.load(contest)
+		config["Duration"] = server_data["Duration"]
+		config["Contest"] = "RUNNING"
+		current_time = time.localtime()
+		contest_start_time = time.time()
+		config["Start Time"] = contest_start_time
+		initialize_contest.set_duration(config["Duration"])
+		contest_duration_seconds = initialize_contest.convert_to_seconds(initialize_contest.get_duration())
+		config["End Time"] = contest_duration_seconds + contest_start_time
+		with open('config.json', 'w') as write:
+			json.dump(config, write, indent=4)
 		start_listening.data_changed_flags[0] =1
+		start_listening.data_changed_flags[4] =2
 		print("[START] Signal received")
 		print("Contest Duration : " + server_data["Duration"])
 

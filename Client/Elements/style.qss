@@ -213,6 +213,12 @@ QTabBar::tab
 
 /*--------------MAIN LAYOUT STARTS----------------*/
 
+
+QLCDNumber{
+	color: #AAAAAA;
+	border : 0px;
+}
+
 /* Sidebar style */
 
 QWidget#sidebar{
