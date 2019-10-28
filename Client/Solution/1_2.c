@@ -18,7 +18,9 @@ class authenticate_login():
 		password = password
 
 		print("[ Validating ] : " + authenticate_login.username + "@" + password)
+		print('yes')
 		config = handle_config.read_config_json()
+		print('yes')
 		# if conf["client_id"] != 'Null': 
 		# 	authenticate_login.client_id = conf["client_id"]
 		final_data = { 
@@ -29,6 +31,7 @@ class authenticate_login():
 			'ID' : authenticate_login.client_id,
 			'Type' : 'CLIENT'
 			}
+		print('yes')
 		final_data = json.dumps(final_data)
 
 		# Declaring queue for the new client
@@ -36,12 +39,14 @@ class authenticate_login():
 			queue = authenticate_login.username, 
 			durable = True,
 			)
+		print('yes')
 		# Binding the queue for listening from the server 
 		authenticate_login.channel.queue_bind(
 			exchange = 'connection_manager', 
 			queue = authenticate_login.username
 			)
 
+		print('yes')
 		# Publishing the message ( Username and Password )
 		authenticate_login.channel.basic_publish(
 			exchange = 'connection_manager', 

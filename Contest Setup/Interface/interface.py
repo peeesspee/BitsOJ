@@ -76,10 +76,14 @@ class contest_setup(QMainWindow):
 		self.language = QWidget()
 		self.contest = QWidget()
 
-		client_problem_model = self.manage_models(self.db, 'client_problem')
+		##################################################################
+		#####################PROBLEM TAB##################################
+		##################################################################
+
+		# client_problem_model = self.manage_models(self.db, 'client_problem')
 
 		problem = QHBoxLayout()
-		problem_label = QLabel('Number of Problems')
+		problem_label = QLabel('Number of Problems : ')
 		problem_label.setObjectName('general')
 		problem_entry = QLineEdit()
 		problem_entry.setFixedWidth(400)
@@ -88,6 +92,65 @@ class contest_setup(QMainWindow):
 		problem.addWidget(problem_entry)
 		problem.addStretch(1)
 		problem.addSpacing(0)
+		self.problem_tab.setLayout(problem)
+
+
+		###################################################################
+		#########################RABBITMQ TAB##############################
+		###################################################################
+
+		rabbitmq_creds = QVBoxLayout()
+		rabbitmq_username = QHBoxLayout()
+		rabbitmq_username_label = QLabel('RABBIT_MQ USERNAME :   ')
+		rabbitmq_username_label.setObjectName('general')
+		rabbitmq_username_text = QLineEdit()
+		rabbitmq_username_text.setPlaceholderText('Example : Client')
+		rabbitmq_username_text.setObjectName('general_text')
+		rabbitmq_username_text.setFixedWidth(400)
+		rabbitmq_username_text.setFixedHeight(50)
+		rabbitmq_username.addWidget(rabbitmq_username_label)
+		rabbitmq_username.addWidget(rabbitmq_username_text)
+		rabbitmq_username.addStretch(1)
+		rabbitmq_username.addSpacing(0)
+		username_widget = QWidget()
+		username_widget.setLayout(rabbitmq_username)
+		rabbitmq_password = QHBoxLayout()
+		rabbitmq_password_label = QLabel('RABBIT_MQ PASSWORD :   ')
+		rabbitmq_password_label.setObjectName('general')
+		rabbitmq_password_text = QLineEdit()
+		rabbitmq_password_text.setPlaceholderText('Example : Client')
+		rabbitmq_password_text.setObjectName('general_text')
+		rabbitmq_password_text.setFixedWidth(400)
+		rabbitmq_password_text.setFixedHeight(50)
+		rabbitmq_password.addWidget(rabbitmq_password_label)
+		rabbitmq_password.addWidget(rabbitmq_password_text)
+		rabbitmq_password.addStretch(1)
+		rabbitmq_password.addSpacing(0)
+		password_widget = QWidget()
+		password_widget.setLayout(rabbitmq_password)
+		rabbitmq_host = QHBoxLayout()
+		rabbitmq_host_label = QLabel('RABBIT_MQ HOST :              ')
+		rabbitmq_host_label.setObjectName('general')
+		rabbitmq_host_text = QLineEdit()
+		rabbitmq_host_text.setPlaceholderText('Example : 127.0.0.1')
+		rabbitmq_host_text.setObjectName('general_text')
+		rabbitmq_host_text.setFixedWidth(400)
+		rabbitmq_host_text.setFixedHeight(50)
+		rabbitmq_host.addWidget(rabbitmq_host_label)
+		rabbitmq_host.addWidget(rabbitmq_host_text)
+		rabbitmq_host.addStretch(1)
+		rabbitmq_host.addSpacing(0)
+		host_widget = QWidget()
+		host_widget.setLayout(rabbitmq_host)
+		rabbitmq_creds.addWidget(username_widget)
+		rabbitmq_creds.addWidget(password_widget)
+		rabbitmq_creds.addWidget(host_widget)
+		rabbitmq_creds.addStretch(10)
+		rabbitmq_creds.addSpacing(0)
+		self.rabbitmq_detail.setLayout(rabbitmq_creds)
+		
+
+
 
 
 		self.tabs.addTab(self.rabbitmq_detail, "RabbitMQ Creds")
@@ -95,7 +158,7 @@ class contest_setup(QMainWindow):
 		self.tabs.addTab(self.language, "Add Language")
 		self.tabs.addTab(self.contest, "Contest Config")
 
-		self.problem_tab.setLayout(problem)
+		
 
 		self.client_tab_layout.addWidget(self.tabs)
 		self.client_tab.setLayout(self.client_tab_layout)
