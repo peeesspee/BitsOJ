@@ -7,7 +7,7 @@ from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from Interface.ui_classes import *
 from init_server import initialize_server, save_status
-from database_management import user_management
+from database_management import user_management, submissions_management, query_management
 
 
 # This is to ignore some warnings which were thrown when gui exited and 
@@ -604,7 +604,6 @@ class server_window(QMainWindow):
 
 		return
 
-	@pyqtSlot()
 	def reset_accounts(self):
 		if self.data_changed_flags[11] == 0:
 			# Set critical flag
@@ -651,7 +650,6 @@ class server_window(QMainWindow):
 			self.data_changed_flags[11] = 0
 			return
 
-	@pyqtSlot
 	def reset_submissions(self):
 		if self.data_changed_flags[11] == 0:
 			# Set critical flag
@@ -685,13 +683,59 @@ class server_window(QMainWindow):
 			custom_close_box.exec_()
 
 			if custom_close_box.clickedButton() == button_yes:
-				# submission_management.delete_all()
-				# Update Accounts View
-				# self.data_changed_flags[5] = 1
+				submissions_management.delete_all()
+				# Update Submissions View
+				self.data_changed_flags[0] = 1
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
-		except:
-			print('Could not reset database!')
+		except Exception as error:
+			print('Could not reset database : ' + str(error))
+
+		finally:
+			# Reset critical flag
+			self.data_changed_flags[11] = 0
+		return
+
+	def reset_queries(self):
+		if self.data_changed_flags[11] == 0:
+			# Set critical flag
+			self.data_changed_flags[11] = 1
+		else:
+			# If one data deletion window is already opened, process it first.
+			return
+		# If no row is selected, return
+		try:
+			message = "Are you sure you want to DELETE ALL queries?"
+		
+			custom_close_box = QMessageBox()
+			custom_close_box.setIcon(QMessageBox.Critical)
+			custom_close_box.setWindowTitle('Confirm RESET')
+			custom_close_box.setText(message)
+
+			custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
+			custom_close_box.setDefaultButton(QMessageBox.No)
+
+			button_yes = custom_close_box.button(QMessageBox.Yes)
+			button_yes.setText('Yes')
+			button_no = custom_close_box.button(QMessageBox.No)
+			button_no.setText('No')
+
+			button_yes.setObjectName("close_button_yes")
+			button_no.setObjectName("close_button_no")
+
+			button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
+			button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+
+			custom_close_box.exec_()
+
+			if custom_close_box.clickedButton() == button_yes:
+				query_management.delete_all()
+				# Update Queriess View
+				self.data_changed_flags[9] = 1
+			elif custom_close_box.clickedButton() == button_no : 
+				pass
+		except Exception as error:
+			print('Could not reset database : ' + str(error))
 
 		finally:
 			# Reset critical flag

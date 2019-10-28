@@ -200,6 +200,17 @@ class submissions_management(manage_database):
 			print("[ ERROR ] Could not update submission submission : " + str(error))
 		return
 
+	def delete_all():
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute("DELETE FROM submissions")
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Database deletion error : " + str(error))
+
+
+
 class query_management(manage_database):
 	def insert_query(query_id, client_id, query):
 		cur = manage_database.get_cursor()
@@ -226,6 +237,16 @@ class query_management(manage_database):
 		query_id_counter = query_id_counter + 1
 		query_id = int(query_id_counter)
 		return query_id
+
+	def delete_all():
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute("DELETE FROM queries")
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Database deletion error : " + str(error))
+
 
 class user_management(manage_database):
 	def generate_n_users(no_of_clients, no_of_judges, password_type):
