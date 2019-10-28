@@ -88,7 +88,7 @@ class previous_data(manage_database):
 				client_id_counter = 0
 
 		except:
-			print('[ ERROR ] Client ID could not be initialised')
+			print('[ INIT ] Client ID initialised to 0')
 			client_id_counter = 0
 
 	def get_last_query_id():
@@ -103,8 +103,9 @@ class previous_data(manage_database):
 				query_id_counter = 0
 
 		except:
-			print('[ ERROR ] Query ID could not be initialised')
+			print('[ INIT ] Query ID initialised to 0')
 			query_id_counter = 0
+			
 
 
 
@@ -130,14 +131,15 @@ class client_authentication(manage_database):
 		client_id = int(client_id_counter)
 		return client_id
 
-	def add_connected_client(client_id, user_name, password, state = 'Null'):
+	def add_client(client_id, user_name, password, state = 'Null'):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("INSERT INTO connected_clients values(?, ?, ?, ?)", (client_id, user_name, password, state, ))
+			cur.execute("INSERT INTO connected_clients(client_id, user_name, password, state) values(?, ?, ?, ?)", (client_id, user_name, password, state, ))
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not add client : " + str(error))
+			conn.rollback()
 		
 		return	
 		
@@ -165,14 +167,16 @@ class client_authentication(manage_database):
 
 	# Check if a client with given client_id is connected in the system
 	def check_connected_client(user_name ):
-		cur = manage_database.get_cursor()
-		cur.execute("SELECT exists(SELECT * FROM connected_clients WHERE user_name = ?)", (user_name,))
-		existence_result = cur.fetchall()
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT * FROM connected_clients WHERE user_name = ?", (user_name,))
+			result = cur.fetchall()
+			print('[ LOGIN ][ VALIDATION ] ' + str(user_name) + ' :: Status -> ' + str(result[0][3]))
+			return result[0][3]
+		except:
+			# If user was not connected earlier, this exception will be raised
+			return 'New'
 
-		if existence_result[0][0] == 1:
-			return True
-		else:
-			return False
 
 
 class submissions_management(manage_database):
@@ -325,12 +329,8 @@ class user_management(manage_database):
 				data = cur.fetchall()
 				client_type = data[0][2]
 				if client_type == 'CLIENT':
-					print("[ DISCONNECT ] " + username)
-					
-
-					cur.execute("DELETE FROM connected_clients WHERE user_name = ?",(user_name,))
-
-
+					print("[ DISCONNECT ] " + user_name)
+					cur.execute("UPDATE connected_clients SET state = 'Deleted' WHERE user_name = ?", (user_name, ))
 
 			cur.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
 			conn.commit()
@@ -342,6 +342,8 @@ class user_management(manage_database):
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			cur.execute("DELETE FROM accounts")
+			cur.execute("DELETE FROM connected_clients")
+			cur.execute("DELETE FROM connected_judges")
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Database deletion error : " + str(error))

@@ -616,9 +616,19 @@ class server_window(QMainWindow):
 		custom_close_box.exec_()
 
 		if custom_close_box.clickedButton() == button_yes:
+			# Delete from accounts table and connected clients table
 			user_management.delete_user(username)
-			# Update Accounts View
+			# Broadcast this user disconnection
+			message = {
+			'Code' : 'DSCNT',
+			'Mode' : 1,
+			'Client' : username
+			}
+			message = json.dumps(message)
+			self.data_to_client.put(message)
+			# Update Accounts and connected clients View
 			self.data_changed_flags[5] = 1
+			self.data_changed_flags[1] = 1
 		elif custom_close_box.clickedButton() == button_no : 
 			pass
 
@@ -802,6 +812,13 @@ class server_window(QMainWindow):
 			if custom_close_box.clickedButton() == button_yes:
 				print('[ EVENT ] SERVER RESET TRIGGERED')
 				print('[ RESET ] Disconnecting all clients...')
+				self.data_changed_flags[1] = 1
+				# TODO : Broadcast this to all clients...
+
+
+
+
+				
 				print('[ RESET ] Disconnecting all Judges...')
 				print('[ RESET ] Resetting Accounts...')
 				user_management.delete_all()
@@ -822,6 +839,7 @@ class server_window(QMainWindow):
 				save_status.update_entry('Contest Start Time', '00:00:00')
 				save_status.update_entry('Contest End Time', '00:00:00')
 				save_status.update_entry('Contest Set Time', 0)
+
 			
 			elif custom_close_box.clickedButton() == button_no : 
 				pass

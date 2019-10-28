@@ -84,24 +84,27 @@ class broadcast_manager():
 					'Client ID' : data['Client ID'],
 					'Query' : data['Query'],
 					'Response' : data['Response'],
-					'Type' : data['Mode'],
+					'Type' : data['Mode']
 					}
 					message = json.dumps(message)
 				elif data['Code'] == 'DSCNT':
 					if data['Mode'] == 1:
 						client = data['Client']
 						print('[ EVENT ] Disconnect client : ' + str(client))
+						message = {
+						'Code' : 'DSCNT',
+						'Client' : client
+						}
 					elif data['Mode'] == 2:
 						print('[ EVENT ] Disconnect all clients')
-					message = {
-					'Code' : 'DSCNT',
-					'Client ID' : data['Client'],
-					'Type' : data['Mode'],
-					}
+						message = {
+						'Code' : 'DSCNT',
+						'Client' : 'All'
+						}
 					message = json.dumps(message)
 				broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
 
 			s.enter(1, 1, broadcast_manager.poll, (s, data_from_interface, ))
 			return
 		except Exception as error:
-			print('[ ERROR ] Data could not be broadcasted : ' + str(error))
+			print('[ ERROR ] Data could not be broadcasted : ' + str(error)) 

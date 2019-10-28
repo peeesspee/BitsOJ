@@ -20,12 +20,12 @@ class ui_widgets:
 		delete_account_button.setFixedSize(200, 50)
 		delete_account_button.clicked.connect(lambda:self.delete_account(accounts_table.selectionModel().selectedRows()))
 		delete_account_button.setObjectName("topbar_button")
+		delete_account_button.setToolTip('Delete account.\nAlso perma-blocks the user if connected!\nProceed with caution.')
 
 		delete_all_accounts_button = QPushButton('Reset', self)
 		delete_all_accounts_button.setFixedSize(200, 50)
 		delete_all_accounts_button.clicked.connect(self.reset_accounts)
 		delete_all_accounts_button.setObjectName("topbar_button")
-
 
 		accounts_model = self.manage_models(self.db, 'accounts')
 		accounts_model.setHeaderData(0, Qt.Horizontal, 'Username')
@@ -260,7 +260,6 @@ class ui_widgets:
 		contest_time_label.setObjectName('main_screen_sub_heading')
 
 		# Set contest time 
-		
 		contest_duration_label = QLabel('> Contest Duration: ')
 		contest_duration_label.setObjectName('main_screen_content')
 		contest_duration_label.setFixedSize(200, 20)
