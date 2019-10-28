@@ -126,16 +126,17 @@ class server_window(QMainWindow):
 		self.tab6 = ui_widgets.problem_ui(self)
 		self.tab7 = ui_widgets.language_ui(self)
 		self.tab8 = ui_widgets.stats_ui(self)
-		self.tab9, self.contest_time_entry, self.change_time_entry, self.set_button, self.start_button, self.update_button, self.stop_button = ui_widgets.settings_ui(self)
+		self.tab9, self.contest_time_entry, self.change_time_entry, self.set_button, self.start_button, self.update_button, self.stop_button, self.server_reset_button = ui_widgets.settings_ui(self)
 		self.tab10 = ui_widgets.reports_ui(self)
 		self.tab11 = ui_widgets.about_us_ui(self)
 		
 		###########################################################
 		
-		# Load previous state in case of server restart
-		server_window.load_previous_state(self)
+		
 		# Initialize GUI elements
 		server_window.init_UI(self)
+		# Load previous state in case of server restart
+		server_window.load_previous_state(self)
 		return
 	
 
@@ -303,7 +304,10 @@ class server_window(QMainWindow):
 			server_window.set_button_behavior(self, 'RUNNING')
 		elif self.config["Contest Status"] == "STOPPED":
 			server_window.set_button_behavior(self, 'STOPPED')
+		elif self.config["Contest Status"] == "SETUP":
+			server_window.set_button_behavior(self, 'SETUP')
 
+		# TODO: When server restarts, pop up a new notification about contest status
 		return
 			
 	def update_data(self):
@@ -355,6 +359,23 @@ class server_window(QMainWindow):
 		return int(h) * 3600 + int(m) * 60 + int(s)
 
 	def set_button_behavior(self, status):
+		if status == "SETUP":
+			self.data_changed_flags[10] = 0
+			self.timer_widget.display('00:00:00')
+			self.contest_time_entry.setReadOnly(0)
+			self.contest_time_entry.setToolTip('You will not be able to edit this when contest starts.')
+			self.change_time_entry.setReadOnly(False)
+			self.change_time_entry.setToolTip('You will be able to use it when contest is STARTED')
+			self.set_button.setEnabled(True)
+			self.set_button.setToolTip('Set contest time.\nThis does NOT broadcast to clients.')
+			self.start_button.setEnabled(True)
+			self.start_button.setToolTip('START the contest and broadcast to all clients.')
+			self.stop_button.setEnabled(False)
+			self.stop_button.setToolTip('STOP the contest and broadcast to all clients.\nDisabled until contest Starts')
+			self.update_button.setEnabled(False)
+			self.update_button.setToolTip('UPDATE contest time and broadcast to all clients.\nDisabled until contest Starts')
+			self.server_reset_button.setEnabled(True)
+			self.server_reset_button.setToolTip('RESET the server.')
 		if status == "RUNNING":
 			self.data_changed_flags[10] = 1
 			self.contest_time_entry.setReadOnly(1)
@@ -369,6 +390,8 @@ class server_window(QMainWindow):
 			self.stop_button.setToolTip('STOP the contest.')
 			self.update_button.setEnabled(True)
 			self.update_button.setToolTip('Update the contest.')
+			self.server_reset_button.setEnabled(False)
+			self.server_reset_button.setToolTip('RESET the server.\nCan only be used when contest\nis not RUNNING.')
 		elif status == "STOPPED":
 			self.data_changed_flags[10] = 2
 			self.contest_time_entry.setReadOnly(1)
@@ -383,6 +406,8 @@ class server_window(QMainWindow):
 			self.set_button.setToolTip('Contest has STOPPED!')
 			self.change_time_entry.setReadOnly(True)
 			self.change_time_entry.setToolTip('Contest has STOPPED.\nYou can not change time now!')
+			self.server_reset_button.setEnabled(True)
+			self.server_reset_button.setToolTip('RESET the server.')
 		return
 
 	def process_event(self, data, extra_data):
@@ -413,8 +438,6 @@ class server_window(QMainWindow):
 			save_status.update_entry('Contest Status', 'RUNNING')
 			save_status.update_entry('Contest Duration', extra_data)
 			save_status.update_entry('Contest Set Time', self.contest_set_time)
-
-			
 
 		elif data == 'STOP':
 			current_time = time.localtime()
@@ -650,6 +673,7 @@ class server_window(QMainWindow):
 			self.data_changed_flags[11] = 0
 			return
 
+	
 	def reset_submissions(self):
 		if self.data_changed_flags[11] == 0:
 			# Set critical flag
@@ -741,6 +765,75 @@ class server_window(QMainWindow):
 			# Reset critical flag
 			self.data_changed_flags[11] = 0
 		return
+
+	def reset_server(self):
+		if self.data_changed_flags[11] == 0:
+			# Set critical flag
+			self.data_changed_flags[11] = 1
+		else:
+			# If one data deletion window is already opened, process it first.
+			return
+		# If no row is selected, return
+		try:
+			message = "Are you sure to RESET the server?\nContest Information will be lost"
+			extra_data = "You should create the contest report first!"
+		
+			custom_close_box = QMessageBox()
+			custom_close_box.setIcon(QMessageBox.Critical)
+			custom_close_box.setWindowTitle('SERVER RESET')
+			custom_close_box.setText(message)
+
+			custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
+			custom_close_box.setDefaultButton(QMessageBox.No)
+
+			button_yes = custom_close_box.button(QMessageBox.Yes)
+			button_yes.setText('Yes')
+			button_no = custom_close_box.button(QMessageBox.No)
+			button_no.setText('No')
+
+			button_yes.setObjectName("close_button_yes")
+			button_no.setObjectName("close_button_no")
+
+			button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
+			button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+
+			custom_close_box.exec_()
+
+			if custom_close_box.clickedButton() == button_yes:
+				print('[ EVENT ] SERVER RESET TRIGGERED')
+				print('[ RESET ] Disconnecting all clients...')
+				print('[ RESET ] Disconnecting all Judges...')
+				print('[ RESET ] Resetting Accounts...')
+				user_management.delete_all()
+				# Update Accounts View
+				self.data_changed_flags[5] = 1
+				print('[ RESET ] Resetting Submissions...')
+				submissions_management.delete_all()
+				# Update Submissions View
+				self.data_changed_flags[0] = 1
+				print('[ RESET ] Resetting Queries...')
+				query_management.delete_all()
+				# Update Queriess View
+				self.data_changed_flags[9] = 1
+				print('[ RESET ] Reset environment...')
+				server_window.set_button_behavior(self, 'SETUP')
+				save_status.update_entry('Contest Duration', '00:00:00')
+				save_status.update_entry('Contest Status', 'SETUP')
+				save_status.update_entry('Contest Start Time', '00:00:00')
+				save_status.update_entry('Contest End Time', '00:00:00')
+				save_status.update_entry('Contest Set Time', 0)
+			
+			elif custom_close_box.clickedButton() == button_no : 
+				pass
+		except Exception as error:
+			print('Could not reset database : ' + str(error))
+
+		finally:
+			# Reset critical flag
+			self.data_changed_flags[11] = 0
+		return
+
+		
 
 	###################################################
 	

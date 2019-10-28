@@ -306,7 +306,7 @@ class user_management(manage_database):
 		password_list = list()
 		chars=string.ascii_uppercase + string.digits+string.ascii_lowercase
 		for i in range(0, number):
-			if type == 'Easy':
+			if type == 'Simple':
 				password = 'bits'+str(i + prev + 1)
 			elif type == 'Random':
 				password = ''.join(random.choice(chars) for _ in range(6))
