@@ -21,7 +21,6 @@ class ui_widgets:
 		delete_account_button.clicked.connect(lambda:self.delete_account(accounts_table.selectionModel().selectedRows()))
 		delete_account_button.setObjectName("topbar_button")
 
-
 		delete_all_accounts_button = QPushButton('Reset', self)
 		delete_all_accounts_button.setFixedSize(200, 50)
 		delete_all_accounts_button.clicked.connect(self.reset_accounts)
@@ -382,7 +381,7 @@ class ui_widgets:
 		submission_reset_button.setFixedSize(70, 25)
 		submission_reset_button.setObjectName('interior_button')
 		submission_reset_button.setToolTip('DELETE all submissions.')
-		# submission_reset_button.clicked.connect()
+		submission_reset_button.clicked.connect(self.reset_submissions)
 		submission_reset_layout = QHBoxLayout()
 		submission_reset_layout.addWidget(submission_reset_label)
 		submission_reset_layout.addWidget(submission_reset_button)
@@ -397,7 +396,7 @@ class ui_widgets:
 		query_reset_button.setFixedSize(70, 25)
 		query_reset_button.setObjectName('interior_button')
 		query_reset_button.setToolTip('DELETE all queries')
-		# query_reset_button.clicked.connect()
+		query_reset_button.clicked.connect(self.reset_queries)
 		query_reset_layout = QHBoxLayout()
 		query_reset_layout.addWidget(query_reset_label)
 		query_reset_layout.addWidget(query_reset_button)
