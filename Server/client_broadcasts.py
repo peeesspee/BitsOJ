@@ -43,51 +43,65 @@ class broadcast_manager():
 			return
 
 		# While there is data to process,
-		while data_from_interface.empty() == False:
-			data = data_from_interface.get()
-			data = json.loads(data)
-			print('\n[ DATA ] Recieved a new broadcast')
-			if data['Code'] == 'START':
-				print('[ EVENT ] START Contest')
-				message = {
-				'Code' : 'START',
-				'Duration' : data['Duration'],
-				'Problem Key' : broadcast_manager.file_password
-				}
-				message = json.dumps(message)
-	
-			elif data['Code'] == 'STOP':
-				# Don't allow Submissions
-				print('[ EVENT ] STOP Contest')
-				message = {
-				'Code' : 'STOP'
-				}
-				message = json.dumps(message)
-				
-			elif data['Code'] == 'UPDATE':
-				# Don't allow Submissions
-				print('[ EVENT ] UPDATE Contest')
-				message = {
-				'Code' : 'UPDATE',
-				'Time' : data['Time']
-				}
-				message = json.dumps(message)
-				
-			elif data['Code'] == 'QUERY':
-				if data['Mode'] == 1:
-					print('[ EVENT ] New Query response to client')
-				else:
-					print('[ EVENT ] New Query response broadcast')
-				message = {
-				'Code' : 'QUERY',
-				'Client ID' : data['Client ID'],
-				'Query' : data['Query'],
-				'Response' : data['Response'],
-				'Type' : data['Mode'],
-				}
-				message = json.dumps(message)
+		try:
+			while data_from_interface.empty() == False:
+				data = data_from_interface.get()
+				data = json.loads(data)
+				print('\n[ DATA ] Recieved a new broadcast')
+				if data['Code'] == 'START':
+					print('[ EVENT ] START Contest')
+					message = {
+					'Code' : 'START',
+					'Duration' : data['Duration'],
+					'Problem Key' : broadcast_manager.file_password
+					}
+					message = json.dumps(message)
+		
+				elif data['Code'] == 'STOP':
+					# Don't allow Submissions
+					print('[ EVENT ] STOP Contest')
+					message = {
+					'Code' : 'STOP'
+					}
+					message = json.dumps(message)
+					
+				elif data['Code'] == 'UPDATE':
+					# Don't allow Submissions
+					print('[ EVENT ] UPDATE Contest')
+					message = {
+					'Code' : 'UPDATE',
+					'Time' : data['Time']
+					}
+					message = json.dumps(message)
+					
+				elif data['Code'] == 'QUERY':
+					if data['Mode'] == 1:
+						print('[ EVENT ] New Query response to client')
+					else:
+						print('[ EVENT ] New Query response broadcast')
+					message = {
+					'Code' : 'QUERY',
+					'Client ID' : data['Client ID'],
+					'Query' : data['Query'],
+					'Response' : data['Response'],
+					'Type' : data['Mode'],
+					}
+					message = json.dumps(message)
+				elif data['Code'] == 'DSCNT':
+					if data['Mode'] == 1:
+						client = data['Client']
+						print('[ EVENT ] Disconnect client : ' + str(client))
+					elif data['Mode'] == 2:
+						print('[ EVENT ] Disconnect all clients')
+					message = {
+					'Code' : 'DSCNT',
+					'Client ID' : data['Client'],
+					'Type' : data['Mode'],
+					}
+					message = json.dumps(message)
+				broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
 
-			broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
-
-		s.enter(1, 1, broadcast_manager.poll, (s, data_from_interface, ))
-		return
+			s.enter(1, 1, broadcast_manager.poll, (s, data_from_interface, ))
+			return
+		except Exception as error:
+			print('[ ERROR ] Data could not be broadcasted : ' + str(error))

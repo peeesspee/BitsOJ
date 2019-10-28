@@ -125,6 +125,7 @@ class ui_widgets:
 		client_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
 		client_model.setHeaderData(1, Qt.Horizontal, 'Username')
 		client_model.setHeaderData(2, Qt.Horizontal, 'Password')
+		client_model.setHeaderData(3, Qt.Horizontal, 'State')
 
 		client_view = self.generate_view(client_model)
 

@@ -134,7 +134,7 @@ class manage_clients():
 	def client_login_handler(client_username, client_password, client_id, client_type):
 		# Client sends the username, password, clientID as 'username+password+clientID', so we split it.
 		# Default value of clientID is 'Null' (String)
-		
+		message = ''
 		print('[ LOGIN REQUEST ] ::: ' + str(client_id) + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
 
 		# Declare queue with same name as client_username
@@ -178,7 +178,7 @@ class manage_clients():
 					# Fetch new client ID
 					client_id = client_authentication.generate_new_client_id()
 					# Add client to connected users database
-					client_authentication.add_connected_client(client_id, client_username, client_password)
+					client_authentication.add_connected_client(client_id, client_username, client_password, 'Connected')
 					print('[ ' + client_username + ' ] Assigned : ' + str(client_id) )
 
 				# Update GUI to indicate new data
@@ -195,8 +195,6 @@ class manage_clients():
 				message = json.dumps(message)
 
 				print('[ SENT ] VALID to ' + client_username)
-				# Send login_successful signal to client. 
-				response.publish_message(manage_clients.channel, client_username, message)
 				
 				# Check if contest has started, also send client the 
 				# contest START signal alog with remaining time.
@@ -209,7 +207,11 @@ class manage_clients():
 				}
 				message = json.dumps(message)
 				# Reply 'Invalid credentials' to client
-				response.publish_message(manage_clients.channel, client_username, message)
+
+
+			# Send response to client
+
+			response.publish_message(manage_clients.channel, client_username, message)
 
 
 		# Judge login is handled as a client to avoid redundancy in code
