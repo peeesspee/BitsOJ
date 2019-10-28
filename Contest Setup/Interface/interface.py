@@ -76,10 +76,26 @@ class contest_setup(QMainWindow):
 		self.language = QWidget()
 		self.contest = QWidget()
 
+		client_problem_model = self.manage_models(self.db, 'client_problem')
+
+		problem = QHBoxLayout()
+		problem_label = QLabel('Number of Problems')
+		problem_label.setObjectName('general')
+		problem_entry = QLineEdit()
+		problem_entry.setFixedWidth(400)
+		problem_entry.setFixedHeight(50)
+		problem.addWidget(problem_label)
+		problem.addWidget(problem_entry)
+		problem.addStretch(1)
+		problem.addSpacing(0)
+
+
 		self.tabs.addTab(self.rabbitmq_detail, "RabbitMQ Creds")
 		self.tabs.addTab(self.problem_tab, "Add Problems")
 		self.tabs.addTab(self.language, "Add Language")
 		self.tabs.addTab(self.contest, "Contest Config")
+
+		self.problem_tab.setLayout(problem)
 
 		self.client_tab_layout.addWidget(self.tabs)
 		self.client_tab.setLayout(self.client_tab_layout)

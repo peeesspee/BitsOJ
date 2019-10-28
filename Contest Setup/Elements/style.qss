@@ -24,6 +24,13 @@ QTabWidget#client_tabs{
 	color: #AAAAAA;
 }
 
+QLabel#general{
+	color:#FFFFFF;
+	font: bold 20px 'Arial';
+	margin-left: 20px;
+}
+
+
 /*-----------------------------------------*/
 
 
