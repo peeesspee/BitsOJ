@@ -25,7 +25,7 @@ class initialize_server():
 
 	# To be moved to setup.py
 class save_status():
-	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, client_key, judge_key, file_password, contest_duration, status, contest_start_time, contest_end_time, contest_set_time):
+	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, allow_judge, client_key, judge_key, file_password, contest_duration, status, contest_start_time, contest_end_time, contest_set_time):
 		print('\n[ WRITE ] config.json')
 
 		allow_login = str(allow_login)
@@ -38,6 +38,7 @@ class save_status():
 		'Judge Username' : judge_username,
 		'Judge Password' : judge_password,
 		'Login Allowed' : allow_login,
+		'Judge Login Allowed' : allow_judge,
 		'Submission Allowed' : allow_submission,
 		'Judge Key' : judge_key,
 		'Client Key' : client_key,

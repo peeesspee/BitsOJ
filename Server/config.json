@@ -5,6 +5,7 @@
     "Judge Username": "judge1",
     "Judge Password": "judge1",
     "Login Allowed": "True",
+    "Judge Login Allowed": "True",
     "Submission Allowed": "True",
     "Judge Key": "abcdefghij12345",
     "Client Key": "abcdefghij12345",

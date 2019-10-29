@@ -23,9 +23,9 @@ class manage_database():
 		try:	
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
 			cur.execute("create table if not exists connected_clients(client_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10), state varchar2(15))")
+			cur.execute("create table if not exists connected_judges(judge_id varchar2(10), user_name varchar2(10), password varchar2(10), state varchar2(15))")
 			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(4), verdict varchar2(2), timestamp text)")
 			cur.execute("create table if not exists scoreboard(client_id varchar2(3), problems_solved integer, total_time text)")
-			cur.execute("create table if not exists connected_judges(judge_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10))")
 			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
 			
 		except Exception as error:
@@ -131,11 +131,11 @@ class client_authentication(manage_database):
 		client_id = int(client_id_counter)
 		return client_id
 
-	def add_client(client_id, user_name, password, state = 'Null'):
+	def add_client(client_id, user_name, password, state, table_name):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("INSERT INTO connected_clients(client_id, user_name, password, state) values(?, ?, ?, ?)", (client_id, user_name, password, state, ))
+			cur.execute("INSERT INTO " + table_name + " values(?, ?, ?, ?)", (client_id, user_name, password, state, ))
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not add client : " + str(error))
@@ -166,10 +166,10 @@ class client_authentication(manage_database):
 			return 'Null'
 
 	# Check if a client with given client_id is connected in the system
-	def check_connected_client(user_name ):
+	def check_connected_client(user_name, table_name ):
 		try:
 			cur = manage_database.get_cursor()
-			cur.execute("SELECT * FROM connected_clients WHERE user_name = ?", (user_name,))
+			cur.execute("SELECT * FROM " + table_name + " WHERE user_name = ?", (user_name,))
 			result = cur.fetchall()
 			print('[ LOGIN ][ VALIDATION ] ' + str(user_name) + ' :: Status -> ' + str(result[0][3]))
 			return result[0][3]
