@@ -67,7 +67,8 @@ class start_listening():
 			start_listening.start_status(json_data)
 		elif code == "STOP":
 			start_listening.stop_status(json_data)
-			print('UNDER DEVELOPMENT')
+		elif code == "DSCNT":
+			start_listening.disconnect(json_data)
 		elif code == "UPDATE":
 			print("UNDER DEVELOPMENT")
 		else:
@@ -129,4 +130,6 @@ class start_listening():
 		start_listening.data_changed_flags[0] = 3
 		print("[STOP] Signal received")
 
+	def disconnect(server_data):
+		print(server_data)
 
