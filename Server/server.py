@@ -41,6 +41,7 @@ def main():
 	judge_password = config["Judge Password"]
 	host = config["Server IP"]
 	login_status = config["Login Allowed"]
+	judge_login = config["Judge Login Allowed"]
 	submission_status = config["Submission Allowed"]
 	
 	####################################################
@@ -66,12 +67,23 @@ def main():
 	#	5		0/1			1: New users generated, update view
 	#   6		0/1			1: Account deletion under progress
 	#	7		0/1			1: Server shutdown
+	#   8		0/1			1: Query reply GUI open
+	#	9		0/1			1: Refresh query gui
+	# 	10		0/1/2		0: SETUP 1: START 2: STOPPED
+	#	11		0/1			1: Delete all accounts open
+	#	12		0/1			1: JUDGE logins allowed
+	#   13		0/1			1: Refresh Judge GUI
 
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	if login_status == 'True' or login_status == 'true':
 		data_changed_flags[2] = 1
 	else:
 		data_changed_flags[2] = 0
+
+	if judge_login == 'True' or judge_login == 'true':
+		data_changed_flags[12] = 1
+	else:
+		data_changed_flags[12] = 0
 
 	# Do not allow new submissions unless timer is active or admin begins contest
 	
@@ -112,11 +124,17 @@ def main():
 	else:
 		login_status = 'False'
 
+	if data_changed_flags[12] == 1:
+		judge_login = 'True'
+	else:
+		judge_login = 'False'
+
 	if data_changed_flags[3] == 1:
 		submission_status = 'True'
 	else:
 		submission_status = 'False'
 
+	save_status.update_entry('Judge Login Allowed', judge_login)
 	save_status.update_entry('Login Allowed', login_status)
 	save_status.update_entry('Submission Allowed', submission_status)
 	

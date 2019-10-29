@@ -21,6 +21,7 @@ save_status.write_config(
 		'judge1', 
 		'localhost', 
 		'True', 
+		'True',
 		'True', 
 		'abcdefghij12345', 
 		'abcdefghij12345', 

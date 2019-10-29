@@ -156,16 +156,47 @@ class ui_widgets:
 		heading = QLabel('Manage Judges')
 		heading.setObjectName('main_screen_heading')
 
-		#judge_model = self.manage_models(self.db, )
+		allow_login_label = QLabel('Allow Judge Logins : ')
+		allow_login_label.setObjectName('main_screen_content')
+
+		login_allowed_flag = self.check_judge_login_allowed()
+		
+		allow_login_button = QCheckBox('')
+		allow_login_button.setFixedSize(30, 30)
+		allow_login_button.setChecked(login_allowed_flag)
+		allow_login_button.stateChanged.connect(self.allow_judge_login_handler)
+
+		judge_model = self.manage_models(self.db, 'connected_judges')
+		judge_model.setHeaderData(0, Qt.Horizontal, 'Judge ID')
+		judge_model.setHeaderData(1, Qt.Horizontal, 'Username')
+		judge_model.setHeaderData(2, Qt.Horizontal, 'Password')
+		judge_model.setHeaderData(3, Qt.Horizontal, 'State')
+
+		judge_view = self.generate_view(judge_model)
+
+		head_layout = QHBoxLayout()
+		head_layout.addWidget(heading)
+		head_layout.addWidget(allow_login_label)
+		head_layout.addWidget(allow_login_button)
+		head_layout.setStretch(0, 80)
+		head_layout.setStretch(1, 10)
+		head_layout.setStretch(2, 10)
+		
+
+		head_widget = QWidget()
+		head_widget.setLayout(head_layout)
 
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
+		main_layout.addWidget(head_widget)
+		main_layout.addWidget(judge_view)
+		main_layout.setStretch(0,5)
+		main_layout.setStretch(1,95)		
 
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main
+		return main, judge_model
+
 
 
 	def query_ui(self):

@@ -119,7 +119,7 @@ class server_window(QMainWindow):
 		# Tab UI are managed by interface_packages/ui_classes.py file 
 		self.tab0, self.account_model = ui_widgets.accounts_ui(self)
 		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
-		self.tab2 = ui_widgets.judge_ui(self)
+		self.tab2, self.judge_model = ui_widgets.judge_ui(self)
 		self.tab3, self.client_model = ui_widgets.client_ui(self)
 		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5 = ui_widgets.leaderboard_ui(self)
@@ -217,7 +217,7 @@ class server_window(QMainWindow):
 		
 
 		# Screen 1 will be our initial screen 
-		self.right_widget.setCurrentIndex(9)
+		self.right_widget.setCurrentIndex(0)
 
 		# Define the combined layout for sidebar + right side screens
 		main_layout = QHBoxLayout()
@@ -325,6 +325,10 @@ class server_window(QMainWindow):
 			self.query_model.select()
 			self.set_flags(9, 0)
 
+		if self.data_changed_flags[13] == 1:
+			self.judge_model.select()
+			self.set_flags(13, 0)
+
 		if self.data_changed_flags[7] == 1:
 			# System EXIT
 			sys.exit()
@@ -361,7 +365,8 @@ class server_window(QMainWindow):
 	def set_button_behavior(self, status):
 		if status == "SETUP":
 			self.data_changed_flags[10] = 0
-			self.timer_widget.display('00:00:00')
+			contest_duration = self.config["Contest Duration"]
+			self.timer_widget.display(contest_duration)
 			self.contest_time_entry.setReadOnly(0)
 			self.contest_time_entry.setToolTip('You will not be able to edit this when contest starts.')
 			self.change_time_entry.setReadOnly(False)
@@ -477,6 +482,15 @@ class server_window(QMainWindow):
 			self.set_flags(2, 0)
 		return
 
+	def allow_judge_login_handler(self, state):
+		if(state == Qt.Checked):
+			# Allow logins
+			self.set_flags(12, 1)
+		else:
+			# Stop logins
+			self.set_flags(12, 0)
+		return
+
 	def allow_submissions_handler(self, state):
 		if(state == Qt.Checked):
 			# Allow submissions
@@ -488,6 +502,11 @@ class server_window(QMainWindow):
 
 	def check_login_allowed(self):
 		if self.data_changed_flags[2] == 1:
+			return True
+		return False
+
+	def check_judge_login_allowed(self):
+		if self.data_changed_flags[12] == 1:
 			return True
 		return False
 
@@ -818,8 +837,12 @@ class server_window(QMainWindow):
 
 
 
-				
+
 				print('[ RESET ] Disconnecting all Judges...')
+				# Update judges view
+				self.data_changed_flags[13] = 1
+				# TODO Broadcast this to all judges
+				
 				print('[ RESET ] Resetting Accounts...')
 				user_management.delete_all()
 				# Update Accounts View

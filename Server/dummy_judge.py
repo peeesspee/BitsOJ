@@ -8,28 +8,31 @@ rabbitmq_password = 'judge1'
 host = 'localhost'
 
 global client_id
-client_id = 'Nul'
+client_id = 0
 
 username = 'judge00001'
-password = 'Bits1'
-
-try:
-	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
-	params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
-	connection = pika.BlockingConnection(params)
-
-	channel = connection.channel()
-	channel.queue_declare(queue = username, durable = True)
-	channel.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
-	channel.queue_bind(exchange = 'connection_manager', queue = username)
-except:
-	print("Error")
+password = 'bits1'
+channel = ''
 
 def login():
 	global username
 	global password
+	global channel
 	username = input('Enter judge username: ') or username
 	password = input('Enter judge password: ') or password
+	try:
+		creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
+		params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+		connection = pika.BlockingConnection(params)
+
+		channel1 = connection.channel()
+		channel1.queue_declare(queue = username, durable = True)
+		channel1.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
+		channel1.queue_bind(exchange = 'connection_manager', queue = username)
+		channel = channel1
+	except:
+		print("Error")
+		return
 	print("Sending")
 	message = {
 		'Code' : 'LOGIN', 
@@ -85,12 +88,15 @@ def handler(ch, method, properties, body):
 		elif code =='VALID':
 			client_id = json_data['Client ID']
 			message = json_data['Message']
-			print('[ ' + code + ' ] ::: ' + client_id + ' ::: ' + message  )
+			print('[ ' + code + ' ] ::: ' + str(client_id) + ' ::: ' + message  )
 			ch.stop_consuming()
 
 		elif code == 'INVLD':
 			print("[ INVALID LOGIN ]")
 			ch.stop_consuming()
+
+		elif code == 'LRJCT':
+			print('Login rejected!')
 
 		ch.basic_ack(delivery_tag = method.delivery_tag)
 		return
