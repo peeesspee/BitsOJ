@@ -42,6 +42,7 @@ def main():
 	# 2        0/1/2         Initiaize/Query response Not received/Query response received
 	# 3        1             Server NOt Accepting Submission
 	# 4        0/1           Timer Stopped/ Timer running   
+	# 5        0/1/2         Proper Connection/Single Client Disconnected/All Clients Disconnected
 
 	##################################
 	# Makes connection with RabbitMQ
