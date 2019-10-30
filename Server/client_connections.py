@@ -3,7 +3,7 @@ import sys
 import time
 import json
 import threading
-from database_management import client_authentication, submissions_management, previous_data, query_management
+from database_management import client_authentication, submissions_management, previous_data, query_management, user_management
 from client_submissions import submission
 from client_broadcasts import broadcast_manager
 from init_server import initialize_server
@@ -191,8 +191,11 @@ class manage_clients():
 					'Client ID' : client_id, 
 					'Message' : 'Welcome back!.'
 					}
-					message = json.dumps(message)
+					message = json.dumps(message) 
+					user_management.update_user_state(client_username, 'Connected')
 
+					# Update GUI
+					manage_clients.data_changed_flags[1] = 1
 
 				# If client has logged in for the first time
 				elif previously_connected_state == 'New':

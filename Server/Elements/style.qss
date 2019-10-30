@@ -89,6 +89,12 @@ QPushButton#topbar_button::hover
 	color : #0892D0;
 	background-color : #202428 ;
 }
+QPushButton#topbar_button::disabled{
+	color: #E91E63;
+}
+QPushButton#topbar_button::!enabled{
+	color: #E91E63;
+}
 
 /* Style of buttons in the topbar  END  */
 

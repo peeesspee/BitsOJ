@@ -140,8 +140,8 @@ class client_authentication(manage_database):
 		except Exception as error:
 			print("[ ERROR ] Could not add client : " + str(error))
 			conn.rollback()
-		
 		return	
+
 		
 	# Get client_id when user_name is known
 	def get_client_id(user_name):

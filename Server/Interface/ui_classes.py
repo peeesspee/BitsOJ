@@ -20,7 +20,7 @@ class ui_widgets:
 		delete_account_button.setFixedSize(200, 50)
 		delete_account_button.clicked.connect(lambda:self.delete_account(accounts_table.selectionModel().selectedRows()))
 		delete_account_button.setObjectName("topbar_button")
-		delete_account_button.setToolTip('Delete account.\nAlso perma-blocks the user if connected!\nProceed with caution.')
+		delete_account_button.setToolTip('Delete account.\nCan be used when contest is \nnot RUNNING')
 
 		accounts_model = self.manage_models(self.db, 'accounts')
 		accounts_model.setHeaderData(0, Qt.Horizontal, 'Username')
@@ -49,7 +49,7 @@ class ui_widgets:
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main, accounts_model
+		return main, accounts_model, delete_account_button
 
 	def submissions_ui(self):
 		heading = QLabel('All Runs')
