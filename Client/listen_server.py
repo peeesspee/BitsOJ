@@ -4,7 +4,7 @@ import pika
 import json
 import sys
 import time
-from init_client import initialize_contest
+from init_client import initialize_contest, handle_config
 
 class start_listening():
 	# client_id, username = authenticate_login.get_user_details()
@@ -67,7 +67,8 @@ class start_listening():
 			start_listening.start_status(json_data)
 		elif code == "STOP":
 			start_listening.stop_status(json_data)
-			print('UNDER DEVELOPMENT')
+		elif code == "DSCNT":
+			start_listening.disconnect(json_data)
 		elif code == "UPDATE":
 			print("UNDER DEVELOPMENT")
 		else:
@@ -108,8 +109,7 @@ class start_listening():
 
 	def start_status(server_data):
 		print(server_data)
-		with open('config.json', 'r') as contest:
-			config = json.load(contest)
+		config = handle_config.read_config_json()
 		config["Duration"] = server_data["Duration"]
 		config["Contest"] = "RUNNING"
 		current_time = time.localtime()
@@ -118,8 +118,7 @@ class start_listening():
 		initialize_contest.set_duration(config["Duration"])
 		contest_duration_seconds = initialize_contest.convert_to_seconds(initialize_contest.get_duration())
 		config["End Time"] = contest_duration_seconds + contest_start_time
-		with open('config.json', 'w') as write:
-			json.dump(config, write, indent=4)
+		handle_config.write_config_json(config)
 		start_listening.data_changed_flags[0] =1
 		start_listening.data_changed_flags[4] =2
 		print("[START] Signal received")
@@ -129,4 +128,14 @@ class start_listening():
 		start_listening.data_changed_flags[0] = 3
 		print("[STOP] Signal received")
 
+	def disconnect(server_data):
+		print(server_data)
+		if server_data["Client"] == 'All':
+			start_listening.channel.stop_consuming()
+			start_listening.data_changed_flags[5] = 2
+		else:
+			config = handle_config.read_config_json()
+			if config["client_id"] == server_data["Client"]:
+				start_listening.channel.stop_consuming()
+				start_listening.data_changed_flags[5] = 1
 

@@ -1,3 +1,13 @@
+/*---------------Heading-----------------*/
+
+QLabel#heading{
+    color:#FFFFFF;
+    font: bold 40px 'Arial';
+    margin-bottom : 60px;
+    qproperty-alignment: AlignCenter;
+}
+
+/*---------------------------------------*/
 
 /*-------------- Top Bar ----------------*/
 
@@ -96,6 +106,18 @@ QRadioButton::indicator:checked {
 QRadioButton::indicator:unchecked {
     background-color:       #FFFFFF;
     border:                 10px solid #000000;
+}
+
+/*----------------------------------------------*/
+
+/*--------------------Check Box-----------------*/
+
+QCheckBox {
+    spacing: 10px;
+    outline: 5px;
+    color: #eff0f1;
+    margin-bottom: 10px;
+    margin-left: 20px;
 }
 
 /*----------------------------------------------*/

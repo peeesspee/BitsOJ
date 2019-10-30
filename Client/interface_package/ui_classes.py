@@ -146,7 +146,7 @@ class ui_widgets():
 		self.drop_widget.setContentsMargins(10, 0, 0, 0)
 		self.drop_widget.setLayout(self.drop_down)
 
-		ui_widgets.text_area = QTextEdit()
+		ui_widgets.text_area = QPlainTextEdit()
 		ui_widgets.text_area.setFixedHeight(650)
 		ui_widgets.text_area.setObjectName('text_area_content')
 		ui_widgets.text_area.setPlaceholderText('Paste your code here')
@@ -155,7 +155,7 @@ class ui_widgets():
 		self.submit_solution = QPushButton('Submit', self)
 		self.submit_solution.setObjectName('submit')
 		self.submit_solution.setFixedSize(200, 50)
-		self.submit_solution.clicked.connect(lambda:ui_widgets.submit_call(self, self.data_changed_flag))
+		self.submit_solution.clicked.connect(lambda:ui_widgets.submit_call(self, self.data_changed_flag,ui_widgets))
 		self.horizontal_layout.addWidget(self.submit_solution,  alignment=Qt.AlignRight)
 
 		self.horizontal_widget = QWidget()
@@ -264,7 +264,7 @@ class ui_widgets():
 
 
 
-	def submit_call(self, data_changed_flag):
+	def submit_call(self, data_changed_flag,ui_widgets):
 
 		if data_changed_flag[0] == 0:
 			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
@@ -323,6 +323,7 @@ class ui_widgets():
 					client_key
 					)
 				QMessageBox.warning(self, 'Message', 'Your Solution has been successfully send')
+				ui_widgets.text_area.setPlainText('')
 			except Exception as Error:
 				print(str(Error))
 		return

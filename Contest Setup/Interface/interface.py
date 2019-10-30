@@ -78,11 +78,12 @@ class contest_setup(QMainWindow):
 		self.contest = QWidget()
 
 		##################################################################
-		#####################PROBLEM TAB##################################
+		####################### PROBLEM TAB ##############################
 		##################################################################
 
 		# client_problem_model = self.manage_models(self.db, 'client_problem')
-
+		problem_heading = QLabel('Problems')
+		problem_heading.setObjectName('heading')
 		self.problem = QHBoxLayout()
 		self.problem_label = QLabel('Number of Problems : ')
 		self.problem_label.setObjectName('general')
@@ -97,10 +98,12 @@ class contest_setup(QMainWindow):
 
 
 		###################################################################
-		#########################RABBITMQ TAB##############################
+		######################## RABBITMQ TAB #############################
 		###################################################################
 
 		self.rabbitmq_creds = QVBoxLayout()
+		rabbitmq_heading = QLabel('RabbitMQ Client Details')
+		rabbitmq_heading.setObjectName('heading')
 		self.rabbitmq_username = QHBoxLayout()
 		self.rabbitmq_username_label = QLabel('RABBIT_MQ USERNAME :   ')
 		self.rabbitmq_username_label.setObjectName('general')
@@ -165,6 +168,7 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_button.addSpacing(0)
 		self.button_widget = QWidget()
 		self.button_widget.setLayout(self.rabbitmq_button)
+		self.rabbitmq_creds.addWidget(rabbitmq_heading)
 		self.rabbitmq_creds.addWidget(self.username_widget)
 		self.rabbitmq_creds.addWidget(self.password_widget)
 		self.rabbitmq_creds.addWidget(self.host_widget)
@@ -175,7 +179,72 @@ class contest_setup(QMainWindow):
 		
 
 		#####################################################################
-		#######################LANGUAGE TAB##################################
+		###################### LANGUAGE TAB #################################
+		#####################################################################
+
+		languages = QVBoxLayout()
+		language_heading = QLabel('Select Languages')
+		language_heading.setObjectName('heading')
+		base = QHBoxLayout()
+		self.all = QRadioButton('Select All')
+		self.some = QRadioButton('Manual Selection')
+		self.some.setChecked(True)
+		self.all.toggled.connect(lambda:self.select_language_base(self.all))
+		self.some.toggled.connect(lambda:self.select_language_base(self.some))
+		base.addWidget(self.all, alignment=Qt.AlignCenter)
+		base.addWidget(self.some, alignment=Qt.AlignCenter)
+		base.addStretch(1)
+		base.addSpacing(0)
+		base_widget = QWidget()
+		base_widget.setLayout(base)
+		self.c = QCheckBox("C",self)
+		self.cplusplus = QCheckBox('C++',self)
+		self.python2 = QCheckBox('PYTHON-2',self)
+		self.python3 = QCheckBox("PYTHON-3",self)
+		self.java = QCheckBox('JAVA',self)
+		self.general = QCheckBox('TEXT ANSWER',self)
+
+		self.c.setObjectName('checkbox')
+		self.cplusplus.setObjectName('checkbox')
+		self.python2.setObjectName('checkbox')
+		self.python3.setObjectName('checkbox')
+		self.java.setObjectName('checkbox')
+		self.general.setObjectName('checkbox')
+
+		self.language_button = QHBoxLayout()
+		self.save_language_button = QPushButton('Save')
+		self.save_language_button.setObjectName('general')
+		self.save_language_button.setFixedSize(200,50)
+		self.save_language_button.clicked.connect(lambda:self.save_client_language())
+		self.edit_language_button = QPushButton('Edit')
+		self.edit_language_button.setObjectName('general')
+		self.edit_language_button.setFixedSize(200,50)
+		self.edit_language_button.clicked.connect(lambda:self.edit_client_language())
+		self.language_button.addWidget(self.save_language_button, alignment=Qt.AlignRight)
+		self.language_button.addWidget(self.edit_language_button, alignment=Qt.AlignRight)
+		self.language_button.addStretch(1)
+		self.language_button.addSpacing(0)
+		self.language_button_widget = QWidget()
+		self.language_button_widget.setLayout(self.language_button)
+
+		languages.addWidget(language_heading)
+		languages.addWidget(base_widget)
+		languages.addWidget(self.c)
+		languages.addWidget(self.cplusplus)
+		languages.addWidget(self.python2)
+		languages.addWidget(self.python3)
+		languages.addWidget(self.java)
+		languages.addWidget(self.general)
+		languages.addWidget(self.language_button_widget)
+		languages.addStretch(1)
+		languages.addSpacing(0)
+
+		self.language.setLayout(languages)
+
+
+
+		#####################################################################
+		######################## CONTEST TAB ################################
 		#####################################################################
 
 		
@@ -192,6 +261,36 @@ class contest_setup(QMainWindow):
 		self.client_tab.setLayout(self.client_tab_layout)
 		self.client_tab.setObjectName('client_tab')
 		return
+
+	def select_language_base(self,button):
+		if button.text() == 'Select All':
+			if button.isChecked() == True:
+				self.c.setChecked(True)
+				self.cplusplus.setChecked(True)
+				self.python2.setChecked(True)
+				self.python3.setChecked(True)
+				self.java.setChecked(True)
+				self.general.setChecked(True)
+				self.c.setDisabled(True)
+				self.cplusplus.setDisabled(True)
+				self.python2.setDisabled(True)
+				self.python3.setDisabled(True)
+				self.java.setDisabled(True)
+				self.general.setDisabled(True)
+		else:
+			if button.isChecked() == True:
+				self.c.setChecked(False)
+				self.cplusplus.setChecked(False)
+				self.python2.setChecked(False)
+				self.python3.setChecked(False)
+				self.java.setChecked(False)
+				self.general.setChecked(False)
+				self.c.setEnabled(True)
+				self.cplusplus.setEnabled(True)
+				self.python2.setEnabled(True)
+				self.python3.setEnabled(True)
+				self.java.setEnabled(True)
+				self.general.setEnabled(True)
 
 
 	def save_client_rabbitmq(self):
@@ -215,6 +314,26 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_host_text.setReadOnly(False)
 		self.manual.setEnabled(True)
 		self.automatic.setEnabled(True)
+
+	def save_client_language(self):
+		self.c.setDisabled(True)
+		self.cplusplus.setDisabled(True)
+		self.python2.setDisabled(True)
+		self.python3.setDisabled(True)
+		self.java.setDisabled(True)
+		self.general.setDisabled(True)
+		self.all.setDisabled(True)
+		self.some.setDisabled(True)
+
+	def edit_client_language(self):
+		self.c.setEnabled(True)
+		self.cplusplus.setEnabled(True)
+		self.python2.setEnabled(True)
+		self.python3.setEnabled(True)
+		self.java.setEnabled(True)
+		self.general.setEnabled(True)
+		self.all.setEnabled(True)
+		self.some.setEnabled(True)
 
 
 	def get_ip_address(self):

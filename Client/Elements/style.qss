@@ -376,7 +376,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 
 /* Scroll bar styles end */
 
-QTextEdit#text_area_content
+QPlainTextEdit#text_area_content
 {
 	background-color : #121212;
 	/*color : #2FA15C;*/

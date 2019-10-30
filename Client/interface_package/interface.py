@@ -279,6 +279,13 @@ class client_window(QMainWindow):
 					self.data_changed_flag[0] = 3
 			except Exception as Error:
 				print(str(Error))
+
+		if(self.data_changed_flag[5] == 1):
+			QMessageBox.warning(self, 'Alert', 'You are disconnected by the admin.\nPlease contact Administrator.')
+			QApplication.quit()
+		if(self.data_changed_flag[5] == 2):
+			QMessageBox.warning(self, 'Alert', 'All Clients are disconnected by the admin.\nPlease contact Administrator.')
+			QApplication.quit()
 		return
 
 	####################################################################################
