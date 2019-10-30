@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-from Interface.table_interface import problem_table, add_problem_ui
+from Interface.table_interface import problem_table, add_problem_ui, edit_problem_ui
 from database_management import manage_database, manage_local_ids, reset_database
 
 
@@ -100,11 +100,11 @@ class contest_setup(QMainWindow):
 		self.edit_problem = QPushButton('Edit')
 		self.edit_problem.setObjectName('general')
 		self.edit_problem.setFixedSize(200,50)
-		self.edit_problem.clicked.connect(lambda:self.edit_problem_client())
+		self.edit_problem.clicked.connect(lambda:self.edit_problem_client(self.add_table_view.selectionModel().currentIndex().row()))
 		self.reset_problem = QPushButton('Reset')
 		self.reset_problem.setObjectName('general')
 		self.reset_problem.setFixedSize(200,50)
-		self.reset_problem.clicked.connect(lambda:self.reset_problem_client())
+		self.reset_problem.clicked.connect(lambda:self.confirm_event())
 		problem_button.addWidget(self.add_problem)
 		problem_button.addWidget(self.edit_problem)
 		problem_button.addWidget(self.reset_problem)
@@ -413,10 +413,47 @@ class contest_setup(QMainWindow):
 		self.window.show()
 
 	############################## EDIT PROBLEM ###############################
-	def edit_problem_client(self):
-		pass
+	def edit_problem_client(self, selected_row):
+		no = self.table_model.index(selected_row, 0).data()
+		name = self.table_model.index(selected_row, 2).data()
+		code = self.table_model.index(selected_row, 3).data()
+		self.window = edit_problem_ui(no,name,code,self.table_model)
+		self.window.show()
 
 	############################# RESET PROBLEM ################################
+
+	def confirm_event(self):
+		message = "Pressing 'Yes' will DELETE all Problems.\nAre you sure you want to delete?"
+		detail_message = "You may lose all data. "
+
+		custom_close_box = QMessageBox()
+		custom_close_box.setIcon(QMessageBox.Critical)
+		custom_close_box.setWindowTitle('Warning!')
+		custom_close_box.setText(message)
+		custom_close_box.setInformativeText(detail_message)
+
+
+		custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
+		custom_close_box.setDefaultButton(QMessageBox.No)
+
+		button_yes = custom_close_box.button(QMessageBox.Yes)
+		button_yes.setText('Yes')
+		button_no = custom_close_box.button(QMessageBox.No)
+		button_no.setText('No')
+
+		button_yes.setObjectName("close_button_yes")
+		button_no.setObjectName("close_button_no")
+
+		button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
+		button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+
+		custom_close_box.exec_()
+
+		if custom_close_box.clickedButton() == button_yes:
+			self.reset_problem_client()
+		elif custom_close_box.clickedButton() == button_no:
+			pass
+
 	def reset_problem_client(self):
 		reset_database.reset_problem(self.table_model)
 

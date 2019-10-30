@@ -50,8 +50,6 @@ class manage_local_ids():
 		manage_local_ids.local_run_id += 1
 		return manage_local_ids.local_run_id 
 
-cur = manage_database()
-manage_local_ids.initialize_local_id(cur)
 
 
 class problem_management(manage_database):
@@ -63,8 +61,12 @@ class problem_management(manage_database):
 		except Exception as Error:
 			print(str(Error))
 
-	def update_problem():
-		pass
+	def update_problem(no,name,code):
+		try:
+			manage_database.cur.execute("UPDATE problems SET 'Problem Name' = ?, 'Problem Code' = ? WHERE No = ?",(name,code,no,))
+			manage_database.conn.commit()
+		except Exception as Error:
+			print(str(Error))
 
 
 class reset_database(manage_database):
