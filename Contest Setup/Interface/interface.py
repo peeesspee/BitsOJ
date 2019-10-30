@@ -81,7 +81,7 @@ class contest_setup(QMainWindow):
 		####################### PROBLEM TAB ##############################
 		##################################################################
 
-		# client_problem_model = self.manage_models(self.db, 'client_problem')
+		
 		problem_heading = QLabel('Problems')
 		problem_heading.setObjectName('heading')
 		self.problem = QHBoxLayout()
@@ -262,6 +262,8 @@ class contest_setup(QMainWindow):
 		self.client_tab.setObjectName('client_tab')
 		return
 
+	#################### SELECT ALL LANGUAGE OR MANUAL #####################
+
 	def select_language_base(self,button):
 		if button.text() == 'Select All':
 			if button.isChecked() == True:
@@ -293,6 +295,7 @@ class contest_setup(QMainWindow):
 				self.general.setEnabled(True)
 
 
+	########################### SAVE RABBITMQ DETAILS FOR CLIENT ###########################
 	def save_client_rabbitmq(self):
 		if self.rabbitmq_username_text.text() == '':
 			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
@@ -308,6 +311,7 @@ class contest_setup(QMainWindow):
 			self.automatic.setDisabled(True)
 			QMessageBox.warning(self,'Message','RabbitMQ Details has been saved')
 
+	########################## EDIT RABBITMQ DETAILS FOR CLIENT ############################
 	def edit_client_rabbitmq(self):
 		self.rabbitmq_username_text.setReadOnly(False)
 		self.rabbitmq_password_text.setReadOnly(False)
@@ -315,6 +319,7 @@ class contest_setup(QMainWindow):
 		self.manual.setEnabled(True)
 		self.automatic.setEnabled(True)
 
+	########################### SAVE LANGUAGE DETAILS FOR CLIENT ###########################
 	def save_client_language(self):
 		self.c.setDisabled(True)
 		self.cplusplus.setDisabled(True)
@@ -325,6 +330,7 @@ class contest_setup(QMainWindow):
 		self.all.setDisabled(True)
 		self.some.setDisabled(True)
 
+	########################### EDIT LANGUAGE DETAILS FOR CLIENT ###########################
 	def edit_client_language(self):
 		self.c.setEnabled(True)
 		self.cplusplus.setEnabled(True)
@@ -335,12 +341,13 @@ class contest_setup(QMainWindow):
 		self.all.setEnabled(True)
 		self.some.setEnabled(True)
 
-
+	########################## FETCH IP ADDRESS AUTOMATICALLY ################################
 	def get_ip_address(self):
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		s.connect(("8.8.8.8", 80))
 		return s.getsockname()[0]
 
+	################################## BUTTON STATE SIGNAL ###################################
 	def button_state(self,button):
 		if button.text() == 'Manual IP':
 			if button.isChecked() == True:
@@ -357,6 +364,7 @@ class contest_setup(QMainWindow):
 	def call_gui(self):
 		pass
 
+	################################### CLOSE BUTTON CLICKED ####################################
 	def closeEvent(self, event):
 		message = "Pressing 'Yes' will SHUT the Client.\nAre you sure you want to exit?"
 		detail_message = "Any active contest might end prematurely. "
