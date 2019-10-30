@@ -117,7 +117,7 @@ class server_window(QMainWindow):
 		# Manage tabs on the right window
 		# Each tab is an object returned by the respective function associated with its UI
 		# Tab UI are managed by interface_packages/ui_classes.py file 
-		self.tab0, self.account_model = ui_widgets.accounts_ui(self)
+		self.tab0, self.account_model, self.delete_account_button = ui_widgets.accounts_ui(self)
 		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
 		self.tab2, self.judge_model = ui_widgets.judge_ui(self)
 		self.tab3, self.client_model = ui_widgets.client_ui(self)
@@ -385,6 +385,7 @@ class server_window(QMainWindow):
 			self.submission_reset_button.setEnabled(True)
 			self.query_reset_button.setEnabled(True)
 			self.client_reset_button.setEnabled(True)
+			self.delete_account_button.setEnabled(True)
 		if status == "RUNNING":
 			self.data_changed_flags[10] = 1
 			self.contest_time_entry.setReadOnly(1)
@@ -405,6 +406,7 @@ class server_window(QMainWindow):
 			self.submission_reset_button.setEnabled(False)
 			self.query_reset_button.setEnabled(True)
 			self.client_reset_button.setEnabled(True)
+			self.delete_account_button.setEnabled(False)
 		elif status == "STOPPED":
 			self.data_changed_flags[10] = 2
 			self.contest_time_entry.setReadOnly(1)
@@ -425,6 +427,7 @@ class server_window(QMainWindow):
 			self.submission_reset_button.setEnabled(True)
 			self.query_reset_button.setEnabled(True)
 			self.client_reset_button.setEnabled(True)
+			self.delete_account_button.setEnabled(True)
 		return
 
 	def process_event(self, data, extra_data):
@@ -689,19 +692,19 @@ class server_window(QMainWindow):
 			username = self.client_model.index(selected_row, 1).data()
 			password = self.client_model.index(selected_row, 2).data()
 			state = self.client_model.index(selected_row, 3).data()
+
+			if username == None or client_id == None or password == None or state == None:
+				pass
+			else:
+				self.edit_window = account_edit_ui(self.data_changed_flags, client_id, username, password, state)
+				self.edit_window.show()
 			
 		except Exception as error: 
-			# Reset data_changed_flag for account edit
 			print('Error' + str(error))
+		finally:
+			# Reset critical flag
 			self.data_changed_flags[14] = 0
 			return
-
-		self.edit_window = account_edit_ui(self.data_changed_flags, client_id, username, password, state)
-		self.edit_window.show()
-	
-		# Reset critical flag
-		self.data_changed_flags[14] = 0
-		return
 
 	def reset_accounts(self):
 		if self.data_changed_flags[11] == 0:
