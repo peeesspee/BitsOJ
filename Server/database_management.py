@@ -323,14 +323,13 @@ class user_management(manage_database):
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			# Check if client is logged in : 
-			if client_authentication.check_connected_client(user_name) == True:
-				
-				cur.execute("SELECT * FROM accounts WHERE user_name = ?", (user_name,))
-				data = cur.fetchall()
-				client_type = data[0][2]
-				if client_type == 'CLIENT':
-					print("[ DISCONNECT ] " + user_name)
-					cur.execute("UPDATE connected_clients SET state = 'Deleted' WHERE user_name = ?", (user_name, ))
+			# if client_authentication.check_connected_client(user_name) == 'Connected':
+			# 	cur.execute("SELECT * FROM accounts WHERE user_name = ?", (user_name,))
+			# 	data = cur.fetchall()
+			# 	client_type = data[0][2]
+			# 	if client_type == 'CLIENT':
+			# 		print("[ DISCONNECT ] " + user_name)
+			# 		cur.execute("UPDATE connected_clients SET state = 'Blocked' WHERE user_name = ?", (user_name, ))
 
 			cur.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
 			conn.commit()
@@ -347,5 +346,30 @@ class user_management(manage_database):
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Database deletion error : " + str(error))
+
+	def disconnect_all():
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute("UPDATE connected_clients SET state = 'Disconnected'")
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Database updation error : " + str(error))
+			conn.rollback()
+		finally:
+			return
+
+	def update_user_state(username, state):
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute("UPDATE connected_clients SET state = ? where user_name = ? ", (state, username, ))
+			conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Database updation error : " + str(error))
+			conn.rollback()
+		finally:
+			return
+
 
 

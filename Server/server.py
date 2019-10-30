@@ -60,7 +60,7 @@ def main():
 
 	#index		value		meaning
 	#	0		0/1			0/1: No new/ New submission data to refresh
-	#	1		0/1			0/1: No new/ New login : Refresh login view
+	#	1		0/1			0/1: No new/ New login : Refresh connected clients view
 	#	2		0/1 		0/1: Disallow/Allow logins
 	#	3		0/1			0/1: Disallow/Allow submissions
 	#	4		0/1			1: A create accounts window is open
@@ -73,6 +73,7 @@ def main():
 	#	11		0/1			1: Delete all accounts open
 	#	12		0/1			1: JUDGE logins allowed
 	#   13		0/1			1: Refresh Judge GUI
+	#	14		0/1			1: Client Edit under progress
 
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	if login_status == 'True' or login_status == 'true':

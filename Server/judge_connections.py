@@ -39,7 +39,7 @@ class manage_judges():
 			print('\n[ LISTEN ] STOPPED listening to judge channel')
 			
 			connection.close()
-			print('[ STOP ] Judge subprocess terminated successfully!')	
+			print('\n[ STOP ] Judge subprocess terminated successfully!\n')	
 			return
 
 	#This function works on judge messages and passes them on to their respective handler function

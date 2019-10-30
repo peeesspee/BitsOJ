@@ -22,11 +22,6 @@ class ui_widgets:
 		delete_account_button.setObjectName("topbar_button")
 		delete_account_button.setToolTip('Delete account.\nAlso perma-blocks the user if connected!\nProceed with caution.')
 
-		delete_all_accounts_button = QPushButton('Reset', self)
-		delete_all_accounts_button.setFixedSize(200, 50)
-		delete_all_accounts_button.clicked.connect(self.reset_accounts)
-		delete_all_accounts_button.setObjectName("topbar_button")
-
 		accounts_model = self.manage_models(self.db, 'accounts')
 		accounts_model.setHeaderData(0, Qt.Horizontal, 'Username')
 		accounts_model.setHeaderData(1, Qt.Horizontal, 'Password')
@@ -37,7 +32,7 @@ class ui_widgets:
 		head_layout.addWidget(heading)
 		head_layout.addWidget(create_accounts_button)
 		head_layout.addWidget(delete_account_button)
-		head_layout.addWidget(delete_all_accounts_button)
+		
 		head_layout.setStretch(0, 80)
 		head_layout.setStretch(1, 10)
 		head_layout.setStretch(2, 10)
@@ -108,6 +103,13 @@ class ui_widgets:
 
 
 	def client_ui(self):
+		client_model = self.manage_models(self.db, 'connected_clients')
+		client_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
+		client_model.setHeaderData(1, Qt.Horizontal, 'Username')
+		client_model.setHeaderData(2, Qt.Horizontal, 'Password')
+		client_model.setHeaderData(3, Qt.Horizontal, 'State')
+		client_view = self.generate_view(client_model)
+
 		heading = QLabel('Connected Clients')
 		heading.setObjectName('main_screen_heading')
 
@@ -121,23 +123,22 @@ class ui_widgets:
 		allow_login_button.setChecked(login_allowed_flag)
 		allow_login_button.stateChanged.connect(self.allow_login_handler)
 
-		client_model = self.manage_models(self.db, 'connected_clients')
-		client_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
-		client_model.setHeaderData(1, Qt.Horizontal, 'Username')
-		client_model.setHeaderData(2, Qt.Horizontal, 'Password')
-		client_model.setHeaderData(3, Qt.Horizontal, 'State')
-
-		client_view = self.generate_view(client_model)
+		edit_client_button = QPushButton('Edit Client', self)
+		edit_client_button.setFixedSize(200, 50)
+		edit_client_button.clicked.connect(lambda:self.edit_client(client_view.selectionModel().currentIndex().row()))
+		edit_client_button.setObjectName("topbar_button")
+		edit_client_button.setToolTip('Change client status.')
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
 		head_layout.addWidget(allow_login_label)
 		head_layout.addWidget(allow_login_button)
-		head_layout.setStretch(0, 80)
-		head_layout.setStretch(1, 10)
-		head_layout.setStretch(2, 10)
+		head_layout.addWidget(edit_client_button)
+		head_layout.setStretch(0, 70)
+		head_layout.setStretch(1, 5)
+		head_layout.setStretch(2, 5)
+		head_layout.setStretch(3, 20)
 		
-
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
@@ -442,28 +443,13 @@ class ui_widgets:
 		client_reset_button.setFixedSize(70, 25)
 		client_reset_button.setObjectName('interior_button')
 		client_reset_button.setToolTip('Disconnect all clients.')
-		# client_reset_button.clicked.connect()
+		client_reset_button.clicked.connect(self.disconnect_all)
 		client_reset_layout = QHBoxLayout()
 		client_reset_layout.addWidget(client_reset_label)
 		client_reset_layout.addWidget(client_reset_button)
 		client_reset_layout.addStretch(1)
 		client_reset_widget = QWidget()
 		client_reset_widget.setLayout(client_reset_layout)
-
-		judge_reset_label = QLabel('> Disconnect Judges ')
-		judge_reset_label.setObjectName('main_screen_content')
-		judge_reset_label.setFixedSize(200, 25)
-		judge_reset_button = QPushButton('RESET')
-		judge_reset_button.setFixedSize(70, 25)
-		judge_reset_button.setObjectName('interior_button')
-		judge_reset_button.setToolTip('Disconnect all judges.')
-		# judge_reset_button.clicked.connect()
-		judge_reset_layout = QHBoxLayout()
-		judge_reset_layout.addWidget(judge_reset_label)
-		judge_reset_layout.addWidget(judge_reset_button)
-		judge_reset_layout.addStretch(1)
-		judge_reset_widget = QWidget()
-		judge_reset_widget.setLayout(judge_reset_layout)
 
 		server_reset_label = QLabel('> Reset SERVER ')
 		server_reset_label.setObjectName('main_screen_content')
@@ -484,10 +470,10 @@ class ui_widgets:
 		button_layout = QGridLayout()
 		button_layout.addWidget(account_reset_widget, 0, 0)
 		button_layout.addWidget(submission_reset_widget, 0, 1)
-		button_layout.addWidget(client_reset_widget, 1, 0)
-		button_layout.addWidget(judge_reset_widget, 1, 1)
-		button_layout.addWidget(query_reset_widget, 2, 0)
-		button_layout.addWidget(server_reset_widget, 2, 1)
+		button_layout.addWidget(query_reset_widget, 1, 0)
+		button_layout.addWidget(client_reset_widget, 1, 1)
+		# button_layout.addWidget(judge_reset_widget, 1, 1)
+		button_layout.addWidget(server_reset_widget, 2, 0)
 		button_layout.setColumnStretch(0,1)
 		button_layout.setColumnStretch(1,3)
 
@@ -500,13 +486,13 @@ class ui_widgets:
 		contest_reset_widget = QWidget()
 		contest_reset_widget.setLayout(contest_reset_layout)
 		contest_reset_widget.setObjectName('content_box')
-		return contest_reset_widget, server_reset_button
+		return contest_reset_widget, account_reset_button, submission_reset_button, query_reset_button, client_reset_button, server_reset_button
 
 	def settings_ui(self):
 		heading = QLabel('Server Settings')
 		heading.setObjectName('main_screen_heading')
 		time_management_widget, contest_time_entry, change_time_entry, set_button, start_button, update_button, stop_button = ui_widgets.contest_time_settings(self)
-		contest_reset_widget, server_reset_button = ui_widgets.contest_reset_settings(self)
+		contest_reset_widget, account_reset_button, submission_reset_button, query_reset_button, client_reset_button, server_reset_button = ui_widgets.contest_reset_settings(self)
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
@@ -517,7 +503,7 @@ class ui_widgets:
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main, contest_time_entry, change_time_entry, set_button, start_button, update_button, stop_button, server_reset_button
+		return main, contest_time_entry, change_time_entry, set_button, start_button, update_button, stop_button, account_reset_button, submission_reset_button, query_reset_button, client_reset_button, server_reset_button
 
 	def preprocess_contest_broadcasts(self, signal, extra_data = 'NONE'):
 		#process_event() is defined in interface package
@@ -832,3 +818,119 @@ class query_reply_ui(QMainWindow):
 		self.close()
 
  
+class account_edit_ui(QMainWindow):
+	client_id = ''
+	username = ''
+	password = ''
+	state = ''
+	state_type = ''
+	changed = 0
+	def __init__(self, data_changed_flags, client_id, username, password, state, parent=None):
+		super(account_edit_ui, self).__init__(parent)
+		
+		self.data_changed_flags = data_changed_flags
+		account_edit_ui.client_id = client_id
+		account_edit_ui.username = username
+		account_edit_ui.password = password
+		account_edit_ui.state = state
+		account_edit_ui.state_type = state
+		
+		self.setWindowTitle('Manage Client')
+		self.setFixedSize(400,350)
+		main = self.main_account_edit_ui()
+		self.setCentralWidget(main)
+		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
+		return
+
+	def main_account_edit_ui(self):
+		heading = QLabel('Edit user status')
+
+		username_label = QLabel('Username: ')
+		username_content = QLabel(account_edit_ui.username)
+
+		password_label = QLabel('Password: ')
+		password_content = QLabel(account_edit_ui.password)
+
+		state_label = QLabel('Current State: ')
+		current_state = QLabel(account_edit_ui.state)
+
+		state_entry_label = QLabel('Set State: ')
+		state_entry = QComboBox()
+		state_entry.addItem('Connected')
+		state_entry.addItem('Disconnected')
+		state_entry.addItem('Blocked')
+		state_entry.activated[str].connect(account_edit_ui.combo_box_data_changed)
+		
+		inner_layout = QGridLayout()
+		inner_layout.addWidget(username_label, 0, 0)
+		inner_layout.addWidget( username_content, 0, 1)
+		inner_layout.addWidget(password_label, 1, 0)
+		inner_layout.addWidget(password_content, 1, 1)
+		inner_layout.addWidget(state_label, 2, 0)
+		inner_layout.addWidget(current_state, 2, 1)
+		inner_layout.addWidget(state_entry_label, 3, 0)
+		inner_layout.addWidget(state_entry, 3, 1)
+
+		inner_layout.setColumnMinimumWidth(0,50)
+		inner_layout.setColumnMinimumWidth(1,50)
+		inner_layout.setColumnStretch(0, 1)
+		inner_layout.setColumnStretch(1, 1)
+		inner_layout.setRowStretch(0, 1)
+		inner_layout.setRowStretch(1, 1)
+		inner_layout.setVerticalSpacing(10)
+		
+		# inner_layout.addStretch(1)
+		inner_widget = QWidget()
+		inner_widget.setLayout(inner_layout)
+				
+		confirm_button = QPushButton('Confirm')
+		confirm_button.setFixedSize(150, 30)
+		confirm_button.clicked.connect(lambda:account_edit_ui.final_status(self))
+		confirm_button.setDefault(True)
+		cancel_button = QPushButton('Cancel')
+		cancel_button.setFixedSize(150, 30)
+		cancel_button.clicked.connect(lambda:account_edit_ui.exit(self))
+		cancel_button.setDefault(True)
+		button_layout = QHBoxLayout()
+		button_layout.addWidget(confirm_button)
+		button_layout.addWidget(cancel_button)
+		button_layout.addStretch(1)
+		button_widget = QWidget()
+		button_widget.setLayout(button_layout)
+		button_widget.setContentsMargins(0, 20, 0, 0)
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(heading)
+		main_layout.addWidget(inner_widget)
+		main_layout.addWidget(button_widget)
+		main_layout.addStretch(1)
+		main = QWidget()
+		main.setLayout(main_layout)
+
+		main.setObjectName('account_window')
+		heading.setObjectName('main_screen_heading')
+		confirm_button.setObjectName('account_button')
+		cancel_button.setObjectName('account_button')
+		username_label.setObjectName('main_screen_sub_heading')
+		username_content.setObjectName('main_screen_content')
+		password_label.setObjectName('main_screen_sub_heading')
+		password_content.setObjectName('main_screen_content')
+		state_label.setObjectName('main_screen_sub_heading')
+		current_state.setObjectName('main_screen_content')
+		state_entry_label.setObjectName('main_screen_sub_heading')
+		state_entry.setObjectName('account_combobox')
+		return main
+
+	def combo_box_data_changed(text):
+		account_edit_ui.changed = 1
+		account_edit_ui.state_type = str(text)
+
+	def final_status(self):
+		# If something is changed in combo box, run query 
+		if account_edit_ui.changed == 1:
+			user_management.update_user_state(account_edit_ui.username, account_edit_ui.state_type)
+			self.data_changed_flags[1] = 1
+		account_edit_ui.exit(self)
+
+	def exit(self):
+		self.close()

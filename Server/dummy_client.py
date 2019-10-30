@@ -84,33 +84,44 @@ def query():
 def handler(ch, method, properties, body):
 	global client_id
 	server_data = str(body.decode("utf-8"))
+	try:
 
-	json_data = json.loads(server_data)
-	code = json_data["Code"]
-	if code == 'VRDCT':
-		status = json_data['Status']
-		run_id = json_data['Run ID']
-		message = json_data['Message']
-		print("[ Status ] " + status + "\n[ Run ID ] : " + str(run_id) + "\n[ Message ] : " + message)
-	elif code =='VALID':
-		client_id = json_data['Client ID']
-		message = json_data['Message']
-		print("[ Response ] " + code + "\n[ Client ID ] : " + str(client_id) + "\n[ Message ] : " + message)
+		json_data = json.loads(server_data)
+		code = json_data["Code"]
+		if code == 'VRDCT':
+			status = json_data['Status']
+			run_id = json_data['Run ID']
+			message = json_data['Message']
+			print("[ Status ] " + status + "\n[ Run ID ] : " + str(run_id) + "\n[ Message ] : " + message)
+		elif code =='VALID':
+			client_id = json_data['Client ID']
+			message = json_data['Message']
+			print("[ Response ] " + code + "\n[ Client ID ] : " + str(client_id) + "\n[ Message ] : " + message)
 
-	elif code == 'INVLD':
-		print("Invalid creds")
+		elif code == 'INVLD':
+			print("Invalid creds")
 
-	elif code == 'REJCT' : 
-		print('Login Rejected')
+		elif code == 'REJCT' : 
+			print('Login Rejected')
+			
+		elif code == 'SRJCT':
+			print('Submission Rejected')
+		elif code == 'DSCNT':
+			type = json_data['Client']
+			if type == username:
+				print('Houston! We have a problem!\nServer dudes disconnected us :(')
+			elif type == 'All':
+				print('Everyone has been disconnected! #Maintainance_Break')
+		else:
+			print(json_data)
+
 		
-	elif code == 'SRJCT':
-		print('Submission Rejected')
-	else:
-		print(json_data)
-
-	print("[ ACK ]")
-	ch.basic_ack(delivery_tag = method.delivery_tag)
-	channel.stop_consuming()
+	except:
+		print('Could not validate message!')
+	finally:
+		print("[ ACK ]")
+		ch.basic_ack(delivery_tag = method.delivery_tag)
+		channel.stop_consuming()
 		
 
 def listen():
@@ -121,10 +132,6 @@ def listen():
 		print("[ CONSUME ] on " + username)
 		channel.start_consuming()
 	except (KeyboardInterrupt, SystemExit):
-		channel.stop_consuming()
-		print('[ DELETE ] Queue ' + username + ' deleted...')
-		channel.queue_delete(username)
-		connection.close()
 		print("[ STOP ] Keyboard interrupt")
 		return
 
@@ -138,7 +145,6 @@ def main():
 		a = int(a)
 		if a == 1:
 			login()
-			listen()
 		elif a == 2:
 			send()
 			listen()

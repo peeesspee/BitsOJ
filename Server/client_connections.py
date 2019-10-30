@@ -132,9 +132,8 @@ class manage_clients():
 
 	# This function handles all client login requests
 	def client_login_handler(client_username, client_password, client_id, client_type):
-		# Client sends the username, password, clientID as 'username+password+clientID', so we split it.
-		# Default value of clientID is 'Null' (String)
 		message = ''
+		
 		print('[ LOGIN REQUEST ] ::: ' + str(client_id) + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
 
 		# Declare queue with same name as client_username
@@ -183,6 +182,16 @@ class manage_clients():
 					message = json.dumps(message)
 
 					# Raise a security event?
+				elif previously_connected_state == 'Disconnected':
+					client_id = client_authentication.get_client_id(client_username)
+					print('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
+				
+					message = {
+					'Code' : 'VALID',
+					'Client ID' : client_id, 
+					'Message' : 'Welcome back!.'
+					}
+					message = json.dumps(message)
 
 
 				# If client has logged in for the first time
@@ -211,7 +220,7 @@ class manage_clients():
 					# Check if contest has started, also send client the 
 					# contest START signal alog with remaining time.
 
-				elif previously_connected_state == 'Deleted':
+				elif previously_connected_state == 'Blocked':
 					print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
 					# Reject client login
 					message = {
@@ -219,6 +228,7 @@ class manage_clients():
 					'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
 					}
 					message = json.dumps(message)
+
 
 
 			# If login is not successful:
@@ -342,7 +352,7 @@ class manage_clients():
 
 
 
-		
+
 
 
 		try:
