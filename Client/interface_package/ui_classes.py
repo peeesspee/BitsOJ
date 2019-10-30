@@ -11,10 +11,7 @@ from manage_code import send_code
 from database_management import submission_management, query_management, manage_local_ids
 from init_client import handle_config
 
-with open("config.json", "r") as read_config:
-	config = json.load(read_config)
-
-
+config = handle_config.read_config_json()
 
 
 class ui_widgets():

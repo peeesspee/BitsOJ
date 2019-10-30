@@ -53,6 +53,7 @@ QPushButton#sidebar_button::hover
 /* Style of buttons in the sidebar  END  */
 
 
+
 /* Style of buttons in the close dialog box  START  */
 
 QPushButton#close_button_yes{

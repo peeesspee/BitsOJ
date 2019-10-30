@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
+from Interface.table_interface import problem_table, add_problem_ui
+from database_management import manage_database, manage_local_ids, reset_database
 
 
 
@@ -16,6 +18,10 @@ class contest_setup(QMainWindow):
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 		self.setWindowTitle('BitsOJ v1.0.1 Contest Setup')
 		self.resize(1200,700)
+		cur = manage_database.initialize_client_tables()
+		manage_local_ids.initialize_local_id(cur)
+
+		self.db = self.init_qt_database()
 
 		contest_setup.init_GUI(self)
 		contest_setup.client(self)
@@ -25,7 +31,7 @@ class contest_setup(QMainWindow):
 
 		#Define our top bar
 		logo = QLabel(self)
-		logo_image = QPixmap('../Elements/bitwise_header.png')
+		logo_image = QPixmap('Elements/bitwise_header.png')
 		logo_image2 = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image2)
 
@@ -82,19 +88,36 @@ class contest_setup(QMainWindow):
 		##################################################################
 
 		
-		problem_heading = QLabel('Problems')
+		problem_tab = QVBoxLayout()
+		problem_heading = QLabel('Add Problems')
 		problem_heading.setObjectName('heading')
-		self.problem = QHBoxLayout()
-		self.problem_label = QLabel('Number of Problems : ')
-		self.problem_label.setObjectName('general')
-		self.problem_entry = QLineEdit()
-		self.problem_entry.setFixedWidth(400)
-		self.problem_entry.setFixedHeight(50)
-		self.problem.addWidget(self.problem_label)
-		self.problem.addWidget(self.problem_entry)
-		self.problem.addStretch(1)
-		self.problem.addSpacing(0)
-		self.problem_tab.setLayout(self.problem)
+		self.add_table_view,self.table_model = problem_table.problem_model(self)
+		problem_button = QHBoxLayout()
+		self.add_problem = QPushButton('Add')
+		self.add_problem.setObjectName('general')
+		self.add_problem.setFixedSize(200,50)
+		self.add_problem.clicked.connect(lambda:self.add_problem_client())
+		self.edit_problem = QPushButton('Edit')
+		self.edit_problem.setObjectName('general')
+		self.edit_problem.setFixedSize(200,50)
+		self.edit_problem.clicked.connect(lambda:self.edit_problem_client())
+		self.reset_problem = QPushButton('Reset')
+		self.reset_problem.setObjectName('general')
+		self.reset_problem.setFixedSize(200,50)
+		self.reset_problem.clicked.connect(lambda:self.reset_problem_client())
+		problem_button.addWidget(self.add_problem)
+		problem_button.addWidget(self.edit_problem)
+		problem_button.addWidget(self.reset_problem)
+		problem_button.addStretch(1)
+		problem_button.addSpacing(0)
+		problem_button_widget = QWidget()
+		problem_button_widget.setLayout(problem_button)
+		problem_tab.addWidget(problem_heading)
+		problem_tab.addWidget(self.add_table_view)
+		problem_tab.addWidget(problem_button_widget)
+		problem_tab.addStretch(1)
+		problem_tab.addSpacing(0)
+		self.problem_tab.setLayout(problem_tab)
 
 
 		###################################################################
@@ -383,6 +406,21 @@ class contest_setup(QMainWindow):
 		return
 
 
+	############################### ADD PROBLEM ################################
+	def add_problem_client(self):
+		no = manage_local_ids.get_new_id()
+		self.window = add_problem_ui(no,self.table_model)
+		self.window.show()
+
+	############################## EDIT PROBLEM ###############################
+	def edit_problem_client(self):
+		pass
+
+	############################# RESET PROBLEM ################################
+	def reset_problem_client(self):
+		reset_database.reset_problem(self.table_model)
+
+	############################ SAVE CONTEST TAB ##############################
 	def save_contest_tab(self):
 		if self.contest_name_text.text() == '':
 			QMessageBox.warning(self,'Message','Contest Name cannot be empty')
@@ -401,6 +439,7 @@ class contest_setup(QMainWindow):
 			self.hour_24.setEnabled(False)
 			QMessageBox.warning(self,'Message','Contest Details has been saved')
 
+	########################## EDIT CONTEST TAB #################################
 	def edit_contest_tab(self):
 		self.contest_name_text.setReadOnly(False)
 		self.contest_theme_text.setReadOnly(False)
@@ -411,6 +450,7 @@ class contest_setup(QMainWindow):
 		self.hour_12.setEnabled(True)
 		self.hour_24.setEnabled(True)
 
+	######################### SELECT AM OR PM ###################################
 	def select_format(self,button):
 		if button.text() == '12 Hour':
 			if button.isChecked() == True:
@@ -525,6 +565,52 @@ class contest_setup(QMainWindow):
 	def call_gui(self):
 		pass
 
+
+	################################ GENERATE DATABASE VIEW  #######################################
+	def generate_view(self,model):
+		table = QTableView() 
+		table.setModel(model)
+		# Enable sorting in the table view 
+		table.setSortingEnabled(True)
+		# Enable alternate row colors for readability
+		table.setAlternatingRowColors(True)
+		# Select whole row when clicked
+		table.setSelectionBehavior(QAbstractItemView.SelectRows)
+		# Allow only one row to be selected 
+		table.setSelectionMode(QAbstractItemView.SingleSelection)
+		# fit view to whole space 
+		table.resizeColumnsToContents()
+		# Make table non editable
+		table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		# Set view to delete when gui is closed
+		table.setAttribute(Qt.WA_DeleteOnClose)
+
+		horizontal_header = table.horizontalHeader()
+		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+		vertical_header = table.verticalHeader()
+		# vertical_header.setSectionResizeMode(QHeaderView.Stretch)
+		vertical_header.setVisible(False)
+		return table
+
+	################################ INITIALIZE DATABASE  #######################################
+	def init_qt_database(self):
+		try:
+			db = QSqlDatabase.addDatabase('QSQLITE')
+			db.setDatabaseName('client_setup.db')
+			return db
+		except Exception as Error:
+			print('[ CRITICAL ] Database loading error......')
+			print(str(Error))
+
+	###################################### MODEL TABLE ##########################################
+	def manage_models(self, db, table_name):
+		if db.open():
+			model = QSqlTableModel()
+			model.setTable(table_name)
+			model.setEditStrategy(QSqlTableModel.OnFieldChange)
+			model.select()
+		return model
+
 	################################### CLOSE BUTTON CLICKED ####################################
 	def closeEvent(self, event):
 		message = "Pressing 'Yes' will SHUT the Client.\nAre you sure you want to exit?"
@@ -563,7 +649,7 @@ class contest_setup(QMainWindow):
 class setup_window(contest_setup):
 	def __init__(self):
 		app = QApplication(sys.argv)
-		app.setStyleSheet(open('../Elements/style.qss', "r").read())
+		app.setStyleSheet(open('Elements/style.qss', "r").read())
 		app.setStyle("Fusion")
 
 		client_app = contest_setup()
