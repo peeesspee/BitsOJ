@@ -105,7 +105,7 @@ class contest_setup(QMainWindow):
 		rabbitmq_heading = QLabel('RabbitMQ Client Details')
 		rabbitmq_heading.setObjectName('heading')
 		self.rabbitmq_username = QHBoxLayout()
-		self.rabbitmq_username_label = QLabel('RABBIT_MQ USERNAME :   ')
+		self.rabbitmq_username_label = QLabel('RABBIT_MQ USERNAME    :   ')
 		self.rabbitmq_username_label.setObjectName('general')
 		self.rabbitmq_username_text = QLineEdit()
 		self.rabbitmq_username_text.setPlaceholderText('Example : Client')
@@ -119,7 +119,7 @@ class contest_setup(QMainWindow):
 		self.username_widget = QWidget()
 		self.username_widget.setLayout(self.rabbitmq_username)
 		self.rabbitmq_password = QHBoxLayout()
-		self.rabbitmq_password_label = QLabel('RABBIT_MQ PASSWORD :   ')
+		self.rabbitmq_password_label = QLabel('RABBIT_MQ PASSWORD   :   ')
 		self.rabbitmq_password_label.setObjectName('general')
 		self.rabbitmq_password_text = QLineEdit()
 		self.rabbitmq_password_text.setPlaceholderText('Example : Client')
@@ -138,7 +138,7 @@ class contest_setup(QMainWindow):
 		self.automatic = QRadioButton('Automatic IP')
 		self.automatic.toggled.connect(lambda:self.button_state(self.automatic))
 		self.rabbitmq_host = QHBoxLayout()
-		self.rabbitmq_host_label = QLabel('RABBIT_MQ HOST :              ')
+		self.rabbitmq_host_label = QLabel('RABBIT_MQ HOST              :   ')
 		self.rabbitmq_host_label.setObjectName('general')
 		self.rabbitmq_host_text = QLineEdit()
 		self.rabbitmq_host_text.setPlaceholderText('Example : 127.0.0.1')
@@ -251,7 +251,7 @@ class contest_setup(QMainWindow):
 		contest_heading = QLabel('Contest Details')
 		contest_heading.setObjectName('heading')
 		contest_name = QHBoxLayout()
-		contest_name_label = QLabel('CONTEST NAME :    ')
+		contest_name_label = QLabel('CONTEST NAME              :   ')
 		contest_name_label.setObjectName('general')
 		self.contest_name_text = QLineEdit()
 		self.contest_name_text.setPlaceholderText('')
@@ -265,7 +265,7 @@ class contest_setup(QMainWindow):
 		contest_name_widget = QWidget()
 		contest_name_widget.setLayout(contest_name)
 		contest_theme = QHBoxLayout()
-		contest_theme_label = QLabel('CONTEST THEME :  ')
+		contest_theme_label = QLabel('CONTEST THEME            :   ')
 		contest_theme_label.setObjectName('general')
 		self.contest_theme_text = QLineEdit()
 		self.contest_theme_text.setPlaceholderText('')
@@ -279,7 +279,7 @@ class contest_setup(QMainWindow):
 		contest_theme_widget = QWidget()
 		contest_theme_widget.setLayout(contest_theme)
 		client_key = QHBoxLayout()
-		client_key_label = QLabel('CLIENT KEY :           ')
+		client_key_label = QLabel('CLIENT KEY                     :   ')
 		client_key_label.setObjectName('general')
 		self.client_key_text = QLineEdit()
 		self.client_key_text.setPlaceholderText('')
@@ -292,6 +292,49 @@ class contest_setup(QMainWindow):
 		client_key.addSpacing(0)
 		client_key_widget = QWidget()
 		client_key_widget.setLayout(client_key)
+		contest_duration = QHBoxLayout()
+		contest_duration_label = QLabel('CONTEST DURATION     :   ')
+		contest_duration_label.setObjectName('general')
+		self.contest_duration_text = QLineEdit()
+		self.contest_duration_text.setPlaceholderText('Duration  -  HH:MM:SS')
+		self.contest_duration_text.setObjectName('general_text')
+		self.contest_duration_text.setFixedWidth(400)
+		self.contest_duration_text.setFixedHeight(50)
+		contest_duration.addWidget(contest_duration_label)
+		contest_duration.addWidget(self.contest_duration_text)
+		contest_duration.addStretch(1)
+		contest_duration.addSpacing(0)
+		contest_duration_widget = QWidget()
+		contest_duration_widget.setLayout(contest_duration)
+		start_time = QHBoxLayout()
+		start_time_label = QLabel('CONTEST START TIME   :   ')
+		start_time_label.setObjectName('general')
+		self.start_time_text = QLineEdit()
+		self.start_time_text.setPlaceholderText('12 Hour - HH:MM:SS')
+		self.start_time_text.setObjectName('general_text')
+		self.start_time_text.setFixedWidth(400)
+		self.start_time_text.setFixedHeight(50)
+		self.am_pm = QComboBox()
+		self.am_pm.setFixedWidth(50)
+		self.am_pm.setFixedHeight(40)
+		self.am_pm.setObjectName('general')
+		self.am_pm.addItem('AM')
+		self.am_pm.addItem('PM')
+		self.hour_12 = QRadioButton('12 Hour')
+		self.hour_24 = QRadioButton('24 Hour')
+		self.hour_12.setChecked(True)
+		self.hour_12.toggled.connect(lambda:self.select_format(self.hour_12))
+		self.hour_24.toggled.connect(lambda:self.select_format(self.hour_24))
+
+		start_time.addWidget(start_time_label)
+		start_time.addWidget(self.start_time_text)
+		start_time.addWidget(self.am_pm)
+		start_time.addWidget(self.hour_12)
+		start_time.addWidget(self.hour_24)
+		start_time.addStretch(1)
+		start_time.addSpacing(0)
+		start_time_widget = QWidget()
+		start_time_widget.setLayout(start_time)
 
 		client_key_button = QHBoxLayout()
 		self.save_client_key_button = QPushButton('Save')
@@ -313,6 +356,8 @@ class contest_setup(QMainWindow):
 		contest_tab.addWidget(contest_name_widget)
 		contest_tab.addWidget(contest_theme_widget)
 		contest_tab.addWidget(client_key_widget)
+		contest_tab.addWidget(contest_duration_widget)
+		contest_tab.addWidget(start_time_widget)
 		contest_tab.addWidget(self.client_key_button_widget)
 		contest_tab.addStretch(1)
 		contest_tab.addSpacing(0)
@@ -320,7 +365,9 @@ class contest_setup(QMainWindow):
 		self.contest.setLayout(contest_tab)
 
 
-		
+		######################################################################
+		######################## FINAL TAB ###################################
+		######################################################################
 
 
 		self.tabs.addTab(self.rabbitmq_detail, "RabbitMQ Creds")
@@ -338,21 +385,43 @@ class contest_setup(QMainWindow):
 
 	def save_contest_tab(self):
 		if self.contest_name_text.text() == '':
-			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
+			QMessageBox.warning(self,'Message','Contest Name cannot be empty')
 		elif self.contest_theme_text.text() == '':
-			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
+			QMessageBox.warning(self,'Message','Contest Theme cannot be empty')
 		elif self.client_key_text.text() == '':
-			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
+			QMessageBox.warning(self,'Message','Client Key cannot be empty')
 		else:
 			self.contest_name_text.setReadOnly(True)
 			self.contest_theme_text.setReadOnly(True)
 			self.client_key_text.setReadOnly(True)
+			self.contest_duration_text.setReadOnly(True)
+			self.start_time_text.setReadOnly(True)
+			self.am_pm.setEnabled(False)
+			self.hour_12.setEnabled(False)
+			self.hour_24.setEnabled(False)
 			QMessageBox.warning(self,'Message','Contest Details has been saved')
 
 	def edit_contest_tab(self):
 		self.contest_name_text.setReadOnly(False)
 		self.contest_theme_text.setReadOnly(False)
 		self.client_key_text.setReadOnly(False)
+		self.contest_duration_text.setReadOnly(False)
+		self.start_time_text.setReadOnly(False)
+		self.am_pm.setEnabled(True)
+		self.hour_12.setEnabled(True)
+		self.hour_24.setEnabled(True)
+
+	def select_format(self,button):
+		if button.text() == '12 Hour':
+			if button.isChecked() == True:
+				self.am_pm.setEnabled(True)
+				self.start_time_text.setText('')
+				self.start_time_text.setPlaceholderText('12 Hour - HH:MM:SS')
+		else:
+			if button.isChecked() == True:
+				self.am_pm.setEnabled(False)
+				self.start_time_text.setText('')
+				self.start_time_text.setPlaceholderText('24 Hour - HH:MM:SS')
 
 	#################### SELECT ALL LANGUAGE OR MANUAL #####################
 
