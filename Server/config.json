@@ -10,17 +10,9 @@
     "Judge Key": "abcdefghij12345",
     "Client Key": "abcdefghij12345",
     "File Password": "papa",
-<<<<<<< HEAD
-    "Contest Duration": "00:00:00",
-    "Contest Status": "SETUP",
-    "Contest Start Time": "00:00:00",
-    "Contest End Time": "00:00:00",
-    "Contest Set Time": 0
-=======
     "Contest Duration": "02:00:00",
     "Contest Status": "STOPPED",
     "Contest Start Time": "12:11:16",
     "Contest End Time": "12:11:30",
     "Contest Set Time": 1572424876.68273
->>>>>>> 533ed47fe7abf71885c6a248e624f813a2f849e3
 }
