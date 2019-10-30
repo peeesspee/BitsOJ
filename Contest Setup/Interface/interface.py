@@ -247,6 +247,79 @@ class contest_setup(QMainWindow):
 		######################## CONTEST TAB ################################
 		#####################################################################
 
+		contest_tab = QVBoxLayout()
+		contest_heading = QLabel('Contest Details')
+		contest_heading.setObjectName('heading')
+		contest_name = QHBoxLayout()
+		contest_name_label = QLabel('CONTEST NAME :    ')
+		contest_name_label.setObjectName('general')
+		self.contest_name_text = QLineEdit()
+		self.contest_name_text.setPlaceholderText('')
+		self.contest_name_text.setObjectName('general_text')
+		self.contest_name_text.setFixedWidth(400)
+		self.contest_name_text.setFixedHeight(50)
+		contest_name.addWidget(contest_name_label)
+		contest_name.addWidget(self.contest_name_text)
+		contest_name.addStretch(1)
+		contest_name.addSpacing(0)
+		contest_name_widget = QWidget()
+		contest_name_widget.setLayout(contest_name)
+		contest_theme = QHBoxLayout()
+		contest_theme_label = QLabel('CONTEST THEME :  ')
+		contest_theme_label.setObjectName('general')
+		self.contest_theme_text = QLineEdit()
+		self.contest_theme_text.setPlaceholderText('')
+		self.contest_theme_text.setObjectName('general_text')
+		self.contest_theme_text.setFixedWidth(400)
+		self.contest_theme_text.setFixedHeight(50)
+		contest_theme.addWidget(contest_theme_label)
+		contest_theme.addWidget(self.contest_theme_text)
+		contest_theme.addStretch(1)
+		contest_theme.addSpacing(0)
+		contest_theme_widget = QWidget()
+		contest_theme_widget.setLayout(contest_theme)
+		client_key = QHBoxLayout()
+		client_key_label = QLabel('CLIENT KEY :           ')
+		client_key_label.setObjectName('general')
+		self.client_key_text = QLineEdit()
+		self.client_key_text.setPlaceholderText('')
+		self.client_key_text.setObjectName('general_text')
+		self.client_key_text.setFixedWidth(400)
+		self.client_key_text.setFixedHeight(50)
+		client_key.addWidget(client_key_label)
+		client_key.addWidget(self.client_key_text)
+		client_key.addStretch(1)
+		client_key.addSpacing(0)
+		client_key_widget = QWidget()
+		client_key_widget.setLayout(client_key)
+
+		client_key_button = QHBoxLayout()
+		self.save_client_key_button = QPushButton('Save')
+		self.save_client_key_button.setObjectName('general')
+		self.save_client_key_button.setFixedSize(200,50)
+		self.save_client_key_button.clicked.connect(lambda:self.save_contest_tab())
+		self.edit_client_key_button = QPushButton('Edit')
+		self.edit_client_key_button.setObjectName('general')
+		self.edit_client_key_button.setFixedSize(200,50)
+		self.edit_client_key_button.clicked.connect(lambda:self.edit_contest_tab())
+		client_key_button.addWidget(self.save_client_key_button, alignment=Qt.AlignRight)
+		client_key_button.addWidget(self.edit_client_key_button, alignment=Qt.AlignRight)
+		client_key_button.addStretch(1)
+		client_key_button.addSpacing(0)
+		self.client_key_button_widget = QWidget()
+		self.client_key_button_widget.setLayout(client_key_button)
+
+		contest_tab.addWidget(contest_heading)
+		contest_tab.addWidget(contest_name_widget)
+		contest_tab.addWidget(contest_theme_widget)
+		contest_tab.addWidget(client_key_widget)
+		contest_tab.addWidget(self.client_key_button_widget)
+		contest_tab.addStretch(1)
+		contest_tab.addSpacing(0)
+
+		self.contest.setLayout(contest_tab)
+
+
 		
 
 
@@ -261,6 +334,25 @@ class contest_setup(QMainWindow):
 		self.client_tab.setLayout(self.client_tab_layout)
 		self.client_tab.setObjectName('client_tab')
 		return
+
+
+	def save_contest_tab(self):
+		if self.contest_name_text.text() == '':
+			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
+		elif self.contest_theme_text.text() == '':
+			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
+		elif self.client_key_text.text() == '':
+			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
+		else:
+			self.contest_name_text.setReadOnly(True)
+			self.contest_theme_text.setReadOnly(True)
+			self.client_key_text.setReadOnly(True)
+			QMessageBox.warning(self,'Message','Contest Details has been saved')
+
+	def edit_contest_tab(self):
+		self.contest_name_text.setReadOnly(False)
+		self.contest_theme_text.setReadOnly(False)
+		self.client_key_text.setReadOnly(False)
 
 	#################### SELECT ALL LANGUAGE OR MANUAL #####################
 
