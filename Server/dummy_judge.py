@@ -13,11 +13,13 @@ client_id = 0
 username = 'judge00001'
 password = 'bits1'
 channel = ''
+connectio = ''
 
 def login():
 	global username
 	global password
 	global channel
+	global connection
 	username = input('Enter judge username: ') or username
 	password = input('Enter judge password: ') or password
 	try:
@@ -30,6 +32,8 @@ def login():
 		channel1.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
 		channel1.queue_bind(exchange = 'connection_manager', queue = username)
 		channel = channel1
+		connectio = connection
+
 	except:
 		print("Error")
 		return
@@ -99,6 +103,7 @@ def handler(ch, method, properties, body):
 			print('Login rejected!')
 
 		ch.basic_ack(delivery_tag = method.delivery_tag)
+		ch.stop_consuming()
 		return
 	except Exception as error:
 		print('Error : ' + str(error))
@@ -114,13 +119,7 @@ def listen(queue_name):
 	try:
 		channel.start_consuming()
 	except (KeyboardInterrupt, SystemExit):
-		channel.stop_consuming()
-		print('[ DELETE ] Queue ' + username + ' deleted...')
-		channel.queue_delete(username)
-		connection.close()
-		print("[ STOP ] Keyboard interrupt")
 		return
-
 
 def main():
 	print('1.Login\n2.Start judging\n3.Exit')
@@ -136,8 +135,11 @@ def main():
 			listen('judge_requests')
 		else:
 			break;
-	
-	
 
-
+	channel.stop_consuming()
+	print('[ DELETE ] Queue ' + username + ' deleted...')
+	channel.queue_delete(username)
+	connectio.close()
+	print("[ STOP ] Keyboard interrupt")
+	return
 main()

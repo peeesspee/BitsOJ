@@ -11,7 +11,9 @@ conn, cur = manage_database.initialize_database()
 manage_database.reset_database(conn)
 conn, cur = manage_database.initialize_database()
 
-connection = pika.BlockingConnection(pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f"))
+connection = pika.BlockingConnection(
+	pika.URLParameters("amqp://" + superuser_username + ":" + superuser_password + "@" + host + "/%2f")
+	)
 channel = connection.channel()
 
 save_status.write_config(
@@ -23,6 +25,7 @@ save_status.write_config(
 		'True', 
 		'True',
 		'True', 
+		'True',
 		'abcdefghij12345', 
 		'abcdefghij12345', 
 		'papa', 

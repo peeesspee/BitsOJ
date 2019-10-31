@@ -1,14 +1,14 @@
 import pika
 import sys
 import json
-from database_management import submissions_management
+from database_management import submissions_management, scoreboard_management
 
 class manage_judges():
 	channel = ''
-	data_changed_flag = ''
+	data_changed_flags = ''
 	# This function continously listens for judge verdicts
 	def listen_judges(superuser_username, superuser_password, host, data_changed_flag1):
-		manage_judges.data_changed_flag = data_changed_flag1
+		manage_judges.data_changed_flags = data_changed_flag1
 		# Create a connection with rabbitmq and declare exchanges and queues
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
@@ -59,12 +59,13 @@ class manage_judges():
 				message = json_data['Message']
 			else:
 				print('[ ERROR ] Judge sent garbage data. Trust me you don\'t wanna see it! ')
-				print(judge_message)
+				return
 
 		except Exception as error:
 			print('[ ERROR ] Could not parse judge JSON data : ' + str(error))
 			return
 
+		# Create response to send to client
 		message = {
 		'Code' : 'VRDCT', 
 		'Local Run ID' : local_run_id,
@@ -73,17 +74,22 @@ class manage_judges():
 		'Message' : message
 		}
 		message = json.dumps(message)
-			 	
 
 		try:
 			manage_judges.channel.basic_publish(exchange = 'connection_manager', routing_key = client_username, body = judge_message) 
 			print('[ VERDICT ] New verdict sent to ' + client_username)
 			submissions_management.update_submission_status(run_id, status)
 			# Update GUI
-			manage_judges.data_changed_flag[0] = 1
+			manage_judges.data_changed_flags[0] = 1
 		except Exception as error:
 			print('[ ERROR ] Could not publish result to client : ' + str(error))
 			return
+
+		# Update scoreboard
+		if manage_judges.data_changed_flags[15] == 1:
+			# call appropiate function
+			manage_judges.data_changed_flags[16] = 1
+		
 
 			
 		return

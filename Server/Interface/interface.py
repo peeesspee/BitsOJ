@@ -122,11 +122,17 @@ class server_window(QMainWindow):
 		self.tab2, self.judge_model = ui_widgets.judge_ui(self)
 		self.tab3, self.client_model = ui_widgets.client_ui(self)
 		self.tab4, self.query_model = ui_widgets.query_ui(self)
-		self.tab5 = ui_widgets.leaderboard_ui(self)
+		self.tab5, self.score_model = ui_widgets.leaderboard_ui(self)
 		self.tab6 = ui_widgets.problem_ui(self)
 		self.tab7 = ui_widgets.language_ui(self)
 		self.tab8 = ui_widgets.stats_ui(self)
-		self.tab9, self.contest_time_entry, self.change_time_entry, self.set_button, self.start_button, self.update_button, self.stop_button, self.account_reset_button, self.submission_reset_button, self.query_reset_button, self.client_reset_button, self.server_reset_button = ui_widgets.settings_ui(self)
+		(
+		self.tab9, self.contest_time_entry, self.change_time_entry, self.set_button, 
+		self.start_button, self.update_button, self.stop_button, self.account_reset_button, 
+		self.submission_reset_button, self.query_reset_button, self.client_reset_button, 
+		self.server_reset_button
+		) = ui_widgets.settings_ui(self)
+
 		self.tab10 = ui_widgets.reports_ui(self)
 		self.tab11 = ui_widgets.about_us_ui(self)
 		
@@ -173,7 +179,7 @@ class server_window(QMainWindow):
 
 		#Define our top bar
 		logo = QLabel(self)
-		logo_image = QPixmap('Elements/bitwise_header.png')
+		logo_image = QPixmap('Interface/bitwise_header.png')
 		logo_image2 = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image2)
 
@@ -200,8 +206,6 @@ class server_window(QMainWindow):
 		# and we map sidebar buttons to each tab switch :)
 		# Since sidebars are not natively supported by pyqt5
 		self.right_widget = QTabWidget()
-		self.right_widget.setObjectName("main_tabs")
-
 		self.right_widget.addTab(self.tab0, '')
 		self.right_widget.addTab(self.tab1, '')    # tab names are '' because we don't want them to show up in our screen
 		self.right_widget.addTab(self.tab2, '')
@@ -214,6 +218,7 @@ class server_window(QMainWindow):
 		self.right_widget.addTab(self.tab9, '')
 		self.right_widget.addTab(self.tab10, '')
 		self.right_widget.addTab(self.tab11, '')
+		self.right_widget.setObjectName("main_tabs")
 		
 
 		# Screen 1 will be our initial screen 
@@ -312,36 +317,41 @@ class server_window(QMainWindow):
 			
 	def update_data(self):
 		# If data has changed in submission table
+		# Update submission table
 		if self.data_changed_flags[0] == 1:
 			self.sub_model.select()
 			self.set_flags(0, 0)
+		# Update connected clients table
 		if self.data_changed_flags[1] == 1:
 			self.client_model.select()
 			self.set_flags(1, 0)
+		# Update accounts table
 		if self.data_changed_flags[5] == 1:
 			self.account_model.select()
 			self.set_flags(5, 0)
+		# Update Query table
 		if self.data_changed_flags[9] == 1:
 			self.query_model.select()
 			self.set_flags(9, 0)
-
+		# Update judge view
 		if self.data_changed_flags[13] == 1:
 			self.judge_model.select()
 			self.set_flags(13, 0)
-
+		# Update scoreboard view
+		if self.data_changed_flags[16] == 1:
+			self.score_model.select()			#TODO select in ascending order of score
+			self.set_flags(16, 0)
+		# System EXIT
 		if self.data_changed_flags[7] == 1:
-			# System EXIT
 			sys.exit()
 
 		# OPTIMISE TODO
-		if self.data_changed_flags[10] == 0:
-			self.set_status('SETUP')
-			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ SETUP ]')
+		# if self.data_changed_flags[10] == 0:
+			# self.set_status('SETUP')
+			# self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ SETUP ]')
 
 		# Recieved contest start signal
 		elif self.data_changed_flags[10] == 1:
-			self.set_status('RUNNING')
-			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ RUNNING ]')
 			# Find time elapsed since contest start
 			total_time = self.contest_set_time
 			current_time = time.time()
@@ -352,9 +362,9 @@ class server_window(QMainWindow):
 			self.timer_widget.display(elapsed_time)
 
 		# Recieved contest stop signal
-		elif self.data_changed_flags[10] == 2:
-			self.set_status('STOPPED')
-			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ STOPPED ]')
+		# elif self.data_changed_flags[10] == 2:
+		# 	self.set_status('STOPPED')
+		# 	self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ STOPPED ]')
 		return
 
 	def convert_to_seconds(time_str):
@@ -364,6 +374,8 @@ class server_window(QMainWindow):
 
 	def set_button_behavior(self, status):
 		if status == "SETUP":
+			self.set_status('SETUP')
+			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ SETUP ]')
 			self.data_changed_flags[10] = 0
 			contest_duration = self.config["Contest Duration"]
 			self.timer_widget.display(contest_duration)
@@ -387,6 +399,8 @@ class server_window(QMainWindow):
 			self.client_reset_button.setEnabled(True)
 			self.delete_account_button.setEnabled(True)
 		if status == "RUNNING":
+			self.set_status('RUNNING')
+			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ RUNNING ]')
 			self.data_changed_flags[10] = 1
 			self.contest_time_entry.setReadOnly(1)
 			self.contest_time_entry.setToolTip('Contest has STARTED.\nYou can\'t edit this value now.')
@@ -408,6 +422,8 @@ class server_window(QMainWindow):
 			self.client_reset_button.setEnabled(True)
 			self.delete_account_button.setEnabled(False)
 		elif status == "STOPPED":
+			self.set_status('STOPPED')
+			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ STOPPED ]')
 			self.data_changed_flags[10] = 2
 			self.contest_time_entry.setReadOnly(1)
 			self.contest_time_entry.setToolTip('Contest has STOPPED.\nYou can\'t edit this value now.')
@@ -515,6 +531,17 @@ class server_window(QMainWindow):
 			self.set_flags(3, 0)
 		return
 
+	def allow_scoreboard_update_handler(self, state):
+		if(state == Qt.Checked):
+			# Allow scoreboard update
+			print("Allow")
+			self.set_flags(15, 1)
+		else:
+			# Stop scoreboard update
+			print("Disallow")
+			self.set_flags(15, 0)
+		return
+
 	def check_login_allowed(self):
 		if self.data_changed_flags[2] == 1:
 			return True
@@ -527,6 +554,11 @@ class server_window(QMainWindow):
 
 	def check_submission_allowed(self):
 		if self.data_changed_flags[3] == 1:
+			return True
+		return False
+
+	def check_scoreboard_update_allowed(self):
+		if self.data_changed_flags[15] == 1:
 			return True
 		return False
 
@@ -651,8 +683,8 @@ class server_window(QMainWindow):
 		button_yes.setObjectName("close_button_yes")
 		button_no.setObjectName("close_button_no")
 
-		button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
-		button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+		button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
+		button_no.setStyleSheet(open('Interface/style.qss', "r").read())
 
 		custom_close_box.exec_()
 
@@ -733,8 +765,8 @@ class server_window(QMainWindow):
 			button_yes.setObjectName("close_button_yes")
 			button_no.setObjectName("close_button_no")
 
-			button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
-			button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+			button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
+			button_no.setStyleSheet(open('Interface/style.qss', "r").read())
 
 			custom_close_box.exec_()
 
@@ -780,8 +812,8 @@ class server_window(QMainWindow):
 			button_yes.setObjectName("close_button_yes")
 			button_no.setObjectName("close_button_no")
 
-			button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
-			button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+			button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
+			button_no.setStyleSheet(open('Interface/style.qss', "r").read())
 
 			custom_close_box.exec_()
 
@@ -826,8 +858,8 @@ class server_window(QMainWindow):
 			button_yes.setObjectName("close_button_yes")
 			button_no.setObjectName("close_button_no")
 
-			button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
-			button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+			button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
+			button_no.setStyleSheet(open('Interface/style.qss', "r").read())
 
 			custom_close_box.exec_()
 
@@ -873,8 +905,8 @@ class server_window(QMainWindow):
 			button_yes.setObjectName("close_button_yes")
 			button_no.setObjectName("close_button_no")
 
-			button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
-			button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+			button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
+			button_no.setStyleSheet(open('Interface/style.qss', "r").read())
 
 			custom_close_box.exec_()
 
@@ -955,8 +987,8 @@ class server_window(QMainWindow):
 			button_yes.setObjectName("close_button_yes")
 			button_no.setObjectName("close_button_no")
 
-			button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
-			button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+			button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
+			button_no.setStyleSheet(open('Interface/style.qss', "r").read())
 
 			custom_close_box.exec_()
 
@@ -1015,8 +1047,8 @@ class server_window(QMainWindow):
 		button_yes.setObjectName("close_button_yes")
 		button_no.setObjectName("close_button_no")
 
-		button_yes.setStyleSheet(open('Elements/style.qss', "r").read())
-		button_no.setStyleSheet(open('Elements/style.qss', "r").read())
+		button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
+		button_no.setStyleSheet(open('Interface/style.qss', "r").read())
 
 		custom_close_box.exec_()
 
@@ -1032,14 +1064,14 @@ class init_gui(server_window):
 		# make a reference of App class
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
-		app.setStyleSheet(open('Elements/style.qss', "r").read())
+		app.setStyleSheet(open('Interface/style.qss', "r").read())
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
 		server_app = server_window(data_changed_flags, data_to_client)
 
 		# Splash screen
-		# splash = QSplashScreen(QPixmap("Elements/bitwise.png"))
+		# splash = QSplashScreen(QPixmap("Interface/bitwise.png"))
 		# splash.show()
 		# splash.finish(server_app)	
 		# Splash ends
