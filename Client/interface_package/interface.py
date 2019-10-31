@@ -26,7 +26,7 @@ qInstallMessageHandler(handler)
 
 
 class client_window(QMainWindow):
-	def __init__(self, data_changed_flag2):
+	def __init__(self, data_changed_flag2,queue):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
@@ -45,6 +45,7 @@ class client_window(QMainWindow):
 
 		# Make data_changed_flag accessible from the class methods
 		self.data_changed_flag = data_changed_flag2
+		self.queue = queue
 
 
 		####################################################################
@@ -258,7 +259,9 @@ class client_window(QMainWindow):
 			self.data_changed_flag[2] =0
 
 		if(self.data_changed_flag[3] == 1):
-			QMessageBox.warning(self, 'Error', 'Right Now Admin is not accepting Submission.\nContact Administrator')
+			# message = self.queue.get()
+			message = 'Under Progress'
+			QMessageBox.warning(self, 'Error', message)
 			self.data_changed_flag[3] = 0
 
 		if(self.data_changed_flag[4] == 2):
@@ -437,7 +440,7 @@ class client_window(QMainWindow):
 
 
 class init_gui(client_window):
-	def __init__(self, data_changed_flag):
+	def __init__(self, data_changed_flag,queue):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
 		app.setStyleSheet(open('Elements/style.qss', "r").read())
@@ -445,7 +448,7 @@ class init_gui(client_window):
 		app.aboutToQuit.connect(self.closeEvent)
 
 		# make a reference of App class
-		client_app = client_window(data_changed_flag)
+		client_app = client_window(data_changed_flag,queue)
 
 		client_app.showMaximized()
 		# server_app.showNormal()

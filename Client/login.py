@@ -9,18 +9,21 @@ class authenticate_login():
 	client_id = 'Null'
 	host = ''
 	login_status = 'INVLD'
+	queue = ''
+
  
 	# function to authenticate login from the server 
-	def login(username, password):
+	def login(username, password,queue):
 		authenticate_login.channel = manage_connection.channel
 		authenticate_login.host = manage_connection.host
 		authenticate_login.username = username
 		password = password
+		authenticate_login.queue = queue
 
 		print("[ Validating ] : " + authenticate_login.username + "@" + password)
 		config = handle_config.read_config_json()
-		# if conf["client_id"] != 'Null': 
-		# 	authenticate_login.client_id = conf["client_id"]
+		if config["client_id"] != 'Null': 
+			authenticate_login.client_id = config["client_id"]
 		final_data = { 
 			'Code' : 'LOGIN',
 			'Client Key' : config["client_key"],
@@ -74,6 +77,8 @@ class authenticate_login():
 		# Extracting the status whether valid or invalid 
 		status = server_data['Code']
 		print("[ STATUS ] " + status)
+		print(server_data)
+		
 		# If authentication is valid 
 		if (status == 'VALID'):
 			print('[ ClientID ] receiving ......')
@@ -96,7 +101,8 @@ class authenticate_login():
 			authenticate_login.channel.stop_consuming()
 
 		# If login is rejected by the server 
-		elif (status == 'REJCT'):
+		elif (status == 'LRJCT'):
+			authenticate_login.queue.put(server_data["Message"])
 			# Changing login status to rejected
 			print('[ Authentication ]  REJECTED ......')
 			authenticate_login.login_status = 'LRJCT'

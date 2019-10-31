@@ -34,6 +34,7 @@ def main():
 	##################################
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 10)
+	queue = multiprocessing.Queue()
 	for i in range(10):
 		data_changed_flags[i] = 0
 	# index    value         meaning
@@ -59,17 +60,17 @@ def main():
 	try:
 		print("----------------BitsOJ v1.0----------------")
 		# Starting GUI for login portal 
-		start_interface(connection,data_changed_flags) 
+		start_interface(connection,data_changed_flags, queue) 
 		print("[ LOGIN ] Successful")
 
 
 		# Manage Threads
 		print('[ SETUP ] Initialising threads....')
-		listen_pid = manage_process(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags)
+		listen_pid = manage_process(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags, queue)
 
 		# After successful login 
 		# Starting Main GUI
-		init_gui(data_changed_flags)
+		init_gui(data_changed_flags, queue)
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 
@@ -85,9 +86,9 @@ def main():
 
 
 # Manageing process
-def manage_process(rabbitmq_username, rabbitmq_password, cursor, host, data_changed_flags):
+def manage_process(rabbitmq_username, rabbitmq_password, cursor, host, data_changed_flags,queue):
 	# this is from continuously listening from the server
-	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (rabbitmq_username,rabbitmq_password, cursor, host, data_changed_flags))
+	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (rabbitmq_username,rabbitmq_password, cursor, host, data_changed_flags, queue))
 
 	listen_from_server.start()
 

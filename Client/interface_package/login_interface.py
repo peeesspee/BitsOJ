@@ -7,74 +7,78 @@ from PyQt5.QtGui import QIcon, QColor, QPixmap
 class Login(QWidget):
 	# channel = None
 	# host = None
-	def __init__(self, connection):
+	def __init__(self, connection,queue):
 		super().__init__()
-		# Sets window title
-		self.setWindowTitle('BitsOJ v1.0.1 [ LOGIN ]')
-		# Resize Size of the window 
-		self.resize(700, 600)
-		# Window Icon
-		self.setWindowIcon(QIcon('Elements/logo.png'))
+		try:
+			# Sets window title
+			self.setWindowTitle('BitsOJ v1.0.1 [ LOGIN ]')
+			# Resize Size of the window 
+			self.resize(700, 600)
+			# Window Icon
+			self.setWindowIcon(QIcon('Elements/logo.png'))
 
-		# Frame Geometry
-		qtRectangle = self.frameGeometry()
-		centerPoint = QDesktopWidget().availableGeometry().center()
-		qtRectangle.moveCenter(centerPoint)
-		self.move(qtRectangle.topLeft())
+			# Frame Geometry
+			qtRectangle = self.frameGeometry()
+			centerPoint = QDesktopWidget().availableGeometry().center()
+			qtRectangle.moveCenter(centerPoint)
+			self.move(qtRectangle.topLeft())
 
-		# Title of the login window
-		self.title = QLabel('<<BitsOJ>>')
-		self.title.setObjectName('label')
-		self.title.setFixedWidth(400)
-		self.title.setFixedHeight(150)
-		
-		# Text Box for taking username input
-		self.username = QLineEdit(self)
-		self.username.setFixedWidth(400)
-		self.username.setFixedHeight(50)
-		self.username.setPlaceholderText('Username')
+			# Title of the login window
+			self.title = QLabel('<<BitsOJ>>')
+			self.title.setObjectName('label')
+			self.title.setFixedWidth(400)
+			self.title.setFixedHeight(150)
+			
+			# Text Box for taking username input
+			self.username = QLineEdit(self)
+			self.username.setFixedWidth(400)
+			self.username.setFixedHeight(50)
+			self.username.setPlaceholderText('Username')
 
-		# Text Box for taking password input
-		self.password = QLineEdit(self)
-		self.password.setFixedWidth(400)
-		self.password.setFixedHeight(50)
-		self.password.setPlaceholderText('Password')
-		self.password.setEchoMode(QLineEdit.Password)
+			# Text Box for taking password input
+			self.password = QLineEdit(self)
+			self.password.setFixedWidth(400)
+			self.password.setFixedHeight(50)
+			self.password.setPlaceholderText('Password')
+			self.password.setEchoMode(QLineEdit.Password)
 
-		# Creating Login button for sending authenticaion request to the Server
-		self.button_login = QPushButton('Login', self)
-		self.button_login.setFixedWidth(300)
-		self.button_login.setFixedHeight(80)
-		self.button_login.clicked.connect(self.handle_login)
-		self.button_login.setDefault(True)
-		self.button_login.setObjectName('login')
+			# Creating Login button for sending authenticaion request to the Server
+			self.button_login = QPushButton('Login', self)
+			self.button_login.setFixedWidth(300)
+			self.button_login.setFixedHeight(80)
+			self.button_login.clicked.connect(lambda:self.handle_login(queue))
+			self.button_login.setDefault(True)
+			self.button_login.setObjectName('login')
 
-		# Creating a layout for adding the widgets
-		layout = QVBoxLayout(self)
+			# Creating a layout for adding the widgets
+			layout = QVBoxLayout(self)
 
-		# Adding the widgets in the layout
-		layout.addWidget(self.title)
-		layout.addWidget(self.username)
-		layout.addWidget(self.password)
-		layout.addWidget(self.button_login)
+			# Adding the widgets in the layout
+			layout.addWidget(self.title)
+			layout.addWidget(self.username)
+			layout.addWidget(self.password)
+			layout.addWidget(self.button_login)
 
-		
-		layout.setContentsMargins(150, 0, 0, 50)
+			
+			layout.setContentsMargins(150, 0, 0, 50)
 
-		self.setLayout(layout)
-		self.setObjectName('main') 
-		self.show()
-		self.connection_object = connection 
+			self.setLayout(layout)
+			self.setObjectName('main') 
+			self.show()
+			self.connection_object = connection 
+		except Exception as Error:
+			print(str(Error))
 		return 
 
 	# Function for handling the login of the user  
-	def handle_login(self):
+	def handle_login(self,queue):
 		# QApplication.quit()
 		# Username and Password are not empty the check credentials
 		if (self.username.text() != '' and self.password.text() != ''):
 
 			# login function to send the username and password to the server for authentication
-			authenticate_login.login(self.username.text(),self.password.text())
+			authenticate_login.login(self.username.text(),self.password.text(),queue)
+			
 
 			# If authentication is successful then close login window and open main window 
 			if( authenticate_login.login_status == 'VALID'):
@@ -85,7 +89,9 @@ class Login(QWidget):
 
 			# If server is not accepting login request then show an alert
 			elif( authenticate_login.login_status == 'LRJCT' ):
-				QMessageBox.warning(self, 'Error', 'Login Rejected by admin.')
+				message = queue.get()
+				# QMessageBox.warning(self, 'Error', 'Login Rejected by admin.')
+				QMessageBox.warning(self, 'Error', message)
 			else:
 				QMessageBox.warning(self, 'Error', 'Wrong credentials')
 
@@ -108,13 +114,13 @@ class Login(QWidget):
 	
 
 class start_interface(Login):
-	def __init__(self, connection, data_changed_flag):
+	def __init__(self, connection, data_changed_flag,queue):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
 		app.setStyleSheet(open('Elements/login.qss', "r").read())
 		app.aboutToQuit.connect(self.closeEvent)
 		# make a reference of App class
-		login_app = Login(connection)
+		login_app = Login(connection,queue)
 		
 		# Close the server as soon as close button is clicked
 		app.exec_()

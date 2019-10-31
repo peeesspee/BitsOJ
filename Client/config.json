@@ -1,21 +1,30 @@
 {
-    "client_id": "4",
-    "client_key": "139728abcder65bf",
+    "client_id": "3",
+    "client_key": "123456789asdfghj",
+    "Username": "team00003",
     "rabbitmq_username": "client",
     "rabbitmq_password": "client",
-    "host": "localhost",
-    "No_of_Problems": 5,
+    "host": "192.168.43.183",
+    "No_of_Problems": 3,
     "Problems": {
-        "Problem 1": "('Sachinam Srivastava','ABCD')",
-        "Problem 2": "('Prakhar Pandey','asdf')",
-        "Problem 3": "('Prashant Singh','rtyu')",
-        "Problem 4": "('Priyesh Rathore','tgbf')",
-        "Problem 5": "('Sanidhya Samadhiya','yuio')"
+        "Problem 1": [
+            "Sachinam Srivastava",
+            "SAC"
+        ],
+        "Problem 2": [
+            "Prakhar Pandey",
+            "PRA"
+        ],
+        "Problem 3": [
+            "Prashant Singh",
+            "PSH"
+        ]
     },
-    "Languages": "('C','C++','JAVA','PYTHON-2')",
-    "Contest": "RUNNING",
-    "Duration": "00:01:00",
-    "Start Time": 1572381728.6175547,
-    "End Time": 1572381788.6175547,
-    "Username": "team00001"
+    "Languages": "('C', 'C++', 'PYTHON-2')",
+    "Contest": "START",
+    "Duration": "00:05:00",
+    "Start Time": "00:00:00",
+    "End Time": "00:00:00",
+    "Contest_Name": "Kodeathon A4",
+    "Contest_Theme": "Welcome"
 }

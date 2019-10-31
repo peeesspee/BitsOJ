@@ -1,6 +1,7 @@
 import sys
 import time
 import socket
+import json
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
@@ -19,7 +20,23 @@ class contest_setup(QMainWindow):
 		self.setWindowTitle('BitsOJ v1.0.1 Contest Setup')
 		self.resize(1200,700)
 		cur = manage_database.initialize_client_tables()
-		manage_local_ids.initialize_local_id(cur)
+		manage_local_ids.initialize_local_id()
+		self.client_config = {"client_id" : 'Null',
+			"client_key" : '',
+			"Username" : '',
+			"rabbitmq_username" : '',
+			"rabbitmq_password" : '',
+			"host" : '',
+			"No_of_Problems" : None,
+			"Problems" : {},
+			"Languages" : '',
+			"Contest" : 'START',
+			"Duration" : '00:05:00',
+			"Start Time" : '00:00:00',
+			"End Time" : '00:00:00',
+			"Contest_Name" : '',
+			"Contest_Theme" : ''}
+		self.language_tuple = ()
 
 		self.db = self.init_qt_database()
 
@@ -409,7 +426,8 @@ class contest_setup(QMainWindow):
 	############################### ADD PROBLEM ################################
 	def add_problem_client(self):
 		no = manage_local_ids.get_new_id()
-		self.window = add_problem_ui(no,self.table_model)
+		self.client_config["No_of_Problems"] = int(no)
+		self.window = add_problem_ui(no,self.table_model,self.client_config)
 		self.window.show()
 
 	############################## EDIT PROBLEM ###############################
@@ -456,6 +474,7 @@ class contest_setup(QMainWindow):
 
 	def reset_problem_client(self):
 		reset_database.reset_problem(self.table_model)
+		manage_local_ids.initialize_local_id()
 
 	############################ SAVE CONTEST TAB ##############################
 	def save_contest_tab(self):
@@ -466,6 +485,11 @@ class contest_setup(QMainWindow):
 		elif self.client_key_text.text() == '':
 			QMessageBox.warning(self,'Message','Client Key cannot be empty')
 		else:
+			self.client_config["Contest_Name"] = self.contest_name_text.text()
+			self.client_config["Contest_Theme"] = self.contest_theme_text.text()
+			self.client_config["client_key"] = self.client_key_text.text()
+			with open("../Client/config.json", 'w') as contest:
+				json.dump(self.client_config, contest, indent = 4)
 			self.contest_name_text.setReadOnly(True)
 			self.contest_theme_text.setReadOnly(True)
 			self.client_key_text.setReadOnly(True)
@@ -517,6 +541,8 @@ class contest_setup(QMainWindow):
 				self.python3.setDisabled(True)
 				self.java.setDisabled(True)
 				self.general.setDisabled(True)
+				self.language_tuple = "('C','C++','PYTHON-2','PYTHON-3','JAVA','TEXT')"
+				
 		else:
 			if button.isChecked() == True:
 				self.c.setChecked(False)
@@ -547,6 +573,9 @@ class contest_setup(QMainWindow):
 			self.rabbitmq_host_text.setReadOnly(True)
 			self.manual.setDisabled(True)
 			self.automatic.setDisabled(True)
+			self.client_config["rabbitmq_username"] = self.rabbitmq_username_text.text()
+			self.client_config["rabbitmq_password"] = self.rabbitmq_password_text.text()
+			self.client_config["host"] = self.rabbitmq_host_text.text()
 			QMessageBox.warning(self,'Message','RabbitMQ Details has been saved')
 
 	########################## EDIT RABBITMQ DETAILS FOR CLIENT ############################
@@ -559,6 +588,25 @@ class contest_setup(QMainWindow):
 
 	########################### SAVE LANGUAGE DETAILS FOR CLIENT ###########################
 	def save_client_language(self):
+		if self.all.isChecked() == True:
+			self.client_config["Languages"] = self.language_tuple
+		else:
+			language_list = []
+			if self.c.isChecked() == True:
+				language_list.append('C')
+			if self.cplusplus.isChecked() == True:
+				language_list.append('C++')
+			if self.python2.isChecked() == True:
+				language_list.append('PYTHON-2')
+			if self.python3.isChecked() == True:
+				language_list.append('PYTHON-3')
+			if self.java.isChecked() == True:
+				language_list.append('JAVA')
+			if self.general.isChecked() == True:
+				language_list.append('TEXT')
+			self.language_tuple = str(tuple(language_list))
+			self.client_config["Languages"] = self.language_tuple
+		print(self.client_config)
 		self.c.setDisabled(True)
 		self.cplusplus.setDisabled(True)
 		self.python2.setDisabled(True)

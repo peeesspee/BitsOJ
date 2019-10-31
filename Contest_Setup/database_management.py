@@ -25,16 +25,16 @@ class manage_database():
 
 
 # Local Id's for all the submission to have a record for every submission locally 
-class manage_local_ids():
+class manage_local_ids(manage_database):
 	global local_run_id
 	local_run_id = 0
 	# Initialize local run id
-	def initialize_local_id(cur):
+	def initialize_local_id():
 		try:
 			# Query to get the last max local id in my submission table
-			cur.execute("SELECT MAX(No) from problems")
+			manage_database.cur.execute("SELECT MAX(No) from problems")
 			# storing the local run id in data
-			data = int(cur.fetchall()[0][0])
+			data = int(manage_database.cur.fetchall()[0][0])
 			if(data == ''):
 				# if the table is empty then initialize it with 0
 				manage_local_ids.local_run_id =  0

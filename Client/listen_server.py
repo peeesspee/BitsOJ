@@ -14,8 +14,9 @@ class start_listening():
 	host = None
 	login_status = False 
 	data_changed_flags = ''
+	queue = ''
 
-	def listen_server(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags2):
+	def listen_server(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags2,queue):
 		try:
 			creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
 			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
@@ -26,6 +27,7 @@ class start_listening():
 			start_listening.cursor = cursor
 			start_listening.host = host
 			start_listening.data_changed_flags = data_changed_flags2
+			start_listening.queue = queue
 
 
 			start_listening.channel.basic_consume(
@@ -60,6 +62,7 @@ class start_listening():
 		elif code == 'QUERY':
 			start_listening.query_verdict(json_data)
 		elif code == 'SRJCT':
+			# start_listening.queue.put(json_data["Message"])
 			start_listening.data_changed_flags[3] = 1
 		elif code == "SCRBD":
 			print("UNDER DEVELOPMENT")
