@@ -25,7 +25,13 @@ class initialize_server():
 
 	# To be moved to setup.py
 class save_status():
-	def write_config(rabbitmq_username, rabbitmq_password, judge_username, judge_password, host, allow_login, allow_submission, allow_judge, client_key, judge_key, file_password, contest_duration, status, contest_start_time, contest_end_time, contest_set_time):
+	def write_config(
+		rabbitmq_username, rabbitmq_password, judge_username, judge_password,
+		host, allow_login, allow_judge, allow_submission, allow_scoreboard,
+		client_key, judge_key, file_password, contest_duration, status,
+		contest_start_time, contest_end_time, contest_set_time
+		):
+
 		print('\n[ WRITE ] config.json')
 
 		allow_login = str(allow_login)
@@ -40,14 +46,28 @@ class save_status():
 		'Login Allowed' : allow_login,
 		'Judge Login Allowed' : allow_judge,
 		'Submission Allowed' : allow_submission,
+		'Scoreboard Update Allowed': allow_scoreboard,
 		'Judge Key' : judge_key,
 		'Client Key' : client_key,
 		'File Password' : file_password,
 		'Contest Duration' : contest_duration,
-		"Contest Status": status,
-    	"Contest Start Time": contest_start_time,
-    	"Contest End Time": contest_end_time,
-    	"Contest Set Time" : contest_set_time
+		'Contest Status': status,
+    	'Contest Start Time': contest_start_time,
+    	'Contest End Time': contest_end_time,
+    	'Contest Set Time' : contest_set_time,
+    	'Number of Problems' : '5',
+    	'Problems': {
+	        "Problem 1": "('The Begining of the End','TBE', 1, 1)",
+	        "Problem 2": "('Privet Drive','PD', 1, 1)",
+	        "Problem 3": "('Dumbledores Cloak,'DC', 1, 1)",
+	        "Problem 4": "('The Auror Mania','TAM', 1, 1)",
+	        "Problem 5": "('A New Start','ANS', 1, 1)"
+    	},
+    	'Languages': "('C','C++','JAVA','PYTHON-2')",
+    	"Ranking Algorithm" : "ACM",
+    	"AC Points" : 100,
+    	"Penalty Score" : -20,
+    	"Penalty Time" : 20
 		}
 
 		with open("config.json", "w") as data_file:
@@ -66,7 +86,6 @@ class save_status():
 		try:
 			config[entry] = new_value
 			print('[ WRITE ] config.json')
-			# config = json.dumps(config)
 			with open("config.json", "w") as data_file:
 				json.dump(config, data_file, indent=4)
 			if entry == "Contest Duration":

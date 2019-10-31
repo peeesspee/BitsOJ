@@ -53,7 +53,7 @@ def send():
 	message = {
 		'Code' : 'SUBMT', 
 		'ID' : client_id,
-		'PCode' : 'ABCD',
+		'PCode' : 'xyz',
 		'Language' : 'CPP',
 		'Time' : '04:05:06',
 		'Source' : code,

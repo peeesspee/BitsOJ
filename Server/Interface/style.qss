@@ -190,17 +190,6 @@ QPushButton#close_button_no::hover{
 /* Style of buttons in the close dialog box  END  */
 
 
-/* Style of tabs in tab-bar (basically invisible)  START  */
-QTabBar::tab
-{
-	width: 0; 
-	height: 0; 
-	margin: 0; 
-	padding-top: 10; 
-}
-/* Style of tabs in tab-bar (basically invisible)  END  */
-
-
 QPushButton#account_button
 {
 	color : #AAAAAA;
@@ -301,6 +290,39 @@ QLCDNumber{
 	color: #AAAAAA;
 	border : 0px;
 }
+
+/* Style of tabs in tab-bar (basically invisible)  START  */
+QTabBar::tab
+{
+	width: 0; 
+	height: 0; 
+	margin: 0; 
+	padding-top: 10; 
+}
+/* Style of tabs in tab-bar (basically invisible)  END  */
+
+/*Style of problem tab bar*/
+QTabBar#problem_tabs
+{
+	background : #131217;
+}
+
+QTabBar#problem_tabs::tab
+{
+	width: 140px; 
+	height: 35px; 
+	margin: 0px; 
+	background : #131217;
+	color : #777777;
+}
+
+QTabBar#problem_tabs::tab:selected
+{ 
+	color : #E91E63;
+	border-top : 1px solid #B2FF59;
+}
+
+
 
 /*--------------MAIN LAYOUT ENDS----------------*/
 

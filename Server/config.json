@@ -7,6 +7,7 @@
     "Login Allowed": "True",
     "Judge Login Allowed": "True",
     "Submission Allowed": "True",
+    "Scoreboard Update Allowed": "True",
     "Judge Key": "abcdefghij12345",
     "Client Key": "abcdefghij12345",
     "File Password": "papa",
@@ -14,5 +15,18 @@
     "Contest Status": "SETUP",
     "Contest Start Time": "00:00:00",
     "Contest End Time": "00:00:00",
-    "Contest Set Time": 0
+    "Contest Set Time": 0,
+    "Number of Problems": "5",
+    "Problems": {
+        "Problem 1": "('The Begining of the End','TBE', 1, 1)",
+        "Problem 2": "('Privet Drive','PD', 1, 1)",
+        "Problem 3": "('Dumbledores Cloak,'DC', 1, 1)",
+        "Problem 4": "('The Auror Mania','TAM', 1, 1)",
+        "Problem 5": "('A New Start','ANS', 1, 1)"
+    },
+    "Languages": "('C','C++','JAVA','PYTHON-2')",
+    "Ranking Algorithm": "ACM",
+    "AC Points": 200,
+    "Penalty Score": -20,
+    "Penalty Time": 20
 }

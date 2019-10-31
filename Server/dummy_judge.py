@@ -13,11 +13,13 @@ client_id = 0
 username = 'judge00001'
 password = 'bits1'
 channel = ''
+connectio = ''
 
 def login():
 	global username
 	global password
 	global channel
+	global connectio
 	username = input('Enter judge username: ') or username
 	password = input('Enter judge password: ') or password
 	try:
@@ -30,6 +32,8 @@ def login():
 		channel1.queue_bind(exchange = 'connection_manager', queue = 'client_requests')
 		channel1.queue_bind(exchange = 'connection_manager', queue = username)
 		channel = channel1
+		connectio = connection
+
 	except:
 		print("Error")
 		return
@@ -67,6 +71,7 @@ def handler(ch, method, properties, body):
 			PCode = json_data['PCode']
 			Source = json_data['Source']
 			local_run_id = json_data['Local Run ID']
+			time_stamp = json_data['Time Stamp']
 
 			message = {
 			'Code' : 'VRDCT', 
@@ -75,15 +80,17 @@ def handler(ch, method, properties, body):
 			'Status' : 'AC',
 			'Run ID' : run_id,
 			'Message' : 'No Error',
-			'Local Run ID' : local_run_id
+			'Local Run ID' : local_run_id,
+			'PCode' : PCode,
+			'Time Stamp' : time_stamp
 			}
 			message = json.dumps(message)
-
+			print('\nRunning....')
+			time.sleep(3)
 
 			ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
-
-			print('[ JUDGE ] Sent ' + message)
-			time.sleep(1)
+			print('[ JUDGE ] Sent ' + message + "\n\n")
+			
 		
 		elif code =='VALID':
 			client_id = json_data['Client ID']
@@ -114,15 +121,10 @@ def listen(queue_name):
 	try:
 		channel.start_consuming()
 	except (KeyboardInterrupt, SystemExit):
-		channel.stop_consuming()
-		print('[ DELETE ] Queue ' + username + ' deleted...')
-		channel.queue_delete(username)
-		connection.close()
-		print("[ STOP ] Keyboard interrupt")
 		return
 
-
 def main():
+	global channel, connectio
 	print('1.Login\n2.Start judging\n3.Exit')
 	while True:
 		a = input('> ')
@@ -136,8 +138,11 @@ def main():
 			listen('judge_requests')
 		else:
 			break;
-	
-	
 
-
+	channel.stop_consuming()
+	print('[ DELETE ] Queue ' + username + ' deleted...')
+	channel.queue_delete(username)
+	connectio.close()
+	print("[ STOP ] Keyboard interrupt")
+	return
 main()
