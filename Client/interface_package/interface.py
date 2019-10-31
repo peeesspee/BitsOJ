@@ -10,6 +10,7 @@ from decrypt_problem import decrypt
 from init_client import initialize_contest
 
 
+
 global current_status 
 current_status = "STOPPED" 
 
