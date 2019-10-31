@@ -377,7 +377,7 @@ class server_window(QMainWindow):
 			self.set_status('SETUP')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ SETUP ]')
 			self.data_changed_flags[10] = 0
-			contest_duration = self.config["Contest Duration"]
+			contest_duration = '00:00:00'
 			self.timer_widget.display(contest_duration)
 			self.contest_time_entry.setReadOnly(0)
 			self.contest_time_entry.setToolTip('You will not be able to edit this when contest starts.')
@@ -928,6 +928,9 @@ class server_window(QMainWindow):
 				# Update judges view
 				self.data_changed_flags[13] = 1
 				# TODO Broadcast this to all judges
+
+				print('[ RESET ] Clearing scoreboard...')
+				self.data_changed_flags[16] = 1
 
 				print('[ RESET ] Resetting Accounts...')
 				user_management.delete_all()

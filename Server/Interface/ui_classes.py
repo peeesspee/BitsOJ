@@ -307,33 +307,37 @@ class ui_widgets:
 		heading.setObjectName('main_screen_heading')
 		# This is the dictionary which contains all problems in the format:
 		# ProblemName, Code, TimeLimit, NoOfTestFiles
-		problem_dict = self.config["Problems"]
-		no_of_problems = self.config["Number Of Problems"]
-		# Problems in the dict are in format "Problem i" where
-		# 1<= i <= no_of_problems
-		problem_tabs = QTabWidget()
-		problem_tabs.setObjectName('main_tabs')
-		problem_tabbar = QTabBar()
-		problem_tabbar.setObjectName('problem_tabs')
+		try:
+			problem_dict = self.config["Problems"]
+			no_of_problems = int(self.config["Number Of Problems"])
+			# Problems in the dict are in format "Problem i" where
+			# 1<= i <= no_of_problems
+			problem_tabs = QTabWidget()
+			problem_tabs.setObjectName('main_tabs')
+			problem_tabbar = QTabBar()
+			problem_tabbar.setObjectName('problem_tabs')
 
-		for i in range(1, no_of_problems + 1):
-			problem_str = problem_dict['Problem ' + str(i)]
-			problem_tuple = eval(problem_str)
+			for i in range(1, no_of_problems + 1):
+				problem_str = problem_dict['Problem ' + str(i)]
+				problem_tuple = eval(problem_str)
 
-			widget = ui_widgets.get_problem_ui(
-				problem_tuple[0], 
-				problem_tuple[1], 
-				problem_tuple[2], 
-				problem_tuple[3]
-			)
-			problem_tabs.addTab(widget, '')
-			problem_tabbar.addTab('Problem ' + str(i))	
+				widget = ui_widgets.get_problem_ui(
+					problem_tuple[0], 
+					problem_tuple[1], 
+					problem_tuple[2], 
+					problem_tuple[3]
+				)
+				problem_tabs.addTab(widget, '')
+				problem_tabbar.addTab('Problem ' + str(i))	
 
-		problem_tabs.setTabBar(problem_tabbar)
+			problem_tabs.setTabBar(problem_tabbar)
+			main_layout.addWidget(heading)
+			main_layout.addWidget(problem_tabs)
+			main_layout.addStretch(1)
+		except:
+			print("oops")
 
-		main_layout.addWidget(heading)
-		main_layout.addWidget(problem_tabs)
-		main_layout.addStretch(1)
+		
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
@@ -588,6 +592,14 @@ class ui_widgets:
 			submission_reset_button, query_reset_button, 
 			client_reset_button, server_reset_button
 			)
+
+	def contest_ranking_settings(self):
+		# TODO
+		# 1.Select Ranking algorithm
+		# 	1.Select Penalty Duration
+		# 2.Set if leaderboard is to be shown to clients
+		# 3....
+		return
 
 	def settings_ui(self):
 		heading = QLabel('Server Settings')

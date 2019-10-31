@@ -33,6 +33,6 @@ save_status.write_config(
 		'SETUP',
 		'00:00:00',
 		'00:00:00',
-		'0'
+		0
 		)
 

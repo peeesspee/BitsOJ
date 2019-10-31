@@ -19,7 +19,7 @@ def login():
 	global username
 	global password
 	global channel
-	global connection
+	global connectio
 	username = input('Enter judge username: ') or username
 	password = input('Enter judge password: ') or password
 	try:
@@ -71,6 +71,7 @@ def handler(ch, method, properties, body):
 			PCode = json_data['PCode']
 			Source = json_data['Source']
 			local_run_id = json_data['Local Run ID']
+			time_stamp = json_data['Time Stamp']
 
 			message = {
 			'Code' : 'VRDCT', 
@@ -79,15 +80,17 @@ def handler(ch, method, properties, body):
 			'Status' : 'AC',
 			'Run ID' : run_id,
 			'Message' : 'No Error',
-			'Local Run ID' : local_run_id
+			'Local Run ID' : local_run_id,
+			'PCode' : PCode,
+			'Time Stamp' : time_stamp
 			}
 			message = json.dumps(message)
-
+			print('\nRunning....')
+			time.sleep(3)
 
 			ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
-
-			print('[ JUDGE ] Sent ' + message)
-			time.sleep(1)
+			print('[ JUDGE ] Sent ' + message + "\n\n")
+			
 		
 		elif code =='VALID':
 			client_id = json_data['Client ID']
@@ -103,7 +106,6 @@ def handler(ch, method, properties, body):
 			print('Login rejected!')
 
 		ch.basic_ack(delivery_tag = method.delivery_tag)
-		ch.stop_consuming()
 		return
 	except Exception as error:
 		print('Error : ' + str(error))
@@ -122,6 +124,7 @@ def listen(queue_name):
 		return
 
 def main():
+	global channel, connectio
 	print('1.Login\n2.Start judging\n3.Exit')
 	while True:
 		a = input('> ')

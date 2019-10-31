@@ -46,6 +46,7 @@ def main():
 	judge_login = config["Judge Login Allowed"]
 	submission_status = config["Submission Allowed"]
 	scoreboard_status = config["Scoreboard Update Allowed"]
+	ranking_algorithm = config["Ranking Algorithm"]
 	
 	####################################################
 	# TODO : Validate client and server keys when any message is sent, to maintain security 
@@ -80,6 +81,7 @@ def main():
 	#	14		0/1			1: Client Edit under progress
 	#	15		0/1			1: Scoreboard update allowed
 	# 	16		0/1			1: Update Scoreboard GUI
+	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
 
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	if login_status == 'True' or login_status == 'true':
@@ -104,6 +106,17 @@ def main():
 		data_changed_flags[15] = 1
 	else:
 		data_changed_flags[15] = 0
+		
+	# Set Ranking Algorithm
+	if ranking_algorithm == 'ACM':
+		data_changed_flags[17] = 1
+	elif ranking_algorithm == 'IOI':
+		data_changed_flags[17] = 2
+	elif ranking_algorithm == 'LONG':
+		data_changed_flags[17] = 3
+	else:
+		#DEFAULT TO ACM
+		data_changed_flags[17] = 1
 
 	data_changed_flags[4] = 0
 	# SYSTEM SHUT flag

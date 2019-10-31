@@ -392,11 +392,6 @@ class manage_clients():
 			return
 
 
-
-
-
-
-
 		try:
 			if client_id == 'Nul':
 				print('[ REJECT ][ SECURITY ] Client has not logged in. Please check the client for ambiguity.')
@@ -411,7 +406,7 @@ class manage_clients():
 				
 				# Push the submission in judging queue
 				print('[ JUDGE ] Requesting a new judgement')
-				manage_clients.send_new_request(client_id, client_username, run_id, local_run_id, problem_code, language, source_code)
+				manage_clients.send_new_request(client_id, client_username, run_id, local_run_id, problem_code, language, time_stamp, source_code)
 				#######################################################################
 				
 		except Exception as error:
@@ -427,7 +422,7 @@ class manage_clients():
 
 
 
-	def send_new_request(client_id, client_username, run_id, local_run_id, p_code, language, source_code):
+	def send_new_request(client_id, client_username, run_id, local_run_id, p_code, language, time_stamp, source_code):
 		message = {
 		'Code' : 'JUDGE', 
 		'Client ID' : client_id, 
@@ -436,7 +431,8 @@ class manage_clients():
 		'Language' : language,
 		'PCode' : p_code,
 		'Source' : source_code,
-		'Local Run ID' : local_run_id
+		'Local Run ID' : local_run_id,
+		'Time Stamp' : time_stamp
 		}
 	
 		message = json.dumps(message)
