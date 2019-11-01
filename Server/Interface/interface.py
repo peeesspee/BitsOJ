@@ -179,7 +179,7 @@ class server_window(QMainWindow):
 
 		#Define our top bar
 		logo = QLabel(self)
-		logo_image = QPixmap('Interface/bitwise_header.png')
+		logo_image = QPixmap('Elements/bitwise_header.png')
 		logo_image2 = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image2)
 

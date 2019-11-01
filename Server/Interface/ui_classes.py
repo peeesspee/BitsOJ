@@ -288,16 +288,85 @@ class ui_widgets:
 		main.show()
 		return main, score_model
 
+	@pyqtSlot()
+	def manage_io_file(problem_code, row, column):
+		if column == 0:
+			# Input file is selected
+			print("Open file " + str(problem_code) + "/input" + str(row) + ".in")
+		elif column == 1:
+			print("Open file " + str(problem_code) + "/output" + str(row) + ".ans")
+		elif column == 2:
+			print("Disable case " + str(row) + " for problem " + problem_code)
+		return
+
 	def get_problem_ui(problem_name, problem_code, time_limit, cases):
+		cases = int(cases)
 		problem_label = QLabel(problem_name)
+		problem_code_label = QLabel('Problem Code: ')
+		problem_code_data = QLabel(problem_code)
+		time_limit_label = QLabel('Time Limit: ')
+		time_limit_data = QLabel(str(time_limit))
+		time_limit_unit = QLabel(' seconds')
+
+		problem_code_layout = QHBoxLayout()
+		problem_code_layout.addWidget(problem_code_label)
+		problem_code_layout.addWidget(problem_code_data)
+		problem_code_layout.addStretch(1)
+		problem_code_widget = QWidget()
+		problem_code_widget.setLayout(problem_code_layout)
+
+		problem_time_layout = QHBoxLayout()
+		problem_time_layout.addWidget(time_limit_label)
+		problem_time_layout.addWidget(time_limit_data)
+		problem_time_layout.addWidget(time_limit_unit)
+		problem_time_layout.addStretch(1)
+		problem_time_widget = QWidget()
+		problem_time_widget.setLayout(problem_time_layout)
+
+		test_cases_table = QTableWidget()
+		test_cases_table.setRowCount(cases)
+		test_cases_table.setColumnCount(3)
+		test_cases_table.setObjectName('test_cases_table')
+		test_cases_table.setHorizontalHeaderLabels(
+			("Input Files", "Output Files", "Status")
+		)
+		test_cases_table.resizeColumnsToContents()
+		test_cases_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		vertical_header = test_cases_table.verticalHeader()
+		vertical_header.setVisible(False)
+		horizontal_header = test_cases_table.horizontalHeader()
+		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+		# void QTableWidget::cellDoubleClicked(int row, int column)
+		# void QTableWidget::setCellWidget(int row, int column, QWidget *widget)
+		test_cases_table.cellDoubleClicked.connect(
+			lambda:ui_widgets.manage_io_file(
+				problem_code,
+				test_cases_table.selectionModel().currentIndex().row(),
+				test_cases_table.selectionModel().currentIndex().column()
+			)
+		)
+		
+		for i in range(0, cases):
+			test_cases_table.setItem(i, 0, QTableWidgetItem("input" + str(i) + ".in"))
+			test_cases_table.setItem(i, 1, QTableWidgetItem("output" + str(i) + ".ans"))
+			test_cases_table.setItem(i, 2, QTableWidgetItem("Enabled"))
 
 		problem_layout = QVBoxLayout()
 		problem_layout.addWidget(problem_label)
+		problem_layout.addWidget(problem_code_widget)
+		problem_layout.addWidget(problem_time_widget)
+		problem_layout.addWidget(test_cases_table)
 		widget = QWidget()
 		widget.setLayout(problem_layout)
 
 		problem_label.setObjectName('main_screen_sub_heading')
 		widget.setObjectName('account_window')
+		problem_code_label.setObjectName('main_screen_content')
+		problem_code_data.setObjectName('main_screen_content')
+		time_limit_label.setObjectName('main_screen_content')
+		time_limit_data.setObjectName('main_screen_content')
+		time_limit_unit.setObjectName('main_screen_content')
+		
 		return widget
 
 
@@ -334,8 +403,8 @@ class ui_widgets:
 			main_layout.addWidget(heading)
 			main_layout.addWidget(problem_tabs)
 			main_layout.addStretch(1)
-		except:
-			print("oops")
+		except Exception as error:
+			print("oops" + str(error))
 
 		
 		main = QWidget()

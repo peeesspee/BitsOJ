@@ -439,9 +439,14 @@ QTableView::item:selected{
 	border : 2px solid #0891D4;
 }
 
-QHeaderView::section{
+QHeaderView::section{ 
 	background-color : #171B1F;
 	color: #E91E63;	
+}
+
+QTableWidget#test_cases_table{
+	background : #1D2227;
+	border : 1px solid #131217;
 }
 
 /* Scroll bar styles */

@@ -55,11 +55,11 @@ class save_status():
     	'Contest Start Time': contest_start_time,
     	'Contest End Time': contest_end_time,
     	'Contest Set Time' : contest_set_time,
-    	'Number of Problems' : '5',
+    	'Number Of Problems' : '5',
     	'Problems': {
 	        "Problem 1": "('The Begining of the End','TBE', 1, 1)",
 	        "Problem 2": "('Privet Drive','PD', 1, 1)",
-	        "Problem 3": "('Dumbledores Cloak,'DC', 1, 1)",
+	        "Problem 3": "('Dumbledores Cloak','DC', 1, 1)",
 	        "Problem 4": "('The Auror Mania','TAM', 1, 1)",
 	        "Problem 5": "('A New Start','ANS', 1, 1)"
     	},
