@@ -288,18 +288,9 @@ class ui_widgets:
 		main.show()
 		return main, score_model
 
-	@pyqtSlot()
-	def manage_io_file(problem_code, row, column):
-		if column == 0:
-			# Input file is selected
-			print("Open file " + str(problem_code) + "/input" + str(row) + ".in")
-		elif column == 1:
-			print("Open file " + str(problem_code) + "/output" + str(row) + ".ans")
-		elif column == 2:
-			print("Disable case " + str(row) + " for problem " + problem_code)
-		return
+	
 
-	def get_problem_ui(problem_name, problem_code, time_limit, cases):
+	def get_problem_ui(self, problem_name, problem_code, time_limit, cases):
 		cases = int(cases)
 		problem_label = QLabel(problem_name)
 		problem_code_label = QLabel('Problem Code: ')
@@ -339,7 +330,7 @@ class ui_widgets:
 		# void QTableWidget::cellDoubleClicked(int row, int column)
 		# void QTableWidget::setCellWidget(int row, int column, QWidget *widget)
 		test_cases_table.cellDoubleClicked.connect(
-			lambda:ui_widgets.manage_io_file(
+			lambda:self.manage_io_file(
 				problem_code,
 				test_cases_table.selectionModel().currentIndex().row(),
 				test_cases_table.selectionModel().currentIndex().column()
@@ -391,6 +382,7 @@ class ui_widgets:
 				problem_tuple = eval(problem_str)
 
 				widget = ui_widgets.get_problem_ui(
+					self,
 					problem_tuple[0], 
 					problem_tuple[1], 
 					problem_tuple[2], 
@@ -885,6 +877,67 @@ class new_accounts_ui(QMainWindow):
 		self.data_changed_flags[5] = 1
 		self.close()
 
+
+
+class view_case_ui(QMainWindow):
+	problem_path = ''
+	def __init__(
+		self, 
+		data_changed_flags,
+		problem_path,
+		parent=None
+		):
+		super(view_case_ui, self).__init__(parent)
+		view_case_ui.button_mode = 1
+
+		self.data_changed_flags = data_changed_flags
+		view_case_ui.problem_path = problem_path
+
+		self.setWindowTitle('View Case')
+		self.setFixedSize(800,600)
+		main = self.main_view_case_ui()
+		self.setCentralWidget(main)
+		# self.setWindowFlag(Qt.WindowCloseButtonHint, False)
+		return
+
+	def main_view_case_ui(self):
+		heading = QLabel('View Test File')
+		open_label = QLabel("Open: ")
+		path = QLabel(view_case_ui.problem_path)
+		path_layout = QHBoxLayout()
+		path_layout.addWidget(open_label)
+		path_layout.addWidget(path)
+		path_layout.addStretch(1)
+		path_widget = QWidget()
+		path_widget.setLayout(path_layout)
+		file_text_box = QTextEdit()
+
+		# Try to open file:
+		try:
+			file_content = ''
+			with open (view_case_ui.problem_path, "r") as myfile:
+				data=myfile.readlines()
+			for i in data:
+				file_content = file_content + i
+			file_text_box.setText(file_content)
+			# print(data)
+		except Exception as error:
+			print("[ CRITICAL ] Could not read test file : " + str(error))
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(heading)
+		main_layout.addWidget(path_widget)
+		main_layout.addWidget(file_text_box)
+		main_layout.addStretch(1)
+		main = QWidget()
+		main.setLayout(main_layout)
+
+		heading.setObjectName('main_screen_heading')
+		open_label.setObjectName('main_screen_sub_heading')
+		path.setObjectName('main_screen_content')
+		main.setObjectName('account_window')
+		return main
+
 class query_reply_ui(QMainWindow):
 	button_mode = 1
 	query = ''
@@ -1147,3 +1200,6 @@ class account_edit_ui(QMainWindow):
 
 	def exit(self):
 		self.close()
+
+
+

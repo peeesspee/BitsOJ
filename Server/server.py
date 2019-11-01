@@ -82,6 +82,7 @@ def main():
 	#	15		0/1			1: Scoreboard update allowed
 	# 	16		0/1			1: Update Scoreboard GUI
 	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
+	
 
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	if login_status == 'True' or login_status == 'true':
@@ -106,7 +107,7 @@ def main():
 		data_changed_flags[15] = 1
 	else:
 		data_changed_flags[15] = 0
-		
+
 	# Set Ranking Algorithm
 	if ranking_algorithm == 'ACM':
 		data_changed_flags[17] = 1
