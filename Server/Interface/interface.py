@@ -659,7 +659,7 @@ class server_window(QMainWindow):
 			self.ui.show()
 		elif column == 1:
 			# Output file is selected
-			file_path = "Problem Data/" + problem_code +"/output" + str(column) + ".ans"
+			file_path = "Problem Data/" + problem_code +"/output" + str(row) + ".ans"
 			self.ui = view_case_ui(
 				self.data_changed_flags,
 				file_path
