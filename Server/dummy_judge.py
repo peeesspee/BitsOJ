@@ -39,6 +39,7 @@ def login():
 		return
 	print("Sending")
 	message = {
+		'Client Key' : 'abcdefghij12345',
 		'Code' : 'LOGIN', 
 		'Username' : username, 
 		'Password' : password,
@@ -73,11 +74,14 @@ def handler(ch, method, properties, body):
 			local_run_id = json_data['Local Run ID']
 			time_stamp = json_data['Time Stamp']
 
+			status = input("Enter verdict : ") or 'AC'
+
 			message = {
+			'Judge Key' : 'abcdefghij12345',
 			'Code' : 'VRDCT', 
 			'Client Username' : username,
 			'Client ID' : client_id,
-			'Status' : 'AC',
+			'Status' : status,
 			'Run ID' : run_id,
 			'Message' : 'No Error',
 			'Local Run ID' : local_run_id,
@@ -86,7 +90,7 @@ def handler(ch, method, properties, body):
 			}
 			message = json.dumps(message)
 			print('\nRunning....')
-			time.sleep(3)
+			time.sleep(1)
 
 			ch.basic_publish(exchange = 'judge_manager', routing_key = 'judge_verdicts', body = message)
 			print('[ JUDGE ] Sent ' + message + "\n\n")

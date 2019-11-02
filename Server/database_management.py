@@ -77,6 +77,7 @@ class scoreboard_management():
 	def update_user_score(client_id, run_id, problem_max_score, problem_penalty, status, problem_code, time_stamp, ranking_algorithm):
 		
 		try:
+			new_ac_submission = 0
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			# Get number of problems solved till now based on client_id
@@ -100,11 +101,15 @@ class scoreboard_management():
 			# Check if this verdict is a new AC or a pre-scored AC
 			# So that score is not updated when user sends same AC code again.
 			if status == 'AC':
-				cur.execute("SELECT * FROM submissions WHERE client_id = ? and problem_code = ? and verdict = 'AC'", (client_id, problem_code, ))
+				cur.execute(
+					"SELECT * FROM submissions WHERE client_id = ? and problem_code = ? and verdict = 'AC'", 
+					(client_id, problem_code, )
+				)
 				data = cur.fetchall()
-				# If data is empty, it means this is a new AC
+				# If there is only one such entry, it means this is a new AC (The same AC that the entry was for)
 				if data == None or len(data) == 1:
 					score = problem_max_score
+					new_ac_submission = 1
 				else:
 					score = 0
 			elif status == 'CE':
@@ -127,12 +132,22 @@ class scoreboard_management():
 			print("[ ERROR ] Could Not Fetch data : " + str(error))
 			return
 
+		# If it is a new AC submission, total time taken by user is updated.
+		if new_ac_submission == 1:
+			updated_time_stamp = time_stamp
+		else:
+			updated_time_stamp = previous_timestamp
+			
 		new_score = previous_score + score
 		
 		try:
 			print('[ SCOREBOARD ][ UPDATE ] Client: ' + str(client_id) + " Prev Score :" + str(previous_score) + " New Score:" + str(new_score))
-			cur.execute("UPDATE scoreboard SET score = ?, problems_solved = ?, total_time = ? WHERE client_id = ? ", (new_score, problems_solved, time_stamp, client_id))
+			cur.execute(
+				"UPDATE scoreboard SET score = ?, problems_solved = ?, total_time = ? WHERE client_id = ? ", 
+				(new_score, problems_solved, updated_time_stamp, client_id)
+			)
 			conn.commit()
+
 		except Exception as error:
 			print('[ ERROR ][ CRITICAL ] Scoreboard could not be updated : ' + str(error))
 		return
@@ -448,6 +463,63 @@ class user_management(manage_database):
 			conn.rollback()
 		finally:
 			return
+	def get_ac_count(problem_code):
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute("SELECT DISTINCT client_id FROM submissions WHERE problem_code = ? and verdict = 'AC'", (problem_code, ))
+			data = cur.fetchall()
+			if data == None:
+				return 0
+			else:
+				return len(data)
 
+		except Exception as error:
+			print(str(error))
+			return 0
 
+			return
+	def get_submission_count(problem_code):
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute("SELECT client_id FROM submissions WHERE problem_code = ?", (problem_code, ))
+			data = cur.fetchall()
+			if data == None:
+				return 0
+			else:
+				return len(data)
 
+		except Exception as error:
+			print(str(error))
+			return 0
+
+	def get_participant_count():
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute("SELECT DISTINCT (client_id) FROM submissions")
+			data = cur.fetchall()
+			if data == None:
+				return 0
+			else:
+				return len(data)
+
+		except Exception as error:
+			print(str(error))
+			return 0
+
+	def get_participant_pro_count():
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute("SELECT DISTINCT (client_id) FROM submissions WHERE verdict = 'AC'")
+			data = cur.fetchall()
+			if data == None:
+				return 0
+			else:
+				return len(data)
+
+		except Exception as error:
+			print(str(error))
+			return 0

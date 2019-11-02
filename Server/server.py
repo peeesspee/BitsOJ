@@ -59,7 +59,7 @@ def main():
 	
 	##################################
 	# Create variables/lists that will be shared between processes
-	data_changed_flags = multiprocessing.Array('i', 20)
+	data_changed_flags = multiprocessing.Array('i', 25)
 	# This queue will be polled for info from interface
 	data_from_interface = multiprocessing.Queue(maxsize = 100)    
 
@@ -82,6 +82,8 @@ def main():
 	#	15		0/1			1: Scoreboard update allowed
 	# 	16		0/1			1: Update Scoreboard GUI
 	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
+	#	18		0/1			1: Broadcast Scoreboard to all clients
+	#	19		0/1			1: UPDATE remaining time broadcast to all clients
 	
 
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab

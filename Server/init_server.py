@@ -1,9 +1,10 @@
 import json 
- 
+import time
 # This class reads server configuration file and initializes server's variables
 class initialize_server():
 	file_password = '0000'
 	duration = '02:00'	#Default Value
+	config = ''
 
 	def get_password():
 		return initialize_server.file_password
@@ -21,9 +22,20 @@ class initialize_server():
 		# Basic credentials for login to RabbitMQ Server
 		initialize_server.duration = config["Contest Duration"]
 		initialize_server.file_password = config["File Password"]
+		initialize_server.config = config
 		return config
 
-	# To be moved to setup.py
+	def convert_to_seconds(time_str):
+		print(time_str)
+		h, m, s = time_str.split(':')
+		return int(h) * 3600 + int(m) * 60 + int(s)
+
+	def get_remaining_time():
+		current_time = initialize_server.convert_to_seconds(time.strftime("%H:%M:%S", time.localtime()))
+		contest_end_time = initialize_server.convert_to_seconds(initialize_server.config["Contest End Time"])
+		diff = contest_end_time - current_time
+		return time.strftime("%H:%M:%S", time.gmtime(diff))
+
 class save_status():
 	def write_config(
 		rabbitmq_username, rabbitmq_password, judge_username, judge_password,
@@ -63,8 +75,9 @@ class save_status():
 	        "Problem 4": "('The Auror Mania','TAM', 1, 1)",
 	        "Problem 5": "('A New Start','ANS', 1, 1)"
     	},
+    	"Problem Codes" : "('TBE', 'PD', 'DC', 'TAM', 'ANS')",
     	'Languages': "('C','C++','JAVA','PYTHON-2')",
-    	"Ranking Algorithm" : "ACM",
+    	"Ranking Algorithm" : "IOI",
     	"AC Points" : 100,
     	"Penalty Score" : -20,
     	"Penalty Time" : 20

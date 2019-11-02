@@ -33,6 +33,7 @@ def login():
 	channel.queue_bind(exchange = 'connection_manager', queue = username)
 
 	message = {
+		'Client Key' : 'abcdefghij12345',
 		'Code' : 'LOGIN', 
 		'Username' : username, 
 		'Password' : password,
@@ -50,12 +51,15 @@ def send():
 	print("Sending code")
 	code = '#include<iostream>\n int main(void){ std::cout<<"Hello"; return 0; }'
 
+	ctime = time.strftime("%H:%M:%S", time.localtime())
+
 	message = {
+		'Client Key' : 'abcdefghij12345',
 		'Code' : 'SUBMT', 
 		'ID' : client_id,
-		'PCode' : 'xyz',
+		'PCode' : 'TBE',
 		'Language' : 'CPP',
-		'Time' : '04:05:06',
+		'Time' : ctime,
 		'Source' : code,
 		'Local Run ID' : 1
 		}
@@ -70,9 +74,10 @@ def query():
 	code = 'Hello server! How are you?'
 
 	message = {
+		'Client Key' : 'abcdefghij12345',
 		'Code' : 'QUERY', 
 		'Query' : code,
-		'Client ID' : client_id
+		'ID' : client_id
 		}
 	message = json.dumps(message)
 	

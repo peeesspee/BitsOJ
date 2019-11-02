@@ -3,7 +3,7 @@ import sys
 import json
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
-from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
+from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from Interface.ui_classes import *
 from init_server import initialize_server, save_status
@@ -47,6 +47,7 @@ class server_window(QMainWindow):
 		###########################################################
 		self.config = initialize_server.read_config()
 		self.contest_set_time = self.config['Contest Set Time']
+		self.duration = self.config['Contest Duration']
 		# Define Sidebar Buttons and their actions
 		button_width = 200
 		button_height = 50
@@ -122,7 +123,7 @@ class server_window(QMainWindow):
 		self.tab2, self.judge_model = ui_widgets.judge_ui(self)
 		self.tab3, self.client_model = ui_widgets.client_ui(self)
 		self.tab4, self.query_model = ui_widgets.query_ui(self)
-		self.tab5, self.score_model = ui_widgets.leaderboard_ui(self)
+		self.tab5, self.score_model, self.scoring_type_label = ui_widgets.leaderboard_ui(self)
 		self.tab6 = ui_widgets.problem_ui(self)
 		self.tab7 = ui_widgets.language_ui(self)
 		self.tab8 = ui_widgets.stats_ui(self)
@@ -130,7 +131,7 @@ class server_window(QMainWindow):
 		self.tab9, self.contest_time_entry, self.change_time_entry, self.set_button, 
 		self.start_button, self.update_button, self.stop_button, self.account_reset_button, 
 		self.submission_reset_button, self.query_reset_button, self.client_reset_button, 
-		self.server_reset_button
+		self.server_reset_button, self.timer_reset_button
 		) = ui_widgets.settings_ui(self)
 
 		self.tab10 = ui_widgets.reports_ui(self)
@@ -320,55 +321,58 @@ class server_window(QMainWindow):
 		# Update submission table
 		if self.data_changed_flags[0] == 1:
 			self.sub_model.select()
-			self.set_flags(0, 0)
+			self.data_changed_flags[0] = 0
 		# Update connected clients table
 		if self.data_changed_flags[1] == 1:
 			self.client_model.select()
-			self.set_flags(1, 0)
+			self.data_changed_flags[1] = 0
 		# Update accounts table
 		if self.data_changed_flags[5] == 1:
 			self.account_model.select()
-			self.set_flags(5, 0)
+			self.data_changed_flags[5] = 0
 		# Update Query table
 		if self.data_changed_flags[9] == 1:
 			self.query_model.select()
-			self.set_flags(9, 0)
+			self.data_changed_flags[9] = 0
 		# Update judge view
 		if self.data_changed_flags[13] == 1:
 			self.judge_model.select()
-			self.set_flags(13, 0)
+			self.data_changed_flags[13] = 0
 		# Update scoreboard view
 		if self.data_changed_flags[16] == 1:
-			self.score_model.select()			#TODO select in ascending order of score
-			self.set_flags(16, 0)
+			self.score_model.setQuery("SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC")
+			self.data_changed_flags[16] = 0
 		# System EXIT
 		if self.data_changed_flags[7] == 1:
 			sys.exit()
 
-		# OPTIMISE TODO
-		# if self.data_changed_flags[10] == 0:
-			# self.set_status('SETUP')
-			# self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ SETUP ]')
-
-		# Recieved contest start signal
-		elif self.data_changed_flags[10] == 1:
+		# While contest is RUNNING
+		if self.data_changed_flags[10] == 1:
 			# Find time elapsed since contest start
 			total_time = self.contest_set_time
 			current_time = time.time()
-
-			elapsed_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
-			
+			remaining_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
 			#Update timer
-			self.timer_widget.display(elapsed_time)
+			self.timer_widget.display(remaining_time)
 
-		# Recieved contest stop signal
-		# elif self.data_changed_flags[10] == 2:
-		# 	self.set_status('STOPPED')
-		# 	self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ STOPPED ]')
+		if self.data_changed_flags[19] == 1:
+			self.data_changed_flags[19] = 0
+			# Broadcast UPDATE signal
+			total_time = self.contest_set_time
+			current_time = time.time()
+			remaining_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
+
+			message = {
+			'Code' : 'UPDATE',
+			'Time' : remaining_time
+			}
+			message = json.dumps(message)
+			self.data_to_client.put(message)
+			
 		return
 
 	def convert_to_seconds(time_str):
-		print(time_str)
+		print("I got: " + time_str)
 		h, m, s = time_str.split(':')
 		return int(h) * 3600 + int(m) * 60 + int(s)
 
@@ -398,6 +402,8 @@ class server_window(QMainWindow):
 			self.query_reset_button.setEnabled(True)
 			self.client_reset_button.setEnabled(True)
 			self.delete_account_button.setEnabled(True)
+			self.timer_reset_button.setEnabled(False)
+			self.timer_reset_button.setToolTip('You can reset timer when contest is STOPPED.')
 		if status == "RUNNING":
 			self.set_status('RUNNING')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ RUNNING ]')
@@ -421,6 +427,7 @@ class server_window(QMainWindow):
 			self.query_reset_button.setEnabled(True)
 			self.client_reset_button.setEnabled(True)
 			self.delete_account_button.setEnabled(False)
+			self.timer_reset_button.setEnabled(False)
 		elif status == "STOPPED":
 			self.set_status('STOPPED')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ STOPPED ]')
@@ -444,6 +451,8 @@ class server_window(QMainWindow):
 			self.query_reset_button.setEnabled(True)
 			self.client_reset_button.setEnabled(True)
 			self.delete_account_button.setEnabled(True)
+			self.timer_reset_button.setEnabled(True)
+			self.timer_reset_button.setToolTip('Reset Contest timer')
 		return
 
 	def process_event(self, data, extra_data):
@@ -451,12 +460,14 @@ class server_window(QMainWindow):
 			print('\n[ SET ] Contest Duration : ' + str(extra_data))
 			save_status.update_entry('Contest Duration', str(extra_data))
 			self.timer_widget.display(initialize_server.get_duration())
+			self.duration = str(extra_data)
 
 		elif data == 'START':
 			current_time = time.localtime()
 			self.contest_start_time = time.time()
 			self.contest_duration_seconds = server_window.convert_to_seconds(initialize_server.get_duration())
 			self.contest_set_time = self.contest_duration_seconds + self.contest_start_time
+			contest_end_time = time.strftime("%H:%M:%S", time.localtime(self.contest_set_time))
 
 			message = {
 			'Code' : 'START',
@@ -474,6 +485,10 @@ class server_window(QMainWindow):
 			save_status.update_entry('Contest Status', 'RUNNING')
 			save_status.update_entry('Contest Duration', extra_data)
 			save_status.update_entry('Contest Set Time', self.contest_set_time)
+			save_status.update_entry('Contest End Time', contest_end_time)
+
+			# Broadcast Scoreboard
+			self.data_changed_flags[18] = 1
 
 		elif data == 'STOP':
 			current_time = time.localtime()
@@ -481,6 +496,7 @@ class server_window(QMainWindow):
 			message = {
 			'Code' : 'STOP'
 			}
+
 			message = json.dumps(message)
 			self.data_to_client.put(message)
 
@@ -495,14 +511,35 @@ class server_window(QMainWindow):
 
 		elif data == 'UPDATE':
 			# Send UPDATE signal
-			message = {
-			'Code' : 'UPDATE',
-			'Time' : extra_data
-			}
-			message = json.dumps(message)
-			self.data_to_client.put(message)
+			print('[ UPDATE ] Contest time ' + str(extra_data))
+			self.contest_set_time = self.contest_set_time + int(extra_data) * 60
+			self.data_changed_flags[19] = 1
+
+			prev_duration = self.duration
+			new_duration = server_window.convert_to_seconds(prev_duration) + (int(extra_data) * 60)
+			new_duration = server_window.convert_to_hhmmss(new_duration)
+
+			new_end_time = time.strftime("%H:%M:%S", time.localtime(self.contest_set_time))
+			save_status.update_entry('Contest Set Time', self.contest_set_time)
+			save_status.update_entry('Contest End Time', new_end_time)
+			save_status.update_entry('Contest Duration', new_duration)
+			# Broadcast to all clients
+			
 			
 		return
+
+	def convert_to_hhmmss(seconds):
+		seconds = int(seconds)
+		h = int(seconds / 3600)
+		m = int((seconds % 3600) / 60)
+		s = int(((seconds % 3600) % 60))
+		if h <= 9:
+			h = '0' + str(h)
+		if m <= 9:
+			m = '0' + str(m)
+		if s <= 9:
+			s = '0' + str(s)
+		return str(h) + ':' + str(m) + ':' + str(s)
 
 	def allow_login_handler(self, state):
 		if(state == Qt.Checked):
@@ -584,7 +621,21 @@ class server_window(QMainWindow):
 			model.setTable(table_name)
 			model.setEditStrategy(QSqlTableModel.OnFieldChange)
 			model.select()
-		return model
+			return model
+		else:
+			return None
+
+	def manage_leaderboard_model(self, db, table_name):
+		if db.open():
+			model = QSqlQueryModel()
+			# score, problems_solved, total_time
+			model.setQuery("SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC")
+			# model.setEditStrategy()
+			
+			return model
+		else:
+			return None
+
 
 
 	def generate_view(self, model):
@@ -666,8 +717,8 @@ class server_window(QMainWindow):
 			)
 			self.ui.show()
 	
-		elif column == 2:
-			print("Disable File " + str(row) + " for problem " + problem_code)
+		# elif column == 2:
+		# 	print("Disable File " + str(row) + " for problem " + problem_code)
 		return
 		
 
@@ -977,7 +1028,59 @@ class server_window(QMainWindow):
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
-			print('Could not reset database : ' + str(error))
+			print('Could not reset server : ' + str(error))
+
+		finally:
+			# Reset critical flag
+			self.data_changed_flags[11] = 0
+		return
+
+	def reset_timer(self):
+		if self.data_changed_flags[11] == 0:
+			# Set critical flag
+			self.data_changed_flags[11] = 1
+		else:
+			# If one data deletion window is already opened, process it first.
+			return
+		# If no row is selected, return
+		try:
+			message = "Are you sure to RESET the timer?"
+			
+			custom_close_box = QMessageBox()
+			custom_close_box.setIcon(QMessageBox.Critical)
+			custom_close_box.setWindowTitle('TIMER RESET')
+			custom_close_box.setText(message)
+
+			custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
+			custom_close_box.setDefaultButton(QMessageBox.No)
+
+			button_yes = custom_close_box.button(QMessageBox.Yes)
+			button_yes.setText('Yes')
+			button_no = custom_close_box.button(QMessageBox.No)
+			button_no.setText('No')
+
+			button_yes.setObjectName("close_button_yes")
+			button_no.setObjectName("close_button_no")
+
+			button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
+			button_no.setStyleSheet(open('Interface/style.qss', "r").read())
+
+			custom_close_box.exec_()
+
+			if custom_close_box.clickedButton() == button_yes:
+				print('[ EVENT ] TIMER RESET TRIGGERED')
+				print('[ RESET ] Reset environment...')
+				server_window.set_button_behavior(self, 'SETUP')
+				save_status.update_entry('Contest Duration', '00:00:00')
+				save_status.update_entry('Contest Status', 'SETUP')
+				save_status.update_entry('Contest Start Time', '00:00:00')
+				save_status.update_entry('Contest End Time', '00:00:00')
+				save_status.update_entry('Contest Set Time', 0)
+
+			elif custom_close_box.clickedButton() == button_no : 
+				pass
+		except Exception as error:
+			print('Could not reset timer : ' + str(error))
 
 		finally:
 			# Reset critical flag

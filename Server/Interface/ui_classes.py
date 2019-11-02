@@ -245,7 +245,19 @@ class ui_widgets:
 		heading = QLabel('Contest Standings')
 		heading.setObjectName('main_screen_heading')
 
-		update_scoreboard_label = QLabel('Update Scoreboard : ')
+		scoring_num = self.data_changed_flags[17]
+		if scoring_num == 1:
+			# ACM Style ranking
+			scoring_type = 'ACM'
+		elif scoring_num == 2:
+			# IOI Style ranking
+			scoring_type = 'IOI'
+		else:
+			scoring_type = 'LONG'
+
+		scoring_label = QLabel('Scoring Type: ' + scoring_type)
+
+		update_scoreboard_label = QLabel('Broadcast Scoreboard : ')
 		update_scoreboard_label.setObjectName('main_screen_content')
 
 		update_scoreboard_flag = self.check_scoreboard_update_allowed()
@@ -255,7 +267,7 @@ class ui_widgets:
 		update_scoreboard_button.setChecked(update_scoreboard_flag)
 		update_scoreboard_button.stateChanged.connect(self.allow_scoreboard_update_handler)
 
-		score_model = self.manage_models(self.db, 'scoreboard')
+		score_model = self.manage_leaderboard_model(self.db, 'scoreboard')
 
 		score_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
 		score_model.setHeaderData(1, Qt.Horizontal, 'Team')
@@ -264,14 +276,17 @@ class ui_widgets:
 		score_model.setHeaderData(4, Qt.Horizontal, 'Total Time')
 		
 		score_table = self.generate_view(score_model)
+		score_table.setSortingEnabled(False)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
+		head_layout.addWidget(scoring_label)
 		head_layout.addWidget(update_scoreboard_label)
 		head_layout.addWidget(update_scoreboard_button)
-		head_layout.setStretch(0, 80)
-		head_layout.setStretch(1, 10)
+		head_layout.setStretch(0, 40)
+		head_layout.setStretch(1, 40)
 		head_layout.setStretch(2, 10)
+		head_layout.setStretch(3, 10)
 		
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
@@ -285,8 +300,9 @@ class ui_widgets:
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
+		scoring_label.setObjectName('main_screen_content')
 		main.show()
-		return main, score_model
+		return main, score_model, scoring_label
 
 	
 
@@ -316,13 +332,14 @@ class ui_widgets:
 
 		test_cases_table = QTableWidget()
 		test_cases_table.setRowCount(cases)
-		test_cases_table.setColumnCount(3)
-		test_cases_table.setObjectName('test_cases_table')
+		test_cases_table.setColumnCount(2)
+		test_cases_table.setObjectName('inner_table')
 		test_cases_table.setHorizontalHeaderLabels(
 			("Input Files", "Output Files", "Status")
 		)
 		test_cases_table.resizeColumnsToContents()
 		test_cases_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		test_cases_table.setAlternatingRowColors(True)
 		vertical_header = test_cases_table.verticalHeader()
 		vertical_header.setVisible(False)
 		horizontal_header = test_cases_table.horizontalHeader()
@@ -340,7 +357,7 @@ class ui_widgets:
 		for i in range(0, cases):
 			test_cases_table.setItem(i, 0, QTableWidgetItem("input" + str(i) + ".in"))
 			test_cases_table.setItem(i, 1, QTableWidgetItem("output" + str(i) + ".ans"))
-			test_cases_table.setItem(i, 2, QTableWidgetItem("Enabled"))
+			
 
 		problem_layout = QVBoxLayout()
 		problem_layout.addWidget(problem_label)
@@ -357,7 +374,6 @@ class ui_widgets:
 		time_limit_label.setObjectName('main_screen_content')
 		time_limit_data.setObjectName('main_screen_content')
 		time_limit_unit.setObjectName('main_screen_content')
-		
 		return widget
 
 
@@ -417,17 +433,144 @@ class ui_widgets:
 		main.setObjectName("main_screen");
 		return main
 
+	def get_stats_widget():
+		contest_problems_subheading = QLabel('Problems: ')
+
+		contest_problems_number = QLabel('Number of Problems: ')
+		contest_problems_number_answer = QLabel('')	# Label Index 2
+		contest_problems_layout = QHBoxLayout()
+		contest_problems_layout.addWidget(contest_problems_number)
+		contest_problems_layout.addWidget(contest_problems_number_answer)
+		contest_problems_layout.addStretch(1)
+		contest_problems_number_widget = QWidget()
+		contest_problems_number_widget.setLayout(contest_problems_layout)
+
+		participants_number = QLabel('Number of Teams with 1 or more submissions: ')
+		participants_number_answer = QLabel('')	# Label Index 4
+		participants_layout = QHBoxLayout()
+		participants_layout.addWidget(participants_number)
+		participants_layout.addWidget(participants_number_answer)
+		participants_layout.addStretch(1)
+		participants_number_widget = QWidget()
+		participants_number_widget.setLayout(participants_layout)
+
+		participants_pro_number = QLabel('Number of Teams with 1 or more Correct submissions: ')
+		participants_pro_number_answer = QLabel('')	# Label Index 6
+		participants_pro_layout = QHBoxLayout()
+		participants_pro_layout.addWidget(participants_pro_number)
+		participants_pro_layout.addWidget(participants_pro_number_answer)
+		participants_pro_layout.addStretch(1)
+		participants_pro_number_widget = QWidget()
+		participants_pro_number_widget.setLayout(participants_pro_layout)
+
+		problem_solved_table = QTableWidget()
+		problem_solved_table.setColumnCount(4)
+		problem_solved_table.setHorizontalHeaderLabels(
+			("Problem", "Correct Submissions", "Total Submissions", "Accuracy")
+		)
+
+		problem_solved_table.resizeColumnsToContents()
+		problem_solved_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		problem_solved_table.setAlternatingRowColors(True)
+		problem_solved_table.setFixedSize(800, 180)
+		vertical_header = problem_solved_table.verticalHeader()
+		vertical_header.setVisible(False)
+		horizontal_header = problem_solved_table.horizontalHeader()
+		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(contest_problems_subheading)
+		main_layout.addWidget(contest_problems_number_widget)
+		main_layout.addWidget(participants_number_widget)
+		main_layout.addWidget(participants_pro_number_widget)
+		main_layout.addWidget(problem_solved_table)
+		main_layout.addStretch(1)
+
+		main = QWidget()
+		main.setLayout(main_layout)
+		main.setObjectName('main_screen')
+		contest_problems_subheading.setObjectName('main_screen_sub_heading')
+		contest_problems_number.setObjectName('main_screen_content')
+		contest_problems_number_answer.setObjectName('main_screen_content')
+		participants_number.setObjectName('main_screen_content')
+		participants_number_answer.setObjectName('main_screen_content')
+		participants_pro_number.setObjectName('main_screen_content')
+		participants_pro_number_answer.setObjectName('main_screen_content')
+		problem_solved_table.setObjectName('inner_table')
+		return main
+
+	def update_stats(self, stats_widget):
+		child_list = stats_widget.findChildren(QLabel)
+		table_list = stats_widget.findChildren(QTableWidget)
+		# 2nd QLabel in this list is contest_problems_number_answer
+		number_of_problems = self.config['Number Of Problems']
+		child_list[2].setText(number_of_problems)
+		number_of_problems = int(number_of_problems)
+
+		# table_list[0] contains problem_solved_table
+		table_list[0].setRowCount(int(number_of_problems))
+		code_tuple_string = self.config['Problem Codes']
+		code_tuple = eval(code_tuple_string)
+		for i in range(0, number_of_problems ):
+
+			table_list[0].setItem(i, 0, QTableWidgetItem(code_tuple[i]))
+			# Get how many clients solved this problem
+			solve_count = user_management.get_ac_count(code_tuple[i])
+			table_list[0].setItem(i, 1, QTableWidgetItem(str(solve_count)))
+
+			# Get how many clients submitted a code for this problem
+			submit_count = user_management.get_submission_count(code_tuple[i])
+			table_list[0].setItem(i, 2, QTableWidgetItem(str(submit_count)))
+
+			if submit_count == 0:
+				accuracy = 0
+			else:
+				accuracy = float(solve_count*100/submit_count)
+				accuracy = '{0:.2f}'.format(accuracy)
+			table_list[0].setItem(i, 3, QTableWidgetItem(str(accuracy) + "%"))
+
+		# Get number of active participants
+		participant_count = user_management.get_participant_count()
+		child_list[4].setText(str(participant_count))
+
+		# Get number of active pro participants
+		participant_pro_count = user_management.get_participant_pro_count()
+		child_list[6].setText(str(participant_pro_count))
+
+		# Get Accuracy
+
+		return
 
 	def stats_ui(self):
 		main_layout = QVBoxLayout()
-		heading = QLabel('Server Stats')
+		heading = QLabel('Contest Stats')
 		heading.setObjectName('main_screen_heading')
 
-		main_layout.addWidget(heading)
+		stats_widget = ui_widgets.get_stats_widget()
+
+		update_button = QPushButton('Update Stats')
+		update_button.clicked.connect(
+			lambda:ui_widgets.update_stats(self, stats_widget)
+		)
+		update_button.setFixedSize(200, 50)
+
+		top_layout = QHBoxLayout()
+		top_layout.addWidget(heading)
+		top_layout.addWidget(update_button)
+		top_layout.setStretch(0, 80)
+		top_layout.setStretch(1, 20)
+		top_widget = QWidget()
+		top_widget.setLayout(top_layout)
+
+		main_layout.addWidget(top_widget)
+		main_layout.addWidget(stats_widget)
 		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
+		update_button.setObjectName('topbar_button')
+		# Update stats UI first time
+		ui_widgets.update_stats(self, stats_widget)
 		return main
 
 	def contest_time_settings(self):
@@ -613,6 +756,21 @@ class ui_widgets:
 		client_reset_widget = QWidget()
 		client_reset_widget.setLayout(client_reset_layout)
 
+		timer_reset_label = QLabel('> Reset Timer ')
+		timer_reset_label.setObjectName('main_screen_content')
+		timer_reset_label.setFixedSize(200, 25)
+		timer_reset_button = QPushButton('RESET')
+		timer_reset_button.setFixedSize(70, 25)
+		timer_reset_button.setObjectName('interior_button')
+		timer_reset_button.setToolTip('Reset contest timer and state.\nCan be used when contest is STOPPED.')
+		timer_reset_button.clicked.connect(self.reset_timer)
+		timer_reset_layout = QHBoxLayout()
+		timer_reset_layout.addWidget(timer_reset_label)
+		timer_reset_layout.addWidget(timer_reset_button)
+		timer_reset_layout.addStretch(1)
+		timer_reset_widget = QWidget()
+		timer_reset_widget.setLayout(timer_reset_layout)
+
 		server_reset_label = QLabel('> Reset SERVER ')
 		server_reset_label.setObjectName('main_screen_content')
 		server_reset_label.setFixedSize(200, 25)
@@ -634,8 +792,8 @@ class ui_widgets:
 		button_layout.addWidget(submission_reset_widget, 0, 1)
 		button_layout.addWidget(query_reset_widget, 1, 0)
 		button_layout.addWidget(client_reset_widget, 1, 1)
-		# button_layout.addWidget(judge_reset_widget, 1, 1)
-		button_layout.addWidget(server_reset_widget, 2, 0)
+		button_layout.addWidget(timer_reset_widget, 2, 0)
+		button_layout.addWidget(server_reset_widget, 2, 1)
 		button_layout.setColumnStretch(0,1)
 		button_layout.setColumnStretch(1,3)
 
@@ -651,7 +809,8 @@ class ui_widgets:
 		return (
 			contest_reset_widget, account_reset_button, 
 			submission_reset_button, query_reset_button, 
-			client_reset_button, server_reset_button
+			client_reset_button, server_reset_button,
+			timer_reset_button
 			)
 
 	def contest_ranking_settings(self):
@@ -674,7 +833,7 @@ class ui_widgets:
 		(
 			contest_reset_widget, account_reset_button, 
 			submission_reset_button, query_reset_button, 
-			client_reset_button, server_reset_button
+			client_reset_button, server_reset_button, timer_reset_button
 		) = ui_widgets.contest_reset_settings(self)
 
 		main_layout = QVBoxLayout()
@@ -690,7 +849,8 @@ class ui_widgets:
 			main, contest_time_entry, change_time_entry, 
 			set_button, start_button, update_button, stop_button, 
 			account_reset_button, submission_reset_button, 
-			query_reset_button, client_reset_button, server_reset_button
+			query_reset_button, client_reset_button, server_reset_button,
+			timer_reset_button
 			)
 
 	def preprocess_contest_broadcasts(self, signal, extra_data = 'NONE'):
@@ -830,7 +990,6 @@ class new_accounts_ui(QMainWindow):
 		
 		layout = QGridLayout()
 		layout.addWidget(label1, 0, 0)
-		label1.setStyleSheet('''Qlabel{text-align : center; }''')
 		layout.addWidget(client_entry, 0, 1)
 		layout.addWidget(label2, 1, 0)
 		layout.addWidget(judge_entry, 1, 1)
@@ -884,6 +1043,7 @@ class view_case_ui(QMainWindow):
 	text_box = ''
 	line_endings_shown = 0
 	backup_file_content = ''
+	file_not_found = 0
 
 
 	def __init__(
@@ -939,15 +1099,18 @@ class view_case_ui(QMainWindow):
 			file_content = ''
 			with open (view_case_ui.problem_path, "r") as myfile:
 				data=myfile.readlines()
-
+			# print(data)
 			for i in data:
 				file_content = file_content + i
 
 			view_case_ui.backup_file_content = repr(file_content)
+			file_not_found = 0
 			# print(data)
 		except Exception as error:
 			print("[ CRITICAL ] Could not read test file : " + str(error))
 			file_content = "CRITICAL ERROR\nFile not found!"
+			view_case_ui.backup_file_content = " CRITICAL ERROR\nFile not found! "
+			file_not_found = 1
 
 		file_text_box.setText(file_content)
 		main_layout = QVBoxLayout()
@@ -969,7 +1132,7 @@ class view_case_ui(QMainWindow):
 
 	def line_end_toggle(state):
 		try:
-			if(state == Qt.Checked):
+			if(state == Qt.Checked) and view_case_ui.file_not_found == 0:
 				# line endings show
 				data = view_case_ui.backup_file_content
 				data = data.replace('\\r', 'CR\r')
@@ -978,7 +1141,7 @@ class view_case_ui(QMainWindow):
 				
 				view_case_ui.line_endings_shown = 1
 				view_case_ui.text_box.setText(data)
-			else:
+			elif view_case_ui.file_not_found == 0:
 				# line endings hide
 				if view_case_ui.line_endings_shown == 1:
 					view_case_ui.line_endings_shown = 0

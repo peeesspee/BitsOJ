@@ -444,7 +444,7 @@ QHeaderView::section{
 	color: #E91E63;	
 }
 
-QTableWidget#test_cases_table{
+QTableWidget#inner_table{
 	background : #1D2227;
 	border : 1px solid #131217;
 }

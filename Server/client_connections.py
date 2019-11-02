@@ -12,16 +12,22 @@ from init_server import initialize_server
 class manage_clients():
 	channel = ''
 	data_changed_flags = ''
+	key = ''
+	config = ''
+	file_password = ''
 
 	def prepare(data_changed_flags2, data_from_interface):
 		manage_clients.data_changed_flags = data_changed_flags2
-		
-		config = initialize_server.read_config()
-		superuser_username = config["Server Username"]
-		superuser_password = config["Server Password"]
-		judge_username = config["Judge Username"]
-		judge_password = config["Judge Password"]
-		host = config["Server IP"]
+
+		manage_clients.config = initialize_server.read_config()
+
+		superuser_username = manage_clients.config["Server Username"]
+		superuser_password = manage_clients.config["Server Password"]
+		judge_username = manage_clients.config["Judge Username"]
+		judge_password = manage_clients.config["Judge Password"]
+		host = manage_clients.config["Server IP"]
+		manage_clients.key = manage_clients.config["Client Key"]
+		manage_clients.file_password = manage_clients.config["File Password"]
 
 		broadcast_thread = threading.Thread(target = broadcast_manager.init_broadcast, args = (data_changed_flags2, data_from_interface, superuser_username, superuser_password, host, ))
 		broadcast_thread.start()
@@ -76,14 +82,17 @@ class manage_clients():
 			# Clients send requests on client_requests
 			# As soon as a new message is recieved, it is sent to client_message_handler for further processing
 			print('[ LISTEN ] Started listening on client_requests')
-			channel.basic_consume(queue = 'client_requests', on_message_callback = manage_clients.client_message_handler, auto_ack = True)
+			channel.basic_consume(
+				queue = 'client_requests', 
+				on_message_callback = manage_clients.client_message_handler
+			)
 			channel.start_consuming()
 		# Handle keyboard interrupt ctrl+c and terminate successfully
 		except (KeyboardInterrupt, SystemExit):
 			channel.stop_consuming()
 			print('\n[ LISTEN ] STOPPED listening to client channel')
 			connection.close()
-			print('[ STOP ] Client subprocess terminated successfully!')
+			print('\n[ STOP ] Client subprocess terminated successfully!')
 			manage_clients.data_changed_flags[7] = 1
 			return
 
@@ -96,6 +105,21 @@ class manage_clients():
 		# JSON Parsing here
 		try:
 			json_data = json.loads(client_message)
+			# Validate Client Key( Make sure client is authentic! )
+			client_key = json_data["Client Key"]
+			if client_key != manage_clients.key:
+				print('[ SECURITY ] Client Key did not match. Client ID: ' + str(json_data['ID']))
+				print('[ SECURITY ] Complete Message: ' + client_message)
+				# Send a response?
+				# message = {
+				# 	'Code' : 'LRJCT',
+				# 	'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
+				# }
+				# message = json.dumps(message)
+				# response.publish_message(manage_clients.channel, client_username, message)
+				return
+
+
 			client_code = json_data["Code"]
 			if client_code == 'LOGIN':
 				client_username = json_data["Username"]
@@ -114,7 +138,7 @@ class manage_clients():
 
 				manage_clients.client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code)
 			elif client_code == 'QUERY':
-				client_id = json_data['Client ID']
+				client_id = json_data['ID']
 				query = json_data['Query'][:100]
 
 				if client_id == 'Nul':
@@ -128,6 +152,9 @@ class manage_clients():
 
 		except Exception as error:
 			print("[ ERROR ] Client json data could not be parsed : "  + str(error))
+
+		# Acknowledge the message
+		ch.basic_ack(delivery_tag = method.delivery_tag)
 		return
 
 	# This function handles all client login requests
@@ -184,6 +211,7 @@ class manage_clients():
 					'Message' : 'Maximum Login limit is 1 per user.'
 					}
 					message = json.dumps(message)
+					response.publish_message(manage_clients.channel, client_username, message)
 
 					# Raise a security event?
 				elif previously_connected_state == 'Disconnected':
@@ -196,6 +224,7 @@ class manage_clients():
 					'Message' : 'Welcome back!.'
 					}
 					message = json.dumps(message)
+					response.publish_message(manage_clients.channel, client_username, message)
 
 					# Update client state from Disconnected to Connected 
 					user_management.update_user_state(client_username, 'Connected')
@@ -227,11 +256,23 @@ class manage_clients():
 					'Message' : server_message
 					}
 					message = json.dumps(message)
-
+					response.publish_message(manage_clients.channel, client_username, message)
 					print('[ LOGIN ][ RESPONSE ] VALID to ' + client_username)
-					
+
 					# Check if contest has started, also send client the 
-					# contest START signal alog with remaining time.
+					# START signal for contest
+					if manage_clients.data_changed_flags[10] == 1:
+						# manage_clients.data_changed_flags[19] = 1
+						remaining_time = initialize_server.get_remaining_time()
+						message = {
+						'Code' : 'START', 
+						'Duration' : remaining_time,
+						'Problem Key' : manage_clients.file_password
+						}
+						message = json.dumps(message)
+						response.publish_message(manage_clients.channel, client_username, message)
+						print('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
+						
 
 				elif previously_connected_state == 'Blocked':
 					print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
@@ -241,6 +282,7 @@ class manage_clients():
 					'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
 					}
 					message = json.dumps(message)
+					response.publish_message(manage_clients.channel, client_username, message)
 
 
 
@@ -252,9 +294,8 @@ class manage_clients():
 				'Code' : 'INVLD'
 				}
 				message = json.dumps(message)
-				
-			# Send response to client
-			response.publish_message(manage_clients.channel, client_username, message)
+				# Send response to client
+				response.publish_message(manage_clients.channel, client_username, message)
 
 
 		# Judge login is handled as a client to avoid redundancy in code
