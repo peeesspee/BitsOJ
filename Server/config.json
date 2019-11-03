@@ -11,23 +11,24 @@
     "Judge Key": "abcdefghij12345",
     "Client Key": "abcdefghij12345",
     "File Password": "papa",
-    "Contest Duration": "02:10:00",
-    "Contest Status": "RUNNING",
-    "Contest Start Time": "21:55:47",
-    "Contest End Time": "00:05:47",
-    "Contest Set Time": 1572719747.959002,
+    "Contest Duration": "00:00:00",
+    "Contest Status": "SETUP",
+    "Contest Start Time": "00:00:00",
+    "Contest End Time": "00:00:00",
+    "Contest Set Time": 0,
     "Number Of Problems": "5",
     "Problems": {
         "Problem 1": "('The Begining of the End','TBE', 1, 1)",
-        "Problem 2": "('Privet Drive', 'PD', 1, 1)",
-        "Problem 3": "('Dumbledores Cloak', 'DC', 1, 7)",
-        "Problem 4": "('The Auror Mania', 'TAM', 2, 4)",
-        "Problem 5": "('A New Start', 'ANS', 4, 2)"
+        "Problem 2": "('Privet Drive','PD', 1, 1)",
+        "Problem 3": "('Dumbledores Cloak','DC', 1, 1)",
+        "Problem 4": "('The Auror Mania','TAM', 1, 1)",
+        "Problem 5": "('A New Start','ANS', 1, 1)"
     },
     "Problem Codes": "('TBE', 'PD', 'DC', 'TAM', 'ANS')",
-    "Languages": "('C','C++','JAVA','PYTHON2', 'PYTHON3')",
+    "Languages": "('C','C++','JAVA','PYTHON-2')",
     "Ranking Algorithm": "IOI",
-    "AC Points": 200,
+    "AC Points": 100,
     "Penalty Score": -20,
-    "Penalty Time": -20
+    "Penalty Time": 20,
+    "Manual Review": "True"
 }

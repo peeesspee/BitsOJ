@@ -15,7 +15,7 @@ class manage_clients():
 	key = ''
 	config = ''
 	file_password = ''
-
+	
 	def prepare(data_changed_flags2, data_from_interface):
 		manage_clients.data_changed_flags = data_changed_flags2
 
@@ -262,7 +262,8 @@ class manage_clients():
 					# Check if contest has started, also send client the 
 					# START signal for contest
 					if manage_clients.data_changed_flags[10] == 1:
-						# manage_clients.data_changed_flags[19] = 1
+						# Update self config
+						manage_clients.config = initialize_server.read_config()
 						remaining_time = initialize_server.get_remaining_time()
 						message = {
 						'Code' : 'START', 
@@ -283,8 +284,6 @@ class manage_clients():
 					}
 					message = json.dumps(message)
 					response.publish_message(manage_clients.channel, client_username, message)
-
-
 
 			# If login is not successful:
 			elif status == False:

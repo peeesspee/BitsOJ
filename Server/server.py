@@ -47,6 +47,7 @@ def main():
 	submission_status = config["Submission Allowed"]
 	scoreboard_status = config["Scoreboard Update Allowed"]
 	ranking_algorithm = config["Ranking Algorithm"]
+	manual_review = config["Manual Review"]
 	
 	####################################################
 	# TODO : Validate client and server keys when any message is sent, to maintain security 
@@ -84,6 +85,7 @@ def main():
 	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
 	#	18		0/1			1: Broadcast Scoreboard to all clients
 	#	19		0/1			1: UPDATE remaining time broadcast to all clients
+	#	20		0/1			1: Manual Review Allowed
 	
 
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
@@ -92,13 +94,13 @@ def main():
 	else:
 		data_changed_flags[2] = 0
 
+	# Check if judges can log in
 	if judge_login == 'True' or judge_login == 'true':
 		data_changed_flags[12] = 1
 	else:
 		data_changed_flags[12] = 0
 
 	# Do not allow new submissions unless timer is active or admin begins contest
-	
 	if submission_status == 'True' or submission_status == 'true':
 		data_changed_flags[3] = 1
 	else:
@@ -120,6 +122,11 @@ def main():
 	else:
 		#DEFAULT TO ACM
 		data_changed_flags[17] = 1
+
+	if manual_review == 'True':
+		data_changed_flags[20] = 1
+	else:
+		data_changed_flags[20] = 0
 
 	data_changed_flags[4] = 0
 	# SYSTEM SHUT flag
@@ -151,7 +158,6 @@ def main():
 	os.kill(judge_pid, signal.SIGINT)
 
 	# Write config file
-	
 	if data_changed_flags[2] == 1:
 		login_status = 'True'
 	else:
@@ -172,10 +178,16 @@ def main():
 	else:
 		scoreboard_status = 'False'
 
+	if data_changed_flags[20] == 1:
+		manual_review = 'True'
+	else:
+		manual_review = 'False'
+
 	save_status.update_entry('Judge Login Allowed', judge_login)
 	save_status.update_entry('Login Allowed', login_status)
 	save_status.update_entry('Submission Allowed', submission_status)
 	save_status.update_entry('Scoreboard Update Allowed', scoreboard_status)
+	save_status.update_entry('Manual Review', manual_review)
 	
 	# EXIT
 	sleep(2)

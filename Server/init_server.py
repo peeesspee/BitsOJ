@@ -80,7 +80,8 @@ class save_status():
     	"Ranking Algorithm" : "IOI",
     	"AC Points" : 100,
     	"Penalty Score" : -20,
-    	"Penalty Time" : 20
+    	"Penalty Time" : 20,
+    	"Manual Review" : "False"
 		}
 
 		with open("config.json", "w") as data_file:

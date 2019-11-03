@@ -58,45 +58,56 @@ class ui_widgets:
 		heading = QLabel('All Runs')
 		heading.setObjectName('main_screen_heading')
 
+		# TODO
+		manual_review_flag = self.check_manual_review_allowed()
+		manual_review_label = QLabel('Manual Review : ')
+		manual_review_label.setObjectName('main_screen_content')
+		manual_review_label.setToolTip(
+			'Review each submission before updating Leaderboard\nand sending client response.\nUse only when necessary!'
+		)
+		manual_review_button = QCheckBox('')
+		manual_review_button.setFixedSize(30, 30)
+		manual_review_button.setChecked(manual_review_flag)
+		manual_review_button.stateChanged.connect(self.manual_reviews_handler)
+		
+		submission_allowed_flag = self.check_submission_allowed()
 		allow_submission_label = QLabel('Allow submissions : ')
 		allow_submission_label.setObjectName('main_screen_content')
-
-		submission_allowed_flag = self.check_submission_allowed()
-		
 		allow_submission_button = QCheckBox('')
 		allow_submission_button.setFixedSize(30, 30)
 		allow_submission_button.setChecked(submission_allowed_flag)
 		allow_submission_button.stateChanged.connect(self.allow_submissions_handler)
 
 		submission_model = self.manage_models(self.db, 'submissions')
-
 		submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
 		submission_model.setHeaderData(1, Qt.Horizontal, 'Local ID')
 		submission_model.setHeaderData(2, Qt.Horizontal, 'Client ID')
 		submission_model.setHeaderData(3, Qt.Horizontal, 'Language')
 		submission_model.setHeaderData(4, Qt.Horizontal, 'Source File')
 		submission_model.setHeaderData(5, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(6, Qt.Horizontal, 'Status')
+		submission_model.setHeaderData(6, Qt.Horizontal, 'Verdict')
 		submission_model.setHeaderData(7, Qt.Horizontal, 'Time')
-
+		submission_model.setHeaderData(8, Qt.Horizontal, 'Status')
+		
 		submission_table = self.generate_view(submission_model)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
+		head_layout.addWidget(manual_review_label)
+		head_layout.addWidget(manual_review_button)
 		head_layout.addWidget(allow_submission_label)
 		head_layout.addWidget(allow_submission_button)
 		head_layout.setStretch(0, 80)
 		head_layout.setStretch(1, 10)
 		head_layout.setStretch(2, 10)
-		
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
 		main_layout.addWidget(submission_table)
-		main_layout.setStretch(0,5)
-		main_layout.setStretch(1,95)
+		main_layout.setStretch(0,10)
+		main_layout.setStretch(1,90)
 
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -150,8 +161,8 @@ class ui_widgets:
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
 		main_layout.addWidget(client_view)
-		main_layout.setStretch(0,5)
-		main_layout.setStretch(1,95)		
+		main_layout.setStretch(0,10)
+		main_layout.setStretch(1,90)		
 
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -195,8 +206,8 @@ class ui_widgets:
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
 		main_layout.addWidget(judge_view)
-		main_layout.setStretch(0,5)
-		main_layout.setStretch(1,95)		
+		main_layout.setStretch(0,10)
+		main_layout.setStretch(1,90)		
 
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -233,8 +244,8 @@ class ui_widgets:
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
 		main_layout.addWidget(query_view)
-		main_layout.setStretch(0,5)
-		main_layout.setStretch(1,95)	
+		main_layout.setStretch(0,10)
+		main_layout.setStretch(1,90)	
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
@@ -294,8 +305,8 @@ class ui_widgets:
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
 		main_layout.addWidget(score_table)
-		main_layout.setStretch(0,5)
-		main_layout.setStretch(1,95)
+		main_layout.setStretch(0,10)
+		main_layout.setStretch(1,90)
 
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -368,7 +379,7 @@ class ui_widgets:
 		widget.setLayout(problem_layout)
 
 		problem_label.setObjectName('main_screen_sub_heading')
-		widget.setObjectName('account_window')
+		widget.setObjectName('content_box')
 		problem_code_label.setObjectName('main_screen_content')
 		problem_code_data.setObjectName('main_screen_content')
 		time_limit_label.setObjectName('main_screen_content')
@@ -410,24 +421,13 @@ class ui_widgets:
 			problem_tabs.setTabBar(problem_tabbar)
 			main_layout.addWidget(heading)
 			main_layout.addWidget(problem_tabs)
-			main_layout.addStretch(1)
+			main_layout.setStretch(0,10)
+			main_layout.setStretch(1,90)
+			
 		except Exception as error:
 			print("oops" + str(error))
 
 		
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
-		return main
-
-
-	def language_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Manage Languages')
-		heading.setObjectName('main_screen_heading')
-
-		main_layout.addWidget(heading)
-		main_layout.addStretch(5)
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
@@ -488,7 +488,7 @@ class ui_widgets:
 
 		main = QWidget()
 		main.setLayout(main_layout)
-		main.setObjectName('main_screen')
+		main.setObjectName('content_box')
 		contest_problems_subheading.setObjectName('main_screen_sub_heading')
 		contest_problems_number.setObjectName('main_screen_content')
 		contest_problems_number_answer.setObjectName('main_screen_content')
@@ -564,7 +564,9 @@ class ui_widgets:
 
 		main_layout.addWidget(top_widget)
 		main_layout.addWidget(stats_widget)
-		main_layout.addStretch(5)
+		main_layout.setStretch(0,10)
+		main_layout.setStretch(1,90)
+
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
@@ -819,7 +821,11 @@ class ui_widgets:
 		# 	1.Select Penalty Duration
 		# 2.Set if leaderboard is to be shown to clients
 		# 3....
-		return
+		main_layout = QVBoxLayout()
+		main = QWidget()
+		main.setLayout(main_layout)
+		main.setObjectName('account_window')
+		return main
 
 	def settings_ui(self):
 		heading = QLabel('Server Settings')
@@ -836,12 +842,17 @@ class ui_widgets:
 			client_reset_button, server_reset_button, timer_reset_button
 		) = ui_widgets.contest_reset_settings(self)
 
+		(
+			main
+		) = ui_widgets.contest_ranking_settings(self)
+
+
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
 		main_layout.addWidget(time_management_widget)
 		main_layout.addWidget(contest_reset_widget)
-		main_layout.setSpacing(10)
-		main_layout.addStretch(1)
+		main_layout.addStretch(5)
+
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");

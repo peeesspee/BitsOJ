@@ -87,30 +87,20 @@ class server_window(QMainWindow):
 		self.button_6.clicked.connect(self.manage_problems)
 		self.button_6.setObjectName("sidebar_button")
 
-		self.button_7 = QPushButton('Languages', self)
+		self.button_7 = QPushButton('Statistics', self)
 		self.button_7.setFixedSize(button_width, button_height)
-		self.button_7.clicked.connect(self.manage_languages)
+		self.button_7.clicked.connect(self.show_stats)
 		self.button_7.setObjectName("sidebar_button")
 
-		self.button_8 = QPushButton('Statistics', self)
+		self.button_8 = QPushButton('Settings', self)
 		self.button_8.setFixedSize(button_width, button_height)
-		self.button_8.clicked.connect(self.show_stats)
+		self.button_8.clicked.connect(self.contest_settings)
 		self.button_8.setObjectName("sidebar_button")
 
-		self.button_9 = QPushButton('Settings', self)
+		self.button_9 = QPushButton('About', self)
 		self.button_9.setFixedSize(button_width, button_height)
-		self.button_9.clicked.connect(self.contest_settings)
+		self.button_9.clicked.connect(self.show_about)
 		self.button_9.setObjectName("sidebar_button")
-
-		self.button_10 = QPushButton('Generate Report', self)
-		self.button_10.setFixedSize(button_width, button_height)
-		self.button_10.clicked.connect(self.generate_report)
-		self.button_10.setObjectName("sidebar_button")
-
-		self.button_11 = QPushButton('About', self)
-		self.button_11.setFixedSize(button_width, button_height)
-		self.button_11.clicked.connect(self.show_about)
-		self.button_11.setObjectName("sidebar_button")
 
 		###########################################################
 
@@ -125,17 +115,17 @@ class server_window(QMainWindow):
 		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5, self.score_model, self.scoring_type_label = ui_widgets.leaderboard_ui(self)
 		self.tab6 = ui_widgets.problem_ui(self)
-		self.tab7 = ui_widgets.language_ui(self)
-		self.tab8 = ui_widgets.stats_ui(self)
+		
+		self.tab7 = ui_widgets.stats_ui(self)
 		(
-		self.tab9, self.contest_time_entry, self.change_time_entry, self.set_button, 
+		self.tab8, self.contest_time_entry, self.change_time_entry, self.set_button, 
 		self.start_button, self.update_button, self.stop_button, self.account_reset_button, 
 		self.submission_reset_button, self.query_reset_button, self.client_reset_button, 
 		self.server_reset_button, self.timer_reset_button
 		) = ui_widgets.settings_ui(self)
 
-		self.tab10 = ui_widgets.reports_ui(self)
-		self.tab11 = ui_widgets.about_us_ui(self)
+		
+		self.tab9 = ui_widgets.about_us_ui(self)
 		
 		###########################################################
 		
@@ -164,8 +154,6 @@ class server_window(QMainWindow):
 		side_bar_layout.addWidget(self.button_7)
 		side_bar_layout.addWidget(self.button_8)
 		side_bar_layout.addWidget(self.button_9)
-		side_bar_layout.addWidget(self.button_10)
-		side_bar_layout.addWidget(self.button_11)
 
 
 		# Set stretch and spacing
@@ -217,8 +205,6 @@ class server_window(QMainWindow):
 		self.right_widget.addTab(self.tab7, '')
 		self.right_widget.addTab(self.tab8, '')
 		self.right_widget.addTab(self.tab9, '')
-		self.right_widget.addTab(self.tab10, '')
-		self.right_widget.addTab(self.tab11, '')
 		self.right_widget.setObjectName("main_tabs")
 		
 
@@ -284,24 +270,16 @@ class server_window(QMainWindow):
 		self.right_widget.setCurrentIndex(6)
 
 	@pyqtSlot()
-	def manage_languages(self):
+	def show_stats(self):
 		self.right_widget.setCurrentIndex(7)
 
 	@pyqtSlot()
-	def show_stats(self):
+	def contest_settings(self):
 		self.right_widget.setCurrentIndex(8)
 
 	@pyqtSlot()
-	def contest_settings(self):
-		self.right_widget.setCurrentIndex(9)
-
-	@pyqtSlot()
-	def generate_report(self):
-		self.right_widget.setCurrentIndex(10)
-
-	@pyqtSlot()
 	def show_about(self):
-		self.right_widget.setCurrentIndex(11)
+		self.right_widget.setCurrentIndex(9)
 
 	####################################################
 	# Functions related to GUI updates
@@ -568,6 +546,15 @@ class server_window(QMainWindow):
 			self.set_flags(3, 0)
 		return
 
+	def manual_reviews_handler(self, state):
+		if(state == Qt.Checked):
+			# Allow submissions
+			self.set_flags(20, 1)
+		else:
+			# Stop submissions
+			self.set_flags(20, 0)
+		return
+
 	def allow_scoreboard_update_handler(self, state):
 		if(state == Qt.Checked):
 			# Allow scoreboard update
@@ -596,6 +583,11 @@ class server_window(QMainWindow):
 
 	def check_scoreboard_update_allowed(self):
 		if self.data_changed_flags[15] == 1:
+			return True
+		return False
+
+	def check_manual_review_allowed(self):
+		if self.data_changed_flags[20] == 1:
 			return True
 		return False
 
@@ -1154,8 +1146,8 @@ class server_window(QMainWindow):
 	###################################################
 
 	def closeEvent(self, event):
-		message = "Pressing 'Yes' will SHUT the Server.\nAre you sure you want to exit?"
-		detail_message = "Any active contest might end prematurely. "
+		message = "Pressing 'Yes' will SHUT the Server."
+		detail_message = "Server will not process any request while it is closed. You should not do this when any contest is running.\n\nAre you sure you want to exit?"
 		
 		custom_close_box = QMessageBox()
 		custom_close_box.setIcon(QMessageBox.Critical)
@@ -1198,9 +1190,9 @@ class init_gui(server_window):
 		server_app = server_window(data_changed_flags, data_to_client)
 
 		# Splash screen
-		# splash = QSplashScreen(QPixmap("Interface/bitwise.png"))
+		# splash = QSplashScreen(QPixmap("Elements/bitwise.png"))
 		# splash.show()
-		# splash.finish(server_app)	
+		# splash.finish(server_app)
 		# Splash ends
 
 		server_app.showMaximized()

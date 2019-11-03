@@ -3,15 +3,14 @@ import sys
 import json
 from database_management import submissions_management, scoreboard_management
 from init_server import initialize_server
+updated_config = 0
 
 class manage_judges():
 	channel = ''
 	data_changed_flags = ''
 	ranking_algoritm = 1
-	ac_score = 10
-	penalty_score = 0
-	penalty_time = 0
-	key = ''
+	updated_config = 0
+	config = ''
 	# This function continously listens for judge verdicts
 	def listen_judges(superuser_username, superuser_password, host, data_changed_flag1):
 		manage_judges.data_changed_flags = data_changed_flag1
@@ -27,12 +26,13 @@ class manage_judges():
 			connection = pika.BlockingConnection(params)
 			channel = connection.channel()
 			manage_judges.channel = channel
+
 			manage_judges.ranking_algoritm = manage_judges.data_changed_flags[17]
 			
 			channel.queue_declare(queue = 'judge_verdicts', durable = True)
 			channel.exchange_declare(exchange = 'judge_manager', exchange_type = 'direct', durable = True)
 			channel.queue_bind(exchange = 'judge_manager', queue = 'judge_verdicts')
-
+			# Read only one request at a time
 			channel.basic_qos(prefetch_count = 1)
 
 		except Exception as error:
@@ -41,11 +41,7 @@ class manage_judges():
 
 		try:
 			# Read config
-			config = initialize_server.read_config()
-			manage_judges.ac_score = config['AC Points']
-			manage_judges.penalty_score = config['Penalty Score']
-			manage_judges.penalty_time = config['Penalty Time']
-			manage_judges.key = config['Judge Key']
+			manage_judges.config = initialize_server.read_config()
 		except:
 			print("[ ERROR ] Could not read config. Contest scores set to default values.")
 
@@ -70,6 +66,9 @@ class manage_judges():
 
 	#This function works on judge messages and passes them on to their respective handler function
 	def judge_message_handler(ch, method, properties, body):
+		if manage_judges.updated_config == 0:
+			manage_judges.updated_config = 1
+			manage_judges.config = initialize_server.read_config()
 		# Decode the message sent by judge
 		judge_message = str(body.decode('utf-8'))
 		print('\n[ PING ] Recieved a new judge verdict.')
@@ -77,7 +76,7 @@ class manage_judges():
 			json_data = json.loads(judge_message)
 			# Validate Judge message
 			judge_key = json_data['Judge Key']
-			if judge_key != manage_judges.key:
+			if judge_key != manage_judges.config['Judge Key']:
 				print('[ SECURITY ][ CRITICAL ] Judge Key did not match!')
 				print('[ SECURITY ][ CRITICAL ] Full Message: ' + judge_message)
 				# Send Acknowldgement of message recieved
@@ -120,45 +119,59 @@ class manage_judges():
 		}
 		message = json.dumps(message)
 
-		try:
-			manage_judges.channel.basic_publish(
-				exchange = 'connection_manager', 
-				routing_key = client_username, 
-				body = judge_message
-			) 
-			print('[ VERDICT ] New verdict sent to ' + client_username)
-			submissions_management.update_submission_status(run_id, status)
-			# Update GUI
-			manage_judges.data_changed_flags[0] = 1
-		except Exception as error:
-			print('[ ERROR ] Could not publish result to client : ' + str(error))
-			return
 
-		# Update scoreboard
-	
-		# Get score for the problem from config
-		# TODO
-		problem_max_score = manage_judges.ac_score
-		problem_penalty = manage_judges.penalty_score
-		# call scoreboard updation function
-		scoreboard_management.update_user_score(
-			client_id, 
-			run_id,
-			problem_max_score, 
-			problem_penalty,
-			status, 
-			p_code,
-			time_stamp,
-			manage_judges.ranking_algoritm # Ranking Algorithm
-		)
-		# Update scoreboard view in server
-		manage_judges.data_changed_flags[16] = 1
+		# Publish message to client if allowed
+		# Update scoreboard also when manual review is off
+		if manage_judges.data_changed_flags[20] == 0:
+			try:
+				manage_judges.channel.basic_publish(
+					exchange = 'connection_manager', 
+					routing_key = client_username, 
+					body = judge_message
+				) 
+				print('[ VERDICT ] New verdict sent to ' + client_username)
+				submissions_management.update_submission_status(run_id, status, 'SENT')
+				# Update GUI
+				manage_judges.data_changed_flags[0] = 1
+			except Exception as error:
+				print('[ ERROR ] Could not publish result to client : ' + str(error))
+				return
 
-		if manage_judges.data_changed_flags[15] == 1 and status == 'AC':
+			# Update scoreboard
+			problem_max_score = manage_judges.config['AC Points']
+			problem_penalty = manage_judges.config['Penalty Score']
+			time_penalty = manage_judges.config['Penalty Time']
+			# Get time taken by user for this submission
+			# call scoreboard updation function
+			scoreboard_management.update_user_score(
+				client_id, 
+				run_id,
+				problem_max_score, 
+				problem_penalty,
+				status, 
+				p_code,
+				time_stamp,
+				manage_judges.ranking_algoritm # Ranking Algorithm
+			)
+
+			# Update scoreboard view in server
+			manage_judges.data_changed_flags[16] = 1
+
 			# Broadcast new scoreboard to clients whenever a new AC is recieved 
 			# and scoreboard update is allowed.
-			manage_judges.data_changed_flags[18] = 1
+			if manage_judges.data_changed_flags[15] == 1 and status == 'AC':
+				# Flag 18 signals interface to update scoreboard
+				manage_judges.data_changed_flags[18] = 1
+
+
+
+		else:
+			submissions_management.update_submission_status(run_id, status, 'REVIEW')
+			# Update submission GUI
+			manage_judges.data_changed_flags[0] = 1
+
 		
-		# Send Acknowldgement of message recieved
+		
+		# Send Acknowldgement of message recieved and processed
 		ch.basic_ack(delivery_tag = method.delivery_tag)
 		return
