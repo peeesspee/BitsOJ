@@ -4,7 +4,7 @@
     "Username": "team00003",
     "rabbitmq_username": "client",
     "rabbitmq_password": "client",
-    "host": "192.168.43.183",
+    "host": "localhost",
     "No_of_Problems": 3,
     "Problems": {
         "Problem 1": [
