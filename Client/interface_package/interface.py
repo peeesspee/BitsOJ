@@ -7,7 +7,7 @@ from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from interface_package.ui_classes import *
 from decrypt_problem import decrypt
-from init_client import initialize_contest
+from init_client import initialize_contest, handle_config
 
 
 
@@ -26,7 +26,7 @@ qInstallMessageHandler(handler)
 
 
 class client_window(QMainWindow):
-	def __init__(self, data_changed_flag2,queue):
+	def __init__(self,channel, data_changed_flag2,queue):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
@@ -42,6 +42,8 @@ class client_window(QMainWindow):
 		self.change_flag = True
 		self.timer.timeout.connect(self.update_data)
 		self.timer.start(1000)
+		self.submission_counter = 60
+		self.channel = channel
 
 		# Make data_changed_flag accessible from the class methods
 		self.data_changed_flag = data_changed_flag2
@@ -220,77 +222,81 @@ class client_window(QMainWindow):
 	##################################################################################
 
 	def update_data(self):
-		if self.data_changed_flag[0] == 1:
-			self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ RUNNING ]')
-			self.start_contest()
-			self.set_status()
-			self.data_changed_flag[0] = 2
-		# If data has changed in submission table
-
-		if self.data_changed_flag[0] == 3:
-			self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ STOPPED ]')
-			self.stop_contest()
-			self.set_status()
-			self.data_changed_flag[0] = 4
-
-		if self.data_changed_flag[1] ==1:
-			self.sub_model.select()
-			# self.notify()
-			# reset data_changed_flag
-			self.data_changed_flag[1] = 0
-
-		if self.data_changed_flag[1] == 2:
-			self.sub_model.select()
-			self.notify()
-			# reset data_changed_flag
-			self.data_changed_flag[1] = 0
-
-		# If data has changed in query table
-		if(self.data_changed_flag[2] == 1):
-			self.query_model.select()
-			# self.notify()
-			# reset data_changed_flag
-			self.data_changed_flag[2] =0
-
-		if(self.data_changed_flag[2] == 2):
-			self.query_model.select()
-			self.notify()
-			# reset data_changed_flag
-			self.data_changed_flag[2] =0
-
-		if(self.data_changed_flag[3] == 1):
-			# message = self.queue.get()
-			message = 'Under Progress'
-			QMessageBox.warning(self, 'Error', message)
-			self.data_changed_flag[3] = 0
-
-		if(self.data_changed_flag[4] == 2):
-			try:
-				initialize_contest.contest_end_time()
-				self.data_changed_flag[4] = 1
-			except Exception as Error:
-				print(str(Error))
-
-		if(self.data_changed_flag[4] == 1):
-			try:
-				total_time = initialize_contest.return_contest_end_time()
-				current_time = time.time()
-				elapsed_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
-				self.timer_widget.display(elapsed_time)
+		try:
+			self.submission_counter += 1
+			if self.data_changed_flag[0] == 1:
+				self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ RUNNING ]')
+				self.start_contest()
 				self.set_status()
-				if elapsed_time == '00:00:00':
-					self.data_changed_flag[4] = 0
-					self.data_changed_flag[0] = 3
-			except Exception as Error:
-				print(str(Error))
+				self.data_changed_flag[0] = 2
+			# If data has changed in submission table
 
-		if(self.data_changed_flag[5] == 1):
-			QMessageBox.warning(self, 'Alert', 'You are disconnected by the admin.\nPlease contact Administrator.')
-			QApplication.quit()
-		if(self.data_changed_flag[5] == 2):
-			QMessageBox.warning(self, 'Alert', 'All Clients are disconnected by the admin.\nPlease contact Administrator.')
-			QApplication.quit()
-		return
+			if self.data_changed_flag[0] == 3:
+				self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ STOPPED ]')
+				self.stop_contest()
+				self.set_status()
+				self.data_changed_flag[0] = 4
+
+			if self.data_changed_flag[1] ==1:
+				self.sub_model.select()
+				# self.notify()
+				# reset data_changed_flag
+				self.data_changed_flag[1] = 0
+
+			if self.data_changed_flag[1] == 2:
+				self.sub_model.select()
+				self.notify()
+				# reset data_changed_flag
+				self.data_changed_flag[1] = 0
+
+			# If data has changed in query table
+			if(self.data_changed_flag[2] == 1):
+				self.query_model.select()
+				# self.notify()
+				# reset data_changed_flag
+				self.data_changed_flag[2] =0
+
+			if(self.data_changed_flag[2] == 2):
+				self.query_model.select()
+				self.notify()
+				# reset data_changed_flag
+				self.data_changed_flag[2] =0
+
+			if(self.data_changed_flag[3] == 1):
+				# message = self.queue.get()
+				message = 'Under Progress'
+				QMessageBox.warning(self, 'Error', message)
+				self.data_changed_flag[3] = 0
+
+			if(self.data_changed_flag[4] == 2):
+				try:
+					initialize_contest.contest_end_time()
+					self.data_changed_flag[4] = 1
+				except Exception as Error:
+					print(str(Error))
+
+			if(self.data_changed_flag[4] == 1):
+				try:
+					total_time = initialize_contest.return_contest_end_time()
+					current_time = time.time()
+					elapsed_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
+					self.timer_widget.display(elapsed_time)
+					self.set_status()
+					if elapsed_time == '00:00:00':
+						self.data_changed_flag[4] = 0
+						self.data_changed_flag[0] = 3
+				except Exception as Error:
+					print(str(Error))
+
+			if(self.data_changed_flag[5] == 1):
+				QMessageBox.warning(self, 'Alert', 'You are disconnected by the admin.\nPlease contact Administrator.')
+				QApplication.quit()
+			if(self.data_changed_flag[5] == 2):
+				QMessageBox.warning(self, 'Alert', 'All Clients are disconnected by the admin.\nPlease contact Administrator.')
+				QApplication.quit()
+			return
+		except Exception as Error:
+			print(str(Error))
 
 	####################################################################################
 
@@ -325,6 +331,23 @@ class client_window(QMainWindow):
 		custom_close_box.exec_()
 
 		if custom_close_box.clickedButton() == button_yes:
+			try:
+				config = handle_config.read_config_json()
+				data = {
+				"Code" : "DSCNT",
+				"Client Key" : config["client_key"],
+				"Username" : config["Username"],
+				"ID" : config["client_id"],
+				"Type" : "CLIENT"
+				}
+				data = json.dumps(data)
+				self.channel.basic_publish(
+					exchange = 'connection_manager',
+					routing_key = 'client_requests',
+					body = data,
+					)
+			except Exception as Error:
+				print(str(Error))
 			event.accept()
 		elif custom_close_box.clickedButton() == button_no:
 			event.ignore()
@@ -419,8 +442,7 @@ class client_window(QMainWindow):
 	def start_contest(self):
 		global current_status
 		global Timer
-		with open('contest.json', 'r') as contest:
-			data = json.load(contest)
+		data = handle_config.read_config_json()
 		current_status = 'RUNNING'
 		Timer = data["Duration"]
 		decrypt.decrypting()
@@ -440,7 +462,7 @@ class client_window(QMainWindow):
 
 
 class init_gui(client_window):
-	def __init__(self, data_changed_flag,queue):
+	def __init__(self,channel, data_changed_flag,queue):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
 		app.setStyleSheet(open('Elements/style.qss', "r").read())
@@ -448,7 +470,7 @@ class init_gui(client_window):
 		app.aboutToQuit.connect(self.closeEvent)
 
 		# make a reference of App class
-		client_app = client_window(data_changed_flag,queue)
+		client_app = client_window(channel,data_changed_flag,queue)
 
 		client_app.showMaximized()
 		# server_app.showNormal()

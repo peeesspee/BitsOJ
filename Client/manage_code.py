@@ -35,7 +35,8 @@ class send_code():
 			'PCode' : problem_Code,
 			'Language' : language_code,
 			'Time' : time_stamp,
-			'Source' : code
+			'Source' : code,
+			'Type' : "CLIENT"
 		}
 		final_data = json.dumps(final_data)
 		print("[ Sending CODE ] " + problem_Code + ' ' + language_code + ' ' + time_stamp)
@@ -58,6 +59,7 @@ class send_code():
 			'Client ID' : client_id,
 			'Client Key': client_key,
 			'Query' : query,
+			'Type' : 'CLIENT'
 		}
 		final_data = json.dumps(final_data)
 		print('[QUERY] Sending.....')

@@ -111,10 +111,10 @@ class start_listening():
 		start_listening.data_changed_flags[2] = 2
 
 	def start_status(server_data):
-		print(server_data)
 		config = handle_config.read_config_json()
 		config["Duration"] = server_data["Duration"]
 		config["Contest"] = "RUNNING"
+		config["Problem Key"] = server_data["Problem Key"]
 		current_time = time.localtime()
 		contest_start_time = time.time()
 		config["Start Time"] = contest_start_time

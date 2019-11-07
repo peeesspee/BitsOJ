@@ -1,7 +1,7 @@
 {
-    "client_id": "3",
-    "client_key": "123456789asdfghj",
-    "Username": "team00003",
+    "client_id": "1",
+    "client_key": "abcdefghij12345",
+    "Username": "team00001",
     "rabbitmq_username": "client",
     "rabbitmq_password": "client",
     "host": "localhost",
@@ -22,9 +22,10 @@
     },
     "Languages": "('C', 'C++', 'PYTHON-2')",
     "Contest": "START",
-    "Duration": "00:05:00",
+    "Duration": "00:00:00",
     "Start Time": "00:00:00",
     "End Time": "00:00:00",
     "Contest_Name": "Kodeathon A4",
-    "Contest_Theme": "Welcome"
+    "Contest_Theme": "Welcome",
+    "Problem Key": "papa"
 }

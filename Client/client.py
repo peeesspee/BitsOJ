@@ -70,7 +70,7 @@ def main():
 
 		# After successful login 
 		# Starting Main GUI
-		init_gui(data_changed_flags, queue)
+		init_gui(channel,data_changed_flags, queue)
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 

@@ -1,7 +1,6 @@
-disconnect signal
 leaderboard
-update
-logout signal
+client save contest
+protect json
 
 
 

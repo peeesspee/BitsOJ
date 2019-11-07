@@ -271,57 +271,63 @@ class ui_widgets():
 		elif data_changed_flag[0] == 3:
 			QMessageBox.warning(self, 'Message', 'Your Time Up.\n Now you cannot submit solution')
 		else:
-			try:
-				config = handle_config.read_config_json()
-				local_time = time.localtime()
-				time_stamp = time.strftime("%H:%M:%S", local_time)
-				textbox_value = ui_widgets.text_area.toPlainText()
-				selected_language = str(ui_widgets.language_box.currentText())
-				problem_code = eval(config["Problems"][str(ui_widgets.problem_box.currentText())])
-				problem_code = problem_code[1]
-				if(selected_language == 'C'):
-					extention = '.c'
-					language_code = 'GCC'
-				elif(selected_language == 'C++'):
-					extention = '.cpp'
-					language_code = 'CPP'
-				elif(selected_language == 'JAVA'):
-					extention = '.java'
-					language_code = 'JVA'
-				elif(selected_language == 'PYTHON-3'):
-					extention = '.py'
-					language_code = 'PY3'
-				else:
-					extention = '.py'
-					language_code = 'PY2'
-				local_id = manage_local_ids.get_new_id()
-				client_id = config["client_id"]
-				client_key = config["client_key"]
-				submission_management.insert_verdict(
-					local_id,
-					client_id,
-					'-',
-					'Queued',
-					selected_language,
-					language_code,
-					problem_code,
-					time_stamp,
-					textbox_value,
-					extention
-					)
-				data_changed_flag[1] = 1
-				send_code.solution_request(
-					problem_code,
-					selected_language,
-					time_stamp,
-					textbox_value,
-					local_id,
-					client_key
-					)
-				QMessageBox.warning(self, 'Message', 'Your Solution has been successfully send')
-				ui_widgets.text_area.setPlainText('')
-			except Exception as Error:
-				print(str(Error))
+			if self.submission_counter >= 60:
+				try:
+					config = handle_config.read_config_json()
+					local_time = time.localtime()
+					time_stamp = time.strftime("%H:%M:%S", local_time)
+					textbox_value = ui_widgets.text_area.toPlainText()
+					selected_language = str(ui_widgets.language_box.currentText())
+					problem_code = config["Problems"][str(ui_widgets.problem_box.currentText())]
+					problem_code = problem_code[1]
+					if(selected_language == 'C'):
+						extention = '.c'
+						language_code = 'GCC'
+					elif(selected_language == 'C++'):
+						extention = '.cpp'
+						language_code = 'CPP'
+					elif(selected_language == 'JAVA'):
+						extention = '.java'
+						language_code = 'JVA'
+					elif(selected_language == 'PYTHON-3'):
+						extention = '.py'
+						language_code = 'PY3'
+					else:
+						extention = '.py'
+						language_code = 'PY2'
+					local_id = manage_local_ids.get_new_id()
+					client_id = config["client_id"]
+					client_key = config["client_key"]
+					submission_management.insert_verdict(
+						local_id,
+						client_id,
+						'-',
+						'Queued',
+						selected_language,
+						language_code,
+						problem_code,
+						time_stamp,
+						textbox_value,
+						extention
+						)
+					data_changed_flag[1] = 1
+					send_code.solution_request(
+						problem_code,
+						selected_language,
+						time_stamp,
+						textbox_value,
+						local_id,
+						client_key
+						)
+					QMessageBox.warning(self, 'Message', 'Your Solution has been successfully send')
+					ui_widgets.text_area.setPlainText('')
+				except Exception as Error:
+					print(str(Error))
+				self.submission_counter = 0
+			else:
+				x = 60 - self.submission_counter
+				x = str(x)
+				QMessageBox.warning(self, 'Message', 'You cannot Submit more than one Solution in one minute.\nPlease wait for ' + x + ' seconds.')
 		return
 
 

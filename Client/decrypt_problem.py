@@ -12,8 +12,8 @@ class decrypt():
 		# read config file
 		data = handle_config.read_config_json()
 		# read contest config file
-		with open('contest.json', 'r') as contest:
-			psswd = json.load(contest)
+		with open('config.json', 'r') as contest:
+			psswd = json.load(contest) 
 
 		# loop to traverse every problem 
 		for i in range(data["No_of_Problems"]):
