@@ -119,6 +119,7 @@ class verdict():
 		i = 1
 		passed = 0
 		cwd = os.getcwd()
+		print("I am in compare_outputs->",cwd)
 		list_0f_files = os.listdir(cwd)
 		print(list_0f_files)
 		list_0f_files.sort()
