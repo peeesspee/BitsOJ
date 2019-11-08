@@ -72,6 +72,16 @@ class scoreboard_management():
 		except Exception as error:
 			print("[ ERROR ] Could not add scoreboard entry : " + str(error))
 			conn.rollback()
+		return
+
+	def get_scoreboard():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT user_name, score, problems_solved, total_time FROM scoreboard")
+			data = cur.fetchall()
+			return data
+		except Exception as error:
+			print("[ CRITICAL ] Could not get scoreboard : " + str(error))
 		return	
 
 	def update_user_score(client_id, run_id, problem_max_score, problem_penalty, status, problem_code, time_stamp, ranking_algorithm):
@@ -138,7 +148,6 @@ class scoreboard_management():
 		else:
 			updated_time_stamp = previous_timestamp
 
-			
 		new_score = previous_score + score
 		
 		try:
@@ -151,6 +160,7 @@ class scoreboard_management():
 
 		except Exception as error:
 			print('[ ERROR ][ CRITICAL ] Scoreboard could not be updated : ' + str(error))
+
 		return
 
 
@@ -269,8 +279,7 @@ class client_authentication(manage_database):
 			# If user was not connected earlier, this exception will be raised
 			return 'New'
 
-
-
+	
 class submissions_management(manage_database):
 	def insert_submission(run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp):
 		cur = manage_database.get_cursor()
@@ -464,6 +473,7 @@ class user_management(manage_database):
 			conn.rollback()
 		finally:
 			return
+			
 	def get_ac_count(problem_code):
 		try:
 			cur = manage_database.get_cursor()

@@ -7,9 +7,9 @@ from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from Interface.ui_classes import *
 from init_server import initialize_server, save_status
-from database_management import user_management, submissions_management, query_management
+from database_management import user_management, submissions_management, query_management, scoreboard_management
 
-
+ 
 # This is to ignore some warnings which were thrown when gui exited and 
 # python deleted some assests in wrong order
 # Nothing critical :)
@@ -295,57 +295,72 @@ class server_window(QMainWindow):
 		return
 			
 	def update_data(self):
-		# If data has changed in submission table
-		# Update submission table
-		if self.data_changed_flags[0] == 1:
-			self.sub_model.select()
-			self.data_changed_flags[0] = 0
-		# Update connected clients table
-		if self.data_changed_flags[1] == 1:
-			self.client_model.select()
-			self.data_changed_flags[1] = 0
-		# Update accounts table
-		if self.data_changed_flags[5] == 1:
-			self.account_model.select()
-			self.data_changed_flags[5] = 0
-		# Update Query table
-		if self.data_changed_flags[9] == 1:
-			self.query_model.select()
-			self.data_changed_flags[9] = 0
-		# Update judge view
-		if self.data_changed_flags[13] == 1:
-			self.judge_model.select()
-			self.data_changed_flags[13] = 0
-		# Update scoreboard view
-		if self.data_changed_flags[16] == 1:
-			self.score_model.setQuery("SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC")
-			self.data_changed_flags[16] = 0
-		# System EXIT
-		if self.data_changed_flags[7] == 1:
-			sys.exit()
+		try:
+			# If data has changed in submission table
+			# Update submission table
+			if self.data_changed_flags[0] == 1:
+				self.sub_model.select()
+				self.data_changed_flags[0] = 0
+			# Update connected clients table
+			if self.data_changed_flags[1] == 1:
+				self.client_model.select()
+				self.data_changed_flags[1] = 0
+			# Update accounts table
+			if self.data_changed_flags[5] == 1:
+				self.account_model.select()
+				self.data_changed_flags[5] = 0
+			# Update Query table
+			if self.data_changed_flags[9] == 1:
+				self.query_model.select()
+				self.data_changed_flags[9] = 0
+			# Update judge view
+			if self.data_changed_flags[13] == 1:
+				self.judge_model.select()
+				self.data_changed_flags[13] = 0
+			# Update scoreboard view
+			if self.data_changed_flags[16] == 1:
+				self.score_model.setQuery("SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC")
+				self.data_changed_flags[16] = 0
+			# System EXIT
+			if self.data_changed_flags[7] == 1:
+				sys.exit()
 
-		# While contest is RUNNING
-		if self.data_changed_flags[10] == 1:
-			# Find time elapsed since contest start
-			total_time = self.contest_set_time
-			current_time = time.time()
-			remaining_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
-			#Update timer
-			self.timer_widget.display(remaining_time)
+			# While contest is RUNNING
+			if self.data_changed_flags[10] == 1:
+				# Find time elapsed since contest start
+				total_time = self.contest_set_time
+				current_time = time.time()
+				remaining_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
+				#Update timer
+				self.timer_widget.display(remaining_time)
 
-		if self.data_changed_flags[19] == 1:
-			self.data_changed_flags[19] = 0
-			# Broadcast UPDATE signal
-			total_time = self.contest_set_time
-			current_time = time.time()
-			remaining_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
+			if self.data_changed_flags[19] == 1:
+				self.data_changed_flags[19] = 0
+				# Broadcast UPDATE signal
+				total_time = self.contest_set_time
+				current_time = time.time()
+				remaining_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
 
-			message = {
-			'Code' : 'UPDATE',
-			'Time' : remaining_time
-			}
-			message = json.dumps(message)
-			self.data_to_client.put(message)
+				message = {
+				'Code' : 'UPDATE',
+				'Time' : remaining_time
+				}
+				message = json.dumps(message)
+				self.data_to_client.put(message)
+
+			if self.data_changed_flags[18] == 1:
+				self.data_changed_flags[18] = 0
+				# Broadcast scoreboard
+				scoreboard = scoreboard_management.get_scoreboard()
+				data = str(scoreboard)
+				message = {
+				'Code':'SCRBD',
+				'Data' : data
+				}
+				message = json.dumps(message)
+				self.data_to_client.put(message)
+		except Exception as error:
+			print('[ ERROR ] Interface updation error: ' + str(error))
 			
 		return
 

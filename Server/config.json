@@ -11,11 +11,11 @@
     "Judge Key": "abcdefghij12345",
     "Client Key": "abcdefghij12345",
     "File Password": "papa",
-    "Contest Duration": "00:00:00",
-    "Contest Status": "SETUP",
-    "Contest Start Time": "00:00:00",
-    "Contest End Time": "00:00:00",
-    "Contest Set Time": 0,
+    "Contest Duration": "24:00:00",
+    "Contest Status": "RUNNING",
+    "Contest Start Time": "22:18:16",
+    "Contest End Time": "22:18:16",
+    "Contest Set Time": 1573318096.4823122,
     "Number Of Problems": "5",
     "Problems": {
         "Problem 1": "('The Begining of the End','TBE', 1, 1)",
@@ -30,5 +30,5 @@
     "AC Points": 100,
     "Penalty Score": -20,
     "Penalty Time": 20,
-    "Manual Review": "True"
+    "Manual Review": "False"
 }
