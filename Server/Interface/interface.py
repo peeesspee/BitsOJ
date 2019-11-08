@@ -461,10 +461,12 @@ class server_window(QMainWindow):
 			self.contest_duration_seconds = server_window.convert_to_seconds(initialize_server.get_duration())
 			self.contest_set_time = self.contest_duration_seconds + self.contest_start_time
 			contest_end_time = time.strftime("%H:%M:%S", time.localtime(self.contest_set_time))
-
+			contest_start_time = time.strftime("%H:%M:%S", time.localtime(self.contest_start_time))
 			message = {
 			'Code' : 'START',
-			'Duration' : extra_data
+			'Duration' : extra_data,
+			'Start Time' : contest_start_time,
+			'End Time' : contest_end_time
 			}
 			message = json.dumps(message)
 			self.data_to_client.put(message)

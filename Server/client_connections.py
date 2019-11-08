@@ -98,7 +98,7 @@ class manage_clients():
 
 	# This function works on client messages and passes them on to their respective handler function
 	def client_message_handler(ch, method, properties, body):
-		print('\n[ PING ] Recieved a new client message...')
+		print('\n[ ALERT ] Recieved a new client message.')
 		# Decode the message sent by client
 		client_message = str(body.decode('utf-8'))
 
@@ -126,7 +126,12 @@ class manage_clients():
 				client_password = json_data["Password"]
 				client_id = json_data["ID"]
 				client_type = json_data["Type"]
-				manage_clients.client_login_handler(client_username, client_password, client_id, client_type)
+				manage_clients.client_login_handler(
+					client_username, 
+					client_password, 
+					client_id, 
+					client_type
+				)
 
 			elif client_code == 'SUBMT':
 				# recieved_client_username = json_data["Username"]
@@ -136,7 +141,14 @@ class manage_clients():
 				language = json_data["Language"]		
 				time_stamp = json_data["Time"]		
 				source_code = json_data["Source"]	
-				manage_clients.client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code)
+				manage_clients.client_submission_handler(
+					client_id, 
+					local_run_id, 
+					problem_code, 
+					language, 
+					time_stamp, 
+					source_code
+				)
 
 			elif client_code == 'QUERY':
 				client_id = json_data['ID']
