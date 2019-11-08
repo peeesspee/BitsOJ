@@ -52,6 +52,7 @@ class start_listening():
 
 		json_data = json.loads(server_data)
 		code = json_data["Code"]
+		print(server_data)
 		if code == 'VRDCT':
 			status = json_data['Status']
 			run_id = json_data['Run ID']
@@ -111,6 +112,7 @@ class start_listening():
 		start_listening.data_changed_flags[2] = 2
 
 	def start_status(server_data):
+		print(server_data)
 		config = handle_config.read_config_json()
 		config["Duration"] = server_data["Duration"]
 		config["Contest"] = "RUNNING"
