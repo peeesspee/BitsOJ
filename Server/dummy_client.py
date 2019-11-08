@@ -142,6 +142,7 @@ def listen():
 
 
 def main():
+	global username
 	print('1.Login\n2.Send solution\n3.Listen\n4.Query\n5.Exit')
 	while True:
 		a = input('> ')
@@ -159,6 +160,15 @@ def main():
 			query()
 		elif a == 5:
 			try:
+				message = {
+					'Client Key' : 'abcdefghij12345',
+					'Code' : 'DSCNT', 
+					'ID' : client_id,
+					'Username' : username
+					}
+				message = json.dumps(message)
+				print('Disconnecting...')
+				channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
 				channel.stop_consuming()
 			except:
 				print("Could not stop listening to the Server.")

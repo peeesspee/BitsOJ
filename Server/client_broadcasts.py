@@ -53,6 +53,8 @@ class broadcast_manager():
 					message = {
 					'Code' : 'START',
 					'Duration' : data['Duration'],
+					'Start Time' : data['Start Time'],
+					'End Time' : data['End Time'],
 					'Problem Key' : broadcast_manager.file_password
 					}
 					message = json.dumps(message)
