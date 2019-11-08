@@ -1,6 +1,4 @@
 leaderboard
 client save contest
-protect json
-
 
 
