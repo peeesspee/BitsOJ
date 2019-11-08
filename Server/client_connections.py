@@ -126,17 +126,18 @@ class manage_clients():
 				client_password = json_data["Password"]
 				client_id = json_data["ID"]
 				client_type = json_data["Type"]
-
 				manage_clients.client_login_handler(client_username, client_password, client_id, client_type)
+
 			elif client_code == 'SUBMT':
+				# recieved_client_username = json_data["Username"]
 				local_run_id = json_data["Local Run ID"]
 				client_id = json_data["ID"]		
 				problem_code = json_data["PCode"]		
 				language = json_data["Language"]		
 				time_stamp = json_data["Time"]		
 				source_code = json_data["Source"]	
-
 				manage_clients.client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code)
+
 			elif client_code == 'QUERY':
 				client_id = json_data['ID']
 				query = json_data['Query'][:100]
@@ -144,8 +145,13 @@ class manage_clients():
 				if client_id == 'Nul':
 					print('[ REJECT ] Client has not logged in.')
 					return
-
 				manage_clients.client_query_handler(client_id, query)
+
+			elif client_code == 'DSCNT':
+				client_username = json_data["Username"]
+				client_id = json_data["ID"]
+				manage_clients.client_logout_handler(client_username, client_id)
+
 			else:
 				print('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
 				# Raise Security Exception maybe?
@@ -157,6 +163,7 @@ class manage_clients():
 		ch.basic_ack(delivery_tag = method.delivery_tag)
 		return
 
+	
 	# This function handles all client login requests
 	def client_login_handler(client_username, client_password, client_id, client_type):
 		message = ''
@@ -182,6 +189,7 @@ class manage_clients():
 				'Message' : 'Logins are not allowed right now.\nPlease wait for announcement.'
 				}
 				message = json.dumps(message)
+				print(message)
 				response.publish_message(manage_clients.channel, client_username, message)
 				return
 			
@@ -241,7 +249,7 @@ class manage_clients():
 					scoreboard_management.insert_new_user(client_id, client_username, 0, 0, '00:00:00')
 					print('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
 
-					# Update GUI to indicate new data
+					# Update connected clients GUI to indicate new client
 					manage_clients.data_changed_flags[1] = 1
 					# Update Scoreboard 
 					manage_clients.data_changed_flags[16] = 1
@@ -265,9 +273,14 @@ class manage_clients():
 						# Update self config
 						manage_clients.config = initialize_server.read_config()
 						remaining_time = initialize_server.get_remaining_time()
+						start_time = initialize_server.get_start_time()
+						end_time = initialize_server.get_end_time()
+
 						message = {
 						'Code' : 'START', 
 						'Duration' : remaining_time,
+						'Start Time' : start_time,
+						'End Time' : end_time,
 						'Problem Key' : manage_clients.file_password
 						}
 						message = json.dumps(message)
@@ -335,10 +348,7 @@ class manage_clients():
 					client_authentication.add_client('__JUDGE__', client_username, client_password, 'Connected', 'connected_judges')
 					print('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
 
-					# Update GUI to indicate new data
-					#manage_clients.data_changed_flags[1] = 1
-
-					# Reply to be sent to client
+					# Reply to be sent to judge
 					server_message = 'Hello Judge!'
 					
 					message = {
@@ -374,8 +384,13 @@ class manage_clients():
 		return
 
 
+
+
 	def client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code):
 		print('[ SUBMISSION ] Client ID :' + str(client_id) + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp)
+
+		# Validate client submission by username and client_id
+
 
 		# Get client username from database
 		client_username = client_authentication.get_client_username(client_id)
@@ -415,14 +430,14 @@ class manage_clients():
 				print('[ ERROR ][ SECURITY ] Client has no username so could not send error code.' )
 			return
 
-		#TODO Check client status, and accept only if it is CONNECTED and not BLOCKED or NEW
+
+
+		# Check client status, and accept only if it is CONNECTED and not BLOCKED or NEW
 		state = client_authentication.check_connected_client(client_username, 'connected_clients')
-		if(state == 'Connected'):
-			pass
-		else:
+		if state != 'Connected':
 			message = {
 				'Code' : 'SRJCT',
-				'Message' : 'Your submission could not be processed! Contact ADMIN for futher information.'
+				'Message' : 'Your submission could not be processed. Please Login to send submissions.'
 				}
 			message = json.dumps(message)
 			try:
@@ -459,6 +474,22 @@ class manage_clients():
 		query_id = query_management.generate_new_query_id() 
 		query_management.insert_query(query_id, client_id, query)
 		manage_clients.data_changed_flags[9] = 1
+
+	# This function handles client logout requests
+	def client_logout_handler(client_username, client_id):
+		# Get client username from database and validate
+		database_client_username = client_authentication.get_client_username(client_id) 
+		if database_client_username == client_username:
+			# ie, client_username and client_id pair matches, 
+			# check if client is connected
+			previously_connected_state = client_authentication.check_connected_client(client_username, 'connected_clients')
+			if previously_connected_state == 'Connected':
+				# Disconnect client
+				user_management.update_user_state(client_username, 'Disconnected')
+				# Update connected clients to indicate new data
+				manage_clients.data_changed_flags[1] = 1
+				print('[ DISCONNECT ] Client: ' + client_username)
+		return
 
 
 

@@ -3,7 +3,7 @@ import json
 import pika
 import sys
 from init_server import initialize_server
-
+ 
 class broadcast_manager():
 	data_changed_flags = ''
 	channel = ''
@@ -102,8 +102,10 @@ class broadcast_manager():
 						'Client' : 'All'
 						}
 					message = json.dumps(message)
-				broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
+				elif data['Code'] == 'SCRBD':
+					message = json.dumps(data)
 
+				broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
 			s.enter(1, 1, broadcast_manager.poll, (s, data_from_interface, ))
 			return
 		except Exception as error:

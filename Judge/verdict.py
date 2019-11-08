@@ -1,9 +1,10 @@
 from file_creation import file_manager
 import subprocess
 import os
-# import filecmp
+import filecmp
 import multiprocessing
 import time
+import signal
 
 class verdict():
 
@@ -163,14 +164,16 @@ class verdict():
 			verd = verdict.VERDICT
 			return verd,result
 		if e == False:
-			p = multiprocessing.Process(target=verdict.run_file, args=(runfile, problem_code, run_id,))
+			tle_process = multiprocessing.Process(target=verdict.run_file, args=(runfile, problem_code, run_id,))
 			start = time.time()
 			# verdict.run_file(runfile, problem_code, run_id)
-			p.start()
-			p.join(int(timelimit))
+			tle_process.start()
+			tle_process.join(int(timelimit))
 			end = time.time()
-			if p.is_alive():
-				p.terminate()
+			if tle_process.is_alive():
+				tle_process_pid = tle_process.pid
+				print(tle_process_pid)
+				os.kill(tle_process_pid, signal.SIGTERM)
 				print("Process terminated")
 				verdict.ERROR = True
 				verdict.result = "Time Limit Exceeded"

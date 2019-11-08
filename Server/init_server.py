@@ -36,6 +36,12 @@ class initialize_server():
 		diff = contest_end_time - current_time
 		return time.strftime("%H:%M:%S", time.gmtime(diff))
 
+	def get_start_time():
+		return initialize_server.config['Contest Start Time']
+
+	def get_end_time():
+		return initialize_server.config['Contest End Time']
+
 class save_status():
 	def write_config(
 		rabbitmq_username, rabbitmq_password, judge_username, judge_password,
