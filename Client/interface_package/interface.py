@@ -28,13 +28,13 @@ qInstallMessageHandler(handler)
 class client_window(QMainWindow):
 	def __init__(self,channel, data_changed_flag2,queue):
 		super().__init__()
+		global current_status
+		current_status = "STOPPED"
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ Client ]')
 		
-		# Initialize status bar
-		self.status = self.statusBar()
 		# self.setFixedSize(1200,700)
 		self.resize(1200,700)
 
@@ -42,12 +42,20 @@ class client_window(QMainWindow):
 		self.change_flag = True
 		self.timer.timeout.connect(self.update_data)
 		self.timer.start(1000)
-		self.submission_counter = 60
 		self.channel = channel
 
 		# Make data_changed_flag accessible from the class methods
 		self.data_changed_flag = data_changed_flag2
+		config = handle_config.read_config_json()
+		if config["Contest"] == "RUNNING":
+			self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ RUNNING ]')
+			current_status = "RUNNING"
+			self.data_changed_flag[0] = 1
+			self.data_changed_flag[4] = 2
 		self.queue = queue
+
+		# Initialize status bar
+		self.status = self.statusBar()
 
 
 		####################################################################
@@ -223,7 +231,6 @@ class client_window(QMainWindow):
 
 	def update_data(self):
 		try:
-			self.submission_counter += 1
 			if self.data_changed_flag[0] == 1:
 				self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ RUNNING ]')
 				self.start_contest()

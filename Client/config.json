@@ -22,9 +22,9 @@
     },
     "Languages": "('C', 'C++', 'PYTHON-2')",
     "Contest": "START",
-    "Duration": "00:00:00",
-    "Start Time": "00:00:00",
-    "End Time": "00:00:00",
+    "Duration": "02:00:00",
+    "Start Time": 1573230018.5366447,
+    "End Time": 1573237218.5366447,
     "Contest_Name": "Kodeathon A4",
     "Contest_Theme": "Welcome",
     "Problem Key": "papa"
