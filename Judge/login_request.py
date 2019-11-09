@@ -4,9 +4,10 @@ import json
 class authenticate_judge():
 	username = ''
 	password = ''
-	client_id = 'Null'
+	client_id = 0
 	channel = ''
 	login_status = ''
+	key = '000000000000000'
 
 
 	def login(channel, host):
@@ -29,6 +30,7 @@ class authenticate_judge():
 			)
 
 		message = {
+			'Client key': authenticate_judge.key,
 			'Code': 'LOGIN',
 			'Username': authenticate_judge.username,
 			'Password': authenticate_judge.password,
