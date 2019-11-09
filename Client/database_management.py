@@ -21,7 +21,7 @@ class manage_database():
 			manage_database.cur = cur
 			# Executing database query to make tables
 			# My Submissions table for storing submission of the client
-			cur.execute("create table if not exists my_submissions(local_run_id integer,run_id integer,verdict varchar2(20),source_file varchar2(30),language varchar2(10),language_code varchar2(5), problem_code varchar2(8), time_stamp text)")
+			cur.execute("create table if not exists my_submissions(local_run_id integer,run_id integer,verdict varchar2(20),source_file varchar2(30),language varchar2(10),language_code varchar2(5), problem_code varchar2(8),problem_number varchar2(10), time_stamp text)")
 			# My Query table to store the queries asked by the individual client
 			cur.execute("create table if not exists my_query(Query varchar2(500), Response varchar2(100))")
 		except Exception as Error: 
@@ -48,6 +48,14 @@ class manage_database():
 
 ##############################################################
 ##############################################################
+
+class source_code(manage_database):
+
+	def get_source(run_id):
+		manage_database.cur.execute("SELECT source_file FROM my_submissions WHERE run_id = ?",(run_id,))
+		data = manage_database.cur.fetchall()
+		data = data[0][0]	
+		return data
 
 # Local Id's for all the submission to have a record for every submission locally 
 class manage_local_ids():
@@ -85,14 +93,14 @@ class manage_local_ids():
 # Submission Managemnt class to update ad insert query in my submission table
 class submission_management(manage_database):
 	# Query to insert a new submission 
-	def insert_verdict(local_run_id,client_id,run_id,verdict,language,language_code,problem_code,time_stamp,code,extension):
+	def insert_verdict(local_run_id,client_id,run_id,verdict,language,language_code,problem_code,problem_number,time_stamp,code,extension):
 		# Creating a source file for every submission 
 		source_file = client_id + '_' + str(local_run_id) + extension
 		file = open("Solution/" + client_id + '_' + str(local_run_id) + extension, 'w+')
 		file.write(code)
 		try:
 			# Query to insert the submission
-			manage_database.cur.execute("INSERT INTO my_submissions VALUES (?,?,?,?,?,?,?,?)",(int(local_run_id),int(run_id),verdict,source_file,language,language_code,problem_code,time_stamp))
+			manage_database.cur.execute("INSERT INTO my_submissions VALUES (?,?,?,?,?,?,?,?,?)",(int(local_run_id),int(run_id),verdict,source_file,language,language_code,problem_code,problem_number,time_stamp))
 			manage_database.conn.commit()
 		except Exception as Error:
 			print(str(Error))

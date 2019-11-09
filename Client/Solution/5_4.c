@@ -3,12 +3,11 @@ import time
 import json
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
-from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
+from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from interface_package.ui_classes import *
 from decrypt_problem import decrypt
 from init_client import initialize_contest, handle_config
-from database_management import source_code
 
 
 
@@ -54,46 +53,32 @@ class client_window(QMainWindow):
 		self.channel = channel
 
 		self.rows = 0
-		self.columns = 5
+		self.columns = 4
 		self.scoreboard = QTableWidget()
 		self.scoreboard.setEditTriggers(QAbstractItemView.NoEditTriggers)
 		self.scoreboard.setFixedHeight(650)
 		self.scoreboard.verticalHeader().setVisible(False)
 		self.scoreboard.setRowCount(self.rows)
 		self.scoreboard.setColumnCount(self.columns)
-		self.scoreboard.setHorizontalHeaderLabels(('Rank', 'Username', 'Score', 'Problems Solved', 'Time'))
-		self.scoreboard.horizontalHeader().setStretchLastSection(True)
-		self.scoreboard.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+		self.scoreboard.setHorizontalHeaderLabels(('Username', 'Score', 'Problems Solved', 'Time'))
+		self.scoreboard.setColumnWidth(0, 467)
+		self.scoreboard.setColumnWidth(1, 350)
+		self.scoreboard.setColumnWidth(2, 350)
+		self.scoreboard.setColumnWidth(3, 400)
 
-		config = handle_config.read_config_json()
 		score_data = handle_config.read_score_json()
 		if score_data != None:
 			score_data = eval(score_data["Data"])
 			row_data = len(score_data)
 			self.scoreboard.setRowCount(row_data)
 			for i in range(row_data):
-				for j in range(5):
-					if j == 0:
-						self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
-					else:
-						self.scoreboard.setItem(i,j, QTableWidgetItem(str(score_data[i][j-1])))
-					self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
-					if i == 0:
-						self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
-					elif i == 1:
-						# self.scoreboard.item(i,j).setForeground(QColor('#AAA9AD'))
-						self.scoreboard.item(i,j).setForeground(QColor('#777777'))
-					elif i == 2:
-						self.scoreboard.item(i,j).setForeground(QColor('#CD7F32'))
-					elif score_data[i][0] == config["Username"]:
-						self.scoreboard.item(i,j).setForeground(QColor('#4B8B3B'))
-					else:
-						self.scoreboard.item(i,j).setForeground(QColor('#FFFFFF'))
-
+				for j in range(4):
+					self.scoreboard.setItem(i,j, QTableWidgetItem(str(score_data[i][j])))
 
 
 		# Make data_changed_flag accessible from the class methods
 		self.data_changed_flag = data_changed_flag2
+		config = handle_config.read_config_json()
 		if config["Contest"] == "RUNNING":
 			self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ RUNNING ]')
 			current_status = "RUNNING"
@@ -287,29 +272,15 @@ class client_window(QMainWindow):
 	def update_scoreboard(self):
 		try:
 			if(self.data_changed_flag[6] == 1):
-				self.data_changed_flag[6] = 0
 				data = self.score.get()
 				data = json.loads(data)
 				score = eval(data["Data"])
 				row = len(score)
 				self.scoreboard.setRowCount(row)
 				for i in range(row):
-					for j in range(5):
-						if j == 0:
-							self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
-						else:
-							self.scoreboard.setItem(i,j, QTableWidgetItem(str(score_data[i][j-1])))
-						if i == 0:
-							self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
-						elif i == 1:
-							self.scoreboard.item(i,j).setForeground(QColor('#777777'))
-						elif i == 2:
-							self.scoreboard.item(i,j).setForeground(QColor('#CD7F32'))
-						elif score_data[i][0] == config["Username"]:
-							self.scoreboard.item(i,j).setForeground(QColor('#4B8B3B'))
-						else:
-							self.scoreboard.item(i,j).setForeground(QColor('#FFFFFF'))
-
+					for j in range(4):
+						self.scoreboard.setItem(i,j, QTableWidgetItem(str(score[i][j])))
+				self.data_changed_flag[6] = 0
 		except Exception as Error:
 			print(str(Error))
 
@@ -330,13 +301,13 @@ class client_window(QMainWindow):
 				self.data_changed_flag[0] = 4
 
 			if self.data_changed_flag[1] ==1:
-				self.sub_model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions")
+				self.sub_model.select()
 				# self.notify()
 				# reset data_changed_flag
 				self.data_changed_flag[1] = 0
 
 			if self.data_changed_flag[1] == 2:
-				self.sub_model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions")
+				self.sub_model.select()
 				self.notify()
 				# reset data_changed_flag
 				self.data_changed_flag[1] = 0
@@ -472,12 +443,6 @@ class client_window(QMainWindow):
 			model.select()
 		return model
 
-	def submission_models(self,db, table_name):
-		if db.open():
-			model = QSqlQueryModel()
-			model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions")
-		return model
-
 	def generate_view(self, model):
 		table = QTableView() 
 		table.setModel(model)
@@ -507,10 +472,10 @@ class client_window(QMainWindow):
 
 	def view_submission(self, selected_row):
 		try:
-			run = self.sub_model.index(selected_row, 0).data()
-			source_file = source_code.get_source(run)
-			verdict = self.sub_model.index(selected_row, 1).data()
-			language = self.sub_model.index(selected_row, 2).data()
+			source_file = self.sub_model.index(selected_row, 3).data()
+			run = self.sub_model.index(selected_row, 1).data()
+			verdict = self.sub_model.index(selected_row, 2).data()
+			language = self.sub_model.index(selected_row, 4).data()
 		except Exception as Error:
 			print(" [ Error ] : " + str(Error))
 		if source_file == None:

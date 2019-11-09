@@ -49,6 +49,19 @@ class handle_config():
 		with open('config.json', 'w') as write_config:
 			json.dump(data, write_config, indent=4)
 
+	def read_score_json():
+		try:
+			with open('score.json', 'r') as read_score:
+				data = json.load(read_score)
+		except:
+			data = None
+
+		return data
+
+	def write_score_json(data):
+		with open('score.json', 'w') as write_score:
+			json.dump(data,write_score, indent = 4)
+
 ################################################################################
 ################################################################################
 

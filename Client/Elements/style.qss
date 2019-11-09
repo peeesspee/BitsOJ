@@ -297,11 +297,6 @@ QLabel#view3
 
 
 
-QHeaderView::section{
-	background-color : #171B1F;
-	color: #0892D0;	
-}
-
 QScrollBar:vertical{
 	width : 0px;
 }
@@ -326,6 +321,12 @@ QLabel#about_screen_heading{
 	font-size : 30px;
 }
 
+
+QLabel#top{
+	color : #AAAAAA;
+	font-size : 30px;
+}
+
 /* Table styles */
 
 QTableView{
@@ -341,10 +342,20 @@ QTableView::item:selected{
 	border : 2px solid #0891D4;
 }
 
-
+/*
 QHeaderView::section{
 	background-color : #171B1F;
-	color: #FFC0CB;	
+	color: #E91E63;	
+}
+*/
+
+QHeaderView::section {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #616161, stop: 0.5 #505050,
+                                      stop: 0.6 #434343, stop:1 #656565);
+    color: white;
+    padding-left: 4px;
+    border: 0px solid #6c6c6c;
 }
 
 /* Scroll bar styles */
@@ -445,3 +456,5 @@ QLineEdit#ask_query
 	color : #FFF8DC;
 	font-size : 20px;
 } 
+
+

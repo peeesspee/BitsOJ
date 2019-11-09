@@ -1,3 +1,1 @@
-leaderboard
-double click
-local id and run id as integer
+update

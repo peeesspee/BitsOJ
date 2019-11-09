@@ -68,7 +68,6 @@ class start_listening():
 			start_listening.data_changed_flags[3] = 1
 		elif code == "SCRBD":
 			start_listening.leaderboard(json_data)
-			start_listening.data_changed_flags[6] = 1
 			print("UNDER DEVELOPMENT")
 		elif code == "START":
 			start_listening.start_status(json_data)
@@ -84,6 +83,11 @@ class start_listening():
 
 
 	def leaderboard(server_data):
+		try:
+			data = handle_config.read_score_json()
+		except:
+			data = None
+		handle_config.write_score_json(server_data)
 		data = json.dumps(server_data)
 		start_listening.scoreboard.put(data)
 		start_listening.data_changed_flags[6] = 1

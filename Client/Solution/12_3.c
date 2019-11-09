@@ -98,7 +98,7 @@ class ui_widgets():
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
-		# head_layout.addWidget(view_submission_button,  alignment=Qt.AlignRight)
+		head_layout.addWidget(view_submission_button,  alignment=Qt.AlignRight)
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
@@ -192,14 +192,9 @@ class ui_widgets():
 
 		query_table = self.generate_view(query_model)
 
-		query_table.doubleClicked.connect(
-			lambda: self.view_reply(
-				query_table.selectionModel().currentIndex().row()
-				))
-
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
-		# head_layout.addWidget(view_query_button,  alignment=Qt.AlignRight)
+		head_layout.addWidget(view_query_button,  alignment=Qt.AlignRight)
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
