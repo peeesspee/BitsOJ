@@ -7,7 +7,7 @@ import json
 #############################################################
 #############################################################
 
-# Managing initialization and resetting of database
+# Managing initialization and resetting of database 
 class manage_database():
 	# cursor object
 	cur = None
@@ -92,7 +92,7 @@ class submission_management(manage_database):
 		file.write(code)
 		try:
 			# Query to insert the submission
-			manage_database.cur.execute("INSERT INTO my_submissions VALUES (?,?,?,?,?,?,?,?)",(local_run_id,run_id,verdict,source_file,language,language_code,problem_code,time_stamp))
+			manage_database.cur.execute("INSERT INTO my_submissions VALUES (?,?,?,?,?,?,?,?)",(local_run_id,int(run_id),verdict,source_file,language,language_code,problem_code,time_stamp))
 			manage_database.conn.commit()
 		except Exception as Error:
 			print(str(Error))
@@ -101,7 +101,7 @@ class submission_management(manage_database):
 	def update_verdict(local_run_id,client_id,run_id,verdict):
 		try:
 			# Query to update the table
-			manage_database.cur.execute("UPDATE my_submissions SET verdict = ?, run_id = ? WHERE local_run_id = ?", (verdict, run_id, local_run_id,))
+			manage_database.cur.execute("UPDATE my_submissions SET verdict = ?, run_id = ? WHERE local_run_id = ?", (verdict, int(run_id), local_run_id,))
 			manage_database.conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not update submission submission : " + str(error))

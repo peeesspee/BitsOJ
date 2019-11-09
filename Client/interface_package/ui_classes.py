@@ -226,7 +226,10 @@ class ui_widgets():
 		heading = QLabel('Leaderboard')
 		heading.setObjectName('main_screen_heading')
 
+
+
 		main_layout.addWidget(heading)
+		main_layout.addWidget(self.scoreboard)
 		main_layout.addStretch(5)
 
 		main = QWidget()

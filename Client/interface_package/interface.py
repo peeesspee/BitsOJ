@@ -26,7 +26,7 @@ qInstallMessageHandler(handler)
 
 
 class client_window(QMainWindow):
-	def __init__(self,channel, data_changed_flag2,queue):
+	def __init__(self,channel, data_changed_flag2,queue,score):
 		super().__init__()
 		global current_status
 		current_status = "STOPPED"
@@ -44,6 +44,16 @@ class client_window(QMainWindow):
 		self.timer.timeout.connect(self.update_data)
 		self.timer.start(1000)
 		self.channel = channel
+
+		self.rows = 0
+		self.columns = 3
+		self.scoreboard = QTableWidget()
+		self.scoreboard.setRowCount(self.rows)
+		self.scoreboard.setColumnCount(self.columns)
+		self.scoreboard.setHorizontalHeaderLabels(('Username', 'Problems Solved', 'Score'))
+		self.scoreboard.setColumnWidth(0, 600)
+		self.scoreboard.setColumnWidth(1, 500)
+		self.scoreboard.setColumnWidth(2, 500)
 
 		# Make data_changed_flag accessible from the class methods
 		self.data_changed_flag = data_changed_flag2
@@ -314,6 +324,10 @@ class client_window(QMainWindow):
 	####################################################################################
 
 
+	def update_leaderboard(data):
+		pass
+
+
 	#####################################################################################
 
 	def closeEvent(self, event):
@@ -475,7 +489,7 @@ class client_window(QMainWindow):
 
 
 class init_gui(client_window):
-	def __init__(self,channel, data_changed_flag,queue):
+	def __init__(self,channel, data_changed_flag,queue,score):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
 		app.setStyleSheet(open('Elements/style.qss', "r").read())
@@ -483,7 +497,7 @@ class init_gui(client_window):
 		app.aboutToQuit.connect(self.closeEvent)
 
 		# make a reference of App class
-		client_app = client_window(channel,data_changed_flag,queue)
+		client_app = client_window(channel,data_changed_flag,queue,score)
 
 		client_app.showMaximized()
 		# server_app.showNormal()

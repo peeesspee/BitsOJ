@@ -4,6 +4,7 @@ import pika
 import json
 import sys
 import time
+from datetime import date,datetime
 from init_client import initialize_contest, handle_config
 
 class start_listening():
@@ -15,8 +16,9 @@ class start_listening():
 	login_status = False 
 	data_changed_flags = ''
 	queue = ''
+	scoreboard = ''
 
-	def listen_server(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags2,queue):
+	def listen_server(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags2,queue,scoreboard):
 		try:
 			creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
 			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
@@ -28,6 +30,7 @@ class start_listening():
 			start_listening.host = host
 			start_listening.data_changed_flags = data_changed_flags2
 			start_listening.queue = queue
+			start_listening.scoreboard = scoreboard
 
 
 			start_listening.channel.basic_consume(
@@ -52,7 +55,6 @@ class start_listening():
 
 		json_data = json.loads(server_data)
 		code = json_data["Code"]
-		print(server_data)
 		if code == 'VRDCT':
 			status = json_data['Status']
 			run_id = json_data['Run ID']
@@ -66,6 +68,8 @@ class start_listening():
 			# start_listening.queue.put(json_data["Message"])
 			start_listening.data_changed_flags[3] = 1
 		elif code == "SCRBD":
+			start_listening.leaderboard(json_data)
+			start_listening.data_changed_flags[6] = 1
 			print("UNDER DEVELOPMENT")
 		elif code == "START":
 			start_listening.start_status(json_data)
@@ -80,6 +84,8 @@ class start_listening():
 			print("WRONG INPUT")
 
 
+	def leaderboard(server_data):
+		pass
 
 	def submission_verdict(server_data):
 		run_id = str(server_data["Run ID"])
@@ -111,14 +117,21 @@ class start_listening():
 			)
 		start_listening.data_changed_flags[2] = 2
 
+	def convert_time_format(start_time):
+		today = date.today()
+		current_date = today.strftime("%d/%m/%Y")
+		current_date = current_date + ' ' + start_time
+		d = datetime.strptime(current_date,"%d/%m/%Y %H:%M:%S")
+		return time.mktime(d.timetuple())
+
 	def start_status(server_data):
 		print(server_data)
+		start_time = start_listening.convert_time_format(server_data["Start Time"])
 		config = handle_config.read_config_json()
 		config["Duration"] = server_data["Duration"]
 		config["Contest"] = "RUNNING"
 		config["Problem Key"] = server_data["Problem Key"]
-		current_time = time.localtime()
-		contest_start_time = time.time()
+		contest_start_time = start_time
 		config["Start Time"] = contest_start_time
 		initialize_contest.set_duration(config["Duration"])
 		contest_duration_seconds = initialize_contest.convert_to_seconds(initialize_contest.get_duration())

@@ -57,7 +57,7 @@ class send_code():
 	def query_request(client_id,client_key,query):
 		final_data ={
 			'Code' : 'QUERY',
-			'Client ID' : client_id,
+			'ID' : client_id,
 			'Client Key': client_key,
 			'Query' : query,
 			'Type' : 'CLIENT'

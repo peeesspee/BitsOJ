@@ -35,6 +35,7 @@ def main():
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 10)
 	queue = multiprocessing.Queue()
+	scoreboard = multiprocessing.Queue()
 	for i in range(10):
 		data_changed_flags[i] = 0
 	# index    value         meaning
@@ -44,6 +45,7 @@ def main():
 	# 3        1             Server NOt Accepting Submission
 	# 4        0/1           Timer Stopped/ Timer running   
 	# 5        0/1/2         Proper Connection/Single Client Disconnected/All Clients Disconnected
+	# 6        1             Leader Board Update
 
 	##################################
 	# Makes connection with RabbitMQ
@@ -66,11 +68,11 @@ def main():
 
 		# Manage Threads
 		print('[ SETUP ] Initialising threads....')
-		listen_pid = manage_process(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags, queue)
+		listen_pid = manage_process(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags, queue,scoreboard)
 
 		# After successful login 
 		# Starting Main GUI
-		init_gui(channel,data_changed_flags, queue)
+		init_gui(channel,data_changed_flags, queue,scoreboard)
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 
@@ -86,9 +88,9 @@ def main():
 
 
 # Manageing process
-def manage_process(rabbitmq_username, rabbitmq_password, cursor, host, data_changed_flags,queue):
+def manage_process(rabbitmq_username, rabbitmq_password, cursor, host, data_changed_flags,queue,scoreboard):
 	# this is from continuously listening from the server
-	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (rabbitmq_username,rabbitmq_password, cursor, host, data_changed_flags, queue))
+	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (rabbitmq_username,rabbitmq_password, cursor, host, data_changed_flags, queue,scoreboard))
 
 	listen_from_server.start()
 
