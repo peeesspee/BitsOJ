@@ -304,7 +304,7 @@ class ui_widgets():
 				submission_management.insert_verdict(
 					local_id,
 					client_id,
-					'-',
+					0,
 					'Queued',
 					selected_language,
 					language_code,

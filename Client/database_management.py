@@ -21,7 +21,7 @@ class manage_database():
 			manage_database.cur = cur
 			# Executing database query to make tables
 			# My Submissions table for storing submission of the client
-			cur.execute("create table if not exists my_submissions(local_run_id varchar2(5),run_id varchar2(5),verdict varchar2(20),source_file varchar2(30),language varchar2(10),language_code varchar2(5), problem_code varchar2(8), time_stamp text)")
+			cur.execute("create table if not exists my_submissions(local_run_id integer,run_id integer,verdict varchar2(20),source_file varchar2(30),language varchar2(10),language_code varchar2(5), problem_code varchar2(8), time_stamp text)")
 			# My Query table to store the queries asked by the individual client
 			cur.execute("create table if not exists my_query(Query varchar2(500), Response varchar2(100))")
 		except Exception as Error: 
@@ -92,7 +92,7 @@ class submission_management(manage_database):
 		file.write(code)
 		try:
 			# Query to insert the submission
-			manage_database.cur.execute("INSERT INTO my_submissions VALUES (?,?,?,?,?,?,?,?)",(local_run_id,run_id,verdict,source_file,language,language_code,problem_code,time_stamp))
+			manage_database.cur.execute("INSERT INTO my_submissions VALUES (?,?,?,?,?,?,?,?)",(int(local_run_id),int(run_id),verdict,source_file,language,language_code,problem_code,time_stamp))
 			manage_database.conn.commit()
 		except Exception as Error:
 			print(str(Error))
@@ -101,7 +101,7 @@ class submission_management(manage_database):
 	def update_verdict(local_run_id,client_id,run_id,verdict):
 		try:
 			# Query to update the table
-			manage_database.cur.execute("UPDATE my_submissions SET verdict = ?, run_id = ? WHERE local_run_id = ?", (verdict, run_id, local_run_id,))
+			manage_database.cur.execute("UPDATE my_submissions SET verdict = ?, run_id = ? WHERE local_run_id = ?", (verdict, int(run_id), int(local_run_id),))
 			manage_database.conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not update submission submission : " + str(error))

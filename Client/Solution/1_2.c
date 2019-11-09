@@ -1,125 +1,113 @@
-from connection import manage_connection
-from init_client import handle_config, user_detail
-import json
+#include<bits/stdc++.h>
+using namespace std;
 
-# Class to manage authenticate login 
-class authenticate_login():
-	username = None
-	channel = None
-	client_id = 'Null'
-	host = ''
-	login_status = 'INVLD'
- 
-	# function to authenticate login from the server 
-	def login(username, password):
-		authenticate_login.channel = manage_connection.channel
-		authenticate_login.host = manage_connection.host
-		authenticate_login.username = username
-		password = password
 
-		print("[ Validating ] : " + authenticate_login.username + "@" + password)
-		print('yes')
-		config = handle_config.read_config_json()
-		print('yes')
-		# if conf["client_id"] != 'Null': 
-		# 	authenticate_login.client_id = conf["client_id"]
-		final_data = { 
-			'Code' : 'LOGIN',
-			'Client Key' : config["client_key"],
-			'Username' : username,
-			'Password' : password, 
-			'ID' : authenticate_login.client_id,
-			'Type' : 'CLIENT'
-			}
-		print('yes')
-		final_data = json.dumps(final_data)
+struct Graph{
+	int V,E;
 
-		# Declaring queue for the new client
-		authenticate_login.channel.queue_declare(
-			queue = authenticate_login.username, 
-			durable = True,
-			)
-		print('yes')
-		# Binding the queue for listening from the server 
-		authenticate_login.channel.queue_bind(
-			exchange = 'connection_manager', 
-			queue = authenticate_login.username
-			)
+	vector<pair<int,pair<int,int>>> edges;
+	Graph(int V,int E){
+		this->V = V;
+		this->E = E;
+	}
 
-		print('yes')
-		# Publishing the message ( Username and Password )
-		authenticate_login.channel.basic_publish(
-			exchange = 'connection_manager', 
-			routing_key = 'client_requests', 
-			body = final_data
-			)
+	void add_edge(int u,int v,int w){
+		edges.push_back({w,{u,v}});
+	}
 
-		# Listening from the server whether the credentials are valid or not
-		authenticate_login.channel.basic_consume(
-			queue = username,
-			on_message_callback = authenticate_login.server_response_handler,
-			auto_ack = True
-			)
-		
-		print("[ Listening ] @ " + authenticate_login.host)
+	int Kruskal_MST();
+};
 
-		# authenticate_login.channel.start_consuming()
-		try:
-			authenticate_login.channel.start_consuming()
-		except(KeyboardInterrupt, SystemExit):
-			authenticate_login.channel.stop_consuming()
+struct DisjointSets{
+	int *parent , *rnk;
+	int  n;
 
-		
+	DisjointSets(int n)
+	{
+		this->n = n;
+		parent = new int[n+1];
+		rnk = new int[n+1];
 
-	def server_response_handler(ch,method,properties,body):
-		# Decoding the data 
-		json_data = str(body.decode('utf-8'))
-		server_data = json.loads(json_data)
+		for(int i =0;i<=n;i++)
+		{
+			rnk[i] = 0;
+			parent[i] = i;
+		}
+	}
 
-		# Extracting the status whether valid or invalid 
-		status = server_data['Code']
-		print("[ STATUS ] " + status)
-		# If authentication is valid 
-		if (status == 'VALID'):
-			print('[ ClientID ] receiving ......')
-			# read config file config.json
-			config = handle_config.read_config_json()
+	int find(int u){
+		if(parent[u] != u)
+			parent[u] = find(parent[u]);
+		return parent[u];
+	}
 
-			# Add client id in the config file received by the server
-			config["client_id"] = str(server_data["Client ID"])
-			config["Username"] = authenticate_login.username
-			# update data in config file
-			handle_config.write_config_json(config)
-			# insert user detail for future use
-			user_detail.insert_detail(server_data["Client ID"], authenticate_login.username) 
+	void merge(int x, int y){
+		x = find(x); y= find(y);
+		if(rnk[x]>rnk[y])
+			parent[y] = x;
+		else
+			parent[x] = y;
+		if(rnk[x] == rnk[y])
+			rnk[y]++;
+	}
 
-			print("[ Status ] " + status + "\n[ ClientID ] : " + str(server_data["Client ID"]) + "\n[ Server ] : " + server_data["Message"])
-			
-			# Changing login status to valid
-			authenticate_login.login_status = 'VALID'
-			authenticate_login.client_id = server_data["Client ID"]
-			authenticate_login.channel.stop_consuming()
+};
 
-		# If login is rejected by the server 
-		elif (status == 'REJCT'):
-			# Changing login status to rejected
-			print('[ Authentication ]  REJECTED ......')
-			authenticate_login.login_status = 'LRJCT'
-			# Delete the queue 
-			authenticate_login.channel.queue_delete(
-				queue = authenticate_login.username
-				)
-		# If login authentication is not valid 
-		else:
-			print("Invalid Login!!!!")
-			authenticate_login.login_status = 'INVLD'
-			# Deleting the queue on which the client is listening
-			authenticate_login.channel.queue_delete(
-				queue = authenticate_login.username
-				)		
+int Graph::Kruskal_MST()
+{
+	int mst_wt = 0;
+
+	sort(edges.begin(),edges.end());
+
+	DisjointSets ds(V);
+
+	vector<pair<int,pair<int,int>>>::iterator it;
+	for(it=edges.begin();it!=edges.end();it++)
+	{
+		int u = it->second.first;
+		int v = it->second.second;
+
+		int set_u = ds.find(u);
+		int set_v = ds.find(v);
+
+		if(set_u != set_v){
+			cout<<u<<" _ "<<v<<endl;
+			mst_wt+=it->first;
+		}
+		ds.merge(set_u,set_v);
+	}
+	return mst_wt;
+}
 
 
 
-	# Function to get user details
-	def get_user_details():
-		return authenticate_login.client_id, authenticate_login.username
+int main() 
+{ 
+    /* Let us create above shown weighted 
+       and unidrected graph */
+    int V = 9, E = 14; 
+    Graph g(V, E); 
+  
+    //  making above shown graph 
+    g.add_edge(0, 1, 4); 
+    g.add_edge(0, 7, 8); 
+    g.add_edge(1, 2, 8); 
+    g.add_edge(1, 7, 11); 
+    g.add_edge(2, 3, 7); 
+    g.add_edge(2, 8, 2); 
+    g.add_edge(2, 5, 4); 
+    g.add_edge(3, 4, 9); 
+    g.add_edge(3, 5, 14); 
+    g.add_edge(4, 5, 10); 
+    g.add_edge(5, 6, 2); 
+    g.add_edge(6, 7, 1); 
+    g.add_edge(6, 8, 6); 
+    g.add_edge(7, 8, 7); 
+  
+    cout << "Edges of MST are \n"; 
+    int mst_wt = g.Kruskal_MST(); 
+  
+    cout << "\nWeight of MST is " << mst_wt<<endl; 
+  
+    return 0; 
+}
