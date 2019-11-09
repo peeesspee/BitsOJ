@@ -102,7 +102,7 @@ class manage_clients():
 		# Decode the message sent by client
 		client_message = str(body.decode('utf-8'))
 
-		# JSON Parsing here
+		# JSON Parsing here 
 		try:
 			json_data = json.loads(client_message)
 			# Validate Client Key( Make sure client is authentic! )
@@ -284,13 +284,13 @@ class manage_clients():
 					if manage_clients.data_changed_flags[10] == 1:
 						# Update self config
 						manage_clients.config = initialize_server.read_config()
-						remaining_time = initialize_server.get_remaining_time()
+						duration = initialize_server.get_duration()
 						start_time = initialize_server.get_start_time()
 						end_time = initialize_server.get_end_time()
 
 						message = {
 						'Code' : 'START', 
-						'Duration' : remaining_time,
+						'Duration' : duration,
 						'Start Time' : start_time,
 						'End Time' : end_time,
 						'Problem Key' : manage_clients.file_password

@@ -39,6 +39,9 @@ class initialize_server():
 	def get_start_time():
 		return initialize_server.config['Contest Start Time']
 
+	def get_duration():
+		return initialize_server.config['Contest Duration']
+
 	def get_end_time():
 		return initialize_server.config['Contest End Time']
 
