@@ -14,12 +14,13 @@ username = 'judge00001'
 password = 'bits1'
 channel = ''
 connectio = ''
+key = '000000000000000'
 
 def login():
 	global username
 	global password
 	global channel
-	global connectio
+	global connectio, key
 	username = input('Enter judge username: ') or username
 	password = input('Enter judge password: ') or password
 	try:
@@ -39,7 +40,7 @@ def login():
 		return
 	print("Sending")
 	message = {
-		'Client Key' : 'abcdefghij12345',
+		'Client Key' : key,
 		'Code' : 'LOGIN', 
 		'Username' : username, 
 		'Password' : password,
@@ -53,7 +54,7 @@ def login():
 
 
 def handler(ch, method, properties, body):
-	global client_id
+	global client_id, key
 	server_data = str(body.decode("utf-8"))
 	if(server_data == ''):
 		print("Empty!")
@@ -77,7 +78,7 @@ def handler(ch, method, properties, body):
 			status = input("Enter verdict : ") or 'AC'
 
 			message = {
-			'Judge Key' : 'abcdefghij12345',
+			'Judge Key' : key,
 			'Code' : 'VRDCT', 
 			'Client Username' : username,
 			'Client ID' : client_id,

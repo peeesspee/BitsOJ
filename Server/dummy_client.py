@@ -12,6 +12,7 @@ client_id = 'Null'
 
 username = 'team00001'
 password = 'bits1'
+key = '000000000000000'
 
 try:
 	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
@@ -24,7 +25,7 @@ except:
 	print("Error")
 
 def login():
-	global username, password, client_id
+	global username, password, client_id, key
 	username = input('Enter username: ') or username
 	password = input('Enter password: ') or password
 	print("Sending")
@@ -33,7 +34,7 @@ def login():
 	channel.queue_bind(exchange = 'connection_manager', queue = username)
 
 	message = {
-		'Client Key' : 'abcdefghij12345',
+		'Client Key' : key,
 		'Code' : 'LOGIN', 
 		'Username' : username, 
 		'Password' : password,
@@ -47,14 +48,14 @@ def login():
 	print("Sent")
 
 def send():
-	global client_id
+	global client_id, key
 	print("Sending code")
 	code = '#include<iostream>\n int main(void){ std::cout<<"Hello"; return 0; }'
 
 	ctime = time.strftime("%H:%M:%S", time.localtime())
 
 	message = {
-		'Client Key' : 'abcdefghij12345',
+		'Client Key' : key,
 		'Code' : 'SUBMT', 
 		'ID' : client_id,
 		'PCode' : 'TBE',
@@ -69,12 +70,12 @@ def send():
 	print("sent code")
 
 def query():
-	global client_id
+	global client_id, key
 	print("Sending Query")
 	code = 'Hello server! How are you?'
 
 	message = {
-		'Client Key' : 'abcdefghij12345',
+		'Client Key' : key,
 		'Code' : 'QUERY', 
 		'Query' : code,
 		'ID' : client_id
@@ -142,7 +143,7 @@ def listen():
 
 
 def main():
-	global username
+	global username, key
 	print('1.Login\n2.Send solution\n3.Listen\n4.Query\n5.Exit')
 	while True:
 		a = input('> ')
@@ -161,7 +162,7 @@ def main():
 		elif a == 5:
 			try:
 				message = {
-					'Client Key' : 'abcdefghij12345',
+					'Client Key' : key,
 					'Code' : 'DSCNT', 
 					'ID' : client_id,
 					'Username' : username

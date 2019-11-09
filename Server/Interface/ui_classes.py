@@ -971,6 +971,9 @@ class new_accounts_ui(QMainWindow):
 		return
 
 	def add_new_accounts_ui(self):
+		new_accounts_ui.client_no = 0
+		new_accounts_ui.judge_no = 0
+		
 		label1 = QLabel('Clients')
 
 		client_entry = QSpinBox()
