@@ -50,10 +50,11 @@ class client_window(QMainWindow):
 		self.scoreboard = QTableWidget()
 		self.scoreboard.setRowCount(self.rows)
 		self.scoreboard.setColumnCount(self.columns)
-		self.scoreboard.setHorizontalHeaderLabels(('Username', 'Problems Solved', 'Score'))
-		self.scoreboard.setColumnWidth(0, 600)
-		self.scoreboard.setColumnWidth(1, 500)
-		self.scoreboard.setColumnWidth(2, 500)
+		self.scoreboard.setHorizontalHeaderLabels(('Username', 'Problems Solved', 'Score', 'Time'))
+		self.scoreboard.setColumnWidth(0, 500)
+		self.scoreboard.setColumnWidth(1, 350)
+		self.scoreboard.setColumnWidth(2, 350)
+		self.scoreboard.setColumnWidth(3, 400)
 
 		# Make data_changed_flag accessible from the class methods
 		self.data_changed_flag = data_changed_flag2

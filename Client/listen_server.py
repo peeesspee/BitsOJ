@@ -52,7 +52,6 @@ class start_listening():
 
 	def server_response_handler(ch,method,properties,body):
 		server_data = str(body.decode("utf-8"))
-
 		json_data = json.loads(server_data)
 		code = json_data["Code"]
 		if code == 'VRDCT':
@@ -85,7 +84,9 @@ class start_listening():
 
 
 	def leaderboard(server_data):
-		pass
+		data = json.dumps(server_data)
+		start_listening.scoreboard.put(data)
+		start_listening.data_changed_flags[6] = 1
 
 	def submission_verdict(server_data):
 		run_id = str(server_data["Run ID"])
