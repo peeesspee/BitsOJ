@@ -8,10 +8,10 @@ class initialize_server():
 
 	def get_password():
 		return initialize_server.file_password
+
 	def get_duration():
 		return initialize_server.duration
-
-
+		
 	# Read Server config file 
 	def read_config():
 		print('\n[ READ ] config.json')

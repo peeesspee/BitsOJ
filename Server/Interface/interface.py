@@ -342,9 +342,8 @@ class server_window(QMainWindow):
 				current_time = time.time()
 				time_difference = total_time - current_time
 				remaining_time = time.strftime('%H:%M:%S', time.gmtime(time_difference))
-				#Update timer
+				# Update timer
 				self.timer_widget.display(remaining_time)
-
 				# Check if remaining time is 0
 
 			if self.data_changed_flags[19] == 1:
@@ -466,7 +465,7 @@ class server_window(QMainWindow):
 		if data == 'SET':
 			print('\n[ SET ] Contest Duration : ' + str(extra_data))
 			save_status.update_entry('Contest Duration', str(extra_data))
-			self.timer_widget.display(initialize_server.get_duration())
+			self.timer_widget.display(extra_data)
 			self.duration = str(extra_data)
 
 		elif data == 'START':
