@@ -31,13 +31,15 @@ class server_window(QMainWindow):
 		self.status = self.statusBar()
 		self.resize(1024, 768)
 
-		# Timer to update GUI every 1 second
+		# Timer to update GUI and broadcast scoreboard
 		self.timer = QTimer()
-		self.change_flag = True
 		self.timer.timeout.connect(self.update_data)
 		self.timer.start(1000)
-		self.contest_start_time = ''
 		
+		self.scoreboard_timer = QTimer()
+		self.scoreboard_timer.timeout.connect(self.broadcast_scoreboard)
+		self.scoreboard_timer.start(300000)
+
 		# make data_changed_flag accessible from the class methods
 		self.data_changed_flags = data_changed_flags2
 		self.data_to_client = data_to_client
@@ -48,6 +50,7 @@ class server_window(QMainWindow):
 		self.config = initialize_server.read_config()
 		self.contest_set_time = self.config['Contest Set Time']
 		self.duration = self.config['Contest Duration']
+		self.contest_start_time = ''
 		# Define Sidebar Buttons and their actions
 		button_width = 200
 		button_height = 50
@@ -293,6 +296,13 @@ class server_window(QMainWindow):
 
 		# TODO: When server restarts, pop up a new notification about contest status
 		return
+
+	def broadcast_scoreboard(self):
+		# If scoreboard broadcast is allowed
+		if self.data_changed_flags[15] == 1:
+			# Just set this flag, update data will take care of it
+			self.data_changed_flags[18] = 1
+			print('[ EVENT ] Scoreboard broadcast to clients ( Time Out )')
 			
 	def update_data(self):
 		try:
@@ -330,9 +340,12 @@ class server_window(QMainWindow):
 				# Find time elapsed since contest start
 				total_time = self.contest_set_time
 				current_time = time.time()
-				remaining_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
+				time_difference = total_time - current_time
+				remaining_time = time.strftime('%H:%M:%S', time.gmtime(time_difference))
 				#Update timer
 				self.timer_widget.display(remaining_time)
+
+				# Check if remaining time is 0
 
 			if self.data_changed_flags[19] == 1:
 				self.data_changed_flags[19] = 0
@@ -359,6 +372,7 @@ class server_window(QMainWindow):
 				}
 				message = json.dumps(message)
 				self.data_to_client.put(message)
+
 		except Exception as error:
 			print('[ ERROR ] Interface updation error: ' + str(error))
 			
@@ -508,7 +522,13 @@ class server_window(QMainWindow):
 			# Send UPDATE signal
 			print('[ UPDATE ] Contest time ' + str(extra_data))
 			self.contest_set_time = self.contest_set_time + int(extra_data) * 60
-			self.data_changed_flags[19] = 1
+			# self.data_changed_flags[19] = 1
+			message = {
+			'Code' : 'EXTND',
+			'Time' : extra_data
+			}
+			message = json.dumps(message)
+			self.data_to_client.put(message)
 
 			prev_duration = self.duration
 			new_duration = server_window.convert_to_seconds(prev_duration) + (int(extra_data) * 60)
@@ -518,8 +538,6 @@ class server_window(QMainWindow):
 			save_status.update_entry('Contest Set Time', self.contest_set_time)
 			save_status.update_entry('Contest End Time', new_end_time)
 			save_status.update_entry('Contest Duration', new_duration)
-			# Broadcast to all clients
-			
 			
 		return
 
