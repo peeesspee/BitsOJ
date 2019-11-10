@@ -21,7 +21,8 @@ class contest_setup(QMainWindow):
 		self.resize(1200,700)
 		cur = manage_database.initialize_client_tables()
 		manage_local_ids.initialize_local_id()
-		self.client_config = {"client_id" : 'Null',
+		self.client_config = {
+			"client_id" : 'Null',
 			"client_key" : '',
 			"Username" : '',
 			"rabbitmq_username" : '',
@@ -31,11 +32,48 @@ class contest_setup(QMainWindow):
 			"Problems" : {},
 			"Languages" : '',
 			"Contest" : 'START',
-			"Duration" : '00:05:00',
+			"Duration" : '00:00:00',
 			"Start Time" : '00:00:00',
 			"End Time" : '00:00:00',
 			"Contest_Name" : '',
 			"Contest_Theme" : ''}
+
+		self.server_config = {
+			"Server Username": "BitsOJ",
+            "Server Password": "root",
+            "Server IP": "localhost",
+            "Judge Username": "judge1",
+            "Judge Password": "judge1",
+            "Login Allowed": "True",
+            "Judge Login Allowed": "True",
+            "Submission Allowed": "True",
+            "Scoreboard Update Allowed": "True",
+            "Judge Key": "000000000000000",
+            "Client Key": "000000000000000",
+            "File Password": "papa",
+            "Contest Duration": "00:00:00",
+            "Contest Status": "SETUP",
+            "Contest Start Time": "00:00:00",
+            "Contest End Time": "00:00:00",
+            "Contest Set Time": 0,
+            "Number Of Problems": "5",
+            "Problems": {
+                "Problem 1": "('The Begining of the End','TBE', 1, 1)",
+                "Problem 2": "('Privet Drive','PD', 1, 1)",
+                "Problem 3": "('Dumbledores Cloak','DC', 1, 1)",
+                "Problem 4": "('The Auror Mania','TAM', 1, 1)",
+                "Problem 5": "('A New Start','ANS', 1, 1)"
+            },
+            "Problem Codes": "('TBE', 'PD', 'DC', 'TAM', 'ANS')",
+            "Languages": "('C','C++','JAVA','PYTHON-2')",
+            "Ranking Algorithm": "IOI",
+            "AC Points": 100,
+            "Penalty Score": -20,
+            "Penalty Time": 20,
+            "Manual Review": "False"
+		}
+		self.judge_config = {}
+
 		self.language_tuple = ()
 
 		self.db = self.init_qt_database()
@@ -64,15 +102,21 @@ class contest_setup(QMainWindow):
 
 		self.top_tab = QTabWidget()
 		self.top_tab.setObjectName('top_tab')
-		self.client_tab = QWidget()
-		self.server_tab = QWidget()
-		self.judge_tab = QWidget()
+		self.rabbitmq_tab = QWidget()
+		self.problem_tab = QWidget()
+		self.language_tab = QWidget()
 		self.contest_tab = QWidget()
+		self.security_tab = QWidget()
+		self.ranking_tab = QWidget()
+		self.final_tab = QWidget()
 
-		self.top_tab.addTab(self.client_tab, "Client Config")
-		self.top_tab.addTab(self.server_tab, "Server Config")
-		self.top_tab.addTab(self.judge_tab, "Judge Config")
-		self.top_tab.addTab(self.contest_tab, "Contest Config")
+		self.top_tab.addTab(self.rabbitmq_tab, "RabbitMQ Details")
+		self.top_tab.addTab(self.problem_tab, "Problems")
+		self.top_tab.addTab(self.language_tab, "Languages")
+		self.top_tab.addTab(self.contest_tab, "Contest")
+		self.top_tab.addTab(self.security_tab, "Security")
+		self.top_tab.addTab(self.ranking_tab, "Ranking")
+		self.top_tab.addTab(self.final_tab, 'Final Save')
 
 
 		#Define top_layout = logo_bar + main_layout
@@ -418,8 +462,8 @@ class contest_setup(QMainWindow):
 		
 
 		self.client_tab_layout.addWidget(self.tabs)
-		self.client_tab.setLayout(self.client_tab_layout)
-		self.client_tab.setObjectName('client_tab')
+		self.rabbitmq_tab.setLayout(self.client_tab_layout)
+		self.rabbitmq_tab.setObjectName('client_tab')
 		return
 
 

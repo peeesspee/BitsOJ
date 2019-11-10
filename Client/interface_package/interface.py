@@ -298,7 +298,7 @@ class client_window(QMainWindow):
 						if j == 0:
 							self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
 						else:
-							self.scoreboard.setItem(i,j, QTableWidgetItem(str(score_data[i][j-1])))
+							self.scoreboard.setItem(i,j, QTableWidgetItem(str(score[i][j-1])))
 						if i == 0:
 							self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
 						elif i == 1:
