@@ -9,6 +9,7 @@ import signal
 class verdict():
 
 	pwd = os.getcwd()
+	pwd = '.'
 	ERROR = False
 	VERDICT = 'Nul'
 	result = 'Nul'
@@ -52,19 +53,22 @@ class verdict():
 
 		if lang != 'PY2' or lang != 'PY3':
 			print("COMPILING...")
-			exit_code = os.system(classfile)
+			process = subprocess.run(classfile, capture_output=True, text=True, shell=True)
+			exit_code = process.returncode
+			output = process.stdout
+			error = process.stderr
 			if exit_code == 0:
 				print("COMPILATION SUCCESSFUL")
 				return verdict.ERROR
 			else :
 				verdict.ERROR = True
 				verdict.VERDICT = 'CMPL'
-				verdict.result = 'COMPILATION ERROR'
-				print("SEEMS COMPILATION ERROR")
+				verdict.result = error
+				print("COMPILATION ERROR !!!")
 				return verdict.ERROR
 			
 
-	def run_file(runfile, problem_code, run_id):
+	def run_file(runfile, problem_code, run_id, time_limit):
 
 		INPUT_PATH = './problems/' + problem_code + '/'
 		SUBM_PATH = './submission_files/' 
@@ -78,19 +82,33 @@ class verdict():
 					ext = file[pos+1:]
 					if ext == 'in':
 						print("STARTED RUNNING SUBMITTED FILE")
-						start = time.time()
-						# command = [runfile , '<' , INPUT_PATH + file , '>' , SUBM_PATH + 'output_' + file[:pos]  + '_' ,run_id]
-						x = os.system(runfile + '<' + INPUT_PATH + file + '>' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id)
-						end = time.time()
-						print("time taken to execute submitted file --->",end-start)
-						print(x)
-						if x != 0:
+						# start = time.time()
+						command = 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
+						process = subprocess.run(command, capture_output=True, text=True, shell=True)
+
+
+						if process.returncode != 0 and process.stderr == '':
+							print("there is no stderr in run time therefore it is tle")
 							verdict.ERROR = True
-							verdict.result = 'Runtime Error'
+							verdict.VERDICT = 'TLE'
+							verdict.result = 'Time Limit Exceeded !!!'
+							os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
+							return verdict.ERROR
+
+
+						if process.returncode != 0:
+							print("there is some Runtime error as returncode is not 0")
+							verdict.ERROR = True
 							verdict.VERDICT = 'RE'
-							print("RUNTIME ERROR")
-						if x == 0:
-							print("NO RUNTIME ERROR")
+							verdict.result = process.stderr
+							os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
+							return verdict.ERROR
+
+
+						if returncode == 0:
+							print("NO RUN TIME ERROR")
+							return verdict.ERROR
+
 				except:
 					pass
 
@@ -145,53 +163,80 @@ class verdict():
 
 		return verdict.result, verdict.VERDICT
 
-	def main(file_name, file_with_ext, lang, problem_code, run_id,timelimit):
+	def main(file_name, file_with_ext, lang, problem_code, run_id, timelimit):
 
 		result = ''
 		verd = ''
 		classfile = ''
 		runfile = ''
 
-		# Process initialised
-		# p = multiprocessing.Process(target=verdict.run_file, args=(runfile, problem_code, run_id,))
-
 		classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, lang)
 
 		e = verdict.compile_file(classfile, lang)
+		print(verdict.ERROR)
+		print(verdict.VERDICT)
+		print(verdict.result)
 
-		if e == True: #  if there is compilation error
-			result = verdict.result
-			verd = verdict.VERDICT
-			return verd,result
+		if e == True:
+			return verdict.VERDICT,verdict.result
+
 		if e == False:
-			tle_process = multiprocessing.Process(target=verdict.run_file, args=(runfile, problem_code, run_id,))
-			start = time.time()
-			# verdict.run_file(runfile, problem_code, run_id)
-			tle_process.start()
-			tle_process.join(int(timelimit))
-			end = time.time()
-			if tle_process.is_alive():
-				tle_process_pid = tle_process.pid
-				print(tle_process_pid)
-				os.kill(tle_process_pid, signal.SIGTERM)
-				print("Process terminated")
-				verdict.ERROR = True
-				verdict.result = "Time Limit Exceeded"
-				verdict.VERDICT = "TLE"
-				print("time taken to execute file",end-start)
+			time_limit = timelimit + 's '
+			e = verdict.run_file(runfile, problem_code, run_id, time_limit)
 
-			e = verdict.ERROR
+			print(verdict.ERROR)
+			print(verdict.VERDICT)
+			print(verdict.result)
 			verdict.remove_object(file_name, file_with_ext, lang)
+			if e == True:
+				return verdict.VERDICT,verdict.result
 
-			if e == True:  # if there is run time error
-				result = verdict.result
-				verd = verdict.VERDICT
-				return verd,result
-			if e == False: # if there is no compilation error and no run time error  
+			if e == False:
 				result,verd = verdict.compare_outputs(problem_code, run_id)
-				print(result)
-				print(verd)
 				return verd,result
+
+
+
+
+
+		# if e == True: #  if there is compilation error
+		# 	result = verdict.result
+		# 	verd = verdict.VERDICT
+		# 	return verd,result
+		# if e == False:
+		# 	tle_process = multiprocessing.Process(target=verdict.run_file, args=(runfile, problem_code, run_id,))
+		# 	start = time.time()
+		# 	# verdict.run_file(runfile, problem_code, run_id)
+		# 	tle_process.start()
+		# 	tle_process.join(int(timelimit))
+		# 	end = time.time()
+		# 	print("Process terminated", end-start)
+			
+		# 	verdict.ERROR = True
+		# 	verdict.result = "Time Limit Exceeded"
+		# 	verdict.VERDICT = "TLE"
+			# if tle_process.is_alive() :
+			# 	tle_process_pid = tle_process.pid
+			# 	print(tle_process_pid)
+			# 	os.kill(tle_process_pid, signal.SIGTERM)
+			# 	print("Process terminated")
+			# 	verdict.ERROR = True
+			# 	verdict.result = "Time Limit Exceeded"
+			# 	verdict.VERDICT = "TLE"
+			# 	print("time taken to execute file",end-start)
+
+			# e = verdict.ERROR
+			# verdict.remove_object(file_name, file_with_ext, lang)
+
+			# if e == True:  # if there is run time error
+			# 	result = verdict.result
+			# 	verd = verdict.VERDICT
+			# 	return verd,result
+			# if e == False: # if there is no compilation error and no run time error  
+			# 	result,verd = verdict.compare_outputs(problem_code, run_id)
+			# 	print(result)
+			# 	print(verd)
+			# 	return verd,result
 
 
 v,r=verdict.main("ABCD1234", "ABCD1234.cpp", "CPP", "ABCD", "1234","3")

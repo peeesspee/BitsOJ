@@ -57,7 +57,7 @@ class communicate_server():
 		local_run_id = message["Local Run ID"]
 
 		file_name,file_with_ext = communicate_server.make_submission_file(run_id, problem_code, language, source_code)
-		result,error = communicate_server.verdict_of_submission(run_id, problem_code, language, source_code, file_name, file_with_ext)
+		result,error = verdict.main(run_id, problem_code, language, source_code, file_name, file_with_ext, '2')
 
 
 		#						 message = {
