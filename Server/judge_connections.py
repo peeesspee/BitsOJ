@@ -88,6 +88,7 @@ class manage_judges():
 					run_id = json_data['Run ID']
 				# Mark the submission
 				submissions_management.update_submission_status(run_id, 'FAILED')
+				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
 
 
@@ -102,10 +103,12 @@ class manage_judges():
 				p_code = json_data['PCode']
 				time_stamp = json_data['Time Stamp']
 			else:
+				ch.basic_ack(delivery_tag = method.delivery_tag)
 				print('[ ERROR ] Judge sent garbage data. Trust me you don\'t wanna see it! ')
 				return
 
 		except Exception as error:
+			ch.basic_ack(delivery_tag = method.delivery_tag)
 			print('[ ERROR ] Could not parse judge JSON data : ' + str(error))
 			return
 
@@ -134,6 +137,7 @@ class manage_judges():
 				# Update GUI
 				manage_judges.data_changed_flags[0] = 1
 			except Exception as error:
+				ch.basic_ack(delivery_tag = method.delivery_tag)
 				print('[ ERROR ] Could not publish result to client : ' + str(error))
 				return
 
