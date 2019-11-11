@@ -113,7 +113,7 @@ class ui_widgets:
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		main.show()
-		return main, submission_model
+		return main, submission_model, allow_submission_button
 
 
 	def client_ui(self):
@@ -167,7 +167,7 @@ class ui_widgets:
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main, client_model
+		return main, client_model, allow_login_button
 
 	def judge_ui(self):
 		heading = QLabel('Manage Judges')

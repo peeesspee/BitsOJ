@@ -112,22 +112,22 @@ class server_window(QMainWindow):
 		# Each tab is an object returned by the respective function associated with its UI
 		# Tab UI are managed by interface_packages/ui_classes.py file 
 		self.tab0, self.account_model, self.delete_account_button = ui_widgets.accounts_ui(self)
-		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
+		self.tab1, self.sub_model, self.allow_sub_button = ui_widgets.submissions_ui(self)
 		self.tab2, self.judge_model = ui_widgets.judge_ui(self)
-		self.tab3, self.client_model = ui_widgets.client_ui(self)
+		self.tab3, self.client_model, self.allow_login_button = ui_widgets.client_ui(self)
 		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5, self.score_model, self.scoring_type_label = ui_widgets.leaderboard_ui(self)
 		self.tab6 = ui_widgets.problem_ui(self)
 		
 		self.tab7 = ui_widgets.stats_ui(self)
+
 		(
-		self.tab8, self.contest_time_entry, self.change_time_entry, self.set_button, 
-		self.start_button, self.update_button, self.stop_button, self.account_reset_button, 
-		self.submission_reset_button, self.query_reset_button, self.client_reset_button, 
-		self.server_reset_button, self.timer_reset_button
+			self.tab8, self.contest_time_entry, self.change_time_entry, self.set_button, 
+			self.start_button, self.update_button, self.stop_button, self.account_reset_button, 
+			self.submission_reset_button, self.query_reset_button, self.client_reset_button, 
+			self.server_reset_button, self.timer_reset_button
 		) = ui_widgets.settings_ui(self)
 
-		
 		self.tab9 = ui_widgets.about_us_ui(self)
 		
 		###########################################################
@@ -467,6 +467,12 @@ class server_window(QMainWindow):
 			self.delete_account_button.setEnabled(True)
 			self.timer_reset_button.setEnabled(True)
 			self.timer_reset_button.setToolTip('Reset Contest timer')
+			# Don't allow submissions now
+			self.allow_sub_button.setChecked(False)
+			self.data_changed_flags[3] = 0
+			# Don't allow logins now
+			self.allow_login_button.setChecked(False)
+			self.data_changed_flags[2] = 0
 		return
 
 	def process_event(self, data, extra_data):
@@ -657,6 +663,7 @@ class server_window(QMainWindow):
 			model.select()
 			return model
 		else:
+			print('[ CRITICAL ] Model Error: DB is not open')
 			return None
 
 	def manage_leaderboard_model(self, db, table_name):
@@ -668,6 +675,7 @@ class server_window(QMainWindow):
 			
 			return model
 		else:
+			print('[ CRITICAL ] Model Error: DB is not open')
 			return None
 
 
