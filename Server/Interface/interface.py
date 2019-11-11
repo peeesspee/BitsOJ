@@ -335,17 +335,6 @@ class server_window(QMainWindow):
 			if self.data_changed_flags[7] == 1:
 				sys.exit()
 
-			# While contest is RUNNING
-			if self.data_changed_flags[10] == 1:
-				# Find time elapsed since contest start
-				total_time = self.contest_set_time
-				current_time = time.time()
-				time_difference = total_time - current_time
-				remaining_time = time.strftime('%H:%M:%S', time.gmtime(time_difference))
-				# Update timer
-				self.timer_widget.display(remaining_time)
-				# Check if remaining time is 0
-
 			if self.data_changed_flags[19] == 1:
 				self.data_changed_flags[19] = 0
 				# Broadcast UPDATE signal
@@ -371,6 +360,25 @@ class server_window(QMainWindow):
 				}
 				message = json.dumps(message)
 				self.data_to_client.put(message)
+
+			# While contest is RUNNING
+			# This block is last as it may cause a return call and not allow further function block executions
+			if self.data_changed_flags[10] == 1:
+				# Find time elapsed since contest start
+				total_time = self.contest_set_time
+				current_time = time.time()
+				time_difference = total_time - current_time
+				remaining_time = time.strftime('%H:%M:%S', time.gmtime(time_difference))
+
+				# When remaining time is less than 0, contest has ended
+				if time_difference < 0:
+					# Contest time ended
+					self.timer_widget.display('00:00:00')
+					self.process_event('STOP', 'None')
+					return
+				
+				# Update timer
+				self.timer_widget.display(remaining_time)
 
 		except Exception as error:
 			print('[ ERROR ] Interface updation error: ' + str(error))
@@ -471,7 +479,7 @@ class server_window(QMainWindow):
 		elif data == 'START':
 			current_time = time.localtime()
 			self.contest_start_time = time.time()
-			self.contest_duration_seconds = server_window.convert_to_seconds(initialize_server.get_duration())
+			self.contest_duration_seconds = server_window.convert_to_seconds(self.duration)
 			self.contest_set_time = self.contest_duration_seconds + self.contest_start_time
 			contest_end_time = time.strftime("%H:%M:%S", time.localtime(self.contest_set_time))
 			contest_start_time = time.strftime("%H:%M:%S", time.localtime(self.contest_start_time))
