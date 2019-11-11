@@ -60,6 +60,7 @@ class communicate_server():
 
 		file_name,file_with_ext = communicate_server.make_submission_file(run_id, problem_code, language, source_code)
 		# main(file_name, file_with_ext, lang, problem_code, run_id, timelimit):
+		print(file_name, file_with_ext, language, problem_code, run_id)
 		result,error = verdict.main(file_name, file_with_ext, language, problem_code, run_id, '2')
 		# result,error = verdict.main(run_id, problem_code, language, source_code, file_name, file_with_ext, '2')
 
