@@ -113,7 +113,7 @@ class ui_widgets:
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		main.show()
-		return main, submission_model
+		return main, submission_model, allow_submission_button
 
 
 	def client_ui(self):
@@ -167,7 +167,7 @@ class ui_widgets:
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main, client_model
+		return main, client_model, allow_login_button
 
 	def judge_ui(self):
 		heading = QLabel('Manage Judges')
@@ -607,12 +607,11 @@ class ui_widgets:
 		minutes_label.setObjectName('main_screen_content')
 
 		change_time_entry = QSpinBox()
-		change_time_entry.setMinimum(-30)
-		change_time_entry.setMaximum(30)
+		change_time_entry.setMinimum(0)
+		change_time_entry.setMaximum(60)
 		change_time_entry.setValue(0)
 		change_time_entry.setReadOnly(True)
 		change_time_entry.setToolTip('You will be able to use it when contest is STARTED')
-
 
 		change_time_layout = QHBoxLayout()
 		change_time_layout.addWidget(contest_extension_label)
@@ -623,7 +622,6 @@ class ui_widgets:
 		change_time_layout.setContentsMargins(5, 0, 10, 0)
 		change_time_widget = QWidget()
 		change_time_widget.setLayout(change_time_layout)
-
 
 		# Start, Stop, Pause contest
 		set_button = QPushButton('Set')
@@ -664,7 +662,6 @@ class ui_widgets:
 			lambda: ui_widgets.preprocess_contest_broadcasts(self, 'STOP')
 			)
 		
-		
 		contest_buttons_layout = QHBoxLayout()
 		contest_buttons_layout.addWidget(set_button)
 		contest_buttons_layout.addWidget(start_button)
@@ -688,6 +685,45 @@ class ui_widgets:
 			time_management_widget, contest_time_entry, change_time_entry, 
 			set_button, start_button, update_button, stop_button
 			)
+	def preprocess_contest_broadcasts(self, signal, extra_data = 'NONE'):
+		#process_event() is defined in interface package
+		if signal == 'SET':
+			#Validate extra data to be time
+			if ui_widgets.validate_date(extra_data) == True:
+				self.process_event('SET', extra_data)
+			else:
+				return
+		elif signal == 'START':
+			#Validate extra data to be time
+			if ui_widgets.validate_date(extra_data) == True:
+				self.process_event('START', extra_data)	
+			else:
+				return
+			
+		elif signal == 'UPDATE':
+			self.process_event('UPDATE', extra_data)
+		elif signal == 'STOP':
+			self.process_event('STOP', extra_data)
+		return
+		
+	def validate_date(data):
+		#Check that data is a valid date in HH:MM:SS format
+		try:
+			h, m, s = data.split(':')
+			if len(h) != 2 or len(m) != 2 or len(s) != 2:
+				print('[ ERROR ] Enter time in HH:MM:SS format only!')
+				return False
+			h = int(h)
+			m = int(m)
+			s = int(s)
+			if h < 0 or h > 24 or m < 0 or m > 59 or s < 0 or s > 59:
+				print('[ ERROR ] Enter time in HH:MM:SS format only!')
+				return False
+			return True
+		except:
+			print('[ ERROR ] Enter time in HH:MM:SS format only!')
+			return False
+
 
 
 	def contest_reset_settings(self):
@@ -863,45 +899,6 @@ class ui_widgets:
 			query_reset_button, client_reset_button, server_reset_button,
 			timer_reset_button
 			)
-
-	def preprocess_contest_broadcasts(self, signal, extra_data = 'NONE'):
-		#process_event() is defined in interface package
-		if signal == 'SET':
-			#Validate extra data to be time
-			if ui_widgets.validate_date(extra_data) == True:
-				self.process_event('SET', extra_data)
-			else:
-				return
-		elif signal == 'START':
-			#Validate extra data to be time
-			if ui_widgets.validate_date(extra_data) == True:
-				self.process_event('START', extra_data)	
-			else:
-				return
-			
-		elif signal == 'UPDATE':
-			self.process_event('UPDATE', extra_data)
-		elif signal == 'STOP':
-			self.process_event('STOP', extra_data)
-		return
-
-	def validate_date(data):
-		#Check that data is a valid date in HH:MM:SS format
-		try:
-			h, m, s = data.split(':')
-			if len(h) != 2 or len(m) != 2 or len(s) != 2:
-				print('[ ERROR ] Enter time in HH:MM:SS format only!')
-				return False
-			h = int(h)
-			m = int(m)
-			s = int(s)
-			if h < 0 or h > 24 or m < 0 or m > 59 or s < 0 or s > 59:
-				print('[ ERROR ] Enter time in HH:MM:SS format only!')
-				return False
-			return True
-		except:
-			print('[ ERROR ] Enter time in HH:MM:SS format only!')
-			return False
 
 	def reports_ui(self):
 		main_layout = QVBoxLayout()

@@ -30,7 +30,7 @@ class authenticate_judge():
 			)
 
 		message = {
-			'Client key': authenticate_judge.key,
+			'Client Key': authenticate_judge.key,
 			'Code': 'LOGIN',
 			'Username': authenticate_judge.username,
 			'Password': authenticate_judge.password,

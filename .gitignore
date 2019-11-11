@@ -1,4 +1,3 @@
-#Ignore these files for now:
 __pycache__/
 *.pyc
 *$py.class
@@ -7,11 +6,10 @@ __pycache__/
 *.db
 server_database.db
 Client_Submissions/
-diary
-*.json
-Server/config.json
-Client/config.json
-*.pdf
 Problems/
-Client/Problems/
-/Client/Problems/*.pdf
+Solution/
+problems/
+submission_files/
+diary
+config.json
+

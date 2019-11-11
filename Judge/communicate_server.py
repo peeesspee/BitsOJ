@@ -1,12 +1,13 @@
 import pika
 from connection import manage_connection
-from compile_run import verdict
+from verdict import verdict
 from file_creation import file_manager
 import time
 import json
 
 class communicate_server():
 	message = ''
+	key = '000000000000000'
 
 	def listen_server():
 
@@ -55,9 +56,13 @@ class communicate_server():
 		client_id = message["Client ID"]
 		client_username = message["Client Username"]
 		local_run_id = message["Local Run ID"]
+		time_stamp = message['Time Stamp']
 
 		file_name,file_with_ext = communicate_server.make_submission_file(run_id, problem_code, language, source_code)
-		result,error = verdict.main(run_id, problem_code, language, source_code, file_name, file_with_ext, '2')
+		# main(file_name, file_with_ext, lang, problem_code, run_id, timelimit):
+		print(file_name, file_with_ext, language, problem_code, run_id)
+		result,error = verdict.main(file_name, file_with_ext, language, problem_code, run_id, '2')
+		# result,error = verdict.main(run_id, problem_code, language, source_code, file_name, file_with_ext, '2')
 
 
 		#						 message = {
@@ -72,14 +77,18 @@ class communicate_server():
 		#						 	message = json.dumps(message)
 
 		message = {
+			'Judge Key' : communicate_server.key,
 			'Code' : 'VRDCT', 
 			'Client Username' : client_username,
 			'Client ID' : client_id,
 			'Status' : result,
 			'Run ID' : run_id,
-			'Message' : 'No Error',
-			'Local Run ID' : local_run_id
+			'Message' : error,
+			'Local Run ID' : local_run_id,
+			'PCode': problem_code,
+			'Time Stamp' : time_stamp
 			}
+		
 		message = json.dumps(message)
 		
 
@@ -87,7 +96,8 @@ class communicate_server():
 		# x = message[6:11]
 		# print(x)
 		# communicate_server.message = verdict
-		time.sleep(5)
+		# time.sleep(1)
+
 
 		ch.basic_publish(
 			exchange = 'judge_manager',

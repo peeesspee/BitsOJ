@@ -31,13 +31,15 @@ class server_window(QMainWindow):
 		self.status = self.statusBar()
 		self.resize(1024, 768)
 
-		# Timer to update GUI every 1 second
+		# Timer to update GUI and broadcast scoreboard
 		self.timer = QTimer()
-		self.change_flag = True
 		self.timer.timeout.connect(self.update_data)
 		self.timer.start(1000)
-		self.contest_start_time = ''
 		
+		self.scoreboard_timer = QTimer()
+		self.scoreboard_timer.timeout.connect(self.broadcast_scoreboard)
+		self.scoreboard_timer.start(300000)
+
 		# make data_changed_flag accessible from the class methods
 		self.data_changed_flags = data_changed_flags2
 		self.data_to_client = data_to_client
@@ -48,6 +50,7 @@ class server_window(QMainWindow):
 		self.config = initialize_server.read_config()
 		self.contest_set_time = self.config['Contest Set Time']
 		self.duration = self.config['Contest Duration']
+		self.contest_start_time = ''
 		# Define Sidebar Buttons and their actions
 		button_width = 200
 		button_height = 50
@@ -109,22 +112,22 @@ class server_window(QMainWindow):
 		# Each tab is an object returned by the respective function associated with its UI
 		# Tab UI are managed by interface_packages/ui_classes.py file 
 		self.tab0, self.account_model, self.delete_account_button = ui_widgets.accounts_ui(self)
-		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
+		self.tab1, self.sub_model, self.allow_sub_button = ui_widgets.submissions_ui(self)
 		self.tab2, self.judge_model = ui_widgets.judge_ui(self)
-		self.tab3, self.client_model = ui_widgets.client_ui(self)
+		self.tab3, self.client_model, self.allow_login_button = ui_widgets.client_ui(self)
 		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5, self.score_model, self.scoring_type_label = ui_widgets.leaderboard_ui(self)
 		self.tab6 = ui_widgets.problem_ui(self)
 		
 		self.tab7 = ui_widgets.stats_ui(self)
+
 		(
-		self.tab8, self.contest_time_entry, self.change_time_entry, self.set_button, 
-		self.start_button, self.update_button, self.stop_button, self.account_reset_button, 
-		self.submission_reset_button, self.query_reset_button, self.client_reset_button, 
-		self.server_reset_button, self.timer_reset_button
+			self.tab8, self.contest_time_entry, self.change_time_entry, self.set_button, 
+			self.start_button, self.update_button, self.stop_button, self.account_reset_button, 
+			self.submission_reset_button, self.query_reset_button, self.client_reset_button, 
+			self.server_reset_button, self.timer_reset_button
 		) = ui_widgets.settings_ui(self)
 
-		
 		self.tab9 = ui_widgets.about_us_ui(self)
 		
 		###########################################################
@@ -293,6 +296,13 @@ class server_window(QMainWindow):
 
 		# TODO: When server restarts, pop up a new notification about contest status
 		return
+
+	def broadcast_scoreboard(self):
+		# If scoreboard broadcast is allowed
+		if self.data_changed_flags[15] == 1:
+			# Just set this flag, update data will take care of it
+			self.data_changed_flags[18] = 1
+			print('[ EVENT ] Scoreboard broadcast to clients ( Time Out )')
 			
 	def update_data(self):
 		try:
@@ -325,15 +335,6 @@ class server_window(QMainWindow):
 			if self.data_changed_flags[7] == 1:
 				sys.exit()
 
-			# While contest is RUNNING
-			if self.data_changed_flags[10] == 1:
-				# Find time elapsed since contest start
-				total_time = self.contest_set_time
-				current_time = time.time()
-				remaining_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
-				#Update timer
-				self.timer_widget.display(remaining_time)
-
 			if self.data_changed_flags[19] == 1:
 				self.data_changed_flags[19] = 0
 				# Broadcast UPDATE signal
@@ -359,6 +360,26 @@ class server_window(QMainWindow):
 				}
 				message = json.dumps(message)
 				self.data_to_client.put(message)
+
+			# While contest is RUNNING
+			# This block is last as it may cause a return call and not allow further function block executions
+			if self.data_changed_flags[10] == 1:
+				# Find time elapsed since contest start
+				total_time = self.contest_set_time
+				current_time = time.time()
+				time_difference = total_time - current_time
+				remaining_time = time.strftime('%H:%M:%S', time.gmtime(time_difference))
+
+				# When remaining time is less than 0, contest has ended
+				if time_difference < 0:
+					# Contest time ended
+					self.timer_widget.display('00:00:00')
+					self.process_event('STOP', 'None')
+					return
+				
+				# Update timer
+				self.timer_widget.display(remaining_time)
+
 		except Exception as error:
 			print('[ ERROR ] Interface updation error: ' + str(error))
 			
@@ -446,19 +467,25 @@ class server_window(QMainWindow):
 			self.delete_account_button.setEnabled(True)
 			self.timer_reset_button.setEnabled(True)
 			self.timer_reset_button.setToolTip('Reset Contest timer')
+			# Don't allow submissions now
+			self.allow_sub_button.setChecked(False)
+			self.data_changed_flags[3] = 0
+			# Don't allow logins now
+			self.allow_login_button.setChecked(False)
+			self.data_changed_flags[2] = 0
 		return
 
 	def process_event(self, data, extra_data):
 		if data == 'SET':
 			print('\n[ SET ] Contest Duration : ' + str(extra_data))
 			save_status.update_entry('Contest Duration', str(extra_data))
-			self.timer_widget.display(initialize_server.get_duration())
+			self.timer_widget.display(extra_data)
 			self.duration = str(extra_data)
 
 		elif data == 'START':
 			current_time = time.localtime()
 			self.contest_start_time = time.time()
-			self.contest_duration_seconds = server_window.convert_to_seconds(initialize_server.get_duration())
+			self.contest_duration_seconds = server_window.convert_to_seconds(self.duration)
 			self.contest_set_time = self.contest_duration_seconds + self.contest_start_time
 			contest_end_time = time.strftime("%H:%M:%S", time.localtime(self.contest_set_time))
 			contest_start_time = time.strftime("%H:%M:%S", time.localtime(self.contest_start_time))
@@ -508,7 +535,13 @@ class server_window(QMainWindow):
 			# Send UPDATE signal
 			print('[ UPDATE ] Contest time ' + str(extra_data))
 			self.contest_set_time = self.contest_set_time + int(extra_data) * 60
-			self.data_changed_flags[19] = 1
+			# self.data_changed_flags[19] = 1
+			message = {
+			'Code' : 'EXTND',
+			'Time' : extra_data
+			}
+			message = json.dumps(message)
+			self.data_to_client.put(message)
 
 			prev_duration = self.duration
 			new_duration = server_window.convert_to_seconds(prev_duration) + (int(extra_data) * 60)
@@ -518,8 +551,6 @@ class server_window(QMainWindow):
 			save_status.update_entry('Contest Set Time', self.contest_set_time)
 			save_status.update_entry('Contest End Time', new_end_time)
 			save_status.update_entry('Contest Duration', new_duration)
-			# Broadcast to all clients
-			
 			
 		return
 
@@ -632,6 +663,7 @@ class server_window(QMainWindow):
 			model.select()
 			return model
 		else:
+			print('[ CRITICAL ] Model Error: DB is not open')
 			return None
 
 	def manage_leaderboard_model(self, db, table_name):
@@ -643,6 +675,7 @@ class server_window(QMainWindow):
 			
 			return model
 		else:
+			print('[ CRITICAL ] Model Error: DB is not open')
 			return None
 
 

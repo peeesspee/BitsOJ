@@ -85,6 +85,8 @@ class verdict():
 						# start = time.time()
 						command = 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
 						process = subprocess.run(command, capture_output=True, text=True, shell=True)
+						print("I am RUNNING")
+						print(process)
 
 
 						if process.returncode != 0 and process.stderr == '':
@@ -105,11 +107,18 @@ class verdict():
 							return verdict.ERROR
 
 
-						if returncode == 0:
+						if process.returncode == 0:
 							print("NO RUN TIME ERROR")
 							return verdict.ERROR
 
 				except:
+					# print("there is some ERROR")
+					# # print(file)
+					# # pos = file.index('.')
+					# # print(pos)
+					# # ext = file[pos+1:]
+					# # print(ext)
+					# # print(file[:pos])
 					pass
 
 	def remove_object(file_name, file_with_ext, lang):
@@ -165,10 +174,10 @@ class verdict():
 
 	def main(file_name, file_with_ext, lang, problem_code, run_id, timelimit):
 
-		result = ''
-		verd = ''
-		classfile = ''
-		runfile = ''
+		result = 'Nul'
+		verd = 'Nul'
+		classfile = 'Nul'
+		runfile = 'Nul'
 
 		classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, lang)
 
@@ -239,8 +248,8 @@ class verdict():
 			# 	return verd,result
 
 
-v,r=verdict.main("ABCD1234", "ABCD1234.cpp", "CPP", "ABCD", "1234","3")
-print("verdict is --->",v)
-print("result is ---->",r)
+# v,r=verdict.main(file_name, file_with_ext, lang, problem_code, run_id, timelimit)
+# print("verdict is --->",v)
+# print("result is ---->",r)
 
 # _main_ = verdict.trial("ABCD1234", "ABCD1234.cpp")

@@ -7,14 +7,16 @@ class initialize_server():
 	config = ''
 
 	def get_password():
+		initialize_server.read_config()
 		return initialize_server.file_password
+
 	def get_duration():
+		initialize_server.read_config()
 		return initialize_server.duration
-
-
+		
 	# Read Server config file 
 	def read_config():
-		print('\n[ READ ] config.json')
+		# print('\n[ READ ] config.json')
 		with open("config.json", "r") as read_json:
 			config = json.load(read_json)
 		initialize_server.config = config
@@ -31,18 +33,22 @@ class initialize_server():
 		return int(h) * 3600 + int(m) * 60 + int(s)
 
 	def get_remaining_time():
+		initialize_server.read_config()
 		current_time = initialize_server.convert_to_seconds(time.strftime("%H:%M:%S", time.localtime()))
 		contest_end_time = initialize_server.convert_to_seconds(initialize_server.config["Contest End Time"])
 		diff = contest_end_time - current_time
 		return time.strftime("%H:%M:%S", time.gmtime(diff))
 
 	def get_start_time():
+		initialize_server.read_config()
 		return initialize_server.config['Contest Start Time']
 
 	def get_duration():
+		initialize_server.read_config()
 		return initialize_server.config['Contest Duration']
 
 	def get_end_time():
+		initialize_server.read_config()
 		return initialize_server.config['Contest End Time']
 
 class save_status():

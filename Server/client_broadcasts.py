@@ -48,6 +48,7 @@ class broadcast_manager():
 				data = data_from_interface.get()
 				data = json.loads(data)
 				print('\n[ DATA ] Recieved a new broadcast')
+				# Contest START signal
 				if data['Code'] == 'START':
 					print('[ EVENT ] START Contest')
 					message = {
@@ -58,7 +59,8 @@ class broadcast_manager():
 					'Problem Key' : broadcast_manager.file_password
 					}
 					message = json.dumps(message)
-		
+				
+				# Contest STOP signal
 				elif data['Code'] == 'STOP':
 					# Don't allow Submissions
 					print('[ EVENT ] STOP Contest')
@@ -66,7 +68,8 @@ class broadcast_manager():
 					'Code' : 'STOP'
 					}
 					message = json.dumps(message)
-					
+				
+				# UPDATE client timer to match server value
 				elif data['Code'] == 'UPDATE':
 					# Don't allow Submissions
 					print('[ EVENT ] UPDATE Contest')
@@ -75,7 +78,8 @@ class broadcast_manager():
 					'Time' : data['Time']
 					}
 					message = json.dumps(message)
-					
+				
+				# QUERY reply to client or broadcast
 				elif data['Code'] == 'QUERY':
 					if data['Mode'] == 1:
 						print('[ EVENT ] New Query response to client')
@@ -89,6 +93,8 @@ class broadcast_manager():
 					'Type' : data['Mode']
 					}
 					message = json.dumps(message)
+
+				# Client has been DiSCoNnecTed
 				elif data['Code'] == 'DSCNT':
 					if data['Mode'] == 1:
 						client = data['Client']
@@ -104,7 +110,13 @@ class broadcast_manager():
 						'Client' : 'All'
 						}
 					message = json.dumps(message)
+
+				# Contest SCoReBoarD
 				elif data['Code'] == 'SCRBD':
+					message = json.dumps(data)
+
+				# Contest EXTeND signal
+				elif data['Code'] == 'EXTND':
 					message = json.dumps(data)
 
 				broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
