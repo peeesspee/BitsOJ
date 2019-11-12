@@ -109,7 +109,7 @@ class verdict():
 
 						if process.returncode == 0:
 							print("NO RUN TIME ERROR")
-							return verdict.ERROR
+							pass
 
 				except:
 					# print("there is some ERROR")
@@ -120,6 +120,8 @@ class verdict():
 					# # print(ext)
 					# # print(file[:pos])
 					pass
+
+			return verdict.ERROR
 
 	def remove_object(file_name, file_with_ext, lang):
 		# print(PATH)
