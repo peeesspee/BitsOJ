@@ -17,6 +17,7 @@ class problem_table():
 		self.problem_table_model.setHeaderData(1, Qt.Horizontal, 'Problem No')
 		self.problem_table_model.setHeaderData(2, Qt.Horizontal, 'Problem Name')
 		self.problem_table_model.setHeaderData(3, Qt.Horizontal, 'Problem Code')
+		self.problem_table_model.setHeaderData(4, Qt.Horizontal, 'Time Limit')
 
 		self.problem_table_view = self.generate_view(self.problem_table_model)
 
@@ -67,6 +68,18 @@ class add_problem_ui(QMainWindow):
 			problem_code.addWidget(self.problem_code_text)
 			problem_code_widget = QWidget()
 			problem_code_widget.setLayout(problem_code)
+			time_limit = QHBoxLayout()
+			time_limit_label = QLabel('Time Limit  : ')
+			time_limit_label.setObjectName('general')
+			self.time_limit_text = QLineEdit()
+			self.time_limit_text.setPlaceholderText('Time Limit ')
+			self.time_limit_text.setObjectName('general_text')
+			self.time_limit_text.setFixedWidth(400)
+			self.time_limit_text.setFixedHeight(50)
+			time_limit.addWidget(time_limit_label)
+			time_limit.addWidget(self.time_limit_text)
+			time_limit_widget = QWidget()
+			time_limit_widget.setLayout(time_limit)
 			self.save = QPushButton('Save')
 			self.save.setObjectName('general')
 			self.save.setFixedSize(200,50)
@@ -75,6 +88,7 @@ class add_problem_ui(QMainWindow):
 			main.addWidget(problem_no, alignment = Qt.AlignCenter)
 			main.addWidget(problem_name_widget)
 			main.addWidget(problem_code_widget)
+			main.addWidget(time_limit_widget)
 			main.addWidget(self.save, alignment = Qt.AlignRight)
 			main_widget = QWidget()
 			main_widget.setLayout(main)
@@ -89,11 +103,13 @@ class add_problem_ui(QMainWindow):
 			QMessageBox.warning(self, 'Message', 'Problem Name cannot be empty')
 		elif self.problem_code_text.text() == '':
 			QMessageBox.warning(self, 'Message', 'Problem Code cannot be empty')
+		elif self.time_limit_text.text() == '':
+			QMessageBox.warning(self, 'Message', 'Time Limit cannot be empty')
 		else:
 			problem_tuple = ()
-			problem_tuple = (self.problem_name_text.text(), self.problem_code_text.text())
+			problem_tuple = (self.problem_name_text.text(), self.problem_code_text.text(),self.time_limit_text.text())
 			client_config["Problems"]["Problem " + str(add_problem_ui.no)] = problem_tuple
-			problem_management.insert_problem(str(add_problem_ui.no),self.problem_name_text.text(),self.problem_code_text.text())
+			problem_management.insert_problem(str(add_problem_ui.no),self.problem_name_text.text(),self.problem_code_text.text(),self.time_limit_text.text())
 			table_model.select()
 			self.close()
 
@@ -149,6 +165,18 @@ class edit_problem_ui(QMainWindow):
 			problem_code.addWidget(self.problem_code_text)
 			problem_code_widget = QWidget()
 			problem_code_widget.setLayout(problem_code)
+			time_limit = QHBoxLayout()
+			time_limit_label = QLabel('Time Limit  : ')
+			time_limit_label.setObjectName('general')
+			self.time_limit_text = QLineEdit()
+			self.time_limit_text.setPlaceholderText('Time Limit ')
+			self.time_limit_text.setObjectName('general_text')
+			self.time_limit_text.setFixedWidth(400)
+			self.time_limit_text.setFixedHeight(50)
+			time_limit.addWidget(time_limit_label)
+			time_limit.addWidget(self.time_limit_text)
+			time_limit_widget = QWidget()
+			time_limit_widget.setLayout(time_limit)
 			self.save = QPushButton('Save')
 			self.save.setObjectName('general')
 			self.save.setFixedSize(200,50)
@@ -157,6 +185,7 @@ class edit_problem_ui(QMainWindow):
 			main.addWidget(problem_no, alignment = Qt.AlignCenter)
 			main.addWidget(problem_name_widget)
 			main.addWidget(problem_code_widget)
+			main.addWidget(time_limit_widget)
 			main.addWidget(self.save, alignment = Qt.AlignRight)
 			main_widget = QWidget()
 			main_widget.setLayout(main)
@@ -171,11 +200,13 @@ class edit_problem_ui(QMainWindow):
 			QMessageBox.warning(self, 'Message', 'Problem Name cannot be empty')
 		elif self.problem_code_text.text() == '':
 			QMessageBox.warning(self, 'Message', 'Problem Code cannot be empty')
+		elif self.time_limit_text.text() == '':
+			QMessageBox.warning(self, 'Message', 'Time Limit cannot be empty')
 		else:
 			problem_tuple = ()
-			problem_tuple = (self.problem_name_text.text(), self.problem_code_text.text())
+			problem_tuple = (self.problem_name_text.text(), self.problem_code_text.text(),self.time_limit_text.text())
 			client_config["Problems"]["Problem " + str(add_problem_ui.no)] = problem_tuple
-			problem_management.update_problem(str(edit_problem_ui.no),self.problem_name_text.text(),self.problem_code_text.text())
+			problem_management.update_problem(str(edit_problem_ui.no),self.problem_name_text.text(),self.problem_code_text.text(),self.time_limit_text.text())
 			table_model.select()
 			self.close()
 

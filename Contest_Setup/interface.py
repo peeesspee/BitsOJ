@@ -79,7 +79,10 @@ class contest_setup(QMainWindow):
 		self.db = self.init_qt_database()
 
 		contest_setup.init_GUI(self)
-		contest_setup.client(self)
+		contest_setup.rabbitmq(self)
+		contest_setup.problem(self)
+		contest_setup.language(self)
+		contest_setup.contest(self)
 		return
 
 	def init_GUI(self):
@@ -135,50 +138,13 @@ class contest_setup(QMainWindow):
 		self.setCentralWidget(top_widget)
 		return
 
-	def client(self):
+	def rabbitmq(self):
 		self.client_tab_layout = QVBoxLayout()
 		self.tabs = QTabWidget()
 		self.tabs.setObjectName('client_tabs')
 		self.rabbitmq_detail = QWidget()
-		self.problem_tab = QWidget()
-		self.language = QWidget()
-		self.contest = QWidget()
-
-		##################################################################
-		####################### PROBLEM TAB ##############################
-		##################################################################
 
 		
-		problem_tab = QVBoxLayout()
-		problem_heading = QLabel('Add Problems')
-		problem_heading.setObjectName('heading')
-		self.add_table_view,self.table_model = problem_table.problem_model(self)
-		problem_button = QHBoxLayout()
-		self.add_problem = QPushButton('Add')
-		self.add_problem.setObjectName('general')
-		self.add_problem.setFixedSize(200,50)
-		self.add_problem.clicked.connect(lambda:self.add_problem_client())
-		self.edit_problem = QPushButton('Edit')
-		self.edit_problem.setObjectName('general')
-		self.edit_problem.setFixedSize(200,50)
-		self.edit_problem.clicked.connect(lambda:self.edit_problem_client(self.add_table_view.selectionModel().currentIndex().row()))
-		self.reset_problem = QPushButton('Reset')
-		self.reset_problem.setObjectName('general')
-		self.reset_problem.setFixedSize(200,50)
-		self.reset_problem.clicked.connect(lambda:self.confirm_event())
-		problem_button.addWidget(self.add_problem)
-		problem_button.addWidget(self.edit_problem)
-		problem_button.addWidget(self.reset_problem)
-		problem_button.addStretch(1)
-		problem_button.addSpacing(0)
-		problem_button_widget = QWidget()
-		problem_button_widget.setLayout(problem_button)
-		problem_tab.addWidget(problem_heading)
-		problem_tab.addWidget(self.add_table_view)
-		problem_tab.addWidget(problem_button_widget)
-		problem_tab.addStretch(1)
-		problem_tab.addSpacing(0)
-		self.problem_tab.setLayout(problem_tab)
 
 
 		###################################################################
@@ -262,6 +228,62 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_detail.setLayout(self.rabbitmq_creds)
 		
 
+
+		######################################################################
+		######################## FINAL TAB ###################################
+		######################################################################
+
+
+		self.tabs.addTab(self.rabbitmq_detail, "RabbitMQ Creds")
+
+		
+
+		self.client_tab_layout.addWidget(self.tabs)
+		self.rabbitmq_tab.setLayout(self.client_tab_layout)
+		self.rabbitmq_tab.setObjectName('client_tab')
+		return
+
+
+	def problem(self):
+
+		##################################################################
+		####################### PROBLEM TAB ##############################
+		##################################################################
+
+		
+		problem_tab = QVBoxLayout()
+		problem_heading = QLabel('Add Problems')
+		problem_heading.setObjectName('heading')
+		self.add_table_view,self.table_model = problem_table.problem_model(self)
+		problem_button = QHBoxLayout()
+		self.add_problem = QPushButton('Add')
+		self.add_problem.setObjectName('general')
+		self.add_problem.setFixedSize(200,50)
+		self.add_problem.clicked.connect(lambda:self.add_problem_client())
+		self.edit_problem = QPushButton('Edit')
+		self.edit_problem.setObjectName('general')
+		self.edit_problem.setFixedSize(200,50)
+		self.edit_problem.clicked.connect(lambda:self.edit_problem_client(self.add_table_view.selectionModel().currentIndex().row()))
+		self.reset_problem = QPushButton('Reset')
+		self.reset_problem.setObjectName('general')
+		self.reset_problem.setFixedSize(200,50)
+		self.reset_problem.clicked.connect(lambda:self.confirm_event())
+		problem_button.addWidget(self.add_problem)
+		problem_button.addWidget(self.edit_problem)
+		problem_button.addWidget(self.reset_problem)
+		problem_button.addStretch(1)
+		problem_button.addSpacing(0)
+		problem_button_widget = QWidget()
+		problem_button_widget.setLayout(problem_button)
+		problem_tab.addWidget(problem_heading)
+		problem_tab.addWidget(self.add_table_view)
+		problem_tab.addWidget(problem_button_widget)
+		problem_tab.addStretch(1)
+		problem_tab.addSpacing(0)
+		self.problem_tab.setLayout(problem_tab)
+
+
+	def language(self):
 		#####################################################################
 		###################### LANGUAGE TAB #################################
 		#####################################################################
@@ -323,9 +345,10 @@ class contest_setup(QMainWindow):
 		languages.addStretch(1)
 		languages.addSpacing(0)
 
-		self.language.setLayout(languages)
+		self.language_tab.setLayout(languages)
 
 
+	def contest(self):
 
 		#####################################################################
 		######################## CONTEST TAB ################################
@@ -376,6 +399,20 @@ class contest_setup(QMainWindow):
 		client_key.addSpacing(0)
 		client_key_widget = QWidget()
 		client_key_widget.setLayout(client_key)
+		judge_key = QHBoxLayout()
+		judge_key_label = QLabel('JUDGE KEY                      :   ')
+		judge_key_label.setObjectName('general')
+		self.judge_key_text = QLineEdit()
+		self.judge_key_text.setPlaceholderText('')
+		self.judge_key_text.setObjectName('general_text')
+		self.judge_key_text.setFixedWidth(400)
+		self.judge_key_text.setFixedHeight(50)
+		judge_key.addWidget(judge_key_label)
+		judge_key.addWidget(self.judge_key_text)
+		judge_key.addStretch(1)
+		judge_key.addSpacing(0)
+		judge_key_widget = QWidget()
+		judge_key_widget.setLayout(judge_key)
 		contest_duration = QHBoxLayout()
 		contest_duration_label = QLabel('CONTEST DURATION     :   ')
 		contest_duration_label.setObjectName('general')
@@ -440,31 +477,14 @@ class contest_setup(QMainWindow):
 		contest_tab.addWidget(contest_name_widget)
 		contest_tab.addWidget(contest_theme_widget)
 		contest_tab.addWidget(client_key_widget)
-		contest_tab.addWidget(contest_duration_widget)
-		contest_tab.addWidget(start_time_widget)
+		contest_tab.addWidget(judge_key_widget)
+		# contest_tab.addWidget(contest_duration_widget)
+		# contest_tab.addWidget(start_time_widget)
 		contest_tab.addWidget(self.client_key_button_widget)
 		contest_tab.addStretch(1)
 		contest_tab.addSpacing(0)
 
-		self.contest.setLayout(contest_tab)
-
-
-		######################################################################
-		######################## FINAL TAB ###################################
-		######################################################################
-
-
-		self.tabs.addTab(self.rabbitmq_detail, "RabbitMQ Creds")
-		self.tabs.addTab(self.problem_tab, "Add Problems")
-		self.tabs.addTab(self.language, "Add Language")
-		self.tabs.addTab(self.contest, "Contest Config")
-
-		
-
-		self.client_tab_layout.addWidget(self.tabs)
-		self.rabbitmq_tab.setLayout(self.client_tab_layout)
-		self.rabbitmq_tab.setObjectName('client_tab')
-		return
+		self.contest_tab.setLayout(contest_tab)
 
 
 	############################### ADD PROBLEM ################################
