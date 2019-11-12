@@ -15,6 +15,7 @@ class manage_clients():
 	key = ''
 	config = ''
 	file_password = ''
+	already_read = 0
 	
 	def prepare(data_changed_flags2, data_from_interface):
 		manage_clients.data_changed_flags = data_changed_flags2
@@ -67,7 +68,7 @@ class manage_clients():
 			print('[ ERROR ] Could not fetch previous client_id')
 
 
-		try:
+		try: 
 			previous_data.get_last_query_id()
 		except:
 			print('[ ERROR ] Could not fetch previous query_id')
@@ -142,7 +143,7 @@ class manage_clients():
 				time_stamp = json_data["Time"]		
 				source_code = json_data["Source"]	
 				manage_clients.client_submission_handler(
-					client_id, 
+					client_id,
 					local_run_id, 
 					problem_code, 
 					language, 
@@ -400,9 +401,9 @@ class manage_clients():
 
 	def client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code):
 		print('[ SUBMISSION ] Client ID :' + str(client_id) + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp)
-
 		# Validate client submission by username and client_id
 
+		# TODO
 
 		# Get client username from database
 		client_username = client_authentication.get_client_username(client_id)
@@ -442,7 +443,15 @@ class manage_clients():
 				print('[ ERROR ][ SECURITY ] Client has no username so could not send error code.' )
 			return
 
+		# Convert timestamp to contest time
+		if manage_clients.already_read == 0:
+			manage_clients.already_read = 1
+			manage_clients.config = initialize_server.read_config()
+			# The above statement ensures that the config read by this thread is latest
 
+		# Now we convert client time to contest duration time
+		contest_start_time = manage_clients.config['Contest Start Time']
+		time_stamp = initialize_server.get_time_difference(contest_start_time, time_stamp)
 
 		# Check client status, and accept only if it is CONNECTED and not BLOCKED or NEW
 		state = client_authentication.check_connected_client(client_username, 'connected_clients')

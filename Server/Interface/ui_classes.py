@@ -7,7 +7,6 @@ import json
 import ast
 
 class ui_widgets:
-
 	def accounts_ui(self):
 		heading = QLabel('Manage Accounts')
 		heading.setObjectName('main_screen_heading')
@@ -500,6 +499,7 @@ class ui_widgets:
 		return main
 
 	def update_stats(self, stats_widget):
+		accuracy = 0
 		child_list = stats_widget.findChildren(QLabel)
 		table_list = stats_widget.findChildren(QTableWidget)
 		# 2nd QLabel in this list is contest_problems_number_answer
@@ -523,7 +523,7 @@ class ui_widgets:
 			table_list[0].setItem(i, 2, QTableWidgetItem(str(submit_count)))
 
 			if submit_count == 0:
-				accuracy = 0
+				accuracy = '{0:.2f}'.format(0)
 			else:
 				accuracy = float(solve_count*100/submit_count)
 				accuracy = '{0:.2f}'.format(accuracy)
@@ -1047,7 +1047,42 @@ class new_accounts_ui(QMainWindow):
 		self.data_changed_flags[5] = 1
 		self.close()
 
+class password_verification_ui(QMainWindow):
+	data_changed_flags = ''
+	def __init__(
+		self, 
+		data_changed_flags,
+		parent=None
+		):
+		super(password_verification_ui, self).__init__(parent)
 
+		self.data_changed_flags = data_changed_flags
+		self.setWindowTitle('Validation')
+		self.setFixedSize(800,600)
+		main = self.main_password_ui()
+		self.setCentralWidget(main)
+		# self.setWindowFlag(Qt.WindowCloseButtonHint, False)
+		return
+
+	def main_password_ui(self):
+		heading = QLabel('Verify yourself:')
+		text_label = QLabel("This action requires pasword validation.")
+		password_label = QLabel('Admin Password:')
+		pass_entry = QLineEdit()
+		pass_entry.setFixedSize(300, 40)
+		pass_layout = QHBoxLayout()
+		pass_layout.addWidget(password_label)
+		pass_layout.addWidget(pass_entry)
+		pass_widget = QWidget()
+		pass_widget.setLayout(pass_layout)
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(heading)
+		main_layout.addWidget(text_label)
+		main_layout.addWidget(pass_widget)
+		main = QWidget()
+		main.setLayout(main_layout)
+		return main
 
 class view_case_ui(QMainWindow):
 	problem_path = ''

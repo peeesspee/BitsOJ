@@ -32,6 +32,25 @@ class initialize_server():
 		h, m, s = time_str.split(':')
 		return int(h) * 3600 + int(m) * 60 + int(s)
 
+	def convert_to_hhmmss(seconds):
+		seconds = int(seconds)
+		h = int(seconds / 3600)
+		m = int((seconds % 3600) / 60)
+		s = int(((seconds % 3600) % 60))
+		if h <= 9:
+			h = '0' + str(h)
+		if m <= 9:
+			m = '0' + str(m)
+		if s <= 9:
+			s = '0' + str(s)
+		return str(h) + ':' + str(m) + ':' + str(s)
+
+	def get_time_difference(time1, time2):
+		# Return difference between time2 and time1 in hhmmss format
+		return initialize_server.convert_to_hhmmss(
+				initialize_server.convert_to_seconds(time2) - initialize_server.convert_to_seconds(time1)
+			)
+
 	def get_remaining_time():
 		initialize_server.read_config()
 		current_time = initialize_server.convert_to_seconds(time.strftime("%H:%M:%S", time.localtime()))
