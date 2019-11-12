@@ -68,7 +68,6 @@ class start_listening():
 			start_listening.data_changed_flags[3] = 1
 		elif code == "SCRBD":
 			start_listening.leaderboard(json_data)
-			print("UNDER DEVELOPMENT")
 		elif code == "START":
 			start_listening.start_status(json_data)
 		elif code == "STOP":
@@ -76,10 +75,20 @@ class start_listening():
 		elif code == "DSCNT":
 			start_listening.disconnect(json_data)
 		elif code == "UPDATE":
-			print("UNDER DEVELOPMENT")
+			pass
+		elif code == 'EXTND':
+			start_listening.extended_time(json_data)
 		else:
 			print(code)
 			print("WRONG INPUT")
+
+
+	def extended_time(server_data):
+		config = handle_config.read_config_json()
+		time = server_data["Time"]
+		config["End Time"] = config["End Time"] + time*60
+		handle_config.write_config_json(config)
+		start_listening.data_changed_flags[4] = 3
 
 
 	def leaderboard(server_data):

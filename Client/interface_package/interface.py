@@ -323,9 +323,12 @@ class client_window(QMainWindow):
 				self.data_changed_flag[0] = 2
 			# If data has changed in submission table
 
-			if self.data_changed_flag[0] == 3:
+			if self.data_changed_flag[0] == 3 or self.data_changed_flag[0] == 5:
 				self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ STOPPED ]')
-				self.stop_contest()
+				if self.data_changed_flag[0] != 5:
+					self.stop_contest()
+				else:
+					self.times_up()
 				self.set_status()
 				self.data_changed_flag[0] = 4
 
@@ -360,6 +363,11 @@ class client_window(QMainWindow):
 				QMessageBox.warning(self, 'Error', message)
 				self.data_changed_flag[3] = 0
 
+			if(self.data_changed_flag[4] == 3):
+				QMessageBox.warning(self, 'Alert', 'Contest has been extended by the admin.\n')
+				self.data_changed_flag[4] = 2
+
+
 			if(self.data_changed_flag[4] == 2):
 				try:
 					initialize_contest.contest_end_time()
@@ -369,14 +377,12 @@ class client_window(QMainWindow):
 
 			if(self.data_changed_flag[4] == 1):
 				try:
-					config = handle_config.read_config_json()
 					total_time = initialize_contest.return_contest_end_time()
 					current_time = time.time()
-					end_time = config["End Time"]
 					elapsed_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
-					if end_time <= current_time:
+					if total_time <= current_time or self.data_changed_flag[0] == 4:
 						self.data_changed_flag[4] = 0
-						self.data_changed_flag[0] = 3
+						self.data_changed_flag[0] = 5
 						self.timer_widget.display('00:00:00')
 					else:
 						self.timer_widget.display(elapsed_time)
@@ -559,6 +565,11 @@ class client_window(QMainWindow):
 		global current_status
 		current_status = 'STOPPED'
 		QMessageBox.warning(self, 'Message', 'Contest has been ended.\n You can not submit solution any more ')
+
+	def times_up(self):
+		global current_status
+		current_status = 'TIMES UP'
+		QMessageBox.warning(self, 'Message', 'Your times up.\n You can not submit solution any more ')
 
 
 	def notify(self):
