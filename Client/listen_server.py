@@ -77,10 +77,18 @@ class start_listening():
 		elif code == "UPDATE":
 			pass
 		elif code == 'EXTND':
-			print('UNDER DEVELOPMENT')
+			start_listening.extended_time(json_data)
 		else:
 			print(code)
 			print("WRONG INPUT")
+
+
+	def extended_time(server_data):
+		config = handle_config.read_config_json()
+		time = server_data["Time"]
+		config["End Time"] = config["End Time"] + time*60
+		handle_config.write_config_json(config)
+		start_listening.data_changed_flags[4] = 3
 
 
 	def leaderboard(server_data):

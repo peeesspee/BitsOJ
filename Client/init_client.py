@@ -3,6 +3,7 @@ import json
 ##########################################################################
 ##########################################################################
 
+
 class initialize_contest():
 	duration = '00:00:00'
 	contest_set_time = None
@@ -14,7 +15,6 @@ class initialize_contest():
 		initialize_contest.duration = data
 
 	def convert_to_seconds(data):
-		print(data)
 		h, m, s = data.split(':')
 		return int(h) * 3600 + int(m) * 60 + int(s)
 
