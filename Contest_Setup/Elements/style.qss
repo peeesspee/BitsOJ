@@ -7,6 +7,11 @@ QLabel#heading{
     qproperty-alignment: AlignCenter;
 }
 
+QLabel#heading2{
+    color:#FFFFFF;
+    font: bold 30px 'Arial';
+}
+
 /*---------------------------------------*/
 
 /*-------------- Top Bar ----------------*/

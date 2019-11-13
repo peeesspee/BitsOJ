@@ -3,6 +3,7 @@ from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from database_management import problem_management
+from Interface.test_file_gui import test_file
 
 
 
@@ -19,11 +20,19 @@ class problem_table():
 		self.problem_table_model.setHeaderData(3, Qt.Horizontal, 'Problem Code')
 		self.problem_table_model.setHeaderData(4, Qt.Horizontal, 'Time Limit')
 
-		self.problem_table_view = self.generate_view(self.problem_table_model)
-		self.problem_table_view.doubleClicked.connect(
-			lambda:problem_table.add_test_cases(self))
+		problem_table_view = self.generate_view(self.problem_table_model)
 
-		return self.problem_table_view,self.problem_table_model
+		problem_table_view.doubleClicked.connect(
+			lambda : problem_table.add_test_cases(
+				self,
+				problem_table_view.selectionModel().currentIndex().row()
+				))
+
+		return problem_table_view,self.problem_table_model
+
+	def add_test_cases(self,selected_row):
+		self.test_file_ui = test_file(selected_row,self.problem_table_model)
+		self.test_file_ui.show()
 
 
 class add_problem_ui(QMainWindow):
