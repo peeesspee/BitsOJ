@@ -20,6 +20,8 @@ class problem_table():
 		self.problem_table_model.setHeaderData(4, Qt.Horizontal, 'Time Limit')
 
 		self.problem_table_view = self.generate_view(self.problem_table_model)
+		self.problem_table_view.doubleClicked.connect(
+			lambda:problem_table.add_test_cases(self))
 
 		return self.problem_table_view,self.problem_table_model
 
