@@ -51,6 +51,9 @@ class server_window(QMainWindow):
 		self.contest_set_time = self.config['Contest Set Time']
 		self.duration = self.config['Contest Duration']
 		self.contest_start_time = ''
+		###########################################################
+		self.admin_password = self.read_password()
+		###########################################################
 		# Define Sidebar Buttons and their actions
 		button_width = 200
 		button_height = 50
@@ -243,6 +246,9 @@ class server_window(QMainWindow):
 		# Set top_widget as our central widget
 		self.setCentralWidget(top_widget)
 		return
+
+	def read_password(self):
+		return 'bitsoj'
 
 	@pyqtSlot()
 	def manage_accounts(self):
@@ -438,7 +444,7 @@ class server_window(QMainWindow):
 			self.server_reset_button.setToolTip('RESET the server.\nCan only be used when contest\nis not RUNNING.')
 			self.account_reset_button.setEnabled(False)
 			self.submission_reset_button.setEnabled(False)
-			self.query_reset_button.setEnabled(True)
+			self.query_reset_button.setEnabled(False)
 			self.client_reset_button.setEnabled(True)
 			self.delete_account_button.setEnabled(False)
 			self.timer_reset_button.setEnabled(False)
@@ -714,6 +720,22 @@ class server_window(QMainWindow):
 		else:
 			pass
 		return
+
+	@pyqtSlot()
+	def password_verification(self):
+		password = self.admin_password
+		input_dialog = QInputDialog()
+		input_dialog.setFixedSize(600, 400)
+		
+		user_input, button_pressed_flag = input_dialog.getText(
+				self, "Authentication", "Enter Contest Password: ", QLineEdit.Password, ""
+			)
+		if button_pressed_flag:
+			if user_input == password:
+				return 1
+			else:
+				return 0
+		return 2		
 
 	@pyqtSlot()
 	def query_reply(self, selected_row):
@@ -1136,6 +1158,18 @@ class server_window(QMainWindow):
 		else:
 			# If one data deletion window is already opened, process it first.
 			return
+
+		status = self.password_verification()
+		if status == 1:
+			pass
+		elif status == 2:
+			self.data_changed_flags[11] = 0 
+			return
+		else:
+			self.data_changed_flags[11] = 0
+			QMessageBox.about(self, "Access Denied!", "Authentication failed!")
+			return
+
 		# If no row is selected, return
 		try:
 			message = "Are you sure to DISCONNECT all clients?\nClients will be able to login again\nif permitted."
@@ -1164,7 +1198,6 @@ class server_window(QMainWindow):
 			if custom_close_box.clickedButton() == button_yes:
 				print('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
 				print('[ EVENT ][ RESET ] Disconnecting all clients...')
-				# TODO : Broadcast this to all clients...
 				message = {
 				'Code' : 'DSCNT',
 				'Mode' : 2
@@ -1196,6 +1229,17 @@ class server_window(QMainWindow):
 	###################################################
 
 	def closeEvent(self, event):
+		# if contest is running,
+		if self.data_changed_flags[10] == 1:
+			status = self.password_verification()
+			if status == 1:
+				pass
+			elif status == 2: 
+				return
+			else:
+				QMessageBox.about(self, "Access Denied!", "Authentication failed!")
+
+
 		message = "Pressing 'Yes' will SHUT the Server."
 		detail_message = "Server will not process any request while it is closed. You should not do this when any contest is running.\n\nAre you sure you want to exit?"
 		

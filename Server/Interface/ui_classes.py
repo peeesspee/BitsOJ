@@ -685,28 +685,43 @@ class ui_widgets:
 			time_management_widget, contest_time_entry, change_time_entry, 
 			set_button, start_button, update_button, stop_button
 			)
+
 	def preprocess_contest_broadcasts(self, signal, extra_data = 'NONE'):
 		#process_event() is defined in interface package
 		if signal == 'SET':
 			#Validate extra data to be time
-			if ui_widgets.validate_date(extra_data) == True:
+			if ui_widgets.validate_date(self, extra_data) == True:
 				self.process_event('SET', extra_data)
 			else:
 				return
 		elif signal == 'START':
 			#Validate extra data to be time
-			if ui_widgets.validate_date(extra_data) == True:
+			if ui_widgets.validate_date(self, extra_data) == True:
 				self.process_event('START', extra_data)	
 			else:
 				return
 			
 		elif signal == 'UPDATE':
-			self.process_event('UPDATE', extra_data)
+			status = self.password_verification()
+			if status == 1:
+				self.process_event('UPDATE', extra_data)
+			elif status == 2: 
+				return
+			else:
+				QMessageBox.about(self, "Access Denied!", "Authentication failed!")
+			
 		elif signal == 'STOP':
-			self.process_event('STOP', extra_data)
+			status = self.password_verification()
+			if status == 2: 
+				# Cancel pressed
+				return
+			elif status == 1:
+				self.process_event('STOP', extra_data)
+			else:
+				QMessageBox.about(self, "Access Denied!", "Authentication failed!")
 		return
 		
-	def validate_date(data):
+	def validate_date(self, data):
 		#Check that data is a valid date in HH:MM:SS format
 		try:
 			h, m, s = data.split(':')
@@ -717,11 +732,11 @@ class ui_widgets:
 			m = int(m)
 			s = int(s)
 			if h < 0 or h > 24 or m < 0 or m > 59 or s < 0 or s > 59:
-				print('[ ERROR ] Enter time in HH:MM:SS format only!')
+				QMessageBox.about(self, "Error!", "Enter time in HH:MM:SS format only!")
 				return False
 			return True
 		except:
-			print('[ ERROR ] Enter time in HH:MM:SS format only!')
+			QMessageBox.about(self, "Error!", "Enter time in HH:MM:SS format only!")
 			return False
 
 
@@ -1046,43 +1061,6 @@ class new_accounts_ui(QMainWindow):
 		# Indicate new insertions in accounts
 		self.data_changed_flags[5] = 1
 		self.close()
-
-class password_verification_ui(QMainWindow):
-	data_changed_flags = ''
-	def __init__(
-		self, 
-		data_changed_flags,
-		parent=None
-		):
-		super(password_verification_ui, self).__init__(parent)
-
-		self.data_changed_flags = data_changed_flags
-		self.setWindowTitle('Validation')
-		self.setFixedSize(800,600)
-		main = self.main_password_ui()
-		self.setCentralWidget(main)
-		# self.setWindowFlag(Qt.WindowCloseButtonHint, False)
-		return
-
-	def main_password_ui(self):
-		heading = QLabel('Verify yourself:')
-		text_label = QLabel("This action requires pasword validation.")
-		password_label = QLabel('Admin Password:')
-		pass_entry = QLineEdit()
-		pass_entry.setFixedSize(300, 40)
-		pass_layout = QHBoxLayout()
-		pass_layout.addWidget(password_label)
-		pass_layout.addWidget(pass_entry)
-		pass_widget = QWidget()
-		pass_widget.setLayout(pass_layout)
-
-		main_layout = QVBoxLayout()
-		main_layout.addWidget(heading)
-		main_layout.addWidget(text_label)
-		main_layout.addWidget(pass_widget)
-		main = QWidget()
-		main.setLayout(main_layout)
-		return main
 
 class view_case_ui(QMainWindow):
 	problem_path = ''
