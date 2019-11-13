@@ -121,7 +121,9 @@ class scoreboard_management():
 					score = problem_max_score
 					new_ac_submission = 1
 				else:
-					score = 0
+					# IGNORE this submission in leaderboard
+					return
+
 			elif status == 'CE':
 				score = 0
 			elif ranking_algorithm == 1:	# For ACM style contest, there is penalty

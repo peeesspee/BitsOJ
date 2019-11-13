@@ -112,13 +112,6 @@ class verdict():
 							pass
 
 				except:
-					# print("there is some ERROR")
-					# # print(file)
-					# # pos = file.index('.')
-					# # print(pos)
-					# # ext = file[pos+1:]
-					# # print(ext)
-					# # print(file[:pos])
 					pass
 
 			return verdict.ERROR
