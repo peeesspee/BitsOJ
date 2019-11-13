@@ -331,32 +331,48 @@ QTabBar#problem_tabs::tab:selected
 
 
 /*--------------SUB LAYOUT STARTS---------*/
+QDialog{
+	background-color : #171B1F;
+}
+QDialog QLabel{
+	color : #AAAAAA;
+}
+QDialog QPushButton{
+	text-align : center;
+	background-color : #090909 ; 
+	color : #AAAAAA;
+}
+
 QSpinBox{
 	background : #2D353D;
 	color : #AAAAAA;
 	border : 1px solid #171B1F;
 	height : 30px;
 }
-QSpinBox::up-button {
+QSpinBox::up-button 
+{
     subcontrol-origin: border;
     subcontrol-position: top right; 
     width: 16px; 
     border : 1px solid #171B1F;
     border-width: 1px;
 }
-QSpinBox::up-arrow {
+QSpinBox::up-arrow 
+{
     image: url(./Elements/up_arrow.png);
     width: 10px;
     height: 10px;
 }
-QSpinBox::down-button {
+QSpinBox::down-button 
+{
     subcontrol-origin: border;
     subcontrol-position: bottom right;
     width: 16px; 
     border : 1px solid #171B1F;
     border-width: 1px;
 }
-QSpinBox::down-arrow {
+QSpinBox::down-arrow 
+{
     image: url(./Elements/down_arrow.png);
     width: 10px;
     height: 10px;
@@ -371,7 +387,8 @@ QComboBox#account_combobox
     border-radius: 3px;
     height : 30px;
 }
-QComboBox#account_combobox::drop-down {
+QComboBox#account_combobox::drop-down 
+{
 	background : #777777;
     subcontrol-origin: padding;
     subcontrol-position: top right;
@@ -381,13 +398,15 @@ QComboBox#account_combobox::drop-down {
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
 }
-QComboBox QAbstractItemView {		/* This is the style of dropdown menu*/
+QComboBox QAbstractItemView 
+{		/* This is the style of dropdown menu*/
     background-color : #1D2227;
 	color : #AAAAAA;
 	border : 1px solid #2D353D;
 	selection-background-color : #171B1F;
 }
-QComboBox::down-arrow {
+QComboBox::down-arrow 
+{
     image: url(./Elements/down_arrow.png);
     width: 10px;
     height: 10px;
@@ -402,12 +421,14 @@ QWidget#account_window
 {
 	background-color : #171B1F;
 }
-QTextEdit{
+QTextEdit
+{
 	background : #2D353D;
 	color : #AAAAAA;
 }
 
-QLineEdit{
+QLineEdit
+{
 	height : 30px;
 	background : #2D353D;
 	color : #AAAAAA;
@@ -426,7 +447,8 @@ QLineEdit{
 /*################################################ TABLE OBJECTS ######################################################*/
 
 /* Table styles */
-QTableView{
+QTableView
+{
 	background-color : #1D2227;
 	alternate-background-color : #242A31;
 	color : #AAAAAA;
@@ -435,22 +457,26 @@ QTableView{
 	selection-background-color : #171B1F;
 }
 
-QTableView::item:selected{
+QTableView::item:selected
+{
 	border : 2px solid #0891D4;
 }
 
-QHeaderView::section{ 
+QHeaderView::section
+{ 
 	background-color : #171B1F;
 	color: #E91E63;	
 }
 
-QTableWidget#inner_table{
+QTableWidget#inner_table
+{
 	background : #1D2227;
 	border : 1px solid #131217;
 }
 
 /* Scroll bar styles */
-QScrollBar:horizontal{
+QScrollBar:horizontal
+{
 	height : 0px;
 }
 
