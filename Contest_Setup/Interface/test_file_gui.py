@@ -69,4 +69,8 @@ class test_file(QMainWindow):
 
 
 	def upload_files(self):
-		pass
+		x = QFileDialog()
+		x.setFileMode(QFileDialog.DirectoryOnly)
+		x.setOption(QFileDialog.ShowDirsOnly, False)
+		name = x.getExistingDirectory(self, 'Select Test Case Folder')
+		print(name)
