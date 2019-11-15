@@ -236,3 +236,4 @@ class edit_problem_ui(QMainWindow):
 			table_model.select()
 			self.close()
 
+

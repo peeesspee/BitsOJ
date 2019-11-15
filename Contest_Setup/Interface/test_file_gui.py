@@ -10,6 +10,7 @@ from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex,
 from database_management import testing
 from init_setup import read_write
 from shutil import copyfile
+from Interface.ui_classes import view_case_ui
 
 
 
@@ -70,6 +71,13 @@ class test_file(QMainWindow):
 		self.test_cases_table.setHorizontalHeaderLabels(('Input', 'Output'))
 		self.test_cases_table.horizontalHeader().setStretchLastSection(True)
 		self.test_cases_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+		self.test_cases_table.cellDoubleClicked.connect(
+			lambda:self.view_files(
+				self.test_cases_table.selectionModel().currentIndex().row(),
+				self.test_cases_table.selectionModel().currentIndex().column()
+				))
+
 		solutions = QHBoxLayout()
 		upload = QPushButton('Upload')
 		upload.setFixedSize(200, 50)
@@ -80,6 +88,7 @@ class test_file(QMainWindow):
 		self.check_solution_text.setObjectName('general_text')
 		self.check_solution_text.setFixedWidth(400)
 		self.check_solution_text.setFixedHeight(50)
+		self.check_solution_text.setReadOnly(True)
 		self.problem_box = QComboBox()
 		self.problem_box.setGeometry(QRect(10, 10, 491, 31))
 		self.problem_box.setFixedWidth(250)
@@ -112,15 +121,42 @@ class test_file(QMainWindow):
 		main.addWidget(time_limit)
 		main.addWidget(self.test_cases_table)
 		main.addWidget(upload, alignment=Qt.AlignRight)
+		main.addWidget(self.problem_box)
 		main.addWidget(solution_widget)
 		main.addStretch(0)
 		main.addSpacing(1)
-
 		main_widget = QWidget()
 		main_widget.setLayout(main)
 		main_widget.setObjectName('add_problem')
 		return main_widget
 
+
+
+	def view_files(self,row,column):
+		print(row)
+		print(column)
+		name = self.test_cases_table.item(row,column)
+		name = name.text()
+		print(name)
+		print(type(name))
+		if column == 0:
+			# Input file is selected
+			file_path = "./Problems/" + self.problem_code + '/' + name
+			self.ui = view_case_ui(
+				file_path
+			)
+			self.ui.show()
+		elif column == 1:
+			# Output file is selected
+			file_path = "./Problems/" + self.problem_code + '/' + name
+			self.ui = view_case_ui(
+				file_path
+			)
+			self.ui.show()
+	
+		# elif column == 2:
+		# 	print("Disable File " + str(row) + " for problem " + problem_code)
+		return
 
 
 	def solution_files(self):
@@ -132,6 +168,7 @@ class test_file(QMainWindow):
 			l = fileName.split('/')
 			length = len(l)
 			self.check_solution_text.setText(l[length - 1])
+			self.check_solution_text.setReadOnly(True)
 			copyfile(fileName,'./Problems/' + self.problem_code + '/' + l[length - 1])
 		else:
 			return

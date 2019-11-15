@@ -3,28 +3,22 @@ import os,sys
 
 
 
-def make_submission_file(problem_code, language, source_code):
-
-	file_name,file_with_ext = file_manager.file_name(run_id, problem_code, language, source_code)
-	if file_with_ext != "INVALID FILENAME":
-		file_manager.create_file(source_code, language, file_with_ext)
-		return file_name,file_with_ext
 
 
-
-def verdict_of_submission(run_id, problem_code, language, source_code, file_name, file_with_ext):
+def verdict_of_submission(problem_code, language, file_with_ext):
 
 	# file,pos,lang = verdict.find_file()
 	result = ''
 	error = ''
+	file_name = file_with_ext.split('.')[0]
 	classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, language)
 	try:
-		verdict.compile_file(classfile,language)
+		verdict.compile_file(classfile,language,problem_code)
 	except Exception as error:
 		print("error in compiling")
 		result = ''
 		error = 'Compilation Error'
-	verdict.run_file(runfile, problem_code, run_id)
+	verdict.run_file(runfile, problem_code)
 	verdict.remove_object(file_name, file_with_ext, language)
 	result = verdict.compare_outputs(problem_code, run_id)
 	# print(file,pos,lang)
@@ -35,77 +29,10 @@ def verdict_of_submission(run_id, problem_code, language, source_code, file_name
 
 
 
-class file_manager():
-
-
-	def create_file(source_code, language, file_name):
-		
-		# if code is in C++
-	    if language == 'CPP':
-	        with open("./submission_files/"+file_name , "w") as file:
-	            file.write(source_code)
-	            return file_name
-
-		# if code is in C
-	    if language == 'GCC':
-	        with open("./submission_files/"+file_name, 'w') as file:
-	            file.write(source_code)
-	            return file_name
-
-		# if code is in Java
-	    if language == 'JVA':
-	        with open("./submission_files/"+file_name, 'w') as file:
-	            file.write(source_code)
-	            return file_name
-
-		# if code is in Python2
-	    if language == 'PY2':
-	        with open("./submission_files/"+file_name, 'w') as file:
-	            file.write(source_code)
-	            return file_name
-
-	    # if code is in Python3
-	    if language == 'PY3':
-	        with open("./submission_files/"+file_name, 'w') as file:
-	            file.write(source_code)
-	            return file_name
-
-
-
-	def file_name(run_id, problem_code, language, source_code ):
-		file_name = 'Nul'
-
-		if language == 'CPP':
-			file_name = problem_code + run_id
-			file_with_ext = problem_code + run_id + '.cpp'
-
-		if language == 'GCC':
-			file_name = problem_code + run_id
-			file_with_ext = problem_code + run_id + '.c'
-
-		if language == 'JVA':
-			file_name = problem_code + run_id
-			file_with_ext = problem_code + run_id + '.java'
-
-		if language == 'PY2':
-			file_name = problem_code + run_id
-			file_with_ext = problem_code + run_id + 'P2' + '.py'
-
-		if language == 'PY3':
-			file_name = problem_code + run_id
-			file_with_ext = problem_code + run_id + 'P3' + '.py'
-
-		if file_name == 'Nul':
-			print("File Name not well-defined")
-			return "INVALID FILENAME"
-
-		return file_name,file_with_ext
-
-
 
 class verdict():
 
-	PATH = "./submission_files/"
+	PATH = "./Problems/"
 
 	def find_file():
 
@@ -130,7 +57,7 @@ class verdict():
 		classfile = ''
 		runfile = ''
 
-		if lang == 'CPP':
+		if lang == 'C++':
 			classfile = 'g++ -o ' + file_name + ' ' + file_with_ext
 			runfile = './' + file_name
 
@@ -138,63 +65,86 @@ class verdict():
 			classfile = 'gcc -o ' + file_name + ' ' + file_with_ext
 			runfile = './' + file_name
 
-		if lang == 'JVA':
+		if lang == 'JAVA':
 			classfile = 'javac ' + file_with_ext
 			runfile = 'java' + file_name
 
-		if lang == 'PY':
-			if file.split('.')[0][-1] == '2':
-				classfile = 'python'
-				runfile = 'python2 ' + file_with_ext
+		if lang == 'PYTHON 2':
+			classfile = 'python'
+			runfile = 'python2 ' + file_with_ext
 
-			if file.split('.')[0][-1] == '3':
-				classfile = 'python'
-				runfile = 'python3 ' + file_with_ext
+		if lang == 'PYTHON 3':
+			classfile = 'python'
+			runfile = 'python3 ' + file_with_ext
 
 		# print(classfile,runfile)
 		return(classfile, runfile)
 
-	def compile_file(classfile,lang):
+	def compile_file(classfile, lang, problem_code):
 
-		print(os.listdir(verdict.PATH))
-		cwd = os.getcwd()
-		# print(cwd)
 		if lang != 'PY2' or lang != 'PY3':
-			try:
-				os.chdir(verdict.PATH)
-			except Exception as error:
-				print(str(error))
-			try:
-				os.system(classfile)
-				print(classfile)
-			except Exception as error:
-				print(str(error))
-	
-			os.chdir(cwd)
+			print("COMPILING...")
+			process = subprocess.run(classfile, capture_output=True, text=True, shell=True)
+			exit_code = process.returncode
+			output = process.stdout
+			error = process.stderr
+			if exit_code == 0:
+				print("COMPILATION SUCCESSFUL")
+				return verdict.ERROR
+			else :
+				verdict.ERROR = True
+				verdict.VERDICT = 'CMPL'
+				verdict.result = error
+				print("COMPILATION ERROR !!!")
+				return verdict.ERROR
 
-	def run_file(runfile, problem_code, run_id):
+	def run_file(runfile, problem_code, time_limit):
 
-		# print(os.listdir(verdict.PATH))
-		cwd = os.getcwd()
-		print("in run file CUrrent->",cwd)
-		os.chdir(verdict.PATH)
-		pwd = os.getcwd()
-		input_file_count = ''
-		i = 1
-		for file in os.listdir(pwd):
-			print(file)
-			try:	# in try block because name of the file which does'nt contain '.' will throw error
-				pos = file.index('.')
-				ext = file[pos+1:]
-				if ext == 'in' and file == (problem_code + input_file_count  + '.in'):
-					os.system(runfile + ' < ' + file + ' > ' + 'output_' + run_id )
-					input_file_count = str(i)
-					i = i + 1
-			except:
-				pass
-		# os.chdir(cwd)
-		cwd = os.getcwd()
-		print("CUrrent->",cwd)
+		INPUT_PATH = './problems/' + problem_code + '/'
+		SUBM_PATH = './submission_files/' 
+
+		if verdict.ERROR == False:
+			list_of_inputfiles = os.listdir(INPUT_PATH)
+
+			for file in list_of_inputfiles:
+				try:
+					pos = file.index('.')
+					ext = file[pos+1:]
+					if ext == 'in':
+						print("STARTED RUNNING SUBMITTED FILE")
+						# start = time.time()
+						command = 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
+						process = subprocess.run(command, capture_output=True, text=True, shell=True)
+						print("I am RUNNING")
+						print(process)
+
+
+						if process.returncode != 0 and process.stderr == '':
+							print("there is no stderr in run time therefore it is tle")
+							verdict.ERROR = True
+							verdict.VERDICT = 'TLE'
+							verdict.result = 'Time Limit Exceeded !!!'
+							os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
+							return verdict.ERROR
+
+
+						if process.returncode != 0:
+							print("there is some Runtime error as returncode is not 0")
+							verdict.ERROR = True
+							verdict.VERDICT = 'RE'
+							verdict.result = process.stderr
+							os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
+							return verdict.ERROR
+
+
+						if process.returncode == 0:
+							print("NO RUN TIME ERROR")
+							pass
+
+				except:
+					pass
+
+			return verdict.ERROR
 
 
 	def remove_object(file_name, file_with_ext, lang):
