@@ -2,11 +2,13 @@ import sys
 import time
 import socket
 import json
+import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from database_management import testing
+from init_setup import read_write
 
 
 
@@ -27,6 +29,8 @@ class test_file(QMainWindow):
 		except Exception as Error:
 			print(str(Error))
 		self.setWindowTitle('Test files')
+		self.input = []
+		self.output = []
 		self.setFixedSize(1200,800)
 		main = self.main_ui()
 		self.setCentralWidget(main)
@@ -42,22 +46,36 @@ class test_file(QMainWindow):
 		time_limit.setObjectName('heading2')
 		row = 0
 		column = 2
-		test_cases_table = QTableWidget()
-		test_cases_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-		# test_cases_table.setFixedHeight(650)
-		test_cases_table.verticalHeader().setVisible(False)
-		test_cases_table.setRowCount(row)
-		test_cases_table.setColumnCount(column)
-		test_cases_table.setHorizontalHeaderLabels(('Input', 'Output'))
-		test_cases_table.horizontalHeader().setStretchLastSection(True)
-		test_cases_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+		self.test_cases_table = QTableWidget()
+		self.test_cases_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		self.test_cases_table.verticalHeader().setVisible(False)
+		self.data = read_write.read_json()
+		if self.data["Problems"]["Problem "+str(self.no)]["Test File Path"] == 'Null':
+			self.test_cases_table.setRowCount(row)
+			self.test_cases_table.setColumnCount(column)
+		else:
+			self.test_cases_table.setRowCount(len(self.data["Problems"]["Problem " + str(self.no)]["Input File"]))
+			self.test_cases_table.setColumnCount(column)
+			name = self.data["Problems"]["Problem " + str(self.no)]["Test File Path"]
+			self.input = self.data["Problems"]["Problem " + str(self.no)]["Input File"]
+			self.output = self.data["Problems"]["Problem " + str(self.no)]["Output File"]
+			self.test_cases_table.setRowCount(len(self.input))
+			for i in range(len(self.input)):
+				for j in range(2):
+					if j == 0:
+						self.test_cases_table.setItem(i,j, QTableWidgetItem(str(self.input[i])))
+					if j == 1:
+						self.test_cases_table.setItem(i,j, QTableWidgetItem(str(self.output[i])))
+		self.test_cases_table.setHorizontalHeaderLabels(('Input', 'Output'))
+		self.test_cases_table.horizontalHeader().setStretchLastSection(True)
+		self.test_cases_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 		upload = QPushButton('Upload')
 		upload.setFixedSize(200, 50)
-		upload.clicked.connect(lambda:self.upload_files())
+		upload.clicked.connect(lambda:self.upload_files('Problem ' + str(self.no)))
 		upload.setObjectName('submit')
 		main.addWidget(problem_code)
 		main.addWidget(time_limit)
-		main.addWidget(test_cases_table)
+		main.addWidget(self.test_cases_table)
 		main.addWidget(upload, alignment=Qt.AlignRight)
 		main.addStretch(0)
 		main.addSpacing(1)
@@ -68,9 +86,29 @@ class test_file(QMainWindow):
 		return main_widget
 
 
-	def upload_files(self):
+	def upload_files(self,index):
+		self.input = []
+		self.output = []
 		x = QFileDialog()
 		x.setFileMode(QFileDialog.DirectoryOnly)
 		x.setOption(QFileDialog.ShowDirsOnly, False)
 		name = x.getExistingDirectory(self, 'Select Test Case Folder')
+		self.data["Problems"]["Problem " + str(self.no)]["Test File Path"] = name
+		for i in os.listdir(name):
+			if i.endswith(".in"):
+				self.input.append(i)
+			if i.endswith(".ans"):
+				self.output.append(i)
+		self.input.sort()
+		self.output.sort()
+		self.data["Problems"]["Problem " + str(self.no)]["Input File"] = self.input
+		self.data["Problems"]["Problem " + str(self.no)]["Output File"] = self.output
+		self.test_cases_table.setRowCount(len(self.input))
+		for i in range(len(self.input)):
+			for j in range(2):
+				if j == 0:
+					self.test_cases_table.setItem(i,j, QTableWidgetItem(str(self.input[i])))
+				if j == 1:
+					self.test_cases_table.setItem(i,j, QTableWidgetItem(str(self.output[i])))
+		read_write.write_json(self.data)
 		print(name)
