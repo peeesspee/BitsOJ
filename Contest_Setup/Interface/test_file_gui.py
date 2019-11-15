@@ -6,9 +6,10 @@ import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QRect
 from database_management import testing
 from init_setup import read_write
+from shutil import copyfile
 
 
 
@@ -69,14 +70,49 @@ class test_file(QMainWindow):
 		self.test_cases_table.setHorizontalHeaderLabels(('Input', 'Output'))
 		self.test_cases_table.horizontalHeader().setStretchLastSection(True)
 		self.test_cases_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+		solutions = QHBoxLayout()
 		upload = QPushButton('Upload')
 		upload.setFixedSize(200, 50)
 		upload.clicked.connect(lambda:self.upload_files('Problem ' + str(self.no)))
 		upload.setObjectName('submit')
+		self.check_solution_text = QLineEdit()
+		self.check_solution_text.setPlaceholderText('Solution Path')
+		self.check_solution_text.setObjectName('general_text')
+		self.check_solution_text.setFixedWidth(400)
+		self.check_solution_text.setFixedHeight(50)
+		self.problem_box = QComboBox()
+		self.problem_box.setGeometry(QRect(10, 10, 491, 31))
+		self.problem_box.setFixedWidth(250)
+		self.problem_box.setFixedHeight(40)
+		self.problem_box.setObjectName("language_box_content")
+		self.problem_box.addItem('C')
+		self.problem_box.addItem('C++')
+		self.problem_box.addItem('PYTHON 2')
+		self.problem_box.addItem('PYTHON 3')
+		self.problem_box.addItem('JAVA')
+		self.problem_box.addItem('TEXT')
+		Solution = QPushButton('Solution')
+		Solution.setFixedSize(200, 50)
+		Solution.clicked.connect(lambda:self.solution_files())
+		Solution.setObjectName('submit')
+		check = QPushButton('check')
+		check.setFixedSize(200, 50)
+		check.clicked.connect(lambda:self.check_files())
+		check.setObjectName('submit')
+		self.result_label = QLabel('')
+		solutions.addWidget(self.check_solution_text)
+		solutions.addWidget(Solution)
+		solutions.addWidget(check)
+		solutions.addWidget(self.result_label)
+		solutions.addStretch(0)
+		solutions.addSpacing(1)
+		solution_widget = QWidget()
+		solution_widget.setLayout(solutions)
 		main.addWidget(problem_code)
 		main.addWidget(time_limit)
 		main.addWidget(self.test_cases_table)
 		main.addWidget(upload, alignment=Qt.AlignRight)
+		main.addWidget(solution_widget)
 		main.addStretch(0)
 		main.addSpacing(1)
 
@@ -86,6 +122,24 @@ class test_file(QMainWindow):
 		return main_widget
 
 
+
+	def solution_files(self):
+		x = QFileDialog()
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getOpenFileName(self,"Select Correct Solution", "","All Files (*);;Python Files (*.py)", options=options)
+		if fileName:
+			l = fileName.split('/')
+			length = len(l)
+			self.check_solution_text.setText(l[length - 1])
+			copyfile(fileName,'./Problems/' + self.problem_code + '/' + l[length - 1])
+		else:
+			return
+		pass
+
+	def check_files(self):
+		pass
+
 	def upload_files(self,index):
 		self.input = []
 		self.output = []
@@ -93,22 +147,34 @@ class test_file(QMainWindow):
 		x.setFileMode(QFileDialog.DirectoryOnly)
 		x.setOption(QFileDialog.ShowDirsOnly, False)
 		name = x.getExistingDirectory(self, 'Select Test Case Folder')
-		self.data["Problems"]["Problem " + str(self.no)]["Test File Path"] = name
-		for i in os.listdir(name):
-			if i.endswith(".in"):
-				self.input.append(i)
-			if i.endswith(".ans"):
-				self.output.append(i)
-		self.input.sort()
-		self.output.sort()
-		self.data["Problems"]["Problem " + str(self.no)]["Input File"] = self.input
-		self.data["Problems"]["Problem " + str(self.no)]["Output File"] = self.output
-		self.test_cases_table.setRowCount(len(self.input))
-		for i in range(len(self.input)):
-			for j in range(2):
-				if j == 0:
-					self.test_cases_table.setItem(i,j, QTableWidgetItem(str(self.input[i])))
-				if j == 1:
-					self.test_cases_table.setItem(i,j, QTableWidgetItem(str(self.output[i])))
-		read_write.write_json(self.data)
-		print(name)
+		if name != '':
+			self.data["Problems"]["Problem " + str(self.no)]["Test File Path"] = name
+			for i in os.listdir(name):
+				if i.endswith(".in"):
+					self.input.append(i)
+				if i.endswith(".ans"):
+					self.output.append(i)
+			self.input.sort()
+			self.output.sort()
+			try:
+				for i in range(len(self.input)):
+					dest = ["{0:02}".format(i)]
+					copyfile(name + '/' + self.input[i],'./Problems/' + self.problem_code + '/input' + dest[0] + '.in')
+					self.input[i] = 'input' + dest[0] + '.in'
+					copyfile(name + '/' + self.output[i],'./Problems/' + self.problem_code + '/output' + dest[0] + '.ans')
+					self.output[i] = 'output' + dest[0] + '.ans'
+				self.data["Problems"]["Problem " + str(self.no)]["Test File Path"] = './Problems/' + self.problem_code
+				self.data["Problems"]["Problem " + str(self.no)]["Input File"] = self.input
+				self.data["Problems"]["Problem " + str(self.no)]["Output File"] = self.output
+				self.test_cases_table.setRowCount(len(self.input))
+				for i in range(len(self.input)):
+					for j in range(2):
+						if j == 0:
+							self.test_cases_table.setItem(i,j, QTableWidgetItem(str(self.input[i])))
+						if j == 1:
+							self.test_cases_table.setItem(i,j, QTableWidgetItem(str(self.output[i])))
+				read_write.write_json(self.data)
+			except Exception as Error:
+				QMessageBox.warning(self, 'Message', str(Error))
+		else:
+			return

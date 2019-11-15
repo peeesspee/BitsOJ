@@ -2,6 +2,7 @@ import sys
 import time
 import socket
 import json
+import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
@@ -20,6 +21,7 @@ class contest_setup(QMainWindow):
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 		self.setWindowTitle('BitsOJ v1.0.1 Contest Setup')
 		self.resize(1200,700)
+		os.system('mkdir Problems')
 		cur = manage_database.initialize_client_tables()
 		manage_local_ids.initialize_local_id()
 		self.client_config = {
@@ -76,7 +78,9 @@ class contest_setup(QMainWindow):
 		self.judge_config = {}
 
 		self.language_tuple = ()
+		
 		self.data = {"Problems" : {}}
+
 
 		self.db = self.init_qt_database()
 
@@ -493,6 +497,7 @@ class contest_setup(QMainWindow):
 	def add_problem_client(self):
 		no = manage_local_ids.get_new_id()
 		self.client_config["No_of_Problems"] = int(no)
+		self.data = read_write.read_json()
 		self.window = add_problem_ui(no,self.table_model,self.client_config,self.data)
 		self.window.show()
 
@@ -542,6 +547,8 @@ class contest_setup(QMainWindow):
 		read_write.write_json(self.data)
 		reset_database.reset_problem(self.table_model)
 		manage_local_ids.initialize_local_id()
+		for i in os.listdir('./Problems/'):
+			os.system('rm -rf ./Problems/' + i)
 
 	############################ SAVE CONTEST TAB ##############################
 	def save_contest_tab(self):

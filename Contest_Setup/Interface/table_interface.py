@@ -1,3 +1,4 @@
+import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
@@ -44,15 +45,14 @@ class add_problem_ui(QMainWindow):
 
 		self.setWindowTitle('Add Problem')
 		self.setFixedSize(800,400)
-		self.data = data
 		add_problem_ui.no = no
 
-		main = self.add_problem_view_ui(table_model,client_config)
+		main = self.add_problem_view_ui(table_model,client_config,data)
 		self.setCentralWidget(main)
 
 		return
 
-	def add_problem_view_ui(self,table_model,client_config):
+	def add_problem_view_ui(self,table_model,client_config,data):
 		try:
 			main = QVBoxLayout()
 			problem_no = QLabel('Problem ' + str(add_problem_ui.no))
@@ -96,7 +96,7 @@ class add_problem_ui(QMainWindow):
 			self.save = QPushButton('Save')
 			self.save.setObjectName('general')
 			self.save.setFixedSize(200,50)
-			self.save.clicked.connect(lambda:self.save_data(table_model,client_config))
+			self.save.clicked.connect(lambda:self.save_data(table_model,client_config,data))
 
 			main.addWidget(problem_no, alignment = Qt.AlignCenter)
 			main.addWidget(problem_name_widget)
@@ -111,7 +111,7 @@ class add_problem_ui(QMainWindow):
 
 		return main_widget
 
-	def save_data(self,table_model,client_config):
+	def save_data(self,table_model,client_config,data):
 		if self.problem_name_text.text() == '':
 			QMessageBox.warning(self, 'Message', 'Problem Name cannot be empty')
 		elif self.problem_code_text.text() == '':
@@ -119,17 +119,19 @@ class add_problem_ui(QMainWindow):
 		elif self.time_limit_text.text() == '':
 			QMessageBox.warning(self, 'Message', 'Time Limit cannot be empty')
 		else:
+			os.system('mkdir Problems/' + self.problem_code_text.text())
 			problem_tuple = ()
 			problem_tuple = (self.problem_name_text.text(), self.problem_code_text.text(),self.time_limit_text.text())
 			client_config["Problems"]["Problem " + str(add_problem_ui.no)] = problem_tuple
 			try:
-				self.data["Problems"]['Problem ' + str(add_problem_ui.no)] = {}
-				self.data["Problems"]['Problem ' + str(add_problem_ui.no)]["Test File Path"] = 'Null'
-				self.data["Problems"]['Problem ' + str(add_problem_ui.no)]["Input File"] = 'Null'
-				self.data["Problems"]['Problem ' + str(add_problem_ui.no)]["Output File"] = 'Null'
+				random_dict = {}
+				random_dict["Test File Path"] = 'Null'
+				random_dict["Input File"] = 'Null'
+				random_dict["Output File"] = 'Null'
+				data["Problems"]['Problem ' + str(add_problem_ui.no)] = random_dict
 			except Exception as Error:
 				print(str(Error))
-			read_write.write_json(self.data)
+			read_write.write_json(data)
 			problem_management.insert_problem(str(add_problem_ui.no),self.problem_name_text.text(),self.problem_code_text.text(),self.time_limit_text.text())
 			table_model.select()
 			self.close()
@@ -155,7 +157,7 @@ class edit_problem_ui(QMainWindow):
 
 		return
 
-	def edit_problem_view_ui(self,table_model, client_config):
+	def edit_problem_view_ui(self, table_model, client_config):
 		try:
 			main = QVBoxLayout()
 			problem_no = QLabel('Problem ' + str(edit_problem_ui.no))
@@ -211,6 +213,7 @@ class edit_problem_ui(QMainWindow):
 			main_widget = QWidget()
 			main_widget.setLayout(main)
 			main_widget.setObjectName('add_problem')
+			self.previous_code = self.problem_code_text.text()
 		except Exception as Error:
 			print(str(Error))
 
@@ -224,6 +227,8 @@ class edit_problem_ui(QMainWindow):
 		elif self.time_limit_text.text() == '':
 			QMessageBox.warning(self, 'Message', 'Time Limit cannot be empty')
 		else:
+			os.system('mkdir Problems/' + self.problem_code_text.text())
+			os.system('rm -rf Problems/' + self.previous_code)
 			problem_tuple = ()
 			problem_tuple = (self.problem_name_text.text(), self.problem_code_text.text(),self.time_limit_text.text())
 			client_config["Problems"]["Problem " + str(add_problem_ui.no)] = problem_tuple

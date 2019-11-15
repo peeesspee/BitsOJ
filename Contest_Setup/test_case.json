@@ -1,46 +1,37 @@
 {
     "Problems": {
         "Problem 1": {
-            "Test File Path": "/home/sj1328/Desktop/sachinam/Kodeathon A3/Problem_1",
+            "Test File Path": "./Problems/SAC",
             "Input File": [
+                "input00.in",
                 "input01.in",
-                "input02.in"
+                "input02.in",
+                "input03.in",
+                "input04.in",
+                "input05.in",
+                "input06.in",
+                "input07.in"
             ],
             "Output File": [
-                "output01.ans",
-                "output02.ans"
-            ]
-        },
-        "Problem 2": {
-            "Test File Path": "/home/sj1328/Desktop/sachinam/Kodeathon A3/Problem_2",
-            "Input File": [
-                "input01.in"
-            ],
-            "Output File": [
-                "output01.ans"
-            ]
-        },
-        "Problem 3": {
-            "Test File Path": "/home/sj1328/Desktop/sachinam/Kodeathon A3/Overlaps-20190922T114634Z-001/Overlaps",
-            "Input File": [
-                "input1.in",
-                "input2.in",
-                "input3.in",
-                "input4.in",
-                "input5.in",
-                "input6.in",
-                "input7.in",
-                "input8.in"
-            ],
-            "Output File": [
+                "output00.ans",
                 "output01.ans",
                 "output02.ans",
                 "output03.ans",
                 "output04.ans",
                 "output05.ans",
                 "output06.ans",
-                "output07.ans",
-                "output08.ans"
+                "output07.ans"
+            ]
+        },
+        "Problem 2": {
+            "Test File Path": "./Problems/RRR",
+            "Input File": [
+                "input00.in",
+                "input01.in"
+            ],
+            "Output File": [
+                "output00.ans",
+                "output01.ans"
             ]
         }
     }
