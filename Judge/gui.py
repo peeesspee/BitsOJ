@@ -1,42 +1,55 @@
-# import time
-# import sys
-# from PyQt5.QtWidgets import *
+import time
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtGui import QIcon, QPixmap
 # from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 # from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 # from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 # from interface_packages.ui_classes import *
 # from init_server import initialize_server
 
-from  database import manage_database
-from compile_run import verdict
-import os
+class App(QWidget):
 
-# import sqlite3
-# conn = sqlite3.connect(":memory:")
-# print((conn))	
-# c = conn.cursor()
-# print(c)
+    def __init__(self):
+        super().__init__()
+        self.title = 'BitsOJ Judge'
+        self.left = 10
+        self.top = 10
+        self.width = 640
+        self.height = 480
+        self.initUI()
+    
+    def initUI(self):
+        self.setWindowTitle(self.title)
+    
+        # Create widget for background
+        label = QLabel(self)
+        pixmap = QPixmap('./Assets/background.png')
+        label.setPixmap(pixmap)
+        self.resize(700,600)
+        # self.setFixedSize(pixmap.width(),pixmap.height())
 
-# a="132"
-# b="BDSM"
-# c="PYTHON2"
-# d="AC"
+        qtRectangle = self.frameGeometry()
+        centerPoint = QDesktopWidget().availableGeometry().center()
+        qtRectangle.moveCenter(centerPoint)     
+        self.move(qtRectangle.topLeft())
 
-# manage_database.initialize_database()
-# # manage_database.insert_record(a, b, c, d)
-# # x = manage_database.get_record()
-# print(x)
-# manage_database.reset_database()
 
-# manage_database.close_db()
+        # Title of login window
+        self.title = QLabel("<<BitsOJ>>")
 
-PATH = "./A/test"
+        # Creating input fields
+        self.judge_id = QLineEdit(self)
+        self.judge_id.setFixedWidth(400)
+        self.judge_id.setFixedHeight(50)
+        self.judge_id.setPlaceholderText('Judge ID')
+        
+        
 
-x = verdict.find_file()
-y = verdict.lang_compiler(x[0], x[1], x[2])
-z = verdict.compile_file(y[0])
-verdict.run_file(y[1])
-verdict.remove_object(x[0], x[2], x[1])
-verdict.compare_outputs()
-print(x)
-print(y)
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = App()
+    ex.show()
+    sys.exit(app.exec_())
