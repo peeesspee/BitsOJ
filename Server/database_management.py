@@ -317,6 +317,17 @@ class submissions_management(manage_database):
 		except Exception as error:
 			print("[ ERROR ] Database deletion error : " + str(error))
 
+	def get_last_sub_time(client_id):
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT max(timestamp) FROM submissions WHERE client_id = ?" , (client_id,))
+			data = cur.fetchall()
+			if data[0][0] == None:
+				return "NONE"
+			else:
+				return data[0][0]
+		except Exception as error:
+			return "NONE"
 
 
 class query_management(manage_database):

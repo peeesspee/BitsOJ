@@ -1235,9 +1235,12 @@ class server_window(QMainWindow):
 			if status == 1:
 				pass
 			elif status == 2: 
+				event.ignore()
 				return
 			else:
 				QMessageBox.about(self, "Access Denied!", "Authentication failed!")
+				event.ignore()
+				return
 
 
 		message = "Pressing 'Yes' will SHUT the Server."

@@ -50,7 +50,7 @@ def main():
 	scoreboard_status = config["Scoreboard Update Allowed"]
 	ranking_algorithm = config["Ranking Algorithm"]
 	manual_review = config["Manual Review"]
-	
+	submission_time_limit = config["Submission Time Limit"]
 	####################################################
 	# TODO : Validate client and server keys when any message is sent, to maintain security 
 	# (As project is open source)
@@ -88,8 +88,12 @@ def main():
 	#	18		0/1			1: Broadcast Scoreboard to all clients
 	#	19		0/1			1: UPDATE remaining time broadcast to all clients
 	#	20		0/1			1: Manual Review Allowed
+	#	21		X			X: Submission time limit 0 < X 
 	
 
+	# Set submission time limit
+	data_changed_flags[21] = submission_time_limit
+ 
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	if login_status == 'True' or login_status == 'true':
 		data_changed_flags[2] = 1
@@ -185,11 +189,14 @@ def main():
 	else:
 		manual_review = 'False'
 
+	submission_time_limit = data_changed_flags[21]
+
 	save_status.update_entry('Judge Login Allowed', judge_login)
 	save_status.update_entry('Login Allowed', login_status)
 	save_status.update_entry('Submission Allowed', submission_status)
 	save_status.update_entry('Scoreboard Update Allowed', scoreboard_status)
 	save_status.update_entry('Manual Review', manual_review)
+	save_status.update_entry('Submission Time Limit', submission_time_limit)
 	
 	# EXIT
 	sleep(2)

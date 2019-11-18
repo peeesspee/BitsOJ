@@ -3,6 +3,7 @@ import time
 import threading
 import sys
 import json
+from random import randrange
 rabbitmq_username = 'judge1'
 rabbitmq_password = 'judge1'
 host = 'localhost'
@@ -62,7 +63,7 @@ def handler(ch, method, properties, body):
 	
 	try:
 		json_data = json.loads(server_data)
-		
+		verdicts = ['AC', 'WA', 'SF', 'TLE', 'RE', 'CE', 'NZ']
 
 		code = json_data['Code']
 		if code == 'JUDGE':
@@ -75,7 +76,9 @@ def handler(ch, method, properties, body):
 			local_run_id = json_data['Local Run ID']
 			time_stamp = json_data['Time Stamp']
 
-			status = input("Enter verdict : ") or 'AC'
+			
+			num = randrange(6)
+			status = verdicts[num]
 
 			message = {
 			'Judge Key' : key,

@@ -28,27 +28,38 @@ class initialize_server():
 		return config
 
 	def convert_to_seconds(time_str):
-		print(time_str)
-		h, m, s = time_str.split(':')
-		return int(h) * 3600 + int(m) * 60 + int(s)
+		try:
+			h, m, s = time_str.split(':')
+			return int(h) * 3600 + int(m) * 60 + int(s)
+		except:
+			print('[ ERROR ] Could not convert time to seconds: Time was: ' + time_str)
+			return -1
 
 	def convert_to_hhmmss(seconds):
-		seconds = int(seconds)
-		h = int(seconds / 3600)
-		m = int((seconds % 3600) / 60)
-		s = int(((seconds % 3600) % 60))
-		if h <= 9:
-			h = '0' + str(h)
-		if m <= 9:
-			m = '0' + str(m)
-		if s <= 9:
-			s = '0' + str(s)
-		return str(h) + ':' + str(m) + ':' + str(s)
+		try:
+			seconds = int(seconds)
+			h = int(seconds / 3600)
+			m = int((seconds % 3600) / 60)
+			s = int(((seconds % 3600) % 60))
+			if h <= 9:
+				h = '0' + str(h)
+			if m <= 9:
+				m = '0' + str(m)
+			if s <= 9:
+				s = '0' + str(s)
+			return str(h) + ':' + str(m) + ':' + str(s)
+		except:
+			print('[ ERROR ] Could not convert time to HH:MM:SS format.')
+			return '00:00:00'
 
 	def get_time_difference(time1, time2):
 		# Return difference between time2 and time1 in hhmmss format
+		time1_s = initialize_server.convert_to_seconds(time1)
+		time2_s = initialize_server.convert_to_seconds(time2)
+		if time2_s < time1_s:
+			time2_s = time2_s + 86400
 		return initialize_server.convert_to_hhmmss(
-				initialize_server.convert_to_seconds(time2) - initialize_server.convert_to_seconds(time1)
+				time2_s - time1_s 
 			)
 
 	def get_remaining_time():
@@ -115,7 +126,8 @@ class save_status():
     	"AC Points" : 100,
     	"Penalty Score" : -20,
     	"Penalty Time" : 20,
-    	"Manual Review" : "False"
+    	"Manual Review" : "False",
+    	"Submission Time Limit":0
 		}
 
 		with open("config.json", "w") as data_file:
