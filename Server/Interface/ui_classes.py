@@ -575,6 +575,11 @@ class ui_widgets:
 		ui_widgets.update_stats(self, stats_widget)
 		return main
 
+	def time_limit_updater(self, text):
+		print('[ SETTING ] Contest submission time limit set to: ' + str(text) + ' minutes.')
+		self.data_changed_flags[21] = int(text)
+		return
+
 	def contest_time_settings(self):
 		# Contest Time Management
 		## Contest Time Settings Label:
@@ -622,6 +627,30 @@ class ui_widgets:
 		change_time_layout.setContentsMargins(5, 0, 10, 0)
 		change_time_widget = QWidget()
 		change_time_widget.setLayout(change_time_layout)
+
+		submission_limit_label = QLabel('> Submission Limit: ')
+		submission_limit_label.setObjectName('main_screen_content')
+		submission_limit_label.setToolTip(
+			'Set Time limit before a Client\nis allowed to send a new solution.'
+			+
+			'\nIncrease this when Server is under load'
+		)
+		submission_limit = QSpinBox()
+		submission_limit.setMinimum(0)
+		submission_limit.setMaximum(5)
+		submission_limit.setToolTip('Increase/Decrease works instantly.')
+		submission_limit.valueChanged.connect(
+			lambda:ui_widgets.time_limit_updater(self, submission_limit.text())
+		)
+		minutes1_label = QLabel(" Minutes")
+		minutes1_label.setObjectName('main_screen_content')
+		submission_limit_layout = QHBoxLayout()
+		submission_limit_layout.addWidget(submission_limit_label)
+		submission_limit_layout.addWidget(submission_limit)
+		submission_limit_layout.addWidget(minutes1_label)
+		submission_limit_layout.addStretch(1)
+		submission_limit_widget = QWidget()
+		submission_limit_widget.setLayout(submission_limit_layout)
 
 		# Start, Stop, Pause contest
 		set_button = QPushButton('Set')
@@ -677,6 +706,7 @@ class ui_widgets:
 		time_management_layout.addWidget(contest_time_label)
 		time_management_layout.addWidget(contest_time_widget)
 		time_management_layout.addWidget(change_time_widget)
+		time_management_layout.addWidget(submission_limit_widget)
 		time_management_layout.addWidget(contest_buttons_widget)
 		time_management_widget = QWidget()
 		time_management_widget.setLayout(time_management_layout)

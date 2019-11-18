@@ -466,7 +466,7 @@ class manage_clients():
 				print('[ ERROR ][ SECURITY ] Client attempted to send submission without being logged in.' )
 			return
 
-		# Check if client has sent a submission in the previous X minutes, where X is set by the ADMIN
+		# Check if client has sent a submission in the previous 'time_minutes_limit' minutes, where 'time_minutes_limit' is set by the ADMIN
 		# Reject the submission if this case is true
 
 		prev_time = submissions_management.get_last_sub_time(client_id)
@@ -476,15 +476,17 @@ class manage_clients():
 		if prev_time == "NONE":
 			pass
 		else:
+			time_minutes_limit = manage_clients.data_changed_flags[21]
 			difference = initialize_server.get_time_difference(prev_time, time_stamp)
 			difference_seconds = initialize_server.convert_to_seconds(difference)
 			difference_minutes = int(difference_seconds / 60)
-	
-			if difference_minutes < manage_clients.data_changed_flags[21]:
+			time_seconds_limit = time_minutes_limit * 60
+
+			if difference_minutes < time_minutes_limit:
 				print('[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.')
 				message = {
 					'Code' : 'SRJCT',
-					'Message' : 'Your submission could not be processed. Resend after ' + str(60 - difference_seconds) + ' Seconds'
+					'Message' : 'Your submission could not be processed. Resend after ' + str(time_seconds_limit - difference_seconds) + ' Seconds'
 					}
 				message = json.dumps(message)
 				try:
