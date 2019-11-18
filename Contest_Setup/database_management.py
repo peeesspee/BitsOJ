@@ -17,11 +17,17 @@ class manage_database():
 			manage_database.cur = cur
 			# Execute database query to make tables 
 			# Problem table to add problems in the contest
-			cur.execute("create table if not exists problems(No varchar2(3) PRIMARY KEY,'Problem No' varchar2(9) , 'Problem Name' varchar2(30), 'Problem Code' varchar2(15), 'Time Limit' integer)")
+			cur.execute("create table if not exists problems(No integer PRIMARY KEY,'Problem No' varchar2(9) , 'Problem Name' varchar2(30), 'Problem Code' varchar2(15), 'Time Limit' integer)")
 		except Exception as Error:
 			print(str(Error))
 		return cur
 
+
+class testing(manage_database):
+	def get_testing_details():
+		manage_database.cur.execute("SELECT No, `Problem No`, `Problem Code`, `Time Limit` FROM problems")
+		data = manage_database.cur.fetchall()
+		return data
 
 
 # Local Id's for all the submission to have a record for every submission locally 
@@ -56,14 +62,14 @@ class problem_management(manage_database):
 
 	def insert_problem(no,name,code,time_limit):
 		try:
-			manage_database.cur.execute("INSERT INTO problems VALUES (?,?,?,?,?)",(no,'Problem '+no,name,code,time_limit))
+			manage_database.cur.execute("INSERT INTO problems VALUES (?,?,?,?,?)",(int(no),'Problem '+no,name,code,time_limit))
 			manage_database.conn.commit()
 		except Exception as Error:
 			print(str(Error))
 
 	def update_problem(no,name,code,time_limit):
 		try:
-			manage_database.cur.execute("UPDATE problems SET 'Problem Name' = ?, 'Problem Code' = ?, 'Time Limit' = ? WHERE No = ?",(name,code,time_limit,no,))
+			manage_database.cur.execute("UPDATE problems SET 'Problem Name' = ?, 'Problem Code' = ?, 'Time Limit' = ? WHERE No = ?",(name,code,time_limit,int(no),))
 			manage_database.conn.commit()
 		except Exception as Error:
 			print(str(Error))
@@ -74,7 +80,7 @@ class reset_database(manage_database):
 	def reset_problem(table_model):
 		try:
 			manage_database.cur.execute("drop table if exists problems")
-			manage_database.cur.execute("create table if not exists problems(No varchar2(3) PRIMARY KEY,'Problem No' varchar2(9) , 'Problem Name' varchar2(30), 'Problem Code' varchar2(15), 'Time Limit' integer)")
+			manage_database.cur.execute("create table if not exists problems(No integer PRIMARY KEY,'Problem No' varchar2(9) , 'Problem Name' varchar2(30), 'Problem Code' varchar2(15), 'Time Limit' integer)")
 			manage_database.conn.commit()
 			table_model.select()
 		except Exception as Error:
