@@ -11,6 +11,7 @@ from database_management import testing
 from init_setup import read_write
 from shutil import copyfile
 from Interface.ui_classes import view_case_ui
+from judge_api import judge
 
 
 
@@ -112,7 +113,7 @@ class test_file(QMainWindow):
 		solutions.addWidget(self.check_solution_text)
 		solutions.addWidget(Solution)
 		solutions.addWidget(check)
-		solutions.addWidget(self.result_label)
+		solutions.addWidget(self.result_label, alignment = Qt.AlignRight)
 		solutions.addStretch(0)
 		solutions.addSpacing(1)
 		solution_widget = QWidget()
@@ -160,22 +161,45 @@ class test_file(QMainWindow):
 
 
 	def solution_files(self):
-		x = QFileDialog()
-		options = QFileDialog.Options()
-		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Select Correct Solution", "","All Files (*);;Python Files (*.py)", options=options)
-		if fileName:
-			l = fileName.split('/')
-			length = len(l)
-			self.check_solution_text.setText(l[length - 1])
-			self.check_solution_text.setReadOnly(True)
-			copyfile(fileName,'./Problems/' + self.problem_code + '/' + l[length - 1])
-		else:
-			return
-		pass
+		try:
+			x = QFileDialog()
+			options = QFileDialog.Options()
+			options |= QFileDialog.DontUseNativeDialog
+			self.fileName, _ = QFileDialog.getOpenFileName(self,"Select Correct Solution", "","All Files (*);;Python Files (*.py)", options=options)
+			if self.fileName:
+				l = self.fileName.split('/')
+				length = len(l)
+				self.check_solution_text.setText(l[length - 1])
+				self.check_solution_text.setReadOnly(True)
+				copyfile(self.fileName,'./Problems/' + self.problem_code + '/' + l[length - 1])
+			else:
+				return
+		except Exception as Error:
+			print(str(Error))
 
 	def check_files(self):
-		pass
+		print(self.problem_box.currentText())
+		print(self.problem_code)
+		print(self.time_limit)
+		print(self.fileName)
+		result = judge.main(
+			self.problem_box.currentText(),
+			self.problem_code,
+			self.time_limit,
+			self.fileName
+			)
+		print(result)
+		print(type(result))
+		try:
+			if result == 'AC':
+				self.result_label.setObjectName('view1')
+				self.result_label.setText(result)
+			else:
+				self.result_label.setObjectName('view2')
+				self.result_label.setText(result)
+		except Exception as Error:
+			print(str(Error))
+
 
 	def upload_files(self,index):
 		self.input = []

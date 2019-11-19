@@ -4,23 +4,11 @@
             "Test File Path": "./Problems/SAC",
             "Input File": [
                 "input00.in",
-                "input01.in",
-                "input02.in",
-                "input03.in",
-                "input04.in",
-                "input05.in",
-                "input06.in",
-                "input07.in"
+                "input01.in"
             ],
             "Output File": [
                 "output00.ans",
-                "output01.ans",
-                "output02.ans",
-                "output03.ans",
-                "output04.ans",
-                "output05.ans",
-                "output06.ans",
-                "output07.ans"
+                "output01.ans"
             ]
         },
         "Problem 2": {

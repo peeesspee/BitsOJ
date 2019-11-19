@@ -5,7 +5,7 @@ import os,sys
 
 
 
-def verdict_of_submission(problem_code, language, file_with_ext):
+def verdict_of_submission(problem_code, language, file_with_ext, time_limit):
 
 	# file,pos,lang = verdict.find_file()
 	result = ''
@@ -18,7 +18,7 @@ def verdict_of_submission(problem_code, language, file_with_ext):
 		print("error in compiling")
 		result = ''
 		error = 'Compilation Error'
-	verdict.run_file(runfile, problem_code)
+	verdict.run_file(runfile, problem_code time_limit)
 	verdict.remove_object(file_name, file_with_ext, language)
 	result = verdict.compare_outputs(problem_code, run_id)
 	# print(file,pos,lang)
@@ -100,7 +100,7 @@ class verdict():
 
 	def run_file(runfile, problem_code, time_limit):
 
-		INPUT_PATH = './problems/' + problem_code + '/'
+		INPUT_PATH = './Problems/' + problem_code + '/'
 		SUBM_PATH = './submission_files/' 
 
 		if verdict.ERROR == False:
@@ -204,3 +204,34 @@ class verdict():
 			result = 'WA'
 			return result
 
+	def main(file_name, file_with_ext, lang, problem_code, run_id, timelimit):
+
+		result = 'Nul'
+		verd = 'Nul'
+		classfile = 'Nul'
+		runfile = 'Nul'
+
+		classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, lang)
+
+		e = verdict.compile_file(classfile, lang)
+		print(verdict.ERROR)
+		print(verdict.VERDICT)
+		print(verdict.result)
+
+		if e == True:
+			return verdict.VERDICT,verdict.result
+
+		if e == False:
+			time_limit = timelimit + 's '
+			e = verdict.run_file(runfile, problem_code, run_id, time_limit)
+
+			print(verdict.ERROR)
+			print(verdict.VERDICT)
+			print(verdict.result)
+			verdict.remove_object(file_name, file_with_ext, lang)
+			if e == True:
+				return verdict.VERDICT,verdict.result
+
+			if e == False:
+				result,verd = verdict.compare_outputs(problem_code, run_id)
+				return verd,result
