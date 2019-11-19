@@ -431,7 +431,7 @@ class server_window(QMainWindow):
 			self.contest_time_entry.setReadOnly(1)
 			self.contest_time_entry.setToolTip('Contest has STARTED.\nYou can\'t edit this value now.')
 			self.change_time_entry.setReadOnly(False)
-			self.change_time_entry.setToolTip('Extend/Shorten contest (in minutes)')
+			self.change_time_entry.setToolTip('Extend/Shorten contest (in minutes).\nPress UPDATE to confirm.')
 			self.set_button.setEnabled(False)
 			self.set_button.setToolTip('Contest has STARTED.\nYou can not set time now!')
 			self.start_button.setEnabled(False)
@@ -1235,9 +1235,12 @@ class server_window(QMainWindow):
 			if status == 1:
 				pass
 			elif status == 2: 
+				event.ignore()
 				return
 			else:
 				QMessageBox.about(self, "Access Denied!", "Authentication failed!")
+				event.ignore()
+				return
 
 
 		message = "Pressing 'Yes' will SHUT the Server."

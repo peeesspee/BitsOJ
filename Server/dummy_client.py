@@ -111,7 +111,7 @@ def handler(ch, method, properties, body):
 			print('Login Rejected')
 			
 		elif code == 'SRJCT':
-			print('Submission Rejected')
+			print('Submission Rejected: ' + json_data['Message'])
 		elif code == 'DSCNT':
 			type = json_data['Client']
 			if type == username:

@@ -111,7 +111,7 @@ class manage_clients():
 			if client_key != manage_clients.key:
 				print('[ SECURITY ] Client Key did not match. Client ID: ' + str(json_data['ID']))
 				print('[ SECURITY ] Complete Message: ' + client_message)
-				# Send a response?
+				# Send a response? 
 				# message = {
 				# 	'Code' : 'LRJCT',
 				# 	'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
@@ -120,7 +120,7 @@ class manage_clients():
 				# response.publish_message(manage_clients.channel, client_username, message)
 				return
 
-
+ 
 			client_code = json_data["Code"]
 			if client_code == 'LOGIN':
 				client_username = json_data["Username"]
@@ -400,16 +400,26 @@ class manage_clients():
 
 
 	def client_submission_handler(client_id, local_run_id, problem_code, language, time_stamp, source_code):
+		# This block ensures that the config read by this process is latest
+		if manage_clients.already_read == 0:
+			manage_clients.already_read = 1
+			manage_clients.config = initialize_server.read_config()
+
 		print('[ SUBMISSION ] Client ID :' + str(client_id) + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp)
-		# Validate client submission by username and client_id
-
-		# TODO
-
+			
 		# Get client username from database
 		client_username = client_authentication.get_client_username(client_id)
 		if client_username == 'Null':
 			print('[ REJECT ] Client status is NOT CONNECTED. This should not happen! Please check for malicious client.')
 			return
+
+		# Now we convert client time to contest duration time
+		contest_start_time = manage_clients.config['Contest Start Time']
+		time_stamp = initialize_server.get_time_difference(contest_start_time, time_stamp)
+
+		# Validate client submission by username and client_id, and also check time for discrepancy
+
+		# TODO
 
 		# If contest is not in running state, reject all submissions.
 		# This might reject some submissions when user sends code just before contest ends
@@ -418,7 +428,7 @@ class manage_clients():
 			# Send SRJCT : SubmissionReject
 			message = {
 				'Code' : 'SRJCT',
-				'Message' : 'Your submission could not be processed! Contest is not active right now.'
+				'Message' : 'Your submission could not be processed! Contest status: NOT RUNNING.'
 				}
 			message = json.dumps(message)
 			try:
@@ -427,8 +437,7 @@ class manage_clients():
 				print('[ ERROR ][ SECURITY ] Client has no username so could not send error code.' )
 			return
 
-
-		# If no new submissions are allowed
+		# If submissions are not allowed by ADMIN
 		if(manage_clients.data_changed_flags[3] == 0):
 			print('[ SUBMISSION ] Rejected by ADMIN')
 			# Send SRJCT : SubmissionReject
@@ -443,16 +452,6 @@ class manage_clients():
 				print('[ ERROR ][ SECURITY ] Client has no username so could not send error code.' )
 			return
 
-		# Convert timestamp to contest time
-		if manage_clients.already_read == 0:
-			manage_clients.already_read = 1
-			manage_clients.config = initialize_server.read_config()
-			# The above statement ensures that the config read by this thread is latest
-
-		# Now we convert client time to contest duration time
-		contest_start_time = manage_clients.config['Contest Start Time']
-		time_stamp = initialize_server.get_time_difference(contest_start_time, time_stamp)
-
 		# Check client status, and accept only if it is CONNECTED and not BLOCKED or NEW
 		state = client_authentication.check_connected_client(client_username, 'connected_clients')
 		if state != 'Connected':
@@ -464,9 +463,37 @@ class manage_clients():
 			try:
 				response.publish_message(manage_clients.channel, client_username, message)
 			except Exception as error:
-				print('[ ERROR ][ SECURITY ] Client attempt to send submission without being logged in.' )
+				print('[ ERROR ][ SECURITY ] Client attempted to send submission without being logged in.' )
 			return
 
+		# Check if client has sent a submission in the previous 'time_minutes_limit' minutes, where 'time_minutes_limit' is set by the ADMIN
+		# Reject the submission if this case is true
+
+		prev_time = submissions_management.get_last_sub_time(client_id)
+		current_time = time.strftime("%H:%M:%S", time.localtime())
+		start_time = manage_clients.config["Contest Start Time"]
+
+		if prev_time == "NONE":
+			pass
+		else:
+			time_minutes_limit = manage_clients.data_changed_flags[21]
+			difference = initialize_server.get_time_difference(prev_time, time_stamp)
+			difference_seconds = initialize_server.convert_to_seconds(difference)
+			difference_minutes = int(difference_seconds / 60)
+			time_seconds_limit = time_minutes_limit * 60
+
+			if difference_minutes < time_minutes_limit:
+				print('[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.')
+				message = {
+					'Code' : 'SRJCT',
+					'Message' : 'Your submission could not be processed. Resend after ' + str(time_seconds_limit - difference_seconds) + ' Seconds'
+					}
+				message = json.dumps(message)
+				try:
+					response.publish_message(manage_clients.channel, client_username, message)
+				except Exception as error:
+					print('[ ERROR ]Could not publish message to client.' )
+				return
 
 		try:
 			if client_id == 'Nul':
