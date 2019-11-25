@@ -333,7 +333,6 @@ class ui_widgets():
 					client_key,
 					username
 					)
-				QMessageBox.warning(self, 'Message', 'Your Solution has been successfully send')
 				ui_widgets.text_area.setPlainText('')
 			except Exception as Error:
 				print(str(Error))

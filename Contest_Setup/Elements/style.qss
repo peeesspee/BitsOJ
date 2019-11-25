@@ -12,6 +12,18 @@ QLabel#heading2{
     font: bold 30px 'Arial';
 }
 
+QLabel#view1
+{
+    color : #A7D129;
+    font : 20px;
+}
+
+QLabel#view2
+{
+    color : #D72323;
+    font : 20px;
+}
+
 /*---------------------------------------*/
 
 /*-------------- Top Bar ----------------*/
@@ -189,3 +201,41 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 }
 
 /* Scroll bar styles end */
+
+
+
+
+/*  Push button */
+
+QPushButton#submit{
+    font-size : 18px;
+    text-align : center;    
+    border : 1px solid #ADFF2F;
+    border-radius : 25px;
+    background-color : #202428 ;
+    color : #838383;
+}
+
+QPushButton#submit::focus
+{
+    color : #23B2EE;
+    background-color : #2B2C39 ;
+}
+
+QPushButton#submit::hover::focus
+{
+    color : #23B2EE;
+    background-color : #2B2C39 ;
+}
+
+QPushButton#submit::pressed
+{
+    color : #23B2EE;
+    background-color : #202428;
+}
+
+QPushButton#submit::hover
+{
+    color : #0892D0;
+    background-color : #202428 ;
+}

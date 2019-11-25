@@ -64,7 +64,8 @@ class start_listening():
 		elif code == 'QUERY':
 			start_listening.query_verdict(json_data)
 		elif code == 'SRJCT':
-			# start_listening.queue.put(json_data["Message"])
+			# print(json_data)
+			start_listening.queue.put(json_data["Message"])
 			start_listening.data_changed_flags[3] = 1
 		elif code == "SCRBD":
 			start_listening.leaderboard(json_data)

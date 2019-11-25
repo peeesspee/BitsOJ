@@ -20,8 +20,6 @@ while (status != 'VALID'):
 	authenticate_judge.login(channel, host)
 	status = authenticate_judge.login_status
 
-	
-
 while (status == 'VALID'):
 	communicate_server.listen_server()
 

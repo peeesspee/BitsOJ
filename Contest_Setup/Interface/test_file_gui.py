@@ -11,6 +11,7 @@ from database_management import testing
 from init_setup import read_write
 from shutil import copyfile
 from Interface.ui_classes import view_case_ui
+from judge_api import judge
 
 
 
@@ -112,9 +113,9 @@ class test_file(QMainWindow):
 		solutions.addWidget(self.check_solution_text)
 		solutions.addWidget(Solution)
 		solutions.addWidget(check)
-		solutions.addWidget(self.result_label)
 		solutions.addStretch(0)
 		solutions.addSpacing(1)
+		solutions.addWidget(self.result_label, alignment = Qt.AlignCenter)
 		solution_widget = QWidget()
 		solution_widget.setLayout(solutions)
 		main.addWidget(problem_code)
@@ -160,22 +161,39 @@ class test_file(QMainWindow):
 
 
 	def solution_files(self):
-		x = QFileDialog()
-		options = QFileDialog.Options()
-		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Select Correct Solution", "","All Files (*);;Python Files (*.py)", options=options)
-		if fileName:
-			l = fileName.split('/')
-			length = len(l)
-			self.check_solution_text.setText(l[length - 1])
-			self.check_solution_text.setReadOnly(True)
-			copyfile(fileName,'./Problems/' + self.problem_code + '/' + l[length - 1])
-		else:
-			return
-		pass
+		try:
+			x = QFileDialog()
+			options = QFileDialog.Options()
+			options |= QFileDialog.DontUseNativeDialog
+			self.fileName, _ = QFileDialog.getOpenFileName(self,"Select Correct Solution", "","All Files (*);;Python Files (*.py)", options=options)
+			if self.fileName:
+				l = self.fileName.split('/')
+				length = len(l)
+				self.check_solution_text.setText(l[length - 1])
+				self.check_solution_text.setReadOnly(True)
+				copyfile(self.fileName,'./Problems/' + self.problem_code + '/' + l[length - 1])
+			else:
+				return
+		except Exception as Error:
+			print(str(Error))
 
 	def check_files(self):
-		pass
+		result = judge.main(
+			self.problem_box.currentText(),
+			self.problem_code,
+			self.time_limit,
+			self.fileName
+			)
+		try:
+			if result == 'AC':
+				self.result_label.setText(result)
+				self.result_label.setObjectName('view1')
+			else:
+				self.result_label.setText(result)
+				self.result_label.setObjectName('view2')
+		except Exception as Error:
+			print(str(Error))
+
 
 	def upload_files(self,index):
 		self.input = []
@@ -185,6 +203,8 @@ class test_file(QMainWindow):
 		x.setOption(QFileDialog.ShowDirsOnly, False)
 		name = x.getExistingDirectory(self, 'Select Test Case Folder')
 		if name != '':
+			for i in os.listdir('./Problems/'+self.problem_code+'/'):
+				os.remove('./Problems/'+self.problem_code+'/' + i)
 			self.data["Problems"]["Problem " + str(self.no)]["Test File Path"] = name
 			for i in os.listdir(name):
 				if i.endswith(".in"):

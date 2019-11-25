@@ -30,7 +30,7 @@ class verdict():
 			classfile = 'g++ -o ' + PATH + file_name + ' ' + PATH + file_with_ext
 			runfile = PATH + file_name
 
-		if lang == 'C':
+		if lang == 'GCC':
 			classfile = 'gcc -o ' + PATH + file_name + ' ' + PATH + file_with_ext
 			runfile = PATH + file_name
 
@@ -38,15 +38,17 @@ class verdict():
 			classfile = 'javac ' + PATH + file_with_ext
 			runfile = 'java' + PATH + file_name
 
-		if lang == 'PY':
-			if file.split('.')[0][-1] == '2':
-				classfile = 'python'
-				runfile = 'python2 ' + PATH + file_with_ext
+		if lang == 'PY2':
+			classfile = 'python'
+			runfile = 'python2 ' + PATH + file_with_ext
 
-			if file.split('.')[0][-1] == '3':
-				classfile = 'python'
-				runfile = 'python3 ' + PATH + file_with_ext
+		# if file.split('.')[0][-1] == '3':
+		if lang == 'PY3': 
+			classfile = 'python'
+			runfile = 'python3 ' + PATH + file_with_ext
 
+		print(classfile)
+		print(runfile)
 		return classfile,runfile
 
 	def compile_file(classfile, lang):
@@ -182,7 +184,13 @@ class verdict():
 		print(verdict.result)
 
 		if e == True:
-			return verdict.VERDICT,verdict.result
+			result = verdict.result
+			verd = verdict.VERDICT
+
+			verdict.VERDICT = 'Nul'
+			verdict.result = 'Nul'
+			verdict.ERROR = False
+			return verd,result
 
 		if e == False:
 			time_limit = timelimit + 's '
@@ -193,10 +201,20 @@ class verdict():
 			print(verdict.result)
 			verdict.remove_object(file_name, file_with_ext, lang)
 			if e == True:
-				return verdict.VERDICT,verdict.result
+				result = verdict.result
+				verd = verdict.VERDICT
+
+				verdict.VERDICT = 'Nul'
+				verdict.result = 'Nul'
+				verdict.ERROR = False
+				return verd,result
 
 			if e == False:
 				result,verd = verdict.compare_outputs(problem_code, run_id)
+
+				verdict.VERDICT = 'Nul'
+				verdict.result = 'Nul'
+				verdict.ERROR = False
 				return verd,result
 
 

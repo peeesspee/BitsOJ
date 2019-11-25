@@ -358,8 +358,7 @@ class client_window(QMainWindow):
 				self.data_changed_flag[2] =0
 
 			if(self.data_changed_flag[3] == 1):
-				# message = self.queue.get()
-				message = 'Under Progress'
+				message = self.queue.get()
 				QMessageBox.warning(self, 'Error', message)
 				self.data_changed_flag[3] = 0
 
