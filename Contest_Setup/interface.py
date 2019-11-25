@@ -981,7 +981,7 @@ class contest_setup(QMainWindow):
 class setup_window(contest_setup):
 	def __init__(self):
 		app = QApplication(sys.argv)
-		app.setStyleSheet(open('Elements/style.qss', "r").read())
+		# app.setStyleSheet(open('Elements/style.qss', "r").read())
 		app.setStyle("Fusion")
 
 		client_app = contest_setup()
