@@ -113,9 +113,9 @@ class test_file(QMainWindow):
 		solutions.addWidget(self.check_solution_text)
 		solutions.addWidget(Solution)
 		solutions.addWidget(check)
-		solutions.addWidget(self.result_label, alignment = Qt.AlignRight)
 		solutions.addStretch(0)
 		solutions.addSpacing(1)
+		solutions.addWidget(self.result_label, alignment = Qt.AlignCenter)
 		solution_widget = QWidget()
 		solution_widget.setLayout(solutions)
 		main.addWidget(problem_code)
@@ -178,25 +178,19 @@ class test_file(QMainWindow):
 			print(str(Error))
 
 	def check_files(self):
-		print(self.problem_box.currentText())
-		print(self.problem_code)
-		print(self.time_limit)
-		print(self.fileName)
 		result = judge.main(
 			self.problem_box.currentText(),
 			self.problem_code,
 			self.time_limit,
 			self.fileName
 			)
-		print(result)
-		print(type(result))
 		try:
 			if result == 'AC':
+				self.result_label.setText(result)
 				self.result_label.setObjectName('view1')
-				self.result_label.setText(result)
 			else:
-				self.result_label.setObjectName('view2')
 				self.result_label.setText(result)
+				self.result_label.setObjectName('view2')
 		except Exception as Error:
 			print(str(Error))
 
@@ -209,6 +203,8 @@ class test_file(QMainWindow):
 		x.setOption(QFileDialog.ShowDirsOnly, False)
 		name = x.getExistingDirectory(self, 'Select Test Case Folder')
 		if name != '':
+			for i in os.listdir('./Problems/'+self.problem_code+'/'):
+				os.remove('./Problems/'+self.problem_code+'/' + i)
 			self.data["Problems"]["Problem " + str(self.no)]["Test File Path"] = name
 			for i in os.listdir(name):
 				if i.endswith(".in"):

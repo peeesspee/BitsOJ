@@ -3,6 +3,8 @@ import time
 import socket
 import json
 import os
+import random
+import string
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
@@ -73,7 +75,8 @@ class contest_setup(QMainWindow):
             "AC Points": 100,
             "Penalty Score": -20,
             "Penalty Time": 20,
-            "Manual Review": "False"
+            "Manual Review": "False",
+            "Submision Time Limit" : 0
 		}
 		self.judge_config = {}
 
@@ -89,6 +92,7 @@ class contest_setup(QMainWindow):
 		contest_setup.problem(self)
 		contest_setup.language(self)
 		contest_setup.contest(self)
+		contest_setup.ranking(self)
 		return
 
 	def init_GUI(self):
@@ -148,7 +152,8 @@ class contest_setup(QMainWindow):
 		self.client_tab_layout = QVBoxLayout()
 		self.tabs = QTabWidget()
 		self.tabs.setObjectName('client_tabs')
-		self.rabbitmq_detail = QWidget()
+		self.rabbitmq_client_detail = QWidget()
+		self.rabbitmq_server_detail = QWidget()
 
 		
 
@@ -231,7 +236,7 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_creds.addWidget(self.button_widget, alignment=Qt.AlignBottom)
 		self.rabbitmq_creds.addStretch(1)
 		self.rabbitmq_creds.addSpacing(0)
-		self.rabbitmq_detail.setLayout(self.rabbitmq_creds)
+		self.rabbitmq_client_detail.setLayout(self.rabbitmq_creds)
 		
 
 
@@ -240,7 +245,9 @@ class contest_setup(QMainWindow):
 		######################################################################
 
 
-		self.tabs.addTab(self.rabbitmq_detail, "RabbitMQ Creds")
+		self.tabs.addTab(self.rabbitmq_client_detail, "Client Creds")
+		self.tabs.addTab(self.rabbitmq_server_detail, "Server Creds")
+		self.tabs.addTab(self.rabbitmq_client_detail, "Judge Creds")
 
 		
 
@@ -397,10 +404,17 @@ class contest_setup(QMainWindow):
 		self.client_key_text = QLineEdit()
 		self.client_key_text.setPlaceholderText('')
 		self.client_key_text.setObjectName('general_text')
+		self.client_key_text.setEchoMode(QLineEdit.Password)
+		self.client_key_text.setReadOnly(True)
 		self.client_key_text.setFixedWidth(400)
 		self.client_key_text.setFixedHeight(50)
+		generate_client_key = QPushButton('Generate')
+		generate_client_key.setObjectName('general')
+		generate_client_key.setFixedSize(200,50)
+		generate_client_key.clicked.connect(lambda:self.generate_key(0))
 		client_key.addWidget(client_key_label)
 		client_key.addWidget(self.client_key_text)
+		client_key.addWidget(generate_client_key)
 		client_key.addStretch(1)
 		client_key.addSpacing(0)
 		client_key_widget = QWidget()
@@ -411,10 +425,17 @@ class contest_setup(QMainWindow):
 		self.judge_key_text = QLineEdit()
 		self.judge_key_text.setPlaceholderText('')
 		self.judge_key_text.setObjectName('general_text')
+		self.judge_key_text.setReadOnly(True)
+		self.judge_key_text.setEchoMode(QLineEdit.Password)
 		self.judge_key_text.setFixedWidth(400)
 		self.judge_key_text.setFixedHeight(50)
+		generate_judge_key = QPushButton('Generate')
+		generate_judge_key.setObjectName('general')
+		generate_judge_key.setFixedSize(200,50)
+		generate_judge_key.clicked.connect(lambda:self.generate_key(1))
 		judge_key.addWidget(judge_key_label)
 		judge_key.addWidget(self.judge_key_text)
+		judge_key.addWidget(generate_judge_key)
 		judge_key.addStretch(1)
 		judge_key.addSpacing(0)
 		judge_key_widget = QWidget()
@@ -492,6 +513,131 @@ class contest_setup(QMainWindow):
 
 		self.contest_tab.setLayout(contest_tab)
 
+
+	###################################### RANKING ##########################################
+
+	def ranking(self):
+
+		main = QVBoxLayout()
+
+
+		heading = QLabel('Ranking System')
+		heading.setObjectName('heading')
+		ranking_system = QHBoxLayout()
+		self.IOI = QRadioButton('IOI System')
+		self.IOI.setChecked(True)
+		self.IOI.toggled.connect(lambda:self.rank_state(self.IOI))
+		self.ACM = QRadioButton('ACM System')
+		self.ACM.toggled.connect(lambda:self.rank_state(self.ACM))
+		self.LONG = QRadioButton('LONG System')
+		self.LONG.toggled.connect(lambda:self.rank_state(self.LONG))
+		ranking_system.addWidget(self.IOI)
+		ranking_system.addWidget(self.ACM)
+		ranking_system.addWidget(self.LONG)
+		ranking_system.addStretch(0)
+		ranking_system.addSpacing(1)
+		ranking_widget = QWidget()
+		ranking_widget.setLayout(ranking_system)
+		ac = QHBoxLayout()
+		ac_label = QLabel('AC Points               :  ')
+		ac_label.setObjectName('general')
+		self.ac_text = QLineEdit()
+		self.ac_text.setPlaceholderText('AC Points')
+		self.ac_text.setText('100')
+		self.ac_text.setObjectName('general_text')
+		self.ac_text.setReadOnly(True)
+		self.ac_text.setFixedWidth(400)
+		self.ac_text.setFixedHeight(50)
+		ac.addWidget(ac_label)
+		ac.addWidget(self.ac_text)
+		ac.addStretch(0)
+		ac.addSpacing(1)
+		ac_widget = QWidget()
+		ac_widget.setLayout(ac)
+		penalty_points = QHBoxLayout()
+		penalty_points_label = QLabel('Penalty Points       :  ')
+		penalty_points_label.setObjectName('general')
+		self.penalty_points_text = QLineEdit()
+		self.penalty_points_text.setPlaceholderText('Penalty Points')
+		self.penalty_points_text.setText('-20')
+		self.penalty_points_text.setObjectName('general_text')
+		self.penalty_points_text.setReadOnly(True)
+		self.penalty_points_text.setFixedWidth(400)
+		self.penalty_points_text.setFixedHeight(50)
+		penalty_points.addWidget(penalty_points_label)
+		penalty_points.addWidget(self.penalty_points_text)
+		penalty_points.addStretch(0)
+		penalty_points.addSpacing(1)
+		penalty_points_widget = QWidget()
+		penalty_points_widget.setLayout(penalty_points)
+		penalty_time = QHBoxLayout()
+		penalty_time_label = QLabel('Penalty Time          :  ')
+		penalty_time_label.setObjectName('general')
+		self.penalty_time_text = QLineEdit()
+		self.penalty_time_text.setPlaceholderText('Penalty Time')
+		self.penalty_time_text.setText('20')
+		self.penalty_time_text.setObjectName('general_text')
+		self.penalty_time_text.setReadOnly(True)
+		self.penalty_time_text.setFixedWidth(400)
+		self.penalty_time_text.setFixedHeight(50)
+		penalty_time.addWidget(penalty_time_label)
+		penalty_time.addWidget(self.penalty_time_text)
+		penalty_time.addStretch(0)
+		penalty_time.addSpacing(1)
+		penalty_time_widget = QWidget()
+		penalty_time_widget.setLayout(penalty_time)
+
+		ranking_button = QHBoxLayout()
+		self.save_ranking_button = QPushButton('Save')
+		self.save_ranking_button.setObjectName('general')
+		self.save_ranking_button.setFixedSize(200,50)
+		self.save_ranking_button.clicked.connect(lambda:self.save_rank_tab())
+		self.edit_ranking_button = QPushButton('Edit')
+		self.edit_ranking_button.setObjectName('general')
+		self.edit_ranking_button.setFixedSize(200,50)
+		self.edit_ranking_button.clicked.connect(lambda:self.edit_rank_tab())
+		ranking_button.addWidget(self.save_ranking_button, alignment=Qt.AlignRight)
+		ranking_button.addWidget(self.edit_ranking_button, alignment=Qt.AlignRight)
+		ranking_button.addStretch(1)
+		ranking_button.addSpacing(0)
+		ranking_button_widget = QWidget()
+		ranking_button_widget.setLayout(ranking_button)
+
+
+		main.addWidget(heading)
+		main.addWidget(ranking_widget)
+		main.addWidget(ac_widget)
+		main.addWidget(penalty_points_widget)
+		main.addWidget(penalty_time_widget)
+		main.addWidget(ranking_button_widget)
+		main.addStretch(0)
+		main.addSpacing(1)
+		self.ranking_tab.setLayout(main)
+
+
+
+
+
+	def generate_key(self,i):
+		if i == 0:
+			key = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(15))
+			self.client_key_text.setText(key)
+			self.client_key_text.setReadOnly(True)
+		else:
+			key = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(15))
+			self.judge_key_text.setText(key)
+			self.judge_key_text.setReadOnly(True)
+
+
+	def save_rank_tab(self):
+		self.IOI.setDisabled(True)
+		self.ACM.setDisabled(True)
+		self.LONG.setDisabled(True)
+
+	def edit_rank_tab(self):
+		self.IOI.setDisabled(False)
+		self.ACM.setDisabled(False)
+		self.LONG.setDisabled(False)
 
 	############################### ADD PROBLEM ################################
 	def add_problem_client(self):
@@ -719,6 +865,33 @@ class contest_setup(QMainWindow):
 				ip = self.get_ip_address()
 				self.rabbitmq_host_text.setText(ip)
 				self.rabbitmq_host_text.setReadOnly(True)
+
+
+	def rank_state(self,button):
+		if button.text() == 'IOI System':
+			if button.isChecked() == True:
+				self.ac_text.setText('100')
+				self.penalty_points_text.setText('-20')
+				self.penalty_time_text.setText('20')
+				self.ac_text.setReadOnly(True)
+				self.penalty_points_text.setReadOnly(True)
+				self.penalty_time_text.setReadOnly(True)
+		elif button.text() == 'ACM System':
+			if button.isChecked() == True:
+				self.ac_text.setText('100')
+				self.penalty_points_text.setText('-20')
+				self.penalty_time_text.setText('20')
+				self.ac_text.setReadOnly(True)
+				self.penalty_points_text.setReadOnly(True)
+				self.penalty_time_text.setReadOnly(True)
+		else:
+			if button.isChecked() == True:
+				self.ac_text.setText('100')
+				self.penalty_points_text.setText('0')
+				self.penalty_time_text.setText('0')
+				self.ac_text.setReadOnly(True)
+				self.penalty_points_text.setReadOnly(True)
+				self.penalty_time_text.setReadOnly(True)
 
 
 	def call_gui(self):
