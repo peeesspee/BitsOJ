@@ -1280,7 +1280,7 @@ class init_gui(server_window):
 		# make a reference of App class
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
-		app.setStyleSheet(open('Interface/style.qss', "r").read())
+		app.setStyleSheet(open('Interface/style2.qss', "r").read())
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
