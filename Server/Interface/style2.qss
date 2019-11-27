@@ -1,8 +1,8 @@
 QStatusBar
 { 
-	/*color : #BB86FC ;*/
+	/*color : #121212 ;*/
 	
-	border-top : 1px solid #1F2C65;
+	border-top : 1px solid #121212;
 	
 	font : 20px;
 
@@ -13,40 +13,17 @@ QStatusBar
 /* Style of buttons in the sidebar  START  */
 
 QPushButton#sidebar_button{
+	background : #ffffff;
+	color: #121212;
 	text-align : left; 
 	padding-left : 20; 	
 	border-radius : 0px;
 	margin-top: 2px;
 	
 }
-
-QPushButton#sidebar_button::focus
-{
-	
-	border-right : 7px solid #B2FF59;
-	background : #444444;
-}
-
-QPushButton#sidebar_button::hover::focus
-{
-	
-	border-right : 7px solid #B2FF59;
-	background : #444444;
-}
-
-QPushButton#sidebar_button::pressed
-{
-	
-	border-right : 4px solid #B2FF59;
-	background : #333333;
-}
-
-QPushButton#sidebar_button::hover
-{
-	
-	border-right : 1px solid #AED581;
-	background : #777777;
-	
+QPushButton#sidebar_button::focus{
+	background : #aaaaaa;
+	color: #121212;
 }
 
 /* Style of buttons in the sidebar  END  */
@@ -59,37 +36,9 @@ QPushButton#topbar_button{
 	text-align : center; 	
 	border : 1px solid #ADFF2F;
 	border-radius : 25px;
-	
-}
-
-QPushButton#topbar_button::focus
-{
-	color : #121212;
-
-}
-
-QPushButton#topbar_button::hover::focus
-{
+	background : #ffffff;
 	color : #121212;
 	
-}
-
-QPushButton#topbar_button::pressed
-{
-	color : #000000;
-	
-}
-
-QPushButton#topbar_button::hover
-{
-	color : #444444;
-	
-}
-QPushButton#topbar_button::disabled{
-	color: #E91E63;
-}
-QPushButton#topbar_button::!enabled{
-	color: #E91E63;
 }
 
 /* Style of buttons in the topbar  END  */
@@ -105,7 +54,7 @@ QPushButton#interior_button{
 	font-size : 14px;
 	text-align : center; 	
 	border : 1px solid #ADFF2F;
-	
+	background : #ffffff;
 }
 
 QPushButton#interior_button::focus
@@ -149,7 +98,7 @@ QPushButton#interior_button::!enabled{
 /* Style of buttons in the close dialog box  START  */
 QPushButton#close_button_yes{
 	text-align : center;
-	
+	background : #ffffff;
 	color : #990000;
 }
 
@@ -167,7 +116,7 @@ QPushButton#close_button_yes::hover{
 
 QPushButton#close_button_no{
 	text-align : center;
-	
+	background : #ffffff;
 	color : #009900;
 }
 
@@ -227,12 +176,12 @@ QWidget#sidebar{
 
 /* right panes background color */
 QTabWidget#main_tabs{
-	background-color : #777777;
+	background-color : #ffffff;
 }
 
 /* Text color in right panes */
 QTabWidget::pane{
-	color : #AAAAAA;
+	color : #121212;
 }
 /* Right panes style END */
 
@@ -240,14 +189,14 @@ QTabWidget::pane{
 /* Style of background */
 QWidget#screen_widget
 {
-	color : #CCCCCC;
-	background-color : #555555;
+	color : #121212;
+	background-color : #ffffff;
 }
 
 /* Style of bar where bitwise logo sits */
 QWidget#main_widget{
-	background-color: #444444;
-	color: #AAAAAA;
+	background-color: #ffffff;
+	color: #121212;
 }
 
 /* Style of content boxes*/
@@ -269,13 +218,13 @@ QLabel#main_screen_heading{
 }
 
 QLabel#main_screen_sub_heading{
-	color : #333333;
+	color : #444444;
 	font-size : 26px;
 }
 
 QLabel#about_screen_heading{
 	margin-top : 200px;
-	color : #E91E63;
+	color : #121212;
 	font-size : 30px;
 }
 QLCDNumber{
@@ -296,7 +245,7 @@ QTabBar::tab
 /*Style of problem tab bar*/
 QTabBar#problem_tabs
 {
-	background : #444444;
+	background : #ffffff;
 }
 
 QTabBar#problem_tabs::tab
@@ -304,7 +253,7 @@ QTabBar#problem_tabs::tab
 	width: 140px; 
 	height: 35px; 
 	margin: 0px; 
-	background : #555555;
+	background : #ffffff;
 	color : #777777;
 }
 
@@ -324,20 +273,20 @@ QTabBar#problem_tabs::tab:selected
 
 /*--------------SUB LAYOUT STARTS---------*/
 QDialog{
-	background-color : #777777;
+	background-color : #ffffff;
 }
 QDialog QLabel{
 	color : #121212;
 }
 QDialog QPushButton{
 	text-align : center;
-	background-color : #777777 ; 
-	color : #AAAAAA;
+	background-color : #ffffff ; 
+	color : #121212;
 	border : 1px solid #121212;
 }
 
 QSpinBox{
-	background : #555555;
+	background : #ffffff;
 	color : #121212;
 	border : 1px solid #777777;
 	height : 30px;
@@ -373,7 +322,7 @@ QSpinBox::down-arrow
 
 QComboBox#account_combobox
 {
-	background : #555555;
+	background : #ffffff;
 	color : #121212;
 	selection-background : #777777;
 	border: 1px solid #777777;
@@ -382,7 +331,7 @@ QComboBox#account_combobox
 }
 QComboBox#account_combobox::drop-down 
 {
-	background : #777777;
+	background : #ffffff;
     subcontrol-origin: padding;
     subcontrol-position: top right;
     border-left-width: 1px;
@@ -393,8 +342,8 @@ QComboBox#account_combobox::drop-down
 }
 QComboBox QAbstractItemView 
 {		/* This is the style of dropdown menu*/
-    background-color : #1D2227;
-	color : #AAAAAA;
+    background-color : #ffffff;
+	color : #121212;
 	border : 1px solid #2D353D;
 	selection-background-color : #777777;
 }
@@ -412,18 +361,18 @@ QLabel#account_label
 
 QWidget#account_window
 {
-	background-color : #777777;
+	background-color : #ffffff;
 }
 QTextEdit
 {
-	background : #666666;
+	background : #ffffff;
 	color : #121212;
 }
 
 QLineEdit
 {
 	height : 30px;
-	background : #666666;
+	background : #ffffff;
 	color : #121212;
 	border : 1px solid #777777;
 }
@@ -442,8 +391,8 @@ QLineEdit
 /* Table styles */
 QTableView
 {
-	background : #666666;
-	alternate-background-color : #555555;
+	background : #ffffff;
+	alternate-background-color : #eeeeee;
 	color : #121212;
 	border : 0px;
 	gridline-color : #transparent;
@@ -457,13 +406,13 @@ QTableView::item:selected
 
 QHeaderView::section
 { 
-	background-color : #777777;
+	background-color : #999999;
 	color: #121212;	
 }
 
 QTableWidget#inner_table
 {
-	background : #666666;
+	background : #ffffff;
 	border : 1px solid #555555;
 }
 
@@ -481,7 +430,7 @@ QScrollBar:vertical{
 }
 
 QScrollBar::handle:vertical{
-	background : qlineargradient( spread:Reflect, x1:0, y1:0, x2:0, y2:1 , stop:0 #777777, stop:0.5 #38424C, stop:1 #777777);
+	background : #aaaaaa;
 	width : 25px;
 	min-height : 500px;
 	margin-left : 0px;

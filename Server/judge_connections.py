@@ -74,25 +74,22 @@ class manage_judges():
 		print('\n[ PING ] Recieved a new judge verdict.')
 		try:
 			json_data = json.loads(judge_message)
+			code = json_data["Code"]
 			# Validate Judge message
 			judge_key = json_data['Judge Key']
 			if judge_key != manage_judges.config['Judge Key']:
 				print('[ SECURITY ][ CRITICAL ] Judge Key did not match!')
 				print('[ SECURITY ][ CRITICAL ] Full Message: ' + judge_message)
-				# Send Acknowldgement of message recieved
-				ch.basic_ack(delivery_tag = method.delivery_tag)
-
 				# Get Run ID
-				code = json_data["Code"]
+				
 				if code == 'VRDCT':
 					run_id = json_data['Run ID']
 				# Mark the submission
-				submissions_management.update_submission_status(run_id, 'FAILED')
+				submissions_management.update_submission_status(run_id, 'FAILED', 'FAILED')
+				manage_judges.data_changed_flags[0] = 1
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
 
-
-			code = json_data["Code"]
 			if code == 'VRDCT':
 				local_run_id = json_data['Local Run ID']
 				client_username = json_data['Client Username']

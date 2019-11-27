@@ -40,8 +40,6 @@ class manage_clients():
 			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
 			connection = pika.BlockingConnection(params)
 
-
-			#connection = pika.BlockingConnection(pika.URLParameters('amqp://' + superuser_username + ':' + superuser_password + '@' + host + '/%2f'))
 			channel = connection.channel()
 			manage_clients.channel = channel
 			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)

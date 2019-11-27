@@ -77,18 +77,17 @@ class ui_widgets:
 		allow_submission_button.setChecked(submission_allowed_flag)
 		allow_submission_button.stateChanged.connect(self.allow_submissions_handler)
 
-		submission_model = self.manage_models(self.db, 'submissions')
+		submission_model = self.manage_submissions_model(self.db, 'submissions')
 		submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
-		submission_model.setHeaderData(1, Qt.Horizontal, 'Local ID')
-		submission_model.setHeaderData(2, Qt.Horizontal, 'Client ID')
+		submission_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
+		submission_model.setHeaderData(2, Qt.Horizontal, 'Problem Code')
 		submission_model.setHeaderData(3, Qt.Horizontal, 'Language')
-		submission_model.setHeaderData(4, Qt.Horizontal, 'Source File')
-		submission_model.setHeaderData(5, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(6, Qt.Horizontal, 'Verdict')
-		submission_model.setHeaderData(7, Qt.Horizontal, 'Time')
-		submission_model.setHeaderData(8, Qt.Horizontal, 'Status')
+		submission_model.setHeaderData(4, Qt.Horizontal, 'Time')
+		submission_model.setHeaderData(5, Qt.Horizontal, 'Verdict')
+		submission_model.setHeaderData(6, Qt.Horizontal, 'Status')
 		
 		submission_table = self.generate_view(submission_model)
+		submission_table.doubleClicked.connect(lambda:self.manage_submission(submission_table.selectionModel().currentIndex().row()))
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
@@ -123,6 +122,10 @@ class ui_widgets:
 		client_model.setHeaderData(3, Qt.Horizontal, 'State')
 		client_view = self.generate_view(client_model)
 
+		client_view.doubleClicked.connect(
+			lambda:self.edit_client(client_view.selectionModel().currentIndex().row())
+		)
+
 		heading = QLabel('Connected Clients')
 		heading.setObjectName('main_screen_heading')
 
@@ -140,7 +143,7 @@ class ui_widgets:
 		edit_client_button.setFixedSize(200, 50)
 		edit_client_button.clicked.connect(
 			lambda:self.edit_client(client_view.selectionModel().currentIndex().row())
-			)
+		)
 		edit_client_button.setObjectName("topbar_button")
 		edit_client_button.setToolTip('Change client status.')
 
@@ -233,6 +236,9 @@ class ui_widgets:
 		query_model.setHeaderData(3, Qt.Horizontal, 'Response')
 
 		query_view = self.generate_view(query_model)
+		query_view.doubleClicked.connect(
+			lambda:self.query_reply(query_view.selectionModel().currentIndex().row())
+		)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
@@ -1343,6 +1349,103 @@ class query_reply_ui(QMainWindow):
 		query_management.update_query(query_reply_ui.query_id, response)
 		self.data_changed_flags[8] = 0
 		self.data_changed_flags[9] = 1
+		self.close()
+
+	def cancel(self):
+		self.data_changed_flags[8] = 0
+		self.close()
+
+class manage_submission_ui(QMainWindow):
+	data_changed_flags = ''
+	data_to_client = ''
+	run_id = ''
+	client_id = ''
+	pcode = ''
+	language = ''
+	timestamp = ''
+	verdict = ''
+	sent_status = ''
+
+	def __init__(
+		self, 
+		data_changed_flags,
+		data_to_client, 
+		run_id,
+		client_id,
+		problem_code,
+		language ,
+		timestamp,
+		verdict,
+		sent_status,
+		parent=None
+		):
+		super(manage_submission_ui, self).__init__(parent)
+		query_reply_ui.button_mode = 1
+
+		self.data_changed_flags = data_changed_flags
+		self.data_to_client = data_to_client
+		self.run_id = run_id
+		self.client_id = client_id
+		self.problem_code = problem_code
+		self.language = language
+		self.timestamp = timestamp
+		self.verdict = verdict
+		self.sent_status = sent_status
+
+
+		self.setWindowTitle('Run ' + str(run_id) + '@Client' + str(client_id))
+		self.setFixedSize(800, 600)
+		main = self.main_manage_sub_ui()
+		self.setCentralWidget(main)
+		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
+		return
+
+	def main_manage_sub_ui(self):
+		submission_heading = QLabel('Manual Validation')
+		submission_sub_heading = QLabel('Run ID ' + str(self.run_id))
+
+
+		confirm_button = QPushButton('Confirm')
+		confirm_button.setFixedSize(150, 30)
+		confirm_button.clicked.connect(
+			lambda:manage_submission_ui.final_status(self)
+			)
+		confirm_button.setDefault(True)
+
+		cancel_button = QPushButton('Cancel')
+		cancel_button.setFixedSize(150, 30)
+		cancel_button.clicked.connect(
+			lambda:manage_submission_ui.cancel(self)
+			)
+		cancel_button.setDefault(True)
+
+		button_layout = QHBoxLayout()
+		button_layout.addWidget(confirm_button)
+		button_layout.addWidget(cancel_button)
+		button_layout.addStretch(1)
+		button_widget = QWidget()
+		button_widget.setLayout(button_layout)
+		
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(submission_heading)
+		main_layout.addWidget(submission_sub_heading)
+		main_layout.addWidget(button_widget)
+		
+		main_layout.addStretch(1)
+
+		main = QWidget()
+		main.setLayout(main_layout)
+
+		main.setObjectName('account_window')
+		submission_heading.setObjectName('main_screen_heading')
+		submission_sub_heading.setObjectName('main_screen_sub_heading')
+		confirm_button.setObjectName('account_button')
+		cancel_button.setObjectName('account_button')
+		
+		return main
+
+	def final_status(self):
+		self.data_changed_flags[8] = 0
 		self.close()
 
 	def cancel(self):
