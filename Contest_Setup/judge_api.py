@@ -140,7 +140,7 @@ class judge():
 	def compare_outputs(problem_code):
 		i = 1
 		passed = 0
-		cwd = './Problems/SAC/'
+		cwd = './Problems/' + problem_code + '/'
 		list_0f_files = os.listdir(cwd)
 		list_0f_files.sort()
 		for files in list_0f_files:

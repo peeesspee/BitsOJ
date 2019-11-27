@@ -5,8 +5,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QColor, QPixmap
 
 class Login(QWidget):
-	# channel = None
-	# host = None
 	def __init__(self, connection,queue):
 		super().__init__()
 		try:
