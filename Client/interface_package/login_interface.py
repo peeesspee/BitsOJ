@@ -5,8 +5,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QColor, QPixmap
 
 class Login(QWidget):
-	# channel = None
-	# host = None
 	def __init__(self, connection,queue):
 		super().__init__()
 		try:
@@ -117,7 +115,7 @@ class start_interface(Login):
 	def __init__(self, connection, data_changed_flag,queue):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
-		# app.setStyleSheet(open('Elements/login.qss', "r").read())
+		app.setStyleSheet(open('Elements/login.qss', "r").read())
 		app.aboutToQuit.connect(self.closeEvent)
 		# make a reference of App class
 		login_app = Login(connection,queue)

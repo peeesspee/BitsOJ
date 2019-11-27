@@ -582,7 +582,7 @@ class init_gui(client_window):
 	def __init__(self,channel, data_changed_flag,queue,score):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
-		# app.setStyleSheet(open('Elements/style.qss', "r").read())
+		app.setStyleSheet(open('Elements/style.qss', "r").read())
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 

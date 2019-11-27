@@ -154,12 +154,13 @@ class contest_setup(QMainWindow):
 		self.tabs.setObjectName('client_tabs')
 		self.rabbitmq_client_detail = QWidget()
 		self.rabbitmq_server_detail = QWidget()
+		self.rabbitmq_judge_detail = QWidget()
 
 		
 
 
 		###################################################################
-		######################## RABBITMQ TAB #############################
+		##################### RABBITMQ CLIENT TAB #########################
 		###################################################################
 
 		self.rabbitmq_creds = QVBoxLayout()
@@ -237,6 +238,171 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_creds.addStretch(1)
 		self.rabbitmq_creds.addSpacing(0)
 		self.rabbitmq_client_detail.setLayout(self.rabbitmq_creds)
+
+
+		###################################################################
+		##################### RABBITMQ SERVER TAB #########################
+		###################################################################
+
+
+		self.rabbitmq_server_creds = QVBoxLayout()
+		rabbitmq_server_heading = QLabel('RabbitMQ Server Details')
+		rabbitmq_server_heading.setObjectName('heading')
+		self.rabbitmq_server_username = QHBoxLayout()
+		self.rabbitmq_server_username_label = QLabel('RABBIT_MQ USERNAME    :   ')
+		self.rabbitmq_server_username_label.setObjectName('general')
+		self.rabbitmq_server_username_text = QLineEdit()
+		self.rabbitmq_server_username_text.setPlaceholderText('Example : Client')
+		self.rabbitmq_server_username_text.setObjectName('general_text')
+		self.rabbitmq_server_username_text.setFixedWidth(400)
+		self.rabbitmq_server_username_text.setFixedHeight(50)
+		self.rabbitmq_server_username.addWidget(self.rabbitmq_server_username_label)
+		self.rabbitmq_server_username.addWidget(self.rabbitmq_server_username_text)
+		self.rabbitmq_server_username.addStretch(1)
+		self.rabbitmq_server_username.addSpacing(0)
+		self.username_server_widget = QWidget()
+		self.username_server_widget.setLayout(self.rabbitmq_server_username)
+		self.rabbitmq_server_password = QHBoxLayout()
+		self.rabbitmq_server_password_label = QLabel('RABBIT_MQ PASSWORD   :   ')
+		self.rabbitmq_server_password_label.setObjectName('general')
+		self.rabbitmq_server_password_text = QLineEdit()
+		self.rabbitmq_server_password_text.setPlaceholderText('Example : Client')
+		self.rabbitmq_server_password_text.setObjectName('general_text')
+		self.rabbitmq_server_password_text.setFixedWidth(400)
+		self.rabbitmq_server_password_text.setFixedHeight(50)
+		self.rabbitmq_server_password.addWidget(self.rabbitmq_server_password_label)
+		self.rabbitmq_server_password.addWidget(self.rabbitmq_server_password_text)
+		self.rabbitmq_server_password.addStretch(1)
+		self.rabbitmq_server_password.addSpacing(0)
+		self.password_server_widget = QWidget()
+		self.password_server_widget.setLayout(self.rabbitmq_server_password)
+		self.manual_server = QRadioButton('Manual IP')
+		self.manual_server.setChecked(True)
+		self.manual_server.toggled.connect(lambda:self.button_state_server(self.manual_server))
+		self.automatic_server = QRadioButton('Automatic IP')
+		self.automatic_server.toggled.connect(lambda:self.button_state_server(self.automatic_server))
+		self.rabbitmq_server_host = QHBoxLayout()
+		self.rabbitmq_server_host_label = QLabel('RABBIT_MQ HOST              :   ')
+		self.rabbitmq_server_host_label.setObjectName('general')
+		self.rabbitmq_server_host_text = QLineEdit()
+		self.rabbitmq_server_host_text.setPlaceholderText('Example : 127.0.0.1')
+		self.rabbitmq_server_host_text.setObjectName('general_text')
+		self.rabbitmq_server_host_text.setFixedWidth(400)
+		self.rabbitmq_server_host_text.setFixedHeight(50)
+		self.rabbitmq_server_host.addWidget(self.rabbitmq_server_host_label)
+		self.rabbitmq_server_host.addWidget(self.rabbitmq_server_host_text)
+		self.rabbitmq_server_host.addWidget(self.manual_server)
+		self.rabbitmq_server_host.addWidget(self.automatic_server)
+		self.rabbitmq_server_host.addStretch(1)
+		self.rabbitmq_server_host.addSpacing(0)
+		self.host_server_widget = QWidget()
+		self.host_server_widget.setLayout(self.rabbitmq_server_host)
+		self.rabbitmq_server_button = QHBoxLayout()
+		self.save_server_button = QPushButton('Save')
+		self.save_server_button.setObjectName('general')
+		self.save_server_button.setFixedSize(200,50)
+		self.save_server_button.clicked.connect(lambda:self.save_server_rabbitmq())
+		self.edit_server_button = QPushButton('Edit')
+		self.edit_server_button.setObjectName('general')
+		self.edit_server_button.setFixedSize(200,50)
+		self.edit_server_button.clicked.connect(lambda:self.edit_server_rabbitmq())
+		self.rabbitmq_server_button.addWidget(self.save_server_button, alignment=Qt.AlignRight)
+		self.rabbitmq_server_button.addWidget(self.edit_server_button, alignment=Qt.AlignRight)
+		self.rabbitmq_server_button.addStretch(1)
+		self.rabbitmq_server_button.addSpacing(0)
+		self.button_server_widget = QWidget()
+		self.button_server_widget.setLayout(self.rabbitmq_server_button)
+		self.rabbitmq_server_creds.addWidget(rabbitmq_server_heading)
+		self.rabbitmq_server_creds.addWidget(self.username_server_widget)
+		self.rabbitmq_server_creds.addWidget(self.password_server_widget)
+		self.rabbitmq_server_creds.addWidget(self.host_server_widget)
+		self.rabbitmq_server_creds.addWidget(self.button_server_widget, alignment=Qt.AlignBottom)
+		self.rabbitmq_server_creds.addStretch(1)
+		self.rabbitmq_server_creds.addSpacing(0)
+		self.rabbitmq_server_detail.setLayout(self.rabbitmq_server_creds)
+
+
+
+		###################################################################
+		##################### RABBITMQ JUDGE TAB ##########################
+		###################################################################
+
+
+		self.rabbitmq_judge_creds = QVBoxLayout()
+		rabbitmq_judge_heading = QLabel('RabbitMQ Judge Details')
+		rabbitmq_judge_heading.setObjectName('heading')
+		self.rabbitmq_judge_username = QHBoxLayout()
+		self.rabbitmq_judge_username_label = QLabel('RABBIT_MQ USERNAME    :   ')
+		self.rabbitmq_judge_username_label.setObjectName('general')
+		self.rabbitmq_judge_username_text = QLineEdit()
+		self.rabbitmq_judge_username_text.setPlaceholderText('Example : Client')
+		self.rabbitmq_judge_username_text.setObjectName('general_text')
+		self.rabbitmq_judge_username_text.setFixedWidth(400)
+		self.rabbitmq_judge_username_text.setFixedHeight(50)
+		self.rabbitmq_judge_username.addWidget(self.rabbitmq_judge_username_label)
+		self.rabbitmq_judge_username.addWidget(self.rabbitmq_judge_username_text)
+		self.rabbitmq_judge_username.addStretch(1)
+		self.rabbitmq_judge_username.addSpacing(0)
+		self.username_judge_widget = QWidget()
+		self.username_judge_widget.setLayout(self.rabbitmq_judge_username)
+		self.rabbitmq_judge_password = QHBoxLayout()
+		self.rabbitmq_judge_password_label = QLabel('RABBIT_MQ PASSWORD   :   ')
+		self.rabbitmq_judge_password_label.setObjectName('general')
+		self.rabbitmq_judge_password_text = QLineEdit()
+		self.rabbitmq_judge_password_text.setPlaceholderText('Example : Client')
+		self.rabbitmq_judge_password_text.setObjectName('general_text')
+		self.rabbitmq_judge_password_text.setFixedWidth(400)
+		self.rabbitmq_judge_password_text.setFixedHeight(50)
+		self.rabbitmq_judge_password.addWidget(self.rabbitmq_judge_password_label)
+		self.rabbitmq_judge_password.addWidget(self.rabbitmq_judge_password_text)
+		self.rabbitmq_judge_password.addStretch(1)
+		self.rabbitmq_judge_password.addSpacing(0)
+		self.password_judge_widget = QWidget()
+		self.password_judge_widget.setLayout(self.rabbitmq_judge_password)
+		self.manual_judge = QRadioButton('Manual IP')
+		self.manual_judge.setChecked(True)
+		self.manual_judge.toggled.connect(lambda:self.button_state_judge(self.manual_judge))
+		self.automatic_judge = QRadioButton('Automatic IP')
+		self.automatic_judge.toggled.connect(lambda:self.button_state_judge(self.automatic_judge))
+		self.rabbitmq_judge_host = QHBoxLayout()
+		self.rabbitmq_judge_host_label = QLabel('RABBIT_MQ HOST              :   ')
+		self.rabbitmq_judge_host_label.setObjectName('general')
+		self.rabbitmq_judge_host_text = QLineEdit()
+		self.rabbitmq_judge_host_text.setPlaceholderText('Example : 127.0.0.1')
+		self.rabbitmq_judge_host_text.setObjectName('general_text')
+		self.rabbitmq_judge_host_text.setFixedWidth(400)
+		self.rabbitmq_judge_host_text.setFixedHeight(50)
+		self.rabbitmq_judge_host.addWidget(self.rabbitmq_judge_host_label)
+		self.rabbitmq_judge_host.addWidget(self.rabbitmq_judge_host_text)
+		self.rabbitmq_judge_host.addWidget(self.manual_judge)
+		self.rabbitmq_judge_host.addWidget(self.automatic_judge)
+		self.rabbitmq_judge_host.addStretch(1)
+		self.rabbitmq_judge_host.addSpacing(0)
+		self.host_judge_widget = QWidget()
+		self.host_judge_widget.setLayout(self.rabbitmq_judge_host)
+		self.rabbitmq_judge_button = QHBoxLayout()
+		self.save_judge_button = QPushButton('Save')
+		self.save_judge_button.setObjectName('general')
+		self.save_judge_button.setFixedSize(200,50)
+		self.save_judge_button.clicked.connect(lambda:self.save_judge_rabbitmq())
+		self.edit_judge_button = QPushButton('Edit')
+		self.edit_judge_button.setObjectName('general')
+		self.edit_judge_button.setFixedSize(200,50)
+		self.edit_judge_button.clicked.connect(lambda:self.edit_judge_rabbitmq())
+		self.rabbitmq_judge_button.addWidget(self.save_judge_button, alignment=Qt.AlignRight)
+		self.rabbitmq_judge_button.addWidget(self.edit_judge_button, alignment=Qt.AlignRight)
+		self.rabbitmq_judge_button.addStretch(1)
+		self.rabbitmq_judge_button.addSpacing(0)
+		self.button_judge_widget = QWidget()
+		self.button_judge_widget.setLayout(self.rabbitmq_judge_button)
+		self.rabbitmq_judge_creds.addWidget(rabbitmq_judge_heading)
+		self.rabbitmq_judge_creds.addWidget(self.username_judge_widget)
+		self.rabbitmq_judge_creds.addWidget(self.password_judge_widget)
+		self.rabbitmq_judge_creds.addWidget(self.host_judge_widget)
+		self.rabbitmq_judge_creds.addWidget(self.button_judge_widget, alignment=Qt.AlignBottom)
+		self.rabbitmq_judge_creds.addStretch(1)
+		self.rabbitmq_judge_creds.addSpacing(0)
+		self.rabbitmq_judge_detail.setLayout(self.rabbitmq_judge_creds)
 		
 
 
@@ -245,9 +411,10 @@ class contest_setup(QMainWindow):
 		######################################################################
 
 
-		self.tabs.addTab(self.rabbitmq_client_detail, "Client Creds")
+		
 		self.tabs.addTab(self.rabbitmq_server_detail, "Server Creds")
-		self.tabs.addTab(self.rabbitmq_client_detail, "Judge Creds")
+		self.tabs.addTab(self.rabbitmq_judge_detail, "Judge Creds")
+		self.tabs.addTab(self.rabbitmq_client_detail, "Client Creds")
 
 		
 
@@ -798,6 +965,12 @@ class contest_setup(QMainWindow):
 			self.client_config["host"] = self.rabbitmq_host_text.text()
 			QMessageBox.warning(self,'Message','RabbitMQ Details has been saved')
 
+	def save_server_rabbitmq(self):
+		pass
+
+	def save_judge_rabbitmq(self):
+		pass
+
 	########################## EDIT RABBITMQ DETAILS FOR CLIENT ############################
 	def edit_client_rabbitmq(self):
 		self.rabbitmq_username_text.setReadOnly(False)
@@ -805,6 +978,15 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_host_text.setReadOnly(False)
 		self.manual.setEnabled(True)
 		self.automatic.setEnabled(True)
+
+
+	def edit_server_rabbitmq(self):
+		pass
+
+
+	def edit_judge_rabbitmq(self):
+		pass
+
 
 	########################### SAVE LANGUAGE DETAILS FOR CLIENT ###########################
 	def save_client_language(self):
@@ -865,6 +1047,32 @@ class contest_setup(QMainWindow):
 				ip = self.get_ip_address()
 				self.rabbitmq_host_text.setText(ip)
 				self.rabbitmq_host_text.setReadOnly(True)
+
+
+	def button_state_server(self,button):
+		if button.text() == 'Manual IP':
+			if button.isChecked() == True:
+				self.rabbitmq_server_host_text.setReadOnly(False)
+				self.rabbitmq_server_host_text.setText('')
+				self.rabbitmq_server_host_text.setPlaceholderText('Example : 127.0.0.1')
+		else:
+			if button.isChecked() == True:
+				ip = self.get_ip_address()
+				self.rabbitmq_server_host_text.setText(ip)
+				self.rabbitmq_server_host_text.setReadOnly(True)
+
+
+	def button_state_judge(self,button):
+		if button.text() == 'Manual IP':
+			if button.isChecked() == True:
+				self.rabbitmq_judge_host_text.setReadOnly(False)
+				self.rabbitmq_judge_host_text.setText('')
+				self.rabbitmq_judge_host_text.setPlaceholderText('Example : 127.0.0.1')
+		else:
+			if button.isChecked() == True:
+				ip = self.get_ip_address()
+				self.rabbitmq_judge_host_text.setText(ip)
+				self.rabbitmq_judge_host_text.setReadOnly(True)
 
 
 	def rank_state(self,button):
@@ -981,7 +1189,7 @@ class contest_setup(QMainWindow):
 class setup_window(contest_setup):
 	def __init__(self):
 		app = QApplication(sys.argv)
-		# app.setStyleSheet(open('Elements/style.qss', "r").read())
+		app.setStyleSheet(open('Elements/style.qss', "r").read())
 		app.setStyle("Fusion")
 
 		client_app = contest_setup()
