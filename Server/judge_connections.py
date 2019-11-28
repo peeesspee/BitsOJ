@@ -85,7 +85,7 @@ class manage_judges():
 				if code == 'VRDCT':
 					run_id = json_data['Run ID']
 				# Mark the submission
-				submissions_management.update_submission_status(run_id, 'FAILED', 'FAILED')
+				submissions_management.update_submission_status(run_id, '[ SECURITY ]', 'HALTED')
 				manage_judges.data_changed_flags[0] = 1
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return

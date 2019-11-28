@@ -46,7 +46,7 @@ class server_window(QMainWindow):
 		
 		###########################################################
 		self.db = self.init_qt_database()
-		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status FROM submissions"
+		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status FROM submissions ORDER BY run_id DESC"
 		self.leaderboard_query = "SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC"
 		###########################################################
 		self.config = initialize_server.read_config()
@@ -316,6 +316,7 @@ class server_window(QMainWindow):
 			# Update submission table
 			if self.data_changed_flags[0] == 1:
 				self.sub_model.setQuery(self.submissions_query)
+				# self.sub_model.select()
 				self.data_changed_flags[0] = 0
 			# Update connected clients table
 			if self.data_changed_flags[1] == 1:
@@ -723,6 +724,8 @@ class server_window(QMainWindow):
 			self.data_changed_flags[8] = 1
 			try:
 				# Get data from selected row
+				#  run_id, client_id, problem_code, language, timestamp, verdict, sent_status
+
 				run_id = self.sub_model.index(selected_row, 0).data()
 				client_id = self.sub_model.index(selected_row, 1).data()
 				problem_code = self.sub_model.index(selected_row, 2).data()
@@ -731,23 +734,25 @@ class server_window(QMainWindow):
 				verdict = self.sub_model.index(selected_row, 5).data()
 				sent_status = self.sub_model.index(selected_row, 6).data()
 
-				self.window = manage_submission_ui(
-					self.data_changed_flags,
-					self.data_to_client ,
-					run_id,
-					client_id,
-					problem_code,
-					language,
-					timestamp,
-					verdict,
-					sent_status
-				)
-				self.window.show()
+				if client_id == None:
+					pass
+				else:
+					self.window = manage_submission_ui(
+						self.data_changed_flags,
+						self.data_to_client ,
+						run_id,
+						client_id,
+						problem_code,
+						language,
+						timestamp,
+						verdict,
+						sent_status
+					)
+					self.window.show()
 
 			except Exception as error: 
 				print('[ ERROR ] : ' + str(error))
 			finally:
-				self.data_changed_flags[8] = 0
 				return
 		else:
 			return
@@ -772,7 +777,6 @@ class server_window(QMainWindow):
 			except Exception as error: 
 				print('[ ERROR ] : ' + str(error))
 			finally:
-				self.data_changed_flags[8] = 0
 				return
 		else:
 			return
@@ -913,7 +917,6 @@ class server_window(QMainWindow):
 			print('Error' + str(error))
 		finally:
 			# Reset critical flag
-			self.data_changed_flags[14] = 0
 			return
 
 	def reset_accounts(self):
