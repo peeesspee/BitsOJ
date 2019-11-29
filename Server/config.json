@@ -30,6 +30,6 @@
     "AC Points": 100,
     "Penalty Score": -20,
     "Penalty Time": 20,
-    "Manual Review": "False",
+    "Manual Review": "True",
     "Submission Time Limit": 0
 }

@@ -133,23 +133,13 @@ class manage_judges():
 		}
 		message = json.dumps(message)
 
-
 		# Publish message to client if allowed
 		# Update scoreboard also when manual review is ON
 		if manage_judges.data_changed_flags[20] == 0:
 			try:
-				# TASK QUEUE HERE
+				# Put response to task queue, to further connect to the client
 				manage_judges.task_queue.put(message)
-				# manage_judges.channel.basic_publish(
-				# 	exchange = 'connection_manager', 
-				# 	routing_key = client_username, 
-				# 	body = message
-				# )
-
 				print('[ VERDICT ] New verdict sent to ' + client_username)
-				submissions_management.update_submission_status(run_id, status, 'SENT')
-				# Update GUI
-				manage_judges.data_changed_flags[0] = 1
 			except Exception as error:
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				print('[ ERROR ] Could not publish result to client : ' + str(error))

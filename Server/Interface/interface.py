@@ -736,7 +736,7 @@ class server_window(QMainWindow):
 				else:
 					self.window = manage_submission_ui(
 						self.data_changed_flags,
-						self.task_queue ,
+						self.task_queue,
 						run_id,
 						client_id,
 						problem_code,

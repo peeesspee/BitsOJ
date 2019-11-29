@@ -2,7 +2,7 @@
 # It also sends data to clients/judges either in unicast or in broadcast.
 import json, pika, sys, time
 from init_server import initialize_server
-from database_management import client_authentication
+from database_management import client_authentication, submissions_management
   
 class core():
 	data_changed_flags = ''
@@ -195,7 +195,7 @@ class core():
 						body = message
 					)
 
-				elif data['Code'] in ['VALID', 'INVLD', 'LRJCT', 'SRJCT', 'VRDCT']:
+				elif data['Code'] in ['VALID', 'INVLD', 'LRJCT', 'SRJCT']:
 					# Pass the message to appropiate recipient, nothing to process in data
 					receiver = data['Receiver']
 					message = json.dumps(data)
@@ -204,6 +204,21 @@ class core():
 						routing_key = receiver, 
 						body = message
 					)
+
+				elif data['Code'] == 'VRDCT':
+					receiver = data['Receiver']
+					run_id = data['Run ID']
+					status = data['Status']
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = core.unicast_exchange, 
+						routing_key = receiver, 
+						body = message
+					)
+					# Update Database
+					submissions_management.update_submission_status(run_id, status, 'SENT')
+					# Update GUI
+					core.data_changed_flags[0] = 1
 
 				elif data['Code'] == 'JUDGE':
 					message = json.dumps(data)
