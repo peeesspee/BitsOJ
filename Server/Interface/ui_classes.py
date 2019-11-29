@@ -1017,6 +1017,7 @@ class new_accounts_ui(QMainWindow):
 	def __init__(self, data_changed_flags, parent=None):
 		super(new_accounts_ui, self).__init__(parent)
 		self.data_changed_flags = data_changed_flags
+		self.setGeometry(800, 450, 300, 200)
 		self.setWindowTitle('Add new accounts')
 		self.setFixedSize(300, 200)
 		main = self.add_new_accounts_ui()
@@ -1137,6 +1138,7 @@ class view_case_ui(QMainWindow):
 		view_case_ui.problem_path = problem_path
 
 		self.setWindowTitle('View Case')
+		self.setGeometry(550, 250, 800, 600)
 		self.setFixedSize(800,600)
 		main = self.main_view_case_ui()
 		self.setCentralWidget(main)
@@ -1250,6 +1252,7 @@ class query_reply_ui(QMainWindow):
 		query_reply_ui.client_id = client_id
 
 		self.setWindowTitle('Reply')
+		self.setGeometry(750, 350, 400, 400)
 		self.setFixedSize(400,400)
 		main = self.main_query_reply_ui()
 		self.setCentralWidget(main)
@@ -1276,10 +1279,10 @@ class query_reply_ui(QMainWindow):
 		send_to_all_rbutton.setChecked(False)
 		send_to_client_rbutton.toggled.connect(
 			lambda: query_reply_ui.send_mode_setter(self, send_to_client_rbutton)
-			)
+		)
 		send_to_all_rbutton.toggled.connect(
 			lambda: query_reply_ui.send_mode_setter(self, send_to_all_rbutton)
-			)
+		)
 
 		radiobutton_layout = QHBoxLayout()
 		radiobutton_layout.addWidget(broadcast_setting_label)
@@ -1346,7 +1349,6 @@ class query_reply_ui(QMainWindow):
 		else:
 			if rbutton.isChecked() == True:
 				query_reply_ui.button_mode = 2
-
 		return
 
 	def final_status(self, response):
@@ -1355,12 +1357,12 @@ class query_reply_ui(QMainWindow):
 		else:
 			send_type = 'Client'
 		message ={
-		'Code' : 'QUERY',
-		'Query' : query_reply_ui.query,
-		'Response' : response,
-		'Mode' : send_type,
-		'Query ID' : query_reply_ui.query_id,
-		'Client ID' : query_reply_ui.client_id
+			'Code' : 'QUERY',
+			'Query' : query_reply_ui.query,
+			'Response' : response,
+			'Mode' : send_type,
+			'Query ID' : query_reply_ui.query_id,
+			'Client ID' : query_reply_ui.client_id
 		}
 		message = json.dumps(message)
 		self.data_to_client.put(message)
@@ -1396,17 +1398,17 @@ class manage_submission_ui(QMainWindow):
 	}
 	
 	def __init__(
-		self, 
-		data_changed_flags,
-		data_to_client, 
-		run_id,
-		client_id,
-		problem_code,
-		language ,
-		timestamp,
-		verdict,
-		sent_status,
-		parent=None
+			self, 
+			data_changed_flags,
+			data_to_client, 
+			run_id,
+			client_id,
+			problem_code,
+			language ,
+			timestamp,
+			verdict,
+			sent_status,
+			parent=None
 		):
 		super(manage_submission_ui, self).__init__(parent)
 		query_reply_ui.button_mode = 1
@@ -1423,9 +1425,9 @@ class manage_submission_ui(QMainWindow):
 
 		width = 800
 		height = 500
+		self.setGeometry(550, 300, width, height)
 		self.setWindowTitle('Run ' + str(run_id) + 'From Client ' + str(client_id))
 		self.setFixedSize(width, height)
-		self.setGeometry(550, 300, width, height)
 		main = self.main_manage_sub_ui()
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
@@ -1605,6 +1607,7 @@ class account_edit_ui(QMainWindow):
 		account_edit_ui.state_type = state
 		
 		self.setWindowTitle('Manage Client')
+		self.setGeometry(750, 350, 400, 350)
 		self.setFixedSize(400,350)
 		main = self.main_account_edit_ui()
 		self.setCentralWidget(main)

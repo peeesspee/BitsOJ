@@ -81,7 +81,7 @@ def handler(ch, method, properties, body):
 			status = verdicts[num]
 
 			message = {
-			'Judge Key' : 'test',
+			'Judge Key' : key,
 			'Code' : 'VRDCT', 
 			'Client Username' : username,
 			'Client ID' : client_id,
