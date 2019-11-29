@@ -10,6 +10,7 @@ from client_connections import manage_clients
 from database_management import manage_database
 from Interface.interface import server_window, init_gui
 from judge_connections import manage_judges
+from bitsoj_core import core
 from init_server import initialize_server, save_status
 
 sys.path.append('../')
@@ -143,7 +144,7 @@ def main():
 
 	# Manage Threads
 	print('[ SETUP ] Initialising subprocesses...')
-	client_pid, judge_pid = manage_process(
+	client_pid, judge_pid, core_pid = manage_process(
 		judge_username, judge_password, host, 
 		data_changed_flags, data_from_interface
 		)
@@ -162,7 +163,7 @@ def main():
 	# SIGINT : Keyboard Interrupt is handled by both subprocesses internally
 	os.kill(client_pid, signal.SIGINT)
 	os.kill(judge_pid, signal.SIGINT)
-
+	
 	# Write config file
 	if data_changed_flags[2] == 1:
 		login_status = 'True'
@@ -217,15 +218,21 @@ def manage_process(
 		target = manage_judges.listen_judges, 
 		args = (judge_username, judge_password, host, data_changed_flags, )
 		)
+	core_process = multiprocessing.Process(
+		target = core.init_core,
+		args = (data_changed_flags, data_from_interface, )
+	)
 
 	client_handler_process.start()
 	judge_handler_process.start()
+	core_process.start()
 
 	# We return process ids of both client and server subprocesses to main()
 	# to interrupt them when close button is pressed in GUI
 	client_pid = client_handler_process.pid
 	judge_pid = judge_handler_process.pid
-	return client_pid, judge_pid
+	core_pid = core_process.pid
+	return client_pid, judge_pid, core_pid
 	
 
 main()

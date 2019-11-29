@@ -1,25 +1,39 @@
-import sched, time
+# import sched, time
 import json
 import pika
 import sys
+import time
 from init_server import initialize_server
- 
-class broadcast_manager():
+  
+class core():
 	data_changed_flags = ''
 	channel = ''
 	file_password = ''
-	def init_broadcast(data_changed_flags, data_from_interface, superuser_username='guest', superuser_password = 'guest', host = 'localhost'):
-		broadcast_manager.data_changed_flags = data_changed_flags
-		channel = broadcast_manager.init_connection(superuser_username, superuser_password, host)
-		broadcast_manager.channel = channel
-
+	def init_core(data_changed_flags, data_from_interface):
+		core.data_changed_flags = data_changed_flags
 		config = initialize_server.read_config()
-		broadcast_manager.file_password = config["File Password"]
+
+		superuser_username = config['Server Username']
+		superuser_password = config['Server Password']
+		host = config['Server IP']
+
+		channel = core.init_connection(superuser_username, superuser_password, host)
+		core.channel = channel
+
 		
-		s = sched.scheduler(time.time, time.sleep)
-		s.enter(0.5, 1, broadcast_manager.poll, (s, data_from_interface, ))
-		s.run()
-		print("[ STOPPED ] Broadcast Thread")
+		core.file_password = config["File Password"]
+		
+		# s = sched.scheduler(time.time, time.sleep)
+		# s.enter(0.5, 1, core.poll, (s, data_from_interface, ))
+		# s.run()
+		while True:
+			status = core.poll(data_from_interface)
+			if status == 1:
+				break
+			# Poll every second
+			time.sleep(1)
+
+		print("[ STOP ] Core subprocess terminated successfully!")
 		return
 
 	def init_connection(superuser_username, superuser_password, host):
@@ -28,7 +42,7 @@ class broadcast_manager():
 			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
 			connection = pika.BlockingConnection(params)
 			channel = connection.channel()
-			channel.exchange_declare(exchange = 'broadcast_manager', exchange_type = 'fanout', durable = True)
+			channel.exchange_declare(exchange = 'core', exchange_type = 'fanout', durable = True)
 			return channel
 		
 		except Exception as error:
@@ -37,10 +51,10 @@ class broadcast_manager():
 
 
 		return 
-	def poll(s, data_from_interface):
+	def poll(data_from_interface):
 		# If sys exit is called
-		if(broadcast_manager.data_changed_flags[7] == 1):
-			return
+		if(core.data_changed_flags[7] == 1):
+			return 1
 
 		# While there is data to process,
 		try:
@@ -56,7 +70,7 @@ class broadcast_manager():
 					'Duration' : data['Duration'],
 					'Start Time' : data['Start Time'],
 					'End Time' : data['End Time'],
-					'Problem Key' : broadcast_manager.file_password
+					'Problem Key' : core.file_password
 					}
 					message = json.dumps(message)
 				
@@ -119,8 +133,9 @@ class broadcast_manager():
 				elif data['Code'] == 'EXTND':
 					message = json.dumps(data)
 
-				broadcast_manager.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
-			s.enter(1, 1, broadcast_manager.poll, (s, data_from_interface, ))
+				core.channel.basic_publish(exchange = 'broadcast_manager', routing_key = '', body = message)
 			return
 		except Exception as error:
 			print('[ ERROR ] Data could not be broadcasted : ' + str(error)) 
+		finally:
+			return 0

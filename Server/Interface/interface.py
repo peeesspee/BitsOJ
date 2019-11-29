@@ -1314,6 +1314,7 @@ class server_window(QMainWindow):
 		custom_close_box.exec_()
 
 		if custom_close_box.clickedButton() == button_yes:
+			self.data_changed_flags[7] = 1
 			event.accept()
 		elif custom_close_box.clickedButton() == button_no : 
 			event.ignore()

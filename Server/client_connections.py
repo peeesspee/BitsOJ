@@ -5,7 +5,7 @@ import json
 import threading
 from database_management import client_authentication, submissions_management, previous_data, query_management, user_management, scoreboard_management
 from client_submissions import submission
-from client_broadcasts import broadcast_manager
+# from client_broadcasts import broadcast_manager
 from init_server import initialize_server
  
 
@@ -30,8 +30,8 @@ class manage_clients():
 		manage_clients.key = manage_clients.config["Client Key"]
 		manage_clients.file_password = manage_clients.config["File Password"]
 
-		broadcast_thread = threading.Thread(target = broadcast_manager.init_broadcast, args = (data_changed_flags2, data_from_interface, superuser_username, superuser_password, host, ))
-		broadcast_thread.start()
+		# broadcast_thread = threading.Thread(target = broadcast_manager.init_broadcast, args = (data_changed_flags2, data_from_interface, superuser_username, superuser_password, host, ))
+		# broadcast_thread.start()
 
 		
 
@@ -73,7 +73,7 @@ class manage_clients():
 
 		# Start listening to client_requests
 		manage_clients.listen_clients(connection, channel, superuser_username, superuser_password, host, data_changed_flags2)
-		broadcast_thread.join()
+		# broadcast_thread.join()
 
 	# This function continously listens for client messages 
 	def listen_clients(connection, channel, superuser_username, superuser_password, host, data_changed_flags2):
@@ -92,7 +92,6 @@ class manage_clients():
 			print('\n[ LISTEN ] STOPPED listening to client channel')
 			connection.close()
 			print('\n[ STOP ] Client subprocess terminated successfully!')
-			manage_clients.data_changed_flags[7] = 1
 			return
 
 	# This function works on client messages and passes them on to their respective handler function
