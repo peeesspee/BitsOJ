@@ -10,6 +10,7 @@ from client_connections import manage_clients
 from database_management import manage_database
 from Interface.interface import server_window, init_gui
 from judge_connections import manage_judges
+from bitsoj_core import core
 from init_server import initialize_server, save_status
 
 sys.path.append('../')
@@ -52,9 +53,6 @@ def main():
 	manual_review = config["Manual Review"]
 	submission_time_limit = config["Submission Time Limit"]
 	####################################################
-	# TODO : Validate client and server keys when any message is sent, to maintain security 
-	# (As project is open source)
-
 
 	# Initialize database
 	print('[ SETUP ] Initialising database...')
@@ -63,8 +61,9 @@ def main():
 	##################################
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 25)
-	# This queue will be polled for info from interface
-	data_from_interface = multiprocessing.Queue(maxsize = 100)    
+	# This queue will be polled from bitsoj_core for handling tasks like 
+	# database updates or data transmission
+	task_queue = multiprocessing.Queue(maxsize = 1000)    
 
 	#index		value		meaning
 	#	0		0/1			0/1: No new/ New submission data to refresh
@@ -90,6 +89,9 @@ def main():
 	#	20		0/1			1: Manual Review Allowed
 	#	21		X			X: Submission time limit 0 < X 
 	
+
+	#####################################################################################
+	# Set local variables and flags :
 
 	# Set submission time limit
 	data_changed_flags[21] = submission_time_limit
@@ -139,31 +141,37 @@ def main():
 	data_changed_flags[7] = 0
 	# Contest state flag(0/1/2 values assigned from interface, -1 signifies nothing)
 	data_changed_flags[10] = -1
-	##################################
+	#####################################################################################
 
-	# Manage Threads
+	# Manage subprocesses
 	print('[ SETUP ] Initialising subprocesses...')
-	client_pid, judge_pid = manage_process(
+	client_pid, judge_pid, core_pid = manage_process(
 		judge_username, judge_password, host, 
-		data_changed_flags, data_from_interface
+		data_changed_flags, task_queue
 		)
 
 	# Initialize GUI handler
-	print('[ SETUP ] Initialising GUI....')
 	try:
-		print("----------------BitsOJ v1.0----------------")
-		init_gui(data_changed_flags, data_from_interface)
-
+		init_gui(data_changed_flags, task_queue)
 	except Exception as error:
-		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
-
+		print("[ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
+	#####################################################################################
+	# Server process is in idle state here on. Active processes are:
+	# client_manager
+	# bitsoj_core
+	# judge_manager
+	#####################################################################################
+	# If we reach here, it means the GUI process has ended, 
+	# which further means the Server has been shut down by press of Close button.
 	print("[ EXIT ] Signal passed")
-	# Send SIGINT to both client and judge processes
-	# SIGINT : Keyboard Interrupt is handled by both subprocesses internally
-	os.kill(client_pid, signal.SIGINT)
+	# Send SIGINT to both client and judge subprocesses
+	# SIGINT : Keyboard Interrupt ( Handled by both subprocesses internally )
+	# We're not exactly Killing the processes. They get the time to shut down on their own :)
+	os.kill(client_pid, signal.SIGINT)		
 	os.kill(judge_pid, signal.SIGINT)
 
-	# Write config file
+	#####################################################################################
+	# Write config file with changed data.
 	if data_changed_flags[2] == 1:
 		login_status = 'True'
 	else:
@@ -197,7 +205,8 @@ def main():
 	save_status.update_entry('Scoreboard Update Allowed', scoreboard_status)
 	save_status.update_entry('Manual Review', manual_review)
 	save_status.update_entry('Submission Time Limit', submission_time_limit)
-	
+	#####################################################################################
+
 	# EXIT
 	sleep(2)
 	print("  ################################################")
@@ -207,25 +216,30 @@ def main():
 
 def manage_process(
 	judge_username, judge_password, host, 
-	data_changed_flags, data_from_interface
+	data_changed_flags, task_queue
 	):
 	client_handler_process = multiprocessing.Process(
 		target = manage_clients.prepare, 
-		args = (data_changed_flags, data_from_interface, )
+		args = (data_changed_flags, task_queue, )
 		)
 	judge_handler_process = multiprocessing.Process(
 		target = manage_judges.listen_judges, 
-		args = (judge_username, judge_password, host, data_changed_flags, )
+		args = (judge_username, judge_password, host, data_changed_flags, task_queue,)
 		)
+	core_process = multiprocessing.Process(
+		target = core.init_core,
+		args = (data_changed_flags, task_queue, )
+	)
 
 	client_handler_process.start()
 	judge_handler_process.start()
+	core_process.start()
 
 	# We return process ids of both client and server subprocesses to main()
 	# to interrupt them when close button is pressed in GUI
 	client_pid = client_handler_process.pid
 	judge_pid = judge_handler_process.pid
-	return client_pid, judge_pid
-	
+	core_pid = core_process.pid
+	return client_pid, judge_pid, core_pid
 
 main()

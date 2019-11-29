@@ -19,7 +19,7 @@ qInstallMessageHandler(handler)
 
 # This class handles the main window of server
 class server_window(QMainWindow):
-	def __init__(self, data_changed_flags2, data_to_client):
+	def __init__(self, data_changed_flags2, task_queue):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
@@ -42,7 +42,7 @@ class server_window(QMainWindow):
 
 		# make data_changed_flag accessible from the class methods
 		self.data_changed_flags = data_changed_flags2
-		self.data_to_client = data_to_client
+		self.task_queue = task_queue
 		
 		###########################################################
 		self.db = self.init_qt_database()
@@ -248,7 +248,7 @@ class server_window(QMainWindow):
 		return
 
 	def read_password(self):
-		return 'bitsoj'
+		return ''
 
 	@pyqtSlot()
 	def manage_accounts(self):
@@ -354,7 +354,7 @@ class server_window(QMainWindow):
 				'Time' : remaining_time
 				}
 				message = json.dumps(message)
-				self.data_to_client.put(message)
+				self.task_queue.put(message)
 
 			if self.data_changed_flags[18] == 1:
 				self.data_changed_flags[18] = 0
@@ -366,7 +366,7 @@ class server_window(QMainWindow):
 				'Data' : data
 				}
 				message = json.dumps(message)
-				self.data_to_client.put(message)
+				self.task_queue.put(message)
 
 			# While contest is RUNNING
 			# This block is last as it may cause a return call and not allow further function block executions
@@ -503,7 +503,8 @@ class server_window(QMainWindow):
 			'End Time' : contest_end_time
 			}
 			message = json.dumps(message)
-			self.data_to_client.put(message)
+			# Put START message in task_queue so that it is broadcasted to all the clients.
+			self.task_queue.put(message)
 
 			# Update GUI
 			server_window.set_button_behavior(self, 'RUNNING')
@@ -521,13 +522,12 @@ class server_window(QMainWindow):
 
 		elif data == 'STOP':
 			current_time = time.localtime()
-			
 			message = {
 			'Code' : 'STOP'
 			}
 
 			message = json.dumps(message)
-			self.data_to_client.put(message)
+			self.task_queue.put(message)
 
 			# Update GUI
 			self.set_button_behavior('STOPPED')
@@ -535,8 +535,6 @@ class server_window(QMainWindow):
 			current_time = str(time.strftime("%H:%M:%S", current_time))
 			save_status.update_entry('Contest End Time', current_time)
 			save_status.update_entry('Contest Status', 'STOPPED')
-
-			
 
 		elif data == 'UPDATE':
 			# Send UPDATE signal
@@ -548,7 +546,7 @@ class server_window(QMainWindow):
 			'Time' : extra_data
 			}
 			message = json.dumps(message)
-			self.data_to_client.put(message)
+			self.task_queue.put(message)
 
 			prev_duration = self.duration
 			new_duration = server_window.convert_to_seconds(prev_duration) + (int(extra_data) * 60)
@@ -558,7 +556,6 @@ class server_window(QMainWindow):
 			save_status.update_entry('Contest Set Time', self.contest_set_time)
 			save_status.update_entry('Contest End Time', new_end_time)
 			save_status.update_entry('Contest Duration', new_duration)
-			
 		return
 
 	def convert_to_hhmmss(seconds):
@@ -739,7 +736,7 @@ class server_window(QMainWindow):
 				else:
 					self.window = manage_submission_ui(
 						self.data_changed_flags,
-						self.data_to_client ,
+						self.task_queue,
 						run_id,
 						client_id,
 						problem_code,
@@ -771,7 +768,7 @@ class server_window(QMainWindow):
 				if client_id == None and query_id == None:
 					pass
 				else:
-					self.window = query_reply_ui(self.data_changed_flags,self.data_to_client ,query,client_id, query_id)
+					self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query,client_id, query_id)
 					self.window.show()
 
 			except Exception as error: 
@@ -880,7 +877,7 @@ class server_window(QMainWindow):
 			'Client' : username
 			}
 			message = json.dumps(message)
-			self.data_to_client.put(message)
+			self.task_queue.put(message)
 			# Update Accounts and connected clients View
 			self.data_changed_flags[5] = 1
 			self.data_changed_flags[1] = 1
@@ -914,7 +911,8 @@ class server_window(QMainWindow):
 				self.edit_window.show()
 			
 		except Exception as error: 
-			print('Error' + str(error))
+			print('[ ERROR ]' + str(error))
+			self.data_changed_flags[14] = 0
 		finally:
 			# Reset critical flag
 			return
@@ -1100,7 +1098,7 @@ class server_window(QMainWindow):
 				'Mode' : 2
 				}
 				message = json.dumps(message)
-				self.data_to_client.put(message)
+				self.task_queue.put(message)
 				# Set DISCONNECTED to all connected clients
 				user_management.disconnect_all()
 				self.data_changed_flags[1] = 1
@@ -1248,7 +1246,7 @@ class server_window(QMainWindow):
 				'Mode' : 2
 				}
 				message = json.dumps(message)
-				self.data_to_client.put(message)
+				self.task_queue.put(message)
 				# Set DISCONNECTED to all connected clients
 				user_management.disconnect_all()
 				self.data_changed_flags[1] = 1
@@ -1314,14 +1312,14 @@ class server_window(QMainWindow):
 		custom_close_box.exec_()
 
 		if custom_close_box.clickedButton() == button_yes:
+			self.data_changed_flags[7] = 1
 			event.accept()
 		elif custom_close_box.clickedButton() == button_no : 
 			event.ignore()
 
 
 class init_gui(server_window):
-	# data_from_interface queue is data_to_client queue with respect to interface
-	def __init__(self, data_changed_flags, data_to_client):
+	def __init__(self, data_changed_flags, task_queue):
 		# make a reference of App class
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
@@ -1329,7 +1327,7 @@ class init_gui(server_window):
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
-		server_app = server_window(data_changed_flags, data_to_client)
+		server_app = server_window(data_changed_flags, task_queue)
 
 		# Splash screen
 		# splash = QSplashScreen(QPixmap("Elements/bitwise.png"))

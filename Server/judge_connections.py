@@ -8,19 +8,22 @@ updated_config = 0
 class manage_judges():
 	channel = ''
 	data_changed_flags = ''
+	task_queue = ''
 	ranking_algoritm = 1
 	updated_config = 0
 	config = ''
 	# This function continously listens for judge verdicts
-	def listen_judges(superuser_username, superuser_password, host, data_changed_flag1):
-		manage_judges.data_changed_flags = data_changed_flag1
+	def listen_judges(superuser_username, superuser_password, host, data_changed_flags, task_queue):
+		print('  [ START ] Judge Manager subprocess started.')
+		manage_judges.data_changed_flags = data_changed_flags
+		manage_judges.task_queue = task_queue
 		# Create a connection with rabbitmq and declare exchanges and queues
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
 			params = pika.ConnectionParameters(
 				host = host, 
 				credentials = creds, 
-				heartbeat=0, 
+				heartbeat=0, 	
 				blocked_connection_timeout=0
 			)
 			connection = pika.BlockingConnection(params)
@@ -29,10 +32,21 @@ class manage_judges():
 
 			manage_judges.ranking_algoritm = manage_judges.data_changed_flags[17]
 			
-			channel.queue_declare(queue = 'judge_verdicts', durable = True)
-			channel.exchange_declare(exchange = 'judge_manager', exchange_type = 'direct', durable = True)
-			channel.queue_bind(exchange = 'judge_manager', queue = 'judge_verdicts')
-			# Read only one request at a time
+			channel.exchange_declare(
+				exchange = 'judge_manager', 
+				exchange_type = 'direct', 
+				durable = True
+			)
+			channel.queue_declare(
+				queue = 'judge_verdicts', 
+				durable = True
+			)
+			channel.queue_bind(
+				exchange = 'judge_manager', 
+				queue = 'judge_verdicts'
+			)
+			# Read only one request at a time, and process it.
+			# If the request could not be processed, it is resent to the queue
 			channel.basic_qos(prefetch_count = 1)
 
 		except Exception as error:
@@ -55,11 +69,10 @@ class manage_judges():
 				on_message_callback = manage_judges.judge_message_handler
 			)
 			channel.start_consuming()
-
 		except (KeyboardInterrupt, SystemExit):
+			manage_judges.data_changed_flags[7] = 1
 			channel.stop_consuming()
 			print('\n[ LISTEN ] STOPPED listening to judge channel')
-			
 			connection.close()
 			print('\n[ STOP ] Judge subprocess terminated successfully!\n')	
 			return
@@ -69,6 +82,7 @@ class manage_judges():
 		if manage_judges.updated_config == 0:
 			manage_judges.updated_config = 1
 			manage_judges.config = initialize_server.read_config()
+
 		# Decode the message sent by judge
 		judge_message = str(body.decode('utf-8'))
 		print('\n[ PING ] Recieved a new judge verdict.')
@@ -81,11 +95,10 @@ class manage_judges():
 				print('[ SECURITY ][ CRITICAL ] Judge Key did not match!')
 				print('[ SECURITY ][ CRITICAL ] Full Message: ' + judge_message)
 				# Get Run ID
-				
 				if code == 'VRDCT':
 					run_id = json_data['Run ID']
-				# Mark the submission
-				submissions_management.update_submission_status(run_id, '[ SECURITY ]', 'HALTED')
+					# Mark the submission
+					submissions_management.update_submission_status(run_id, 'SECURITY', 'HALTED')
 				manage_judges.data_changed_flags[0] = 1
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
@@ -101,7 +114,7 @@ class manage_judges():
 				time_stamp = json_data['Time Stamp']
 			else:
 				ch.basic_ack(delivery_tag = method.delivery_tag)
-				print('[ ERROR ] Judge sent garbage data. Trust me you don\'t wanna see it! ')
+				print('[ ERROR ] Judge data could not be parsed. Recheck judge Authenticity.')
 				return
 
 		except Exception as error:
@@ -112,6 +125,7 @@ class manage_judges():
 		# Create response to send to client
 		message = {
 		'Code' : 'VRDCT', 
+		'Receiver' : client_username,
 		'Local Run ID' : local_run_id,
 		'Run ID' : run_id,
 		'Status' : status,
@@ -119,20 +133,13 @@ class manage_judges():
 		}
 		message = json.dumps(message)
 
-
 		# Publish message to client if allowed
-		# Update scoreboard also when manual review is off
+		# Update scoreboard also when manual review is ON
 		if manage_judges.data_changed_flags[20] == 0:
 			try:
-				manage_judges.channel.basic_publish(
-					exchange = 'connection_manager', 
-					routing_key = client_username, 
-					body = judge_message
-				) 
+				# Put response to task queue, to further connect to the client
+				manage_judges.task_queue.put(message)
 				print('[ VERDICT ] New verdict sent to ' + client_username)
-				submissions_management.update_submission_status(run_id, status, 'SENT')
-				# Update GUI
-				manage_judges.data_changed_flags[0] = 1
 			except Exception as error:
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				print('[ ERROR ] Could not publish result to client : ' + str(error))
@@ -157,22 +164,16 @@ class manage_judges():
 
 			# Update scoreboard view in server
 			manage_judges.data_changed_flags[16] = 1
-
 			# Broadcast new scoreboard to clients whenever a new AC is recieved 
 			# and scoreboard update is allowed.
-			if manage_judges.data_changed_flags[15] == 1 and status == 'AC':
+			if status == 'AC' and manage_judges.data_changed_flags[15] == 1:
 				# Flag 18 signals interface to update scoreboard
 				manage_judges.data_changed_flags[18] = 1
-
-
-
 		else:
 			submissions_management.update_submission_status(run_id, status, 'REVIEW')
 			# Update submission GUI
 			manage_judges.data_changed_flags[0] = 1
 
-		
-		
 		# Send Acknowldgement of message recieved and processed
 		ch.basic_ack(delivery_tag = method.delivery_tag)
 		return

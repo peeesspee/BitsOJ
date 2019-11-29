@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-from database_management import user_management, query_management, client_authentication
+from database_management import user_management, query_management, client_authentication, submissions_management
 import json 
 import ast
 
@@ -1017,6 +1017,7 @@ class new_accounts_ui(QMainWindow):
 	def __init__(self, data_changed_flags, parent=None):
 		super(new_accounts_ui, self).__init__(parent)
 		self.data_changed_flags = data_changed_flags
+		self.setGeometry(800, 450, 300, 200)
 		self.setWindowTitle('Add new accounts')
 		self.setFixedSize(300, 200)
 		main = self.add_new_accounts_ui()
@@ -1137,6 +1138,7 @@ class view_case_ui(QMainWindow):
 		view_case_ui.problem_path = problem_path
 
 		self.setWindowTitle('View Case')
+		self.setGeometry(550, 250, 800, 600)
 		self.setFixedSize(800,600)
 		main = self.main_view_case_ui()
 		self.setCentralWidget(main)
@@ -1237,19 +1239,20 @@ class query_reply_ui(QMainWindow):
 	query_id = ''
 	client_id = ''
 	def __init__(
-		self, data_changed_flags,data_to_client, 
+		self, data_changed_flags,task_queue, 
 		query, client_id, query_id, parent=None
 		):
 		super(query_reply_ui, self).__init__(parent)
 		query_reply_ui.button_mode = 1
 
 		self.data_changed_flags = data_changed_flags
-		self.data_to_client = data_to_client
+		self.task_queue = task_queue
 		query_reply_ui.query = query
 		query_reply_ui.query_id = query_id
 		query_reply_ui.client_id = client_id
 
 		self.setWindowTitle('Reply')
+		self.setGeometry(750, 350, 400, 400)
 		self.setFixedSize(400,400)
 		main = self.main_query_reply_ui()
 		self.setCentralWidget(main)
@@ -1276,10 +1279,10 @@ class query_reply_ui(QMainWindow):
 		send_to_all_rbutton.setChecked(False)
 		send_to_client_rbutton.toggled.connect(
 			lambda: query_reply_ui.send_mode_setter(self, send_to_client_rbutton)
-			)
+		)
 		send_to_all_rbutton.toggled.connect(
 			lambda: query_reply_ui.send_mode_setter(self, send_to_all_rbutton)
-			)
+		)
 
 		radiobutton_layout = QHBoxLayout()
 		radiobutton_layout.addWidget(broadcast_setting_label)
@@ -1346,7 +1349,6 @@ class query_reply_ui(QMainWindow):
 		else:
 			if rbutton.isChecked() == True:
 				query_reply_ui.button_mode = 2
-
 		return
 
 	def final_status(self, response):
@@ -1355,15 +1357,15 @@ class query_reply_ui(QMainWindow):
 		else:
 			send_type = 'Client'
 		message ={
-		'Code' : 'QUERY',
-		'Query' : query_reply_ui.query,
-		'Response' : response,
-		'Mode' : send_type,
-		'Query ID' : query_reply_ui.query_id,
-		'Client ID' : query_reply_ui.client_id
+			'Code' : 'QUERY',
+			'Query' : query_reply_ui.query,
+			'Response' : response,
+			'Mode' : send_type,
+			'Query ID' : query_reply_ui.query_id,
+			'Client ID' : query_reply_ui.client_id
 		}
 		message = json.dumps(message)
-		self.data_to_client.put(message)
+		self.task_queue.put(message)
 		query_management.update_query(query_reply_ui.query_id, response)
 		self.data_changed_flags[8] = 0
 		self.data_changed_flags[9] = 1
@@ -1375,7 +1377,7 @@ class query_reply_ui(QMainWindow):
 
 class manage_submission_ui(QMainWindow):
 	data_changed_flags = ''
-	data_to_client = ''
+	task_queue = ''
 	run_id = ''
 	client_id = ''
 	pcode = ''
@@ -1394,25 +1396,26 @@ class manage_submission_ui(QMainWindow):
 	'OLE' : 'OLE - Output Limit Exceeded',
 	'NZEC' : 'NZEC - Non Zero Exit Code'
 	}
+	inverted_verdict_dict = { v : k for k, v in verdict_dict.items()}
 	
 	def __init__(
-		self, 
-		data_changed_flags,
-		data_to_client, 
-		run_id,
-		client_id,
-		problem_code,
-		language ,
-		timestamp,
-		verdict,
-		sent_status,
-		parent=None
+			self, 
+			data_changed_flags,
+			task_queue, 
+			run_id,
+			client_id,
+			problem_code,
+			language ,
+			timestamp,
+			verdict,
+			sent_status,
+			parent=None
 		):
 		super(manage_submission_ui, self).__init__(parent)
 		query_reply_ui.button_mode = 1
 
 		self.data_changed_flags = data_changed_flags
-		self.data_to_client = data_to_client
+		self.task_queue = task_queue
 		self.run_id = run_id
 		self.client_id = client_id
 		self.problem_code = problem_code
@@ -1423,9 +1426,9 @@ class manage_submission_ui(QMainWindow):
 
 		width = 800
 		height = 500
+		self.setGeometry(550, 300, width, height)
 		self.setWindowTitle('Run ' + str(run_id) + 'From Client ' + str(client_id))
 		self.setFixedSize(width, height)
-		self.setGeometry(550, 300, width, height)
 		main = self.main_manage_sub_ui()
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
@@ -1446,12 +1449,11 @@ class manage_submission_ui(QMainWindow):
 			sent_text = QLabel("Response has been sent to the Team")
 			sent_text.setObjectName('main_screen_green_content')
 		elif self.sent_status == 'HALTED':
-			sent_text = QLabel("Security Exception! Judge NOT verified. A Rejudgement is suggested!")
+			sent_text = QLabel("<Security Exception> Judge NOT verified.")
 			sent_text.setObjectName('main_screen_red_content')
 		else:
 			sent_text = QLabel("Waiting for Judgement")
 			sent_text.setObjectName('main_screen_content')
-
 
 		run_info_layout = QGridLayout()
 		run_info_layout.addWidget(run_id_label, 0, 0)
@@ -1478,22 +1480,27 @@ class manage_submission_ui(QMainWindow):
 
 		send_button = QPushButton("Accept Verdict")
 		send_button.setFixedSize(200, 50)
-		# send_button.clicked.connect()
+		send_button.clicked.connect(lambda:manage_submission_ui.accept_verdict(self))
 		manual_judgement_label = QLabel("Manual Judgement: ")
 		manual_judgement_entry = QComboBox()
 		manual_judgement_entry.addItem('<- SELECT ->')
-		manual_judgement_entry.addItem('AC - Correct Answer')
-		manual_judgement_entry.addItem('WA - Wrong Answer')
-		manual_judgement_entry.addItem('TLE - Time Limit Exceeded')
-		manual_judgement_entry.addItem('CE - Compilation Error')
-		manual_judgement_entry.addItem('PE - Presentation Error')
-		manual_judgement_entry.addItem('RE - Run Time Error')
-		manual_judgement_entry.addItem('OLE - Output Limit Exceeded')
-		manual_judgement_entry.addItem('NZEC - Non Zero Exit Code')
+		manual_judgement_entry.addItem(self.verdict_dict['AC'])
+		manual_judgement_entry.addItem(self.verdict_dict['WA'])
+		manual_judgement_entry.addItem(self.verdict_dict['TLE'])
+		manual_judgement_entry.addItem(self.verdict_dict['CMPL'])
+		manual_judgement_entry.addItem(self.verdict_dict['PE'])
+		manual_judgement_entry.addItem(self.verdict_dict['RE'])
+		manual_judgement_entry.addItem(self.verdict_dict['OLE'])
+		manual_judgement_entry.addItem(self.verdict_dict['NZEC'])
 		# manual_judgement_entry.activated[str].connect(new_accounts_ui.combo_box_data_changed)
 		accept_select_button = QPushButton("Accept Selected")
 		accept_select_button.setFixedSize(200, 50)
-		# accept_select_button.clicked.connect()
+		accept_select_button.clicked.connect(
+			lambda: manage_submission_ui.manual_verdict(
+				self,  
+				str(manual_judgement_entry.currentText())
+			)
+		)
 		verdict_layout = QGridLayout()
 		verdict_layout.addWidget(judge_verdict, 0, 0)
 		verdict_layout.addWidget(verdict, 0, 1)
@@ -1506,13 +1513,13 @@ class manage_submission_ui(QMainWindow):
 
 		verdict_layout.setRowStretch(1,60)
 
-		rejudge_button = QPushButton('ReJudge')
+		rejudge_button = QPushButton('Rejudge')
 		rejudge_button.setFixedSize(150, 40)
 		rejudge_button.clicked.connect(
 			lambda:manage_submission_ui.final_status(self)
 			)
 
-		view_output_source_button = QPushButton('View Outputs and Data')
+		view_output_source_button = QPushButton('Submission Source and Data')
 		view_output_source_button.setFixedSize(250, 40)
 		view_output_source_button.clicked.connect(
 			lambda:manage_submission_ui.final_status(self)
@@ -1575,6 +1582,104 @@ class manage_submission_ui(QMainWindow):
 		cancel_button.setObjectName('interior_button')
 		return main
 
+	def manual_verdict(self, manual_verdict):
+		if self.verdict == 'Running':
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Information)
+			info_box.setWindowTitle('Alert')
+			info_box.setText('Verdict is not yet Recieved!')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+		elif self.verdict == 'SECURITY':
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Critical)
+			info_box.setWindowTitle('Security Alert')
+			info_box.setText('Please Rejudge.')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+		elif manual_verdict == '<- SELECT ->':
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Information)
+			info_box.setWindowTitle('Alert')
+			info_box.setText('Please select a verdict.')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+		else:
+			buttonReply = QMessageBox.question(
+				self, 
+				'Confirm Selection', 
+				'Are you sure you want to give \'' + manual_verdict + '\' verdict', 
+				QMessageBox.Yes | QMessageBox.No, 
+				QMessageBox.No
+			)
+			if buttonReply == QMessageBox.Yes:
+				pass
+			else:
+				return
+
+		client_username = client_authentication.get_client_username(self.client_id)
+		local_run_id = submissions_management.get_local_run_id(self.run_id)
+		message = {
+			'Code' : 'VRDCT', 
+			'Receiver' : client_username,
+			'Local Run ID' : local_run_id,
+			'Run ID' : self.run_id,
+			'Status' : self.inverted_verdict_dict[manual_verdict],
+			'Message' : self.get_message(self.run_id)
+		}
+		message = json.dumps(message)
+		self.task_queue.put(message)
+		print('[ VERDICT ][ SENT ] Manual Verdict:' + manual_verdict + 'Sent to Client ' + client_username)
+
+		# TODO: UPDATE LEADERBOARD AND SUBMISSION TABLE
+
+		self.data_changed_flags[8] = 0
+		self.close()
+
+	def accept_verdict(self):
+		if self.verdict == 'Running':
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Information)
+			info_box.setWindowTitle('Alert')
+			info_box.setText('Verdict is not yet Recieved!')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+		elif self.verdict == 'SECURITY':
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Critical)
+			info_box.setWindowTitle('Security Alert')
+			info_box.setText('Please Rejudge.')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+
+		client_username = client_authentication.get_client_username(self.client_id)
+		local_run_id = submissions_management.get_local_run_id(self.run_id)
+		message = {
+			'Code' : 'VRDCT', 
+			'Receiver' : client_username,
+			'Local Run ID' : local_run_id,
+			'Run ID' : self.run_id,
+			'Status' : self.verdict,
+			'Message' : self.get_message(self.run_id)
+		}
+		message = json.dumps(message)
+		self.task_queue.put(message)
+		print('[ VERDICT ][ SENT ] Judge Verdict accepted and sent to Client ' + client_username)
+
+		# TODO: UPDATE LEADERBOARD AND SUBMISSION TABLE
+
+
+		self.data_changed_flags[8] = 0
+		self.close()
+
+	def get_message(self, run_id):
+		return "No Error"
+
 	def final_status(self):
 		self.data_changed_flags[8] = 0
 		self.close()
@@ -1605,6 +1710,7 @@ class account_edit_ui(QMainWindow):
 		account_edit_ui.state_type = state
 		
 		self.setWindowTitle('Manage Client')
+		self.setGeometry(750, 350, 400, 350)
 		self.setFixedSize(400,350)
 		main = self.main_account_edit_ui()
 		self.setCentralWidget(main)
