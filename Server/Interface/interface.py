@@ -46,6 +46,8 @@ class server_window(QMainWindow):
 		
 		###########################################################
 		self.db = self.init_qt_database()
+		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status FROM submissions ORDER BY run_id DESC"
+		self.leaderboard_query = "SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC"
 		###########################################################
 		self.config = initialize_server.read_config()
 		self.contest_set_time = self.config['Contest Set Time']
@@ -142,8 +144,6 @@ class server_window(QMainWindow):
 		server_window.load_previous_state(self)
 		return
 	
-
-		return
 	def init_UI(self):
 		self.set_status('SETUP')
 		# Define Layout for sidebar
@@ -315,7 +315,8 @@ class server_window(QMainWindow):
 			# If data has changed in submission table
 			# Update submission table
 			if self.data_changed_flags[0] == 1:
-				self.sub_model.select()
+				self.sub_model.setQuery(self.submissions_query)
+				# self.sub_model.select()
 				self.data_changed_flags[0] = 0
 			# Update connected clients table
 			if self.data_changed_flags[1] == 1:
@@ -335,7 +336,7 @@ class server_window(QMainWindow):
 				self.data_changed_flags[13] = 0
 			# Update scoreboard view
 			if self.data_changed_flags[16] == 1:
-				self.score_model.setQuery("SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC")
+				self.score_model.setQuery(self.leaderboard_query)
 				self.data_changed_flags[16] = 0
 			# System EXIT
 			if self.data_changed_flags[7] == 1:
@@ -675,16 +676,22 @@ class server_window(QMainWindow):
 	def manage_leaderboard_model(self, db, table_name):
 		if db.open():
 			model = QSqlQueryModel()
-			# score, problems_solved, total_time
-			model.setQuery("SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC")
+			model.setQuery(self.leaderboard_query)
 			# model.setEditStrategy()
-			
 			return model
 		else:
 			print('[ CRITICAL ] Model Error: DB is not open')
 			return None
 
-
+	def manage_submissions_model(self, db, table_name):
+		if db.open():
+			model = QSqlQueryModel()
+			model.setQuery(self.submissions_query)
+			# model.setEditStrategy()
+			return model
+		else:
+			print('[ CRITICAL ] Model Error: DB is not open')
+			return None
 
 	def generate_view(self, model):
 		table = QTableView()
@@ -709,6 +716,70 @@ class server_window(QMainWindow):
 		vertical_header = table.verticalHeader()
 		vertical_header.setVisible(False)
 		return table
+
+	@pyqtSlot()
+	def manage_submission(self, selected_row):
+		if self.data_changed_flags[8] == 0:
+			# CRITICAL section flag set
+			self.data_changed_flags[8] = 1
+			try:
+				# Get data from selected row
+				#  run_id, client_id, problem_code, language, timestamp, verdict, sent_status
+
+				run_id = self.sub_model.index(selected_row, 0).data()
+				client_id = self.sub_model.index(selected_row, 1).data()
+				problem_code = self.sub_model.index(selected_row, 2).data()
+				language = self.sub_model.index(selected_row, 3).data()
+				timestamp = self.sub_model.index(selected_row, 4).data()
+				verdict = self.sub_model.index(selected_row, 5).data()
+				sent_status = self.sub_model.index(selected_row, 6).data()
+
+				if client_id == None:
+					pass
+				else:
+					self.window = manage_submission_ui(
+						self.data_changed_flags,
+						self.data_to_client ,
+						run_id,
+						client_id,
+						problem_code,
+						language,
+						timestamp,
+						verdict,
+						sent_status
+					)
+					self.window.show()
+
+			except Exception as error: 
+				print('[ ERROR ] : ' + str(error))
+			finally:
+				return
+		else:
+			return
+
+	@pyqtSlot()
+	def query_reply(self, selected_row):
+		if self.data_changed_flags[8] == 0:
+			# CRITICAL section flag set
+			self.data_changed_flags[8] = 1
+			try:
+				# Get data from selected row
+				query = self.query_model.index(selected_row, 2).data()
+				client_id = self.query_model.index(selected_row, 1).data()
+				query_id = self.query_model.index(selected_row, 0).data()
+				
+				if client_id == None and query_id == None:
+					pass
+				else:
+					self.window = query_reply_ui(self.data_changed_flags,self.data_to_client ,query,client_id, query_id)
+					self.window.show()
+
+			except Exception as error: 
+				print('[ ERROR ] : ' + str(error))
+			finally:
+				return
+		else:
+			return
 
 	@pyqtSlot()
 	def create_accounts(self):
@@ -736,31 +807,6 @@ class server_window(QMainWindow):
 			else:
 				return 0
 		return 2		
-
-	@pyqtSlot()
-	def query_reply(self, selected_row):
-		if self.data_changed_flags[8] == 0:
-			# CRITICAL section flag set
-			self.data_changed_flags[8] = 1
-			try:
-				query = self.query_model.index(selected_row, 2).data()
-				client_id = self.query_model.index(selected_row, 1).data()
-				query_id = self.query_model.index(selected_row, 0).data()
-				
-				if client_id == None and query_id == None:
-					pass
-				else:
-					self.window = query_reply_ui(self.data_changed_flags,self.data_to_client ,query,client_id, query_id)
-					self.window.show()
-
-			except Exception as error: 
-				# Reset data_changed_flag for deletion of account
-				print('[ ERROR ] : ' + str(error))
-			finally:
-				self.data_changed_flags[8] = 0
-				return
-		else:
-			return
 
 	@pyqtSlot()
 	def manage_io_file(self, problem_code, row, column):
@@ -871,7 +917,6 @@ class server_window(QMainWindow):
 			print('Error' + str(error))
 		finally:
 			# Reset critical flag
-			self.data_changed_flags[14] = 0
 			return
 
 	def reset_accounts(self):
@@ -1280,7 +1325,7 @@ class init_gui(server_window):
 		# make a reference of App class
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
-		app.setStyleSheet(open('Interface/style2.qss', "r").read())
+		app.setStyleSheet(open('Interface/style.qss', "r").read())
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		

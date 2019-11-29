@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-from database_management import user_management, query_management
+from database_management import user_management, query_management, client_authentication
 import json 
 import ast
 
@@ -59,7 +59,7 @@ class ui_widgets:
 
 		# TODO
 		manual_review_flag = self.check_manual_review_allowed()
-		manual_review_label = QLabel('Manual Review : ')
+		manual_review_label = QLabel('Manual Review')
 		manual_review_label.setObjectName('main_screen_content')
 		manual_review_label.setToolTip(
 			'Review each submission before updating Leaderboard\nand sending client response.\nUse only when necessary!'
@@ -68,27 +68,41 @@ class ui_widgets:
 		manual_review_button.setFixedSize(30, 30)
 		manual_review_button.setChecked(manual_review_flag)
 		manual_review_button.stateChanged.connect(self.manual_reviews_handler)
-		
+
 		submission_allowed_flag = self.check_submission_allowed()
-		allow_submission_label = QLabel('Allow submissions : ')
+		allow_submission_label = QLabel('Allow Submissions')
 		allow_submission_label.setObjectName('main_screen_content')
+		allow_submission_label.setToolTip('Allow/Disallow client submissions.')
 		allow_submission_button = QCheckBox('')
 		allow_submission_button.setFixedSize(30, 30)
 		allow_submission_button.setChecked(submission_allowed_flag)
 		allow_submission_button.stateChanged.connect(self.allow_submissions_handler)
 
-		submission_model = self.manage_models(self.db, 'submissions')
+		edit_submission_button = QPushButton('Review', self)
+		edit_submission_button.setFixedSize(200, 50)
+		edit_submission_button.clicked.connect(
+			lambda:self.manage_submission(submission_table.selectionModel().currentIndex().row())
+		)
+		edit_submission_button.setObjectName("topbar_button")
+		edit_submission_button.setToolTip('Review selected submission')
+
+		submission_model = self.manage_submissions_model(self.db, 'submissions')
+
+		# run_id, client_id, problem_code, language, timestamp, verdict, sent_status
+	
 		submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
-		submission_model.setHeaderData(1, Qt.Horizontal, 'Local ID')
-		submission_model.setHeaderData(2, Qt.Horizontal, 'Client ID')
+		submission_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
+		submission_model.setHeaderData(2, Qt.Horizontal, 'Problem Code')
 		submission_model.setHeaderData(3, Qt.Horizontal, 'Language')
-		submission_model.setHeaderData(4, Qt.Horizontal, 'Source File')
-		submission_model.setHeaderData(5, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(6, Qt.Horizontal, 'Verdict')
-		submission_model.setHeaderData(7, Qt.Horizontal, 'Time')
-		submission_model.setHeaderData(8, Qt.Horizontal, 'Status')
+		submission_model.setHeaderData(4, Qt.Horizontal, 'Time')
+		submission_model.setHeaderData(5, Qt.Horizontal, 'Verdict')
+		submission_model.setHeaderData(6, Qt.Horizontal, 'Status')
 		
 		submission_table = self.generate_view(submission_model)
+		submission_table.setSortingEnabled(False)
+		submission_table.doubleClicked.connect(
+			lambda:self.manage_submission(submission_table.selectionModel().currentIndex().row())
+		)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
@@ -96,9 +110,12 @@ class ui_widgets:
 		head_layout.addWidget(manual_review_button)
 		head_layout.addWidget(allow_submission_label)
 		head_layout.addWidget(allow_submission_button)
+		head_layout.addWidget(edit_submission_button)
 		head_layout.setStretch(0, 80)
-		head_layout.setStretch(1, 10)
-		head_layout.setStretch(2, 10)
+		head_layout.setStretch(1, 5)
+		head_layout.setStretch(2, 5)
+		head_layout.setStretch(3, 5)
+		head_layout.setStretch(4, 5)
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
@@ -123,6 +140,10 @@ class ui_widgets:
 		client_model.setHeaderData(3, Qt.Horizontal, 'State')
 		client_view = self.generate_view(client_model)
 
+		client_view.doubleClicked.connect(
+			lambda:self.edit_client(client_view.selectionModel().currentIndex().row())
+		)
+
 		heading = QLabel('Connected Clients')
 		heading.setObjectName('main_screen_heading')
 
@@ -140,7 +161,7 @@ class ui_widgets:
 		edit_client_button.setFixedSize(200, 50)
 		edit_client_button.clicked.connect(
 			lambda:self.edit_client(client_view.selectionModel().currentIndex().row())
-			)
+		)
 		edit_client_button.setObjectName("topbar_button")
 		edit_client_button.setToolTip('Change client status.')
 
@@ -233,6 +254,9 @@ class ui_widgets:
 		query_model.setHeaderData(3, Qt.Horizontal, 'Response')
 
 		query_view = self.generate_view(query_model)
+		query_view.doubleClicked.connect(
+			lambda:self.query_reply(query_view.selectionModel().currentIndex().row())
+		)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
@@ -1349,6 +1373,216 @@ class query_reply_ui(QMainWindow):
 		self.data_changed_flags[8] = 0
 		self.close()
 
+class manage_submission_ui(QMainWindow):
+	data_changed_flags = ''
+	data_to_client = ''
+	run_id = ''
+	client_id = ''
+	pcode = ''
+	language = ''
+	timestamp = ''
+	verdict = ''
+	sent_status = ''
+
+	verdict_dict = {
+	'AC' : 'AC - Correct Answer', 
+	'WA' : 'WA - Wrong Answer', 
+	'TLE' : 'TLE - Time Limit Exceeded',
+	'CMPL' : 'CMPL - Compilation Error',
+	'PE' : 'PE - Presentation Error',
+	'RE' : 'RE - Run Time Error',
+	'OLE' : 'OLE - Output Limit Exceeded',
+	'NZEC' : 'NZEC - Non Zero Exit Code'
+	}
+	
+	def __init__(
+		self, 
+		data_changed_flags,
+		data_to_client, 
+		run_id,
+		client_id,
+		problem_code,
+		language ,
+		timestamp,
+		verdict,
+		sent_status,
+		parent=None
+		):
+		super(manage_submission_ui, self).__init__(parent)
+		query_reply_ui.button_mode = 1
+
+		self.data_changed_flags = data_changed_flags
+		self.data_to_client = data_to_client
+		self.run_id = run_id
+		self.client_id = client_id
+		self.problem_code = problem_code
+		self.language = language
+		self.timestamp = timestamp
+		self.verdict = verdict
+		self.sent_status = sent_status
+
+		width = 800
+		height = 500
+		self.setWindowTitle('Run ' + str(run_id) + 'From Client ' + str(client_id))
+		self.setFixedSize(width, height)
+		self.setGeometry(550, 300, width, height)
+		main = self.main_manage_sub_ui()
+		self.setCentralWidget(main)
+		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
+		return
+
+	def main_manage_sub_ui(self):
+		submission_heading = QLabel('Manual Validation')
+
+		submission_sub_heading = QLabel('Run Information: ')
+		team_name = client_authentication.get_client_username(self.client_id)
+		run_id_label = QLabel("Run ID:  " + str(self.run_id))
+		client_label = QLabel("Client:  " + team_name + '( ID: ' + str(self.client_id) + ')')
+		problem_label = QLabel("Problem:  " + self.problem_code)
+		language_label = QLabel("Language:  " + self.language)
+		time_label = QLabel("Time:  " + self.timestamp)
+
+		if self.sent_status == 'SENT':
+			sent_text = QLabel("Response has been sent to the Team")
+			sent_text.setObjectName('main_screen_green_content')
+		elif self.sent_status == 'HALTED':
+			sent_text = QLabel("Security Exception! Judge NOT verified. A Rejudgement is suggested!")
+			sent_text.setObjectName('main_screen_red_content')
+		else:
+			sent_text = QLabel("Waiting for Judgement")
+			sent_text.setObjectName('main_screen_content')
+
+
+		run_info_layout = QGridLayout()
+		run_info_layout.addWidget(run_id_label, 0, 0)
+		run_info_layout.addWidget(client_label, 0, 1)
+		run_info_layout.addWidget(problem_label, 1, 0)
+		run_info_layout.addWidget(language_label, 1, 1)
+		run_info_layout.addWidget(time_label, 2, 0)
+		run_info_layout.addWidget(sent_text, 3, 0)
+		run_info_widget = QWidget()
+		run_info_widget.setLayout(run_info_layout)
+
+		verdict_sub_heading = QLabel("Judgement:")
+		judge_verdict = QLabel("Judge Verdict:  ")
+
+		try:
+			verdict = QLabel(self.verdict_dict[self.verdict])
+		except:
+			verdict = QLabel(self.verdict)
+
+		if self.verdict == 'AC':
+			verdict.setObjectName('main_screen_green_content')
+		else:
+			verdict.setObjectName('main_screen_red_content')
+
+		send_button = QPushButton("Accept Verdict")
+		send_button.setFixedSize(200, 50)
+		# send_button.clicked.connect()
+		manual_judgement_label = QLabel("Manual Judgement: ")
+		manual_judgement_entry = QComboBox()
+		manual_judgement_entry.addItem('<- SELECT ->')
+		manual_judgement_entry.addItem('AC - Correct Answer')
+		manual_judgement_entry.addItem('WA - Wrong Answer')
+		manual_judgement_entry.addItem('TLE - Time Limit Exceeded')
+		manual_judgement_entry.addItem('CE - Compilation Error')
+		manual_judgement_entry.addItem('PE - Presentation Error')
+		manual_judgement_entry.addItem('RE - Run Time Error')
+		manual_judgement_entry.addItem('OLE - Output Limit Exceeded')
+		manual_judgement_entry.addItem('NZEC - Non Zero Exit Code')
+		# manual_judgement_entry.activated[str].connect(new_accounts_ui.combo_box_data_changed)
+		accept_select_button = QPushButton("Accept Selected")
+		accept_select_button.setFixedSize(200, 50)
+		# accept_select_button.clicked.connect()
+		verdict_layout = QGridLayout()
+		verdict_layout.addWidget(judge_verdict, 0, 0)
+		verdict_layout.addWidget(verdict, 0, 1)
+		verdict_layout.addWidget(send_button, 0, 2)
+		verdict_layout.addWidget(manual_judgement_label, 1, 0)
+		verdict_layout.addWidget(manual_judgement_entry, 1, 1)
+		verdict_layout.addWidget(accept_select_button, 1, 2)		
+		verdict_widget = QWidget()
+		verdict_widget.setLayout(verdict_layout)
+
+		verdict_layout.setRowStretch(1,60)
+
+		rejudge_button = QPushButton('ReJudge')
+		rejudge_button.setFixedSize(150, 40)
+		rejudge_button.clicked.connect(
+			lambda:manage_submission_ui.final_status(self)
+			)
+
+		view_output_source_button = QPushButton('View Outputs and Data')
+		view_output_source_button.setFixedSize(250, 40)
+		view_output_source_button.clicked.connect(
+			lambda:manage_submission_ui.final_status(self)
+			)
+		
+		cancel_button = QPushButton('Cancel')
+		cancel_button.setFixedSize(150, 40)
+		cancel_button.clicked.connect(
+			lambda:manage_submission_ui.cancel(self)
+			)
+		cancel_button.setDefault(True)
+
+		button_layout = QHBoxLayout()
+		button_layout.addWidget(rejudge_button)
+		button_layout.addWidget(view_output_source_button)
+		button_layout.addWidget(cancel_button)
+		button_widget = QWidget()
+		button_widget.setLayout(button_layout)
+
+		spacer_item = QSpacerItem(0, 50, QSizePolicy.Expanding)
+		
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(submission_heading)
+		main_layout.addWidget(submission_sub_heading)
+		main_layout.addWidget(run_info_widget)
+		main_layout.addWidget(verdict_sub_heading)
+		main_layout.addWidget(verdict_widget)
+		main_layout.addSpacerItem(spacer_item)
+		main_layout.addWidget(button_widget)
+		main_layout.setAlignment(Qt.AlignHCenter)
+		
+		main_layout.addStretch(1)
+
+		main = QWidget()
+		main.setLayout(main_layout)
+
+		main.setObjectName('account_window')
+		run_info_widget.setObjectName('content_box')
+		verdict_widget.setObjectName('content_box')
+
+		submission_heading.setObjectName('main_screen_heading')
+
+		submission_sub_heading.setObjectName('main_screen_sub_heading')
+		verdict_sub_heading.setObjectName('main_screen_sub_heading')
+		
+		client_label.setObjectName('main_screen_content')
+		problem_label.setObjectName('main_screen_content')
+		language_label.setObjectName('main_screen_content')
+		time_label.setObjectName('main_screen_content')
+		run_id_label.setObjectName('main_screen_content')
+		judge_verdict.setObjectName('main_screen_content')
+		manual_judgement_label.setObjectName('main_screen_content')
+		
+		manual_judgement_entry.setObjectName('account_combobox')
+
+		send_button.setObjectName('interior_button')
+		accept_select_button.setObjectName('interior_button')
+		rejudge_button.setObjectName('interior_button')
+		view_output_source_button.setObjectName('interior_button')
+		cancel_button.setObjectName('interior_button')
+		return main
+
+	def final_status(self):
+		self.data_changed_flags[8] = 0
+		self.close()
+
+	def cancel(self):
+		self.data_changed_flags[8] = 0
+		self.close()
+
  
 class account_edit_ui(QMainWindow):
 	client_id = ''
@@ -1391,6 +1625,7 @@ class account_edit_ui(QMainWindow):
 
 		state_entry_label = QLabel('Set State: ')
 		state_entry = QComboBox()
+		state_entry.addItem('<- SELECT ->')
 		state_entry.addItem('Connected')
 		state_entry.addItem('Disconnected')
 		state_entry.addItem('Blocked')
@@ -1457,18 +1692,20 @@ class account_edit_ui(QMainWindow):
 		return main
 
 	def combo_box_data_changed(text):
-		account_edit_ui.changed = 1
-		account_edit_ui.state_type = str(text)
+		if str(text) != '<- SELECT ->':
+			account_edit_ui.changed = 1
+			account_edit_ui.state_type = str(text)
+		else:
+			account_edit_ui.changed = 0
 
 	def final_status(self):
 		# If something is changed in combo box, run query 
 		if account_edit_ui.changed == 1:
 			user_management.update_user_state(account_edit_ui.username, account_edit_ui.state_type)
 			self.data_changed_flags[1] = 1
-		account_edit_ui.exit(self)
-
-	def exit(self):
+		self.data_changed_flags[14] = 0
 		self.close()
 
-
-
+	def exit(self):
+		self.data_changed_flags[14] = 0
+		self.close()

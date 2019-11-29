@@ -1,11 +1,9 @@
 QStatusBar
 { 
-	/*color : #BB86FC ;*/
-	color : #E91E63;;
+	color : #E91E63;
 	border-top : 1px solid #1F2C65;
 	background-color : #202020;
 	font : 20px;
-
 }
 
 QMessageBox{
@@ -143,13 +141,7 @@ QPushButton#interior_button::disabled{
 QPushButton#interior_button::!enabled{
 	color: #E91E63;
 }
-
-
 /* Style of interior buttons END  */
-
-
-
-
 
 /* Style of buttons in the close dialog box  START  */
 QPushButton#close_button_yes{
@@ -217,6 +209,12 @@ QRadioButton#interior_rbutton::indicator::unchecked{
 QRadioButton#interior_rbutton::indicator::checked{
 	image: url(./Elements/radio_checked.png);
 }
+
+QCheckBox::indicator{
+	width : 20px;
+	height : 20px;
+}
+
 /*################################################### /BUTTONS #########################################################*/
 
 
@@ -270,6 +268,16 @@ QLabel#main_screen_content{
 	color : #999999;
 	font-size : 20px;
 }
+QLabel#main_screen_green_content{
+	color : #00AA00;
+	font-size : 20px;
+}
+QLabel#main_screen_red_content{
+	color : #AA0000;
+	font-size : 20px;
+}
+
+
 
 QLabel#main_screen_heading{
 	color : #ADFF2F;
