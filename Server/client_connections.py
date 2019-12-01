@@ -151,12 +151,18 @@ class manage_clients():
 				if client_id == 'Nul':
 					print('[ REJECT ] Client has not logged in.')
 					return
-				manage_clients.client_query_handler(client_id, query)
+				manage_clients.client_query_handler(
+					client_id, 
+					query
+				)
 
 			elif client_code == 'DSCNT':
 				client_username = json_data["Username"]
 				client_id = json_data["ID"]
-				manage_clients.client_logout_handler(client_username, client_id)
+				manage_clients.client_logout_handler(
+					client_username, 
+					client_id
+				)
 
 			else:
 				print('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
@@ -296,7 +302,6 @@ class manage_clients():
 						response.publish_message(manage_clients.channel, client_username, message)
 						print('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
 						
-
 				elif previously_connected_state == 'Blocked':
 					print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
 					# Reject client login
@@ -517,7 +522,6 @@ class manage_clients():
 				print('[ JUDGE ] Requesting a new judgement')
 				message = {
 					'Code' : 'JUDGE', 
-					'Receiver' : 'judge_requests',
 					'Client ID' : client_id, 
 					'Client Username' : client_username,
 					'Run ID' : run_id,

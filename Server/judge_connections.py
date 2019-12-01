@@ -112,6 +112,65 @@ class manage_judges():
 				message = json_data['Message']
 				p_code = json_data['PCode']
 				time_stamp = json_data['Time Stamp']
+
+				# Create response to send to client
+				message = {
+					'Code' : 'VRDCT', 
+					'Receiver' : client_username,
+					'Local Run ID' : local_run_id,
+					'Run ID' : run_id,
+					'Status' : status,
+					'Message' : message
+				}
+				message = json.dumps(message)
+
+				# Publish message to client if allowed
+				# Update scoreboard also when manual review is ON
+				if manage_judges.data_changed_flags[20] == 0:
+					try:
+						# Put response to task queue, to further connect to the client
+						manage_judges.task_queue.put(message)
+						print('[ VERDICT ] New verdict sent to ' + client_username)
+					except Exception as error:
+						ch.basic_ack(delivery_tag = method.delivery_tag)
+						print('[ ERROR ] Could not publish result to client : ' + str(error))
+						return
+
+					# Update scoreboard
+					problem_max_score = manage_judges.config['AC Points']
+					problem_penalty = manage_judges.config['Penalty Score']
+					time_penalty = manage_judges.config['Penalty Time']
+					# call scoreboard updation function		TODO MOVE TO CORE
+					scoreboard_management.update_user_score(
+						client_id, 
+						run_id,
+						problem_max_score, 
+						problem_penalty,
+						status, 
+						p_code,
+						time_stamp,
+						manage_judges.ranking_algoritm # Ranking Algorithm
+					)
+
+					# Update scoreboard view in server
+					manage_judges.data_changed_flags[16] = 1
+					# Broadcast new scoreboard to clients whenever a new AC is recieved 
+					# and scoreboard update is allowed.
+					if status == 'AC' and manage_judges.data_changed_flags[15] == 1:
+						# Flag 18 signals interface to update scoreboard
+						manage_judges.data_changed_flags[18] = 1
+				else:
+					submissions_management.update_submission_status(run_id, status, 'REVIEW')
+					# Update submission GUI
+					manage_judges.data_changed_flags[0] = 1
+
+				# Send Acknowldgement of message recieved and processed
+				ch.basic_ack(delivery_tag = method.delivery_tag)
+
+
+
+
+
 			else:
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				print('[ ERROR ] Judge data could not be parsed. Recheck judge Authenticity.')
@@ -122,58 +181,9 @@ class manage_judges():
 			print('[ ERROR ] Could not parse judge JSON data : ' + str(error))
 			return
 
-		# Create response to send to client
-		message = {
-		'Code' : 'VRDCT', 
-		'Receiver' : client_username,
-		'Local Run ID' : local_run_id,
-		'Run ID' : run_id,
-		'Status' : status,
-		'Message' : message
-		}
-		message = json.dumps(message)
 
-		# Publish message to client if allowed
-		# Update scoreboard also when manual review is ON
-		if manage_judges.data_changed_flags[20] == 0:
-			try:
-				# Put response to task queue, to further connect to the client
-				manage_judges.task_queue.put(message)
-				print('[ VERDICT ] New verdict sent to ' + client_username)
-			except Exception as error:
-				ch.basic_ack(delivery_tag = method.delivery_tag)
-				print('[ ERROR ] Could not publish result to client : ' + str(error))
-				return
 
-			# Update scoreboard
-			problem_max_score = manage_judges.config['AC Points']
-			problem_penalty = manage_judges.config['Penalty Score']
-			time_penalty = manage_judges.config['Penalty Time']
-			# Get time taken by user for this submission
-			# call scoreboard updation function
-			scoreboard_management.update_user_score(
-				client_id, 
-				run_id,
-				problem_max_score, 
-				problem_penalty,
-				status, 
-				p_code,
-				time_stamp,
-				manage_judges.ranking_algoritm # Ranking Algorithm
-			)
 
-			# Update scoreboard view in server
-			manage_judges.data_changed_flags[16] = 1
-			# Broadcast new scoreboard to clients whenever a new AC is recieved 
-			# and scoreboard update is allowed.
-			if status == 'AC' and manage_judges.data_changed_flags[15] == 1:
-				# Flag 18 signals interface to update scoreboard
-				manage_judges.data_changed_flags[18] = 1
-		else:
-			submissions_management.update_submission_status(run_id, status, 'REVIEW')
-			# Update submission GUI
-			manage_judges.data_changed_flags[0] = 1
 
-		# Send Acknowldgement of message recieved and processed
-		ch.basic_ack(delivery_tag = method.delivery_tag)
+
 		return

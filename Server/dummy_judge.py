@@ -63,7 +63,15 @@ def handler(ch, method, properties, body):
 	
 	try:
 		json_data = json.loads(server_data)
-		verdicts = ['AC', 'WA', 'SF', 'TLE', 'RE', 'CE', 'NZ']
+		# 'AC' : 'AC - Correct Answer', 
+		# 'WA' : 'WA - Wrong Answer', 
+		# 'TLE' : 'TLE - Time Limit Exceeded',
+		# 'CMPL' : 'CMPL - Compilation Error',
+		# 'PE' : 'PE - Presentation Error',
+		# 'RE' : 'RE - Run Time Error',
+		# 'OLE' : 'OLE - Output Limit Exceeded',
+		# 'NZEC'
+		verdicts = ['AC', 'WA', 'TLE', 'RE', 'CMPL', 'NZEC', 'OLE', 'PE']
 
 		code = json_data['Code']
 		if code == 'JUDGE':
@@ -77,8 +85,11 @@ def handler(ch, method, properties, body):
 			time_stamp = json_data['Time Stamp']
 
 			
-			num = randrange(6)
-			status = verdicts[num]
+			num = randrange(8)
+			try:
+				status = verdicts[num]
+			except:
+				status = 'AC'
 
 			message = {
 			'Judge Key' : key,

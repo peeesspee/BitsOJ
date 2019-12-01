@@ -1516,7 +1516,7 @@ class manage_submission_ui(QMainWindow):
 		rejudge_button = QPushButton('Rejudge')
 		rejudge_button.setFixedSize(150, 40)
 		rejudge_button.clicked.connect(
-			lambda:manage_submission_ui.final_status(self)
+			lambda:manage_submission_ui.rejudge(self)
 			)
 
 		view_output_source_button = QPushButton('Submission Source and Data')
@@ -1581,6 +1581,51 @@ class manage_submission_ui(QMainWindow):
 		view_output_source_button.setObjectName('interior_button')
 		cancel_button.setObjectName('interior_button')
 		return main
+
+	def rejudge(self):
+		print('[ EVENT ][ REJUDGE ] Run ' + str(self.run_id) + ' by ADMIN')
+		client_username = client_authentication.get_client_username(self.client_id)
+		file_name = submissions_management.get_source_file_name(self.run_id)
+		if file_name == 'NONE':
+			print('[ ERROR ] Source file not found!')
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Critical)
+			info_box.setWindowTitle('Alert')
+			info_box.setText('Source file not found!')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+
+		try:
+			file = open("Client_Submissions/" + file_name ,"r")
+			source_code = file.read()
+			file.close()
+		except:
+			print('[ ERROR ] Source file could not be accessed!')
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Critical)
+			info_box.setWindowTitle('Alert')
+			info_box.setText('Source file could not be accessed!')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+
+		local_run_id = submissions_management.get_local_run_id(self.run_id)
+		message = {
+			'Code' : 'JUDGE', 
+			'Client ID' : self.client_id, 
+			'Client Username' : client_username,
+			'Run ID' : self.run_id,
+			'Language' : self.language,
+			'PCode' : self.problem_code,
+			'Source' : source_code,
+			'Local Run ID' : local_run_id,
+			'Time Stamp' : self.timestamp
+		}
+		message = json.dumps(message)
+		self.task_queue.put(message)
+		self.data_changed_flags[8] = 0
+		self.close()
 
 	def manual_verdict(self, manual_verdict):
 		if self.verdict == 'Running':

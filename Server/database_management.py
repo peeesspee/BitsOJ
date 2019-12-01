@@ -341,6 +341,18 @@ class submissions_management(manage_database):
 		except Exception as error:
 			return "NONE"
 
+	def get_source_file_name(run_id):
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT source_file FROM submissions WHERE run_id = ?" , (run_id,))
+			data = cur.fetchall()
+			if data[0][0] == None:
+				return "NONE"
+			else:
+				return data[0][0]
+		except Exception as error:
+			return "NONE"
+
 
 class query_management(manage_database):
 	def insert_query(query_id, client_id, query):
