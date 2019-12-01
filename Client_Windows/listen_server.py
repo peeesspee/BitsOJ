@@ -11,14 +11,15 @@ class start_listening():
 	# client_id, username = authenticate_login.get_user_details()
 	channel = None
 	connection = None
-	cursor = None
+
 	host = None
 	login_status = False 
 	data_changed_flags = ''
 	queue = ''
 	scoreboard = ''
 
-	def listen_server(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags2,queue,scoreboard):
+	def listen_server(rabbitmq_username, rabbitmq_password, host, data_changed_flags2, queue, scoreboard):
+		print('[ PREPARE ] 1')
 		try:
 			creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
 			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
@@ -26,19 +27,24 @@ class start_listening():
 			channel = connection.channel()
 			start_listening.channel = channel
 			start_listening.connection = connection
-			start_listening.cursor = cursor
+			print('[ PREPARE ] 2 ')
+			
+			
+			print('[ PREPARE ] 3')
 			start_listening.host = host
 			start_listening.data_changed_flags = data_changed_flags2
 			start_listening.queue = queue
 			start_listening.scoreboard = scoreboard
-
+			print('[ PREPARE ] 4')
 
 			start_listening.channel.basic_consume(
-				queue = authenticate_login.username,
+				queue = authenticate_login.username or 'team00001',
 				on_message_callback = start_listening.server_response_handler,
 				auto_ack = True
 				)
+			print('[ PREPARE ] 5')
 			start_listening.channel.start_consuming()
+			print('[ PREPARE ] 6')
 		except (KeyboardInterrupt, SystemExit):
 			print('[ DELETE ] Queue ' + authenticate_login.username + ' deleted...')
 			print("[ STOP ] Keyboard interrupt")

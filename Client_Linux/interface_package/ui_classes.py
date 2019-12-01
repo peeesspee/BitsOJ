@@ -346,7 +346,11 @@ class ui_widgets():
 		if data_changed_flag[0] == 0:
 			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
 		else:
-			webbrowser.open('Problems/Problem_'+str(i)+'.pdf')
+			config = handle_config.read_config_json()
+			if config["Problems"]["Problem " + str(i)][2] == 0:
+				webbrowser.open('Problems/Problem_'+str(i)+'.pdf')
+			else:
+				pass
 		return
 		# print('Button {0} clicked'.format(i))
 
@@ -520,5 +524,4 @@ class view_submission_ui(QMainWindow):
 
 
 		return main
-
 

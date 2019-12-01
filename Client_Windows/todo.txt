@@ -1,1 +1,3 @@
-show errors
+username 
+cursor
+Path

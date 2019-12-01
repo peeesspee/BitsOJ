@@ -35,14 +35,15 @@ class contest_setup(QMainWindow):
 			"rabbitmq_password" : '',
 			"host" : '',
 			"No_of_Problems" : None,
+			"Problem Key" : None,
 			"Problems" : {},
 			"Languages" : '',
 			"Contest" : 'START',
 			"Duration" : '00:00:00',
 			"Start Time" : '00:00:00',
 			"End Time" : '00:00:00',
-			"Contest_Name" : '',
-			"Contest_Theme" : ''
+			"Contest Name" : '',
+			"Contest Theme" : ''
 			}
 
 		self.server_config = {
@@ -63,6 +64,8 @@ class contest_setup(QMainWindow):
             "Contest Start Time": "00:00:00",
             "Contest End Time": "00:00:00",
             "Contest Set Time": 0,
+            "Contest Name" : '',
+			"Contest Theme" : '',
             "Number Of Problems": "5",
             "Problems": {
                 "Problem 1": "('The Begining of the End','TBE', 1, 1)",
@@ -80,7 +83,21 @@ class contest_setup(QMainWindow):
             "Manual Review": "False",
             "Submision Time Limit" : 0
 		}
-		self.judge_config = {}
+		self.judge_config = {
+			"rabbitmq_username" : "",
+			"rabbitmq_password" : "",
+			"rabbitmq_host" : "",
+			"judge_key" : "000000000000000",
+			"Number of Problems" : "5",
+			"Problems": {
+                "Problem 1": "('The Begining of the End','TBE', 1, 1)",
+                "Problem 2": "('Privet Drive','PD', 1, 1)",
+                "Problem 3": "('Dumbledores Cloak','DC', 1, 1)",
+                "Problem 4": "('The Auror Mania','TAM', 1, 1)",
+                "Problem 5": "('A New Start','ANS', 1, 1)"
+            },
+            "Problem Codes": "('TBE', 'PD', 'DC', 'TAM', 'ANS')",
+		}
 
 		self.language_tuple = ()
 		
@@ -94,7 +111,7 @@ class contest_setup(QMainWindow):
 		contest_setup.problem(self)
 		contest_setup.language(self)
 		contest_setup.contest(self)
-		contest_setup.security(self)
+		# contest_setup.security(self)
 		contest_setup.ranking(self)
 		return
 
@@ -122,7 +139,7 @@ class contest_setup(QMainWindow):
 		self.problem_tab = QWidget()
 		self.language_tab = QWidget()
 		self.contest_tab = QWidget()
-		self.security_tab = QWidget()
+		# self.security_tab = QWidget()
 		self.ranking_tab = QWidget()
 		self.final_tab = QWidget()
 
@@ -130,7 +147,7 @@ class contest_setup(QMainWindow):
 		self.top_tab.addTab(self.problem_tab, "Problems")
 		self.top_tab.addTab(self.language_tab, "Languages")
 		self.top_tab.addTab(self.contest_tab, "Contest")
-		self.top_tab.addTab(self.security_tab, "Security")
+		# self.top_tab.addTab(self.security_tab, "Security")
 		self.top_tab.addTab(self.ranking_tab, "Ranking")
 		self.top_tab.addTab(self.final_tab, 'Final Save')
 
@@ -613,6 +630,29 @@ class contest_setup(QMainWindow):
 		judge_key.addSpacing(0)
 		judge_key_widget = QWidget()
 		judge_key_widget.setLayout(judge_key)
+
+
+		problem_password_key = QHBoxLayout()
+		problem_password_key_label = QLabel('PROBLEM KEY                :   ')
+		problem_password_key_label.setObjectName('general')
+		self.problem_password_key_text = QLineEdit()
+		self.problem_password_key_text.setPlaceholderText('')
+		self.problem_password_key_text.setObjectName('general_text')
+		self.problem_password_key_text.setReadOnly(True)
+		self.problem_password_key_text.setEchoMode(QLineEdit.Password)
+		self.problem_password_key_text.setFixedWidth(400)
+		self.problem_password_key_text.setFixedHeight(50)
+		generate_problem_password_key = QPushButton('Generate')
+		generate_problem_password_key.setObjectName('general')
+		generate_problem_password_key.setFixedSize(200,50)
+		generate_problem_password_key.clicked.connect(lambda:self.generate_key(2))
+		problem_password_key.addWidget(problem_password_key_label)
+		problem_password_key.addWidget(self.problem_password_key_text)
+		problem_password_key.addWidget(generate_problem_password_key)
+		problem_password_key.addStretch(1)
+		problem_password_key.addSpacing(0)
+		problem_password_key_widget = QWidget()
+		problem_password_key_widget.setLayout(problem_password_key)
 		contest_duration = QHBoxLayout()
 		contest_duration_label = QLabel('CONTEST DURATION     :   ')
 		contest_duration_label.setObjectName('general')
@@ -678,6 +718,8 @@ class contest_setup(QMainWindow):
 		contest_tab.addWidget(contest_theme_widget)
 		contest_tab.addWidget(client_key_widget)
 		contest_tab.addWidget(judge_key_widget)
+		contest_tab.addWidget(problem_password_key_widget)
+		# contest_tab.addWidget(problems_password_widget)
 		# contest_tab.addWidget(contest_duration_widget)
 		# contest_tab.addWidget(start_time_widget)
 		contest_tab.addWidget(self.client_key_button_widget)
@@ -935,13 +977,21 @@ class contest_setup(QMainWindow):
 			QMessageBox.warning(self,'Message','Contest Theme cannot be empty')
 		elif self.client_key_text.text() == '':
 			QMessageBox.warning(self,'Message','Client Key cannot be empty')
+		elif self.judge_key_text.text() == '':
+			QMessageBox.warning(self,'Message','Judge Key cannot be empty')
+		elif self.problem_password_key_text.text() == '':
+			QMessageBox.warning(self,'Message','Problem Key cannot be empty')
 		else:
-			self.client_config["Contest_Name"] = self.contest_name_text.text()
-			self.client_config["Contest_Theme"] = self.contest_theme_text.text()
+			self.client_config["Contest Name"] = self.contest_name_text.text()
+			self.client_config["Contest Theme"] = self.contest_theme_text.text()
 			self.client_config["client_key"] = self.client_key_text.text()
-			with open("../Client/config.json", 'w') as contest:
-				json.dump(self.client_config, contest, indent = 4)
-			self.contest_name_text.setReadOnly(True)
+			self.client_config["Problem Key"] = self.problem_password_key_text.text()
+			self.server_config["Contest Name"] = self.contest_name_text.text()
+			self.server_config["Contest Theme"] = self.contest_theme_text.text()
+			self.server_config["Client Key"] = self.client_key_text.text()
+			self.server_config["Judge Key"] = self.judge_key_text.text()
+			self.server_config["File Password"] = self.problem_password_key_text.text()
+			self.judge_config["judge_key"] = self.judge_key_text.text()
 			self.contest_theme_text.setReadOnly(True)
 			self.client_key_text.setReadOnly(True)
 			self.contest_duration_text.setReadOnly(True)
@@ -1027,13 +1077,49 @@ class contest_setup(QMainWindow):
 			self.client_config["rabbitmq_username"] = self.rabbitmq_username_text.text()
 			self.client_config["rabbitmq_password"] = self.rabbitmq_password_text.text()
 			self.client_config["host"] = self.rabbitmq_host_text.text()
+			print(self.client_config)
+			print("\n\n\n")
 			QMessageBox.warning(self,'Message','RabbitMQ Details has been saved')
 
 	def save_server_rabbitmq(self):
-		pass
+		if self.rabbitmq_server_username_text.text() == '':
+			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
+		elif self.rabbitmq_server_password_text.text() == '':
+			QMessageBox.warning(self,'Message','PASSWORD cannot be empty')
+		elif self.rabbitmq_server_host_text.text() == '':
+			QMessageBox.warning(self,'Message','HOST cannot be empty')
+		else:
+			self.rabbitmq_server_username_text.setReadOnly(True)
+			self.rabbitmq_server_password_text.setReadOnly(True)
+			self.rabbitmq_server_host_text.setReadOnly(True)
+			self.manual_server.setDisabled(True)
+			self.automatic_server.setDisabled(True)
+			self.server_config["Server Username"] = self.rabbitmq_server_username_text.text()
+			self.server_config["Server Password"] = self.rabbitmq_server_password_text.text()
+			self.server_config["Server IP"] = self.rabbitmq_server_host_text.text()
+			print(self.server_config)
+			print("\n\n\n")
+			QMessageBox.warning(self,'Message','RabbitMQ Details has been saved')
 
 	def save_judge_rabbitmq(self):
-		pass
+		if self.rabbitmq_judge_username_text.text() == '':
+			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
+		elif self.rabbitmq_judge_password_text.text() == '':
+			QMessageBox.warning(self,'Message','PASSWORD cannot be empty')
+		elif self.rabbitmq_judge_host_text.text() == '':
+			QMessageBox.warning(self,'Message','HOST cannot be empty')
+		else:
+			self.rabbitmq_judge_username_text.setReadOnly(True)
+			self.rabbitmq_judge_password_text.setReadOnly(True)
+			self.rabbitmq_judge_host_text.setReadOnly(True)
+			self.manual_judge.setDisabled(True)
+			self.automatic_judge.setDisabled(True)
+			self.judge_config["rabbitmq_username"] = self.rabbitmq_judge_username_text.text()
+			self.judge_config["rabbitmq_password"] = self.rabbitmq_judge_password_text.text()
+			self.judge_config["rabbitmq_host"] = self.rabbitmq_judge_host_text.text()
+			print(self.judge_config)
+			print("\n\n\n")
+			QMessageBox.warning(self,'Message','RabbitMQ Details has been saved')
 
 	########################## EDIT RABBITMQ DETAILS FOR CLIENT ############################
 	def edit_client_rabbitmq(self):
@@ -1045,17 +1131,26 @@ class contest_setup(QMainWindow):
 
 
 	def edit_server_rabbitmq(self):
-		pass
+		self.rabbitmq_server_username_text.setReadOnly(False)
+		self.rabbitmq_server_password_text.setReadOnly(False)
+		self.rabbitmq_server_host_text.setReadOnly(False)
+		self.manual_server.setEnabled(True)
+		self.automatic_server.setEnabled(True)
 
 
 	def edit_judge_rabbitmq(self):
-		pass
+		self.rabbitmq_judge_username_text.setReadOnly(False)
+		self.rabbitmq_judge_password_text.setReadOnly(False)
+		self.rabbitmq_judge_host_text.setReadOnly(False)
+		self.manual_judge.setEnabled(True)
+		self.automatic_judge.setEnabled(True)
 
 
 	########################### SAVE LANGUAGE DETAILS FOR CLIENT ###########################
 	def save_client_language(self):
 		if self.all.isChecked() == True:
 			self.client_config["Languages"] = self.language_tuple
+			self.server_config["Languages"] = self.language_tuple
 		else:
 			language_list = []
 			if self.c.isChecked() == True:
@@ -1072,7 +1167,11 @@ class contest_setup(QMainWindow):
 				language_list.append('TEXT')
 			self.language_tuple = str(tuple(language_list))
 			self.client_config["Languages"] = self.language_tuple
+			self.server_config["Languages"] = self.language_tuple
 		print(self.client_config)
+		print("\n\n")
+		print(self.server_config)
+		print("\n\n")
 		self.c.setDisabled(True)
 		self.cplusplus.setDisabled(True)
 		self.python2.setDisabled(True)

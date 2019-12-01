@@ -33,7 +33,7 @@ class client_window(QMainWindow):
 		current_status = "STOPPED"
 		global Timer
 		# Set app icon
-		self.setWindowIcon(QIcon("Elements+'\'+logo.png"))
+		self.setWindowIcon(QIcon("Elements\\logo.png"))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ Client ]')
 		
@@ -189,7 +189,7 @@ class client_window(QMainWindow):
 
 		# Define out top bar
 		logo = QLabel(self)
-		logo_image = QPixmap("Elements+'\'+bitwise_header.png")
+		logo_image = QPixmap("Elements\\bitwise_header.png")
 		logo_image = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image)
 
@@ -431,8 +431,8 @@ class client_window(QMainWindow):
 		button_yes.setObjectName("close_button_yes")
 		button_no.setObjectName("close_button_no")
 
-		button_yes.setStyleSheet(open("Elements+'\'+style.qss", "r").read())
-		button_no.setStyleSheet(open("Elements+'\'+style.qss", "r").read())
+		button_yes.setStyleSheet(open("Elements\\style.qss", "r").read())
+		button_no.setStyleSheet(open("Elements\\style.qss", "r").read())
 
 		custom_close_box.exec_()
 
@@ -582,7 +582,7 @@ class init_gui(client_window):
 	def __init__(self,channel, data_changed_flag,queue,score):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
-		app.setStyleSheet(open("Element+'\'+style.qss", "r").read())
+		app.setStyleSheet(open("Elements\\style.qss", "r").read())
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 
@@ -592,7 +592,9 @@ class init_gui(client_window):
 		client_app.showMaximized()
 		# server_app.showNormal()
 		# Close the server as soon as close buton is clicked
+		print('Executing///')
 		app.exec_()
+		print('Executing\\\\\\')
 
 
 
