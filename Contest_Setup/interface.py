@@ -24,6 +24,7 @@ class contest_setup(QMainWindow):
 		self.setWindowTitle('BitsOJ v1.0.1 Contest Setup')
 		self.resize(1200,700)
 		os.system('mkdir Problems')
+		self.flag = 0
 		cur = manage_database.initialize_client_tables()
 		manage_local_ids.initialize_local_id()
 		self.client_config = {
@@ -41,7 +42,8 @@ class contest_setup(QMainWindow):
 			"Start Time" : '00:00:00',
 			"End Time" : '00:00:00',
 			"Contest_Name" : '',
-			"Contest_Theme" : ''}
+			"Contest_Theme" : ''
+			}
 
 		self.server_config = {
 			"Server Username": "BitsOJ",
@@ -92,6 +94,7 @@ class contest_setup(QMainWindow):
 		contest_setup.problem(self)
 		contest_setup.language(self)
 		contest_setup.contest(self)
+		contest_setup.security(self)
 		contest_setup.ranking(self)
 		return
 
@@ -435,6 +438,9 @@ class contest_setup(QMainWindow):
 		problem_heading = QLabel('Add Problems')
 		problem_heading.setObjectName('heading')
 		self.add_table_view,self.table_model = problem_table.problem_model(self)
+		if self.flag == 0:
+			reset_database.reset_problem(self.table_model)
+			self.flag = 1
 		problem_button = QHBoxLayout()
 		self.add_problem = QPushButton('Add')
 		self.add_problem.setObjectName('general')
@@ -681,6 +687,60 @@ class contest_setup(QMainWindow):
 		self.contest_tab.setLayout(contest_tab)
 
 
+
+	###################################### SECURITY #########################################
+
+	def security(self):
+		main_security = QVBoxLayout()
+		heading = QLabel('Security')
+		heading.setObjectName('heading')
+
+		problems_password = QHBoxLayout()
+		problems_password_label = QLabel('Problems Password  :  ')
+		problems_password_label.setObjectName('general')
+		self.problems_password_text = QLineEdit()
+		self.problems_password_text.setObjectName('general_text')
+		self.problems_password_text.setEchoMode(QLineEdit.Password)
+		self.problems_password_text.setReadOnly(True)
+		problems_password.addWidget(problems_password_label)
+		problems_password.addWidget(self.problems_password_text)
+		generate_password_key = QPushButton('Generate')
+		generate_password_key.setObjectName('general')
+		generate_password_key.setFixedSize(200,50)
+		generate_password_key.clicked.connect(lambda:self.generate_key(2))
+		problems_password.addWidget(generate_password_key)
+		problems_password.addStretch(0)
+		problems_password.addSpacing(1)
+		problems_password_widget = QWidget()
+		problems_password_widget.setLayout(problems_password)
+
+		password_key_button = QHBoxLayout()
+		self.save_password_key_button = QPushButton('Save')
+		self.save_password_key_button.setObjectName('general')
+		self.save_password_key_button.setFixedSize(200,50)
+		self.save_password_key_button.clicked.connect(lambda:self.save_security_tab())
+		self.edit_password_key_button = QPushButton('Edit')
+		self.edit_password_key_button.setObjectName('general')
+		self.edit_password_key_button.setFixedSize(200,50)
+		self.edit_password_key_button.clicked.connect(lambda:self.edit_security_tab())
+		password_key_button.addWidget(self.save_password_key_button, alignment=Qt.AlignRight)
+		password_key_button.addWidget(self.edit_password_key_button, alignment=Qt.AlignRight)
+		password_key_button.addStretch(0)
+		password_key_button.addSpacing(1)
+		self.password_key_button_widget = QWidget()
+		self.password_key_button_widget.setLayout(password_key_button)
+
+
+		main_security.addWidget(heading)
+		main_security.addWidget(problems_password_widget)
+
+		main_security.addStretch(0)
+		main_security.addSpacing(1)
+		main_security.addWidget(self.password_key_button_widget)
+
+		self.security_tab.setLayout(main_security)
+
+
 	###################################### RANKING ##########################################
 
 	def ranking(self):
@@ -790,10 +850,14 @@ class contest_setup(QMainWindow):
 			key = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(15))
 			self.client_key_text.setText(key)
 			self.client_key_text.setReadOnly(True)
-		else:
+		elif i == 1:
 			key = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(15))
 			self.judge_key_text.setText(key)
 			self.judge_key_text.setReadOnly(True)
+		else:
+			key = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(10))
+			self.problems_password_text.setText(key)
+			self.problems_password_text.setReadOnly(True)
 
 
 	def save_rank_tab(self):
