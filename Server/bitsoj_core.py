@@ -221,6 +221,11 @@ class core():
 					core.data_changed_flags[0] = 1
 
 				elif data['Code'] == 'JUDGE':
+					run_id = data['Run ID']
+					# Update submission status
+					submissions_management.update_submission_status(run_id, 'REJUDGE', 'REJUDGE')
+					# Refresh GUI
+					core.data_changed_flags[0] = 1
 					message = json.dumps(data)
 					core.channel.basic_publish(
 						exchange = 'connection_manager', 
