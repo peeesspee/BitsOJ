@@ -57,6 +57,21 @@ QLabel#general{
 	margin-left: 20px;
 }
 
+QLabel#general2{
+    color:#FFFFFF;
+    font: bold 30px 'Arial';
+    margin-left: 28px;
+    text-decoration: underline;
+}
+
+
+QLabel#general3{
+    color:#FFFFFF;
+    font: bold 26px 'Arial';
+    margin-left: 50px;
+    text-decoration: underline;
+}
+
 
 /*-----------------------------------------*/
 
@@ -239,3 +254,68 @@ QPushButton#submit::hover
     color : #0892D0;
     background-color : #202428 ;
 }
+
+
+
+/* ------------  Line Edit ---------------------*/
+
+QLineEdit#general_text{
+    border-top : 0px;
+    border-left : 0px;
+    border-right : 0px;
+    border-bottom: 1px solid #76FF03;
+
+    color : #AAAAAA;
+    font-size : 30px;
+  
+    background: #171B1F;
+    selection-background-color: darkgray;
+}
+
+QPlainTextEdit#general_text2{
+    border: 1px solid #76FF03;
+
+    color : #AAAAAA;
+    font-size : 18px;
+  
+    background: #171B1F;
+    selection-background-color: darkgray;
+    margin-left: 28px;
+}
+
+QPlainTextEdit#general_text3{
+    border: 1px solid #76FF03;
+
+    color : #AAAAAA;
+    font-size : 18px;
+  
+    background: #171B1F;
+    selection-background-color: darkgray;
+    margin-left: 50px;
+}
+
+
+/*----------- Push Button ---------------*/
+/*
+QPushButton#general
+{
+    background-color : #171B1F ; 
+    color : #838383;
+    margin-top: 20px;
+    margin-left : 100px;
+    text-align : center; 
+    border : 1px solid #0892D0;
+    border-radius : 30px;
+    font-size : 30px;
+} 
+
+QPushButton#general::focus
+{
+    color : #0892D0;
+}
+
+QPushButton#general::hover::focus
+{
+    color : #0892D0;
+}
+*/

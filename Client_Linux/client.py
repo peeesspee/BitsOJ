@@ -13,13 +13,19 @@ from interface_package.login_interface import start_interface
 from listen_server import start_listening
 from init_client import handle_config,rabbitmq_detail
 
-
-config = handle_config.read_config_json()
-
-# Basic credentials for login to RabbitMQ Server
-rabbitmq_username = config["rabbitmq_username"]
-rabbitmq_password = config["rabbitmq_password"]
-host = config["host"]
+try:
+	config = handle_config.read_config_json()
+except Exception as Error:
+	print(str(Error))
+	sys.exit()
+try:
+	# Basic credentials for login to RabbitMQ Server
+	rabbitmq_username = config["rabbitmq_username"]
+	rabbitmq_password = config["rabbitmq_password"]
+	host = config["host"]
+except Exception as Error:
+	print(str(Error))
+	sys.exit()
 
 rabbitmq_detail.fill_detail(rabbitmq_username,rabbitmq_password,host)
 

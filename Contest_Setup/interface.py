@@ -23,10 +23,14 @@ class contest_setup(QMainWindow):
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 		self.setWindowTitle('BitsOJ v1.0.1 Contest Setup')
 		self.resize(1200,700)
-		os.system('mkdir Problems')
-		self.flag = 0
 		cur = manage_database.initialize_client_tables()
-		manage_local_ids.initialize_local_id()
+		os.system('mkdir Problems')
+		os.system('mkdir Problem_Statement')
+		for i in os.listdir('./Problem_Statement'):
+			os.remove('./Problem_Statement/' + i)
+		for i in os.listdir('./Problems'):
+			os.system('rm -rf ./Problems/' + i)
+		self.flag = 0
 		self.client_config = {
 			"client_id" : 'Null',
 			"client_key" : '',
@@ -102,6 +106,7 @@ class contest_setup(QMainWindow):
 		self.language_tuple = ()
 		
 		self.data = {"Problems" : {}}
+		read_write.write_json(self.data)
 
 
 		self.db = self.init_qt_database()
@@ -457,6 +462,7 @@ class contest_setup(QMainWindow):
 		self.add_table_view,self.table_model = problem_table.problem_model(self)
 		if self.flag == 0:
 			reset_database.reset_problem(self.table_model)
+			manage_local_ids.initialize_local_id()
 			self.flag = 1
 		problem_button = QHBoxLayout()
 		self.add_problem = QPushButton('Add')
@@ -968,6 +974,10 @@ class contest_setup(QMainWindow):
 		manage_local_ids.initialize_local_id()
 		for i in os.listdir('./Problems/'):
 			os.system('rm -rf ./Problems/' + i)
+		read_write.write_json(self.data)
+		for i in os.listdir('./Problem_Statement'):
+			os.remove('./Problem_Statement/' + i)
+
 
 	############################ SAVE CONTEST TAB ##############################
 	def save_contest_tab(self):

@@ -14,12 +14,20 @@ from listen_server import start_listening
 from init_client import handle_config,rabbitmq_detail
 
 
-config = handle_config.read_config_json()
+try:
+	config = handle_config.read_config_json()
+except Exception as Error:
+	print(str(Error))
+	sys.exit()
+try:
+	# Basic credentials for login to RabbitMQ Server
+	rabbitmq_username = config["rabbitmq_username"]
+	rabbitmq_password = config["rabbitmq_password"]
+	host = config["host"]
+except Exception as Error:
+	print(str(Error))
+	sys.exit()
 
-# Basic credentials for login to RabbitMQ Server
-rabbitmq_username = config["rabbitmq_username"]
-rabbitmq_password = config["rabbitmq_password"]
-host = config["host"]
 
 rabbitmq_detail.fill_detail(rabbitmq_username,rabbitmq_password,host)
 
