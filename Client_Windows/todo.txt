@@ -1,1 +1,5 @@
-show errors
+username done
+cursor done 
+Path done
+solution
+check everything

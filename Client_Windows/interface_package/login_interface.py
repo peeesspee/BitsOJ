@@ -13,7 +13,7 @@ class Login(QWidget):
 			# Resize Size of the window 
 			self.resize(700, 600)
 			# Window Icon
-			self.setWindowIcon(QIcon("Elements+'\'+logo.png"))
+			self.setWindowIcon(QIcon("Elements\\logo.png"))
 
 			# Frame Geometry
 			qtRectangle = self.frameGeometry()
@@ -81,6 +81,7 @@ class Login(QWidget):
 			# If authentication is successful then close login window and open main window 
 			if( authenticate_login.login_status == 'VALID'):
 				try:
+					print('[ VALID ] Login')
 					QApplication.quit()
 				except Exception as error:
 					print('[ ERROR ] Could not exit properly : ' + str(error) )
@@ -115,7 +116,7 @@ class start_interface(Login):
 	def __init__(self, connection, data_changed_flag,queue):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
-		app.setStyleSheet(open("Elements+'\'+login.qss", "r").read())
+		app.setStyleSheet(open("Elements\\login.qss", "r").read())
 		app.aboutToQuit.connect(self.closeEvent)
 		# make a reference of App class
 		login_app = Login(connection,queue)

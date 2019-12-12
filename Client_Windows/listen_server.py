@@ -1,5 +1,4 @@
 from database_management import submission_management, query_management
-from login import authenticate_login
 import pika
 import json
 import sys
@@ -8,43 +7,40 @@ from datetime import date,datetime
 from init_client import initialize_contest, handle_config
 
 class start_listening():
-	# client_id, username = authenticate_login.get_user_details()
 	channel = None
 	connection = None
-	cursor = None
+
 	host = None
 	login_status = False 
 	data_changed_flags = ''
 	queue = ''
 	scoreboard = ''
 
-	def listen_server(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags2,queue,scoreboard):
+	def listen_server(rabbitmq_username, rabbitmq_password, host, data_changed_flags2, queue, scoreboard):
+		authenticate_login = handle_config.read_config_json()
 		try:
 			creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
 			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
 			connection = pika.BlockingConnection(params)
 			channel = connection.channel()
 			start_listening.channel = channel
-			start_listening.connection = connection
-			start_listening.cursor = cursor
 			start_listening.host = host
 			start_listening.data_changed_flags = data_changed_flags2
 			start_listening.queue = queue
 			start_listening.scoreboard = scoreboard
 
-
 			start_listening.channel.basic_consume(
-				queue = authenticate_login.username,
+				queue = authenticate_login["Username"],
 				on_message_callback = start_listening.server_response_handler,
 				auto_ack = True
 				)
 			start_listening.channel.start_consuming()
 		except (KeyboardInterrupt, SystemExit):
-			print('[ DELETE ] Queue ' + authenticate_login.username + ' deleted...')
+			print('[ DELETE ] Queue ' + authenticate_login["Username"] + ' deleted...')
 			print("[ STOP ] Keyboard interrupt")
 		finally:
 			start_listening.channel.stop_consuming()
-			start_listening.channel.queue_delete(authenticate_login.username)
+			start_listening.channel.queue_delete(authenticate_login["Username"])
 			
 	
 			
@@ -110,7 +106,7 @@ class start_listening():
 		print('[ Run ID : ' + run_id + ' ] [ Result : ' + code_result + ' ] [ error : ' + message + ' ]')
 		submission_management.update_verdict(
 			local_id,
-			authenticate_login.client_id,
+			authenticate_login["client_id"],
 			run_id,
 			code_result,
 			)
@@ -131,6 +127,7 @@ class start_listening():
 			Type,
 			)
 		start_listening.data_changed_flags[2] = 2
+
 
 	def convert_time_format(start_time):
 		today = date.today()

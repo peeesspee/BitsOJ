@@ -1,4 +1,5 @@
 import json
+from PyQt5.QtWidgets import *
 
 ##########################################################################
 ##########################################################################
@@ -34,10 +35,12 @@ class initialize_contest():
 
 class handle_config():
 	def read_config_json():
-		with open('config.json', 'r') as read_config:
-			data = json.load(read_config)
-
-		return data
+		try:
+			with open('config.json', 'r') as read_config:
+				data = json.load(read_config)
+			return data
+		except Exception as Error:
+			print(str(Error))
 
 	def read_config_string():
 		with open('config.json', 'r') as read_config:

@@ -14,12 +14,20 @@ from listen_server import start_listening
 from init_client import handle_config,rabbitmq_detail
 
 
-config = handle_config.read_config_json()
+try:
+	config = handle_config.read_config_json()
+except Exception as Error:
+	print(str(Error))
+	sys.exit()
+try:
+	# Basic credentials for login to RabbitMQ Server
+	rabbitmq_username = config["rabbitmq_username"]
+	rabbitmq_password = config["rabbitmq_password"]
+	host = config["host"]
+except Exception as Error:
+	print(str(Error))
+	sys.exit()
 
-# Basic credentials for login to RabbitMQ Server
-rabbitmq_username = config["rabbitmq_username"]
-rabbitmq_password = config["rabbitmq_password"]
-host = config["host"]
 
 rabbitmq_detail.fill_detail(rabbitmq_username,rabbitmq_password,host)
 
@@ -30,6 +38,7 @@ def main():
 	print("[ SETUP ] INITIALISING DATABASE ............")
 	conn, cursor = manage_database.initialize_table()
 	manage_local_ids.initialize_local_id(cursor)
+	print(cursor)
 
 	##################################
 	# Create variables/lists that will be shared between processes
@@ -64,17 +73,23 @@ def main():
 		# Starting GUI for login portal 
 		start_interface(connection,data_changed_flags, queue) 
 		print("[ LOGIN ] Successful")
-
-
-		# Manage Threads
-		print('[ SETUP ] Initialising threads....')
-		listen_pid = manage_process(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags, queue,scoreboard)
-
-		# After successful login 
-		# Starting Main GUI
-		init_gui(channel,data_changed_flags, queue,scoreboard)
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
+
+
+	try:
+		# Manage Threads
+		print('[ SETUP ] Initialising threads....')
+		listen_pid = manage_process(rabbitmq_username,rabbitmq_password, host ,data_changed_flags, queue, scoreboard)
+	except Exception as error:
+		print('[ CRITICAL ] Could not initialize threads : ' + str(error))
+		# After successful login 
+	try:
+		# Starting Main GUI
+		print('Main GUI Loading')
+		init_gui(channel,data_changed_flags, queue,scoreboard)
+	except Exception as error:
+		print(str(error))
 
 	print("[EXIT] Signal Passed")
 	os.kill(listen_pid, signal.SIGINT)
@@ -88,15 +103,23 @@ def main():
 
 
 # Manageing process
-def manage_process(rabbitmq_username, rabbitmq_password, cursor, host, data_changed_flags,queue,scoreboard):
+def manage_process(rabbitmq_username, rabbitmq_password, host, data_changed_flags, queue, scoreboard):
 	# this is from continuously listening from the server
-	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (rabbitmq_username,rabbitmq_password, cursor, host, data_changed_flags, queue,scoreboard))
+	listen_from_server = multiprocessing.Process(
+		target = start_listening.listen_server, 
+		args = (rabbitmq_username,rabbitmq_password, host, data_changed_flags, queue, scoreboard, )
+		)
 
 	listen_from_server.start()
+	
 
 	listen_pid = listen_from_server.pid
+	
 
 	# returning process id 
 	return listen_pid
 
-main()
+
+
+if __name__ == '__main__':
+	main()

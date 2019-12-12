@@ -93,7 +93,18 @@ class manage_local_ids():
 # Submission Managemnt class to update ad insert query in my submission table
 class submission_management(manage_database):
 	# Query to insert a new submission 
-	def insert_verdict(local_run_id,client_id,run_id,verdict,language,language_code,problem_code,problem_number,time_stamp,code,extension):
+	def insert_verdict(
+		local_run_id, 
+		client_id, 
+		run_id, 
+		verdict, 
+		language, 
+		language_code, 
+		problem_code, 
+		problem_number, 
+		time_stamp, 
+		code, 
+		extension):
 		# Creating a source file for every submission 
 		source_file = client_id + '_' + str(local_run_id) + extension
 		file = open("Solution/" + client_id + '_' + str(local_run_id) + extension, 'w+')

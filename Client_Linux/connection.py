@@ -8,13 +8,17 @@ class manage_connection():
 
 	# Function to establish connection
 	def initialize_connection(rabbitmq_username,rabbitmq_password,host):
-		# Credential for rabbitmq management
-		creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
-		params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
-		connection = pika.BlockingConnection(params)
-		channel = connection.channel()
-		manage_connection.channel = channel
-		manage_connection.host = host
+		try:
+			# Credential for rabbitmq management
+			creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
+			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+			connection = pika.BlockingConnection(params)
+			channel = connection.channel()
+			manage_connection.channel = channel
+			manage_connection.host = host
+		except Exception as Error:
+			print(str(Error))
+			sys.exit()
 		
 		# binding credential manager exchange and login_request queue  which send the login request from client to server
 		try:

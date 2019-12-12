@@ -1,4 +1,5 @@
 import os
+import json
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
@@ -44,7 +45,7 @@ class add_problem_ui(QMainWindow):
 		super(add_problem_ui, self).__init__(parent)
 
 		self.setWindowTitle('Add Problem')
-		self.setFixedSize(800,400)
+		self.setFixedSize(1600,800)
 		add_problem_ui.no = no
 
 		main = self.add_problem_view_ui(table_model,client_config,data)
@@ -55,6 +56,7 @@ class add_problem_ui(QMainWindow):
 	def add_problem_view_ui(self,table_model,client_config,data):
 		try:
 			main = QVBoxLayout()
+			main2 = QScrollArea()
 			problem_no = QLabel('Problem ' + str(add_problem_ui.no))
 			problem_no.setObjectName('general')
 			problem_name = QHBoxLayout()
@@ -65,11 +67,6 @@ class add_problem_ui(QMainWindow):
 			self.problem_name_text.setObjectName('general_text')
 			self.problem_name_text.setFixedWidth(400)
 			self.problem_name_text.setFixedHeight(50)
-			problem_name.addWidget(problem_name_label)
-			problem_name.addWidget(self.problem_name_text)
-			problem_name_widget = QWidget()
-			problem_name_widget.setLayout(problem_name)
-			problem_code = QHBoxLayout()
 			problem_code_label = QLabel('Problem Code : ')
 			problem_code_label.setObjectName('general')
 			self.problem_code_text = QLineEdit()
@@ -77,22 +74,73 @@ class add_problem_ui(QMainWindow):
 			self.problem_code_text.setObjectName('general_text')
 			self.problem_code_text.setFixedWidth(400)
 			self.problem_code_text.setFixedHeight(50)
-			problem_code.addWidget(problem_code_label)
-			problem_code.addWidget(self.problem_code_text)
-			problem_code_widget = QWidget()
-			problem_code_widget.setLayout(problem_code)
+			problem_name.addWidget(problem_name_label)
+			problem_name.addWidget(self.problem_name_text)
+			problem_name.addStretch(0)
+			problem_name.addSpacing(1)
+			problem_name.addWidget(problem_code_label)
+			problem_name.addWidget(self.problem_code_text)
+			problem_name.addStretch(0)
+			problem_name.addSpacing(1)
+			problem_name_widget = QWidget()
+			problem_name_widget.setLayout(problem_name)
 			time_limit = QHBoxLayout()
-			time_limit_label = QLabel('Time Limit  : ')
+			time_limit_label = QLabel('Time Limit        : ')
 			time_limit_label.setObjectName('general')
 			self.time_limit_text = QLineEdit()
 			self.time_limit_text.setPlaceholderText('Time Limit ')
 			self.time_limit_text.setObjectName('general_text')
 			self.time_limit_text.setFixedWidth(400)
 			self.time_limit_text.setFixedHeight(50)
+			author_label = QLabel('Author Name : ')
+			author_label.setObjectName('general')
+			self.author_text = QLineEdit()
+			self.author_text.setPlaceholderText('Author Name ')
+			self.author_text.setObjectName('general_text')
+			self.author_text.setFixedWidth(400)
+			self.author_text.setFixedHeight(50)
 			time_limit.addWidget(time_limit_label)
 			time_limit.addWidget(self.time_limit_text)
+			time_limit.addStretch(0)
+			time_limit.addSpacing(1)
+			time_limit.addWidget(author_label)
+			time_limit.addWidget(self.author_text)
+			time_limit.addStretch(0)
+			time_limit.addSpacing(1)
 			time_limit_widget = QWidget()
 			time_limit_widget.setLayout(time_limit)
+			problem_statement_label = QLabel('Problem')
+			problem_statement_label.setObjectName('general2')
+			self.problem_statement_text = QPlainTextEdit()
+			self.problem_statement_text.setFixedSize(1500,500)
+			self.problem_statement_text.setObjectName('general_text2')
+			input_label = QLabel('Input: ')
+			input_label.setObjectName('general2')
+			self.input_text = QPlainTextEdit()
+			self.input_text.setFixedSize(1500,200)
+			self.input_text.setObjectName('general_text2')
+			output_label = QLabel('Output: ')
+			output_label.setObjectName('general2')
+			self.output_text = QPlainTextEdit()
+			self.output_text.setFixedSize(1500,200)
+			self.output_text.setObjectName('general_text2')
+			constraints_label = QLabel('Constraints: ')
+			constraints_label.setObjectName('general2')
+			self.constraints_text = QPlainTextEdit()
+			self.constraints_text.setFixedSize(1500,200)
+			self.constraints_text.setObjectName('general_text2')
+			example_label = QLabel('Example: ')
+			example_label.setObjectName('general2')
+			example_input_label = QLabel('Example Input: ')
+			example_input_label.setObjectName('general3')
+			self.example_input_text = QPlainTextEdit()
+			self.example_input_text.setFixedSize(1200,200)
+			self.example_input_text.setObjectName('general_text3')
+			example_output_label = QLabel('Example Output: ')
+			example_output_label.setObjectName('general3')
+			self.example_output_text = QPlainTextEdit()
+			self.example_output_text.setFixedSize(1200,200)
+			self.example_output_text.setObjectName('general_text3')
 			self.save = QPushButton('Save')
 			self.save.setObjectName('general')
 			self.save.setFixedSize(200,50)
@@ -100,16 +148,37 @@ class add_problem_ui(QMainWindow):
 
 			main.addWidget(problem_no, alignment = Qt.AlignCenter)
 			main.addWidget(problem_name_widget)
-			main.addWidget(problem_code_widget)
 			main.addWidget(time_limit_widget)
+			main.addWidget(problem_statement_label)
+			main.addWidget(self.problem_statement_text)
+			main.addWidget(input_label)
+			main.addWidget(self.input_text)
+			main.addWidget(output_label)
+			main.addWidget(self.output_text)
+			main.addWidget(constraints_label)
+			main.addWidget(self.constraints_text)
+			main.addWidget(example_label)
+			main.addWidget(example_input_label)
+			main.addWidget(self.example_input_text)
+			main.addWidget(example_output_label)
+			main.addWidget(self.example_output_text)
+			main.addStretch(0)
+			main.addSpacing(1)
 			main.addWidget(self.save, alignment = Qt.AlignRight)
 			main_widget = QWidget()
 			main_widget.setLayout(main)
 			main_widget.setObjectName('add_problem')
+			main2.setWidget(main_widget)
+			main2.setWidgetResizable(True)
+			main2.setFixedHeight(780)
+			layout = QVBoxLayout()
+			layout.addWidget(main2)
+			main_layout = QWidget()
+			main_layout.setLayout(layout)
 		except Exception as Error:
 			print(str(Error))
 
-		return main_widget
+		return main_layout
 
 	def save_data(self,table_model,client_config,data):
 		if self.problem_name_text.text() == '':
@@ -133,6 +202,23 @@ class add_problem_ui(QMainWindow):
 				print(str(Error))
 			read_write.write_json(data)
 			problem_management.insert_problem(str(add_problem_ui.no),self.problem_name_text.text(),self.problem_code_text.text(),self.time_limit_text.text())
+			try:
+				problem = {
+					"Problem Name" : self.problem_name_text.text(),
+					"Problem Code" : self.problem_code_text.text(),
+					"Time Limit" : self.time_limit_text.text(),
+					"Author Name" : self.author_text.text(),
+					"Problem Statement" : self.problem_statement_text.toPlainText(),
+					"Input" : self.input_text.toPlainText(),
+					"Output" : self.output_text.toPlainText(),
+					"Constraints" : self.constraints_text.toPlainText(),
+					"Example Input" : self.example_input_text.toPlainText(),
+					"Example Output" : self.example_output_text.toPlainText()
+				}
+				with open('./Problem_Statement/Problem_' + str(add_problem_ui.no) + '.json', 'w') as write:
+					json.dump(problem, write, indent = 4)
+			except Exception as Error:
+				print(str(Error))
 			table_model.select()
 			self.close()
 
