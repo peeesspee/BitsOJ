@@ -165,6 +165,7 @@ class manage_judges():
 				# Publish message to client if allowed
 				# Update scoreboard also when manual review is ON
 				if manage_judges.data_changed_flags[20] == 0:
+					
 					try:
 						# Put response to task queue, to further connect to the client
 						manage_judges.task_queue.put(message)

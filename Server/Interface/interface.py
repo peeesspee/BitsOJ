@@ -6,6 +6,7 @@ from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from Interface.ui_classes import *
+from Interface.problem_ui import *
 from init_server import initialize_server, save_status
 from database_management import user_management, submissions_management, query_management, scoreboard_management
 
@@ -122,7 +123,7 @@ class server_window(QMainWindow):
 		self.tab3, self.client_model, self.allow_login_button = ui_widgets.client_ui(self)
 		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5, self.score_model, self.scoring_type_label = ui_widgets.leaderboard_ui(self)
-		self.tab6 = ui_widgets.problem_ui(self)
+		self.tab6, self.problem_model = ui_widgets.problem_ui(self)
 		
 		self.tab7 = ui_widgets.stats_ui(self)
 
@@ -367,6 +368,10 @@ class server_window(QMainWindow):
 				message = json.dumps(message)
 				self.task_queue.put(message)
 
+			if self.data_changed_flags[22] == 1:
+				self.data_changed_flags[22] = 0
+				self.problem_model.select()
+
 			# While contest is RUNNING
 			# This block is last as it may cause a return call and not allow further function block executions
 			if self.data_changed_flags[10] == 1:
@@ -424,6 +429,7 @@ class server_window(QMainWindow):
 			self.delete_account_button.setEnabled(True)
 			self.timer_reset_button.setEnabled(False)
 			self.timer_reset_button.setToolTip('You can reset timer when contest is STOPPED.')
+
 		if status == "RUNNING":
 			self.set_status('RUNNING')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ RUNNING ]')
@@ -448,6 +454,13 @@ class server_window(QMainWindow):
 			self.client_reset_button.setEnabled(True)
 			self.delete_account_button.setEnabled(False)
 			self.timer_reset_button.setEnabled(False)
+			# Allow submissions now
+			self.allow_sub_button.setChecked(True)
+			self.data_changed_flags[3] = 1
+			# Allow logins now
+			self.allow_login_button.setChecked(True)
+			self.data_changed_flags[2] = 1
+
 		elif status == "STOPPED":
 			self.set_status('STOPPED')
 			self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ][ STOPPED ]')
@@ -522,7 +535,7 @@ class server_window(QMainWindow):
 		elif data == 'STOP':
 			current_time = time.localtime()
 			message = {
-			'Code' : 'STOP'
+				'Code' : 'STOP'
 			}
 
 			message = json.dumps(message)
@@ -805,30 +818,6 @@ class server_window(QMainWindow):
 		return 2		
 
 	@pyqtSlot()
-	def manage_io_file(self, problem_code, row, column):
-		if column == 0:
-			# Input file is selected
-			file_path = "Problem Data/" + problem_code +"/input" + str(row) + ".in"
-			self.ui = view_case_ui(
-				self.data_changed_flags,
-				file_path
-			)
-			self.ui.show()
-		elif column == 1:
-			# Output file is selected
-			file_path = "Problem Data/" + problem_code +"/output" + str(row) + ".ans"
-			self.ui = view_case_ui(
-				self.data_changed_flags,
-				file_path
-			)
-			self.ui.show()
-	
-		# elif column == 2:
-		# 	print("Disable File " + str(row) + " for problem " + problem_code)
-		return
-		
-
-	@pyqtSlot()
 	def delete_account(self, selected_rows):
 		if self.data_changed_flags[6] == 0:
 			# Set critical flag
@@ -904,6 +893,7 @@ class server_window(QMainWindow):
 			state = self.client_model.index(selected_row, 3).data()
 
 			if username == None or client_id == None or password == None or state == None:
+				self.data_changed_flags[14] = 0
 				pass
 			else:
 				self.edit_window = account_edit_ui(self.data_changed_flags, client_id, username, password, state)
@@ -913,7 +903,34 @@ class server_window(QMainWindow):
 			print('[ ERROR ]' + str(error))
 			self.data_changed_flags[14] = 0
 		finally:
-			# Reset critical flag
+			return
+
+	@pyqtSlot()
+	def edit_problem(self, selected_row):
+		if self.data_changed_flags[14] == 0:
+			# Set critical flag
+			self.data_changed_flags[14] = 1
+		else:
+			# If one client edit window is already opened, process it first.
+			return
+		# If no row is selected, return
+		try:
+			problem = self.problem_model.index(selected_row, 0).data()
+			code = self.problem_model.index(selected_row, 1).data()
+			test_files = self.problem_model.index(selected_row, 2).data()
+			time_limit = self.problem_model.index(selected_row, 3).data()
+
+			if problem == None:
+				self.data_changed_flags[14] = 0
+				pass
+			else:
+				self.edit_window = problem_edit_ui(self.data_changed_flags, problem, code, test_files, time_limit)
+				self.edit_window.show()
+			
+		except Exception as error: 
+			print('[ ERROR ]' + str(error))
+			self.data_changed_flags[14] = 0
+		finally:
 			return
 
 	def reset_accounts(self):

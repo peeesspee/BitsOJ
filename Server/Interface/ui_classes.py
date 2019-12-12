@@ -339,124 +339,103 @@ class ui_widgets:
 		main.show()
 		return main, score_model, scoring_label
 
-	
 
-	def get_problem_ui(self, problem_name, problem_code, time_limit, cases):
-		cases = int(cases)
-		problem_label = QLabel(problem_name)
-		problem_code_label = QLabel('Problem Code: ')
-		problem_code_data = QLabel(problem_code)
-		time_limit_label = QLabel('Time Limit: ')
-		time_limit_data = QLabel(str(time_limit))
-		time_limit_unit = QLabel(' seconds')
+	# def problem_ui(self):
+	# 	main_layout = QVBoxLayout()
+	# 	heading = QLabel('Manage Problems')
+	# 	heading.setObjectName('main_screen_heading')
+	# 	# This is the dictionary which contains all problems in the format:
+	# 	# ProblemName, Code, TimeLimit, NoOfTestFiles
+	# 	try:
+	# 		problem_dict = self.config["Problems"]
+	# 		no_of_problems = int(self.config["Number Of Problems"])
+	# 		# Problems in the dict are in format "Problem i" where
+	# 		# 1<= i <= no_of_problems
+	# 		problem_tabs = QTabWidget()
+	# 		problem_tabs.setObjectName('main_tabs')
+	# 		problem_tabbar = QTabBar()
+	# 		problem_tabbar.setObjectName('problem_tabs')
 
-		problem_code_layout = QHBoxLayout()
-		problem_code_layout.addWidget(problem_code_label)
-		problem_code_layout.addWidget(problem_code_data)
-		problem_code_layout.addStretch(1)
-		problem_code_widget = QWidget()
-		problem_code_widget.setLayout(problem_code_layout)
+	# 		for i in range(1, no_of_problems + 1):
+	# 			problem_str = problem_dict['Problem ' + str(i)]
+	# 			problem_tuple = eval(problem_str)
 
-		problem_time_layout = QHBoxLayout()
-		problem_time_layout.addWidget(time_limit_label)
-		problem_time_layout.addWidget(time_limit_data)
-		problem_time_layout.addWidget(time_limit_unit)
-		problem_time_layout.addStretch(1)
-		problem_time_widget = QWidget()
-		problem_time_widget.setLayout(problem_time_layout)
+	# 			widget = ui_widgets.get_problem_ui(
+	# 				self,
+	# 				problem_tuple[0], 
+	# 				problem_tuple[1], 
+	# 				problem_tuple[2], 
+	# 				problem_tuple[3]
+	# 			)
+	# 			problem_tabs.addTab(widget, '')
+	# 			problem_tabbar.addTab('Problem ' + str(i))	
 
-		test_cases_table = QTableWidget()
-		test_cases_table.setRowCount(cases)
-		test_cases_table.setColumnCount(2)
-		test_cases_table.setObjectName('inner_table')
-		test_cases_table.setHorizontalHeaderLabels(
-			("Input Files", "Output Files", "Status")
-		)
-		test_cases_table.resizeColumnsToContents()
-		test_cases_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-		test_cases_table.setAlternatingRowColors(True)
-		vertical_header = test_cases_table.verticalHeader()
-		vertical_header.setVisible(False)
-		horizontal_header = test_cases_table.horizontalHeader()
-		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
-		# void QTableWidget::cellDoubleClicked(int row, int column)
-		# void QTableWidget::setCellWidget(int row, int column, QWidget *widget)
-		test_cases_table.cellDoubleClicked.connect(
-			lambda:self.manage_io_file(
-				problem_code,
-				test_cases_table.selectionModel().currentIndex().row(),
-				test_cases_table.selectionModel().currentIndex().column()
-			)
-		)
-		
-		for i in range(0, cases):
-			test_cases_table.setItem(i, 0, QTableWidgetItem("input" + str(i) + ".in"))
-			test_cases_table.setItem(i, 1, QTableWidgetItem("output" + str(i) + ".ans"))
+	# 		problem_tabs.setTabBar(problem_tabbar)
+	# 		main_layout.addWidget(heading)
+	# 		main_layout.addWidget(problem_tabs)
+	# 		main_layout.setStretch(0,10)
+	# 		main_layout.setStretch(1,90)
 			
-
-		problem_layout = QVBoxLayout()
-		problem_layout.addWidget(problem_label)
-		problem_layout.addWidget(problem_code_widget)
-		problem_layout.addWidget(problem_time_widget)
-		problem_layout.addWidget(test_cases_table)
-		widget = QWidget()
-		widget.setLayout(problem_layout)
-
-		problem_label.setObjectName('main_screen_sub_heading')
-		widget.setObjectName('content_box')
-		problem_code_label.setObjectName('main_screen_content')
-		problem_code_data.setObjectName('main_screen_content')
-		time_limit_label.setObjectName('main_screen_content')
-		time_limit_data.setObjectName('main_screen_content')
-		time_limit_unit.setObjectName('main_screen_content')
-		return widget
-
+	# 	except Exception as error:
+	# 		print("[ ERROR ]" + str(error))
+		
+	# 	main = QWidget()
+	# 	main.setLayout(main_layout)
+	# 	main.setObjectName("main_screen");
+	# 	return main
 
 	def problem_ui(self):
-		main_layout = QVBoxLayout()
 		heading = QLabel('Manage Problems')
 		heading.setObjectName('main_screen_heading')
-		# This is the dictionary which contains all problems in the format:
-		# ProblemName, Code, TimeLimit, NoOfTestFiles
-		try:
-			problem_dict = self.config["Problems"]
-			no_of_problems = int(self.config["Number Of Problems"])
-			# Problems in the dict are in format "Problem i" where
-			# 1<= i <= no_of_problems
-			problem_tabs = QTabWidget()
-			problem_tabs.setObjectName('main_tabs')
-			problem_tabbar = QTabBar()
-			problem_tabbar.setObjectName('problem_tabs')
 
-			for i in range(1, no_of_problems + 1):
-				problem_str = problem_dict['Problem ' + str(i)]
-				problem_tuple = eval(problem_str)
+		edit_problem_button = QPushButton('Edit Problem', self)
+		edit_problem_button.setFixedSize(200, 50)
+		edit_problem_button.clicked.connect(
+			lambda:self.edit_problem(problem_table.selectionModel().currentIndex().row())
+		)
+		edit_problem_button.setObjectName("topbar_button")
 
-				widget = ui_widgets.get_problem_ui(
-					self,
-					problem_tuple[0], 
-					problem_tuple[1], 
-					problem_tuple[2], 
-					problem_tuple[3]
-				)
-				problem_tabs.addTab(widget, '')
-				problem_tabbar.addTab('Problem ' + str(i))	
-
-			problem_tabs.setTabBar(problem_tabbar)
-			main_layout.addWidget(heading)
-			main_layout.addWidget(problem_tabs)
-			main_layout.setStretch(0,10)
-			main_layout.setStretch(1,90)
-			
-		except Exception as error:
-			print("oops" + str(error))
-
+		delete_problem_button = QPushButton('Delete Problem', self)
+		delete_problem_button.setFixedSize(200, 50)
+		# delete_problem_button.clicked.connect(
+		# 	lambda:self.delete_problem(problem_table.selectionModel().selectedRows())
+		# )
+		delete_problem_button.setObjectName("topbar_button")
 		
+
+		problem_model = self.manage_models(self.db, 'problems')
+		problem_model.setHeaderData(0, Qt.Horizontal, 'Problem Name')
+		problem_model.setHeaderData(1, Qt.Horizontal, 'Code')
+		problem_model.setHeaderData(2, Qt.Horizontal, 'Test Files')
+		problem_model.setHeaderData(3, Qt.Horizontal, 'Time Limit')
+		problem_table = self.generate_view(problem_model)
+		problem_table.doubleClicked.connect(
+			lambda:self.edit_problem(problem_table.selectionModel().currentIndex().row())
+		)
+
+		head_layout = QHBoxLayout()
+		head_layout.addWidget(heading)
+		head_layout.addWidget(edit_problem_button)
+		head_layout.addWidget(delete_problem_button)
+		
+		head_layout.setStretch(0, 80)
+		head_layout.setStretch(1, 10)
+		head_layout.setStretch(2, 10)
+		head_widget = QWidget()
+		head_widget.setLayout(head_layout)
+
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(head_widget)
+		main_layout.addWidget(problem_table)
+		
+		main_layout.setStretch(0,10)
+		main_layout.setStretch(1,90)
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main
-
+		return main, problem_model
+		
 	def get_stats_widget():
 		contest_problems_subheading = QLabel('Problems: ')
 
@@ -929,7 +908,7 @@ class ui_widgets:
 		# 1.Select Ranking algorithm
 		# 	1.Select Penalty Duration
 		# 2.Set if leaderboard is to be shown to clients
-		# 3....
+		
 		main_layout = QVBoxLayout()
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -1124,122 +1103,6 @@ class new_accounts_ui(QMainWindow):
 		# Indicate new insertions in accounts
 		self.data_changed_flags[5] = 1
 		self.close()
-
-class view_case_ui(QMainWindow):
-	problem_path = ''
-	text_box = ''
-	line_endings_shown = 0
-	backup_file_content = ''
-	file_not_found = 0
-
-
-	def __init__(
-		self, 
-		data_changed_flags,
-		problem_path,
-		parent=None
-		):
-		super(view_case_ui, self).__init__(parent)
-		view_case_ui.button_mode = 1
-
-		self.data_changed_flags = data_changed_flags
-		view_case_ui.problem_path = problem_path
-
-		self.setWindowTitle('View Case')
-		self.setGeometry(550, 250, 800, 600)
-		self.setFixedSize(800,600)
-		main = self.main_view_case_ui()
-		self.setCentralWidget(main)
-		# self.setWindowFlag(Qt.WindowCloseButtonHint, False)
-		return
-
-	def main_view_case_ui(self):
-		heading = QLabel('View Test File')
-		open_label = QLabel("Open: ")
-		path = QLabel(view_case_ui.problem_path)
-		path_layout = QHBoxLayout()
-		path_layout.addWidget(open_label)
-		path_layout.addWidget(path)
-		path_layout.addStretch(1)
-		path_widget = QWidget()
-		path_widget.setLayout(path_layout)
-
-		show_line_endings_label = QLabel('Show Line endings: ')
-
-		show_line_endings_button = QCheckBox('')
-		show_line_endings_button.setFixedSize(30, 30)
-		show_line_endings_button.setChecked(False)
-		show_line_endings_button.stateChanged.connect(view_case_ui.line_end_toggle)
-
-		line_end_layout = QHBoxLayout()
-		line_end_layout.addWidget(show_line_endings_label)
-		line_end_layout.addWidget(show_line_endings_button)
-		line_end_layout.addStretch(1)
-		line_end_widget = QWidget()
-		line_end_widget.setLayout(line_end_layout)
-
-		file_text_box = QTextEdit()
-		file_text_box.setReadOnly(True)
-		view_case_ui.text_box = file_text_box
-
-		# Try to open file:
-		try:
-			file_content = ''
-			with open (view_case_ui.problem_path, "r") as myfile:
-				data=myfile.readlines()
-			# print(data)
-			for i in data:
-				file_content = file_content + i
-
-			view_case_ui.backup_file_content = repr(file_content)
-			file_not_found = 0
-			# print(data)
-		except Exception as error:
-			print("[ CRITICAL ] Could not read test file : " + str(error))
-			file_content = "CRITICAL ERROR\nFile not found!"
-			view_case_ui.backup_file_content = " CRITICAL ERROR\nFile not found! "
-			file_not_found = 1
-
-		file_text_box.setText(file_content)
-		main_layout = QVBoxLayout()
-		main_layout.addWidget(heading)
-		main_layout.addWidget(path_widget)
-		main_layout.addWidget(line_end_widget)
-		main_layout.addWidget(view_case_ui.text_box)
-		main_layout.addStretch(1)
-		main = QWidget()
-		main.setLayout(main_layout)
-
-		heading.setObjectName('main_screen_heading')
-		open_label.setObjectName('main_screen_sub_heading')
-		path.setObjectName('main_screen_content')
-		main.setObjectName('account_window')
-		show_line_endings_label.setObjectName('main_screen_content')
-		
-		return main
-
-	def line_end_toggle(state):
-		try:
-			if(state == Qt.Checked) and view_case_ui.file_not_found == 0:
-				# line endings show
-				data = view_case_ui.backup_file_content
-				data = data.replace('\\r', 'CR\r')
-				data = data.replace('\\n', 'LF\n')
-				data = data[1:-1]
-				
-				view_case_ui.line_endings_shown = 1
-				view_case_ui.text_box.setText(data)
-			elif view_case_ui.file_not_found == 0:
-				# line endings hide
-				if view_case_ui.line_endings_shown == 1:
-					view_case_ui.line_endings_shown = 0
-					# Replace current text with backup text
-					view_case_ui.text_box.setText(eval(view_case_ui.backup_file_content))
-		except:
-			print('[ ERROR ] Could not show line endings. File Size might be too big.')
-				
-		return
-		
 
 class query_reply_ui(QMainWindow):
 	button_mode = 1
@@ -1869,8 +1732,6 @@ class submission_data_ui(QMainWindow):
 		filename_label.setObjectName('main_screen_content')
 		return error_widget
 
-
- 
 class account_edit_ui(QMainWindow):
 	client_id = ''
 	username = ''
@@ -1997,3 +1858,4 @@ class account_edit_ui(QMainWindow):
 	def exit(self):
 		self.data_changed_flags[14] = 0
 		self.close()
+

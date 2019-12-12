@@ -27,9 +27,16 @@ class manage_database():
 			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'WAITING', judge varchar2(15) DEFAULT '-')")
 			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
 			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text)")
+			cur.execute("create table if not exists problems(problem_name varchar2(30), problem_code varchar(10), test_files integer, time_limit integer)")
 			
 		except Exception as error:
 			print("[ CRITICAL ERROR ] Table creation error : " + str(error))
+
+		# try:
+		# 	cur.execute("INSERT INTO problems VALUES(?, ?, ?, ?)", ('The Fight for Survival', 'TFS', 1, 1, ))
+		# 	conn.commit()
+		# except:
+		# 	print('Errorororor')
 
 		return conn, cur
 
@@ -42,8 +49,7 @@ class manage_database():
 			cur.execute("drop table if exists connected_clients")
 			cur.execute("drop table if exists connected_judges")
 			cur.execute("drop table if exists queries")
-
-			
+			cur.execute("drop table if exists problems")
 		except:
 			print("[ CRITICAL ERROR ] Table drop error")
 

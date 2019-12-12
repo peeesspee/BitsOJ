@@ -12,10 +12,10 @@
     "Client Key": "000000000000000",
     "File Password": "papa",
     "Contest Duration": "02:00:00",
-    "Contest Status": "RUNNING",
-    "Contest Start Time": "15:12:31",
-    "Contest End Time": "17:12:31",
-    "Contest Set Time": 1576150951.6499612,
+    "Contest Status": "SETUP",
+    "Contest Start Time": "00:00:00",
+    "Contest End Time": "00:00:00",
+    "Contest Set Time": 0,
     "Number Of Problems": "5",
     "Problems": {
         "Problem 1": "('The Begining of the End','TBE', 1, 1)",
@@ -30,6 +30,6 @@
     "AC Points": 100,
     "Penalty Score": -20,
     "Penalty Time": 20,
-    "Manual Review": "True",
+    "Manual Review": "False",
     "Submission Time Limit": 0
 }

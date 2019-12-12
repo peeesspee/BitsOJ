@@ -88,6 +88,7 @@ def main():
 	#	19		0/1			1: UPDATE remaining time broadcast to all clients
 	#	20		0/1			1: Manual Review Allowed
 	#	21		X			X: Submission time limit 0 < X 
+	#	22		0/1			1: Problem table changed
 	
 
 	#####################################################################################
