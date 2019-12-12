@@ -97,6 +97,7 @@ class ui_widgets:
 		submission_model.setHeaderData(4, Qt.Horizontal, 'Time')
 		submission_model.setHeaderData(5, Qt.Horizontal, 'Verdict')
 		submission_model.setHeaderData(6, Qt.Horizontal, 'Status')
+		submission_model.setHeaderData(7, Qt.Horizontal, 'Judge')
 		
 		submission_table = self.generate_view(submission_model)
 		submission_table.setSortingEnabled(False)
@@ -914,11 +915,14 @@ class ui_widgets:
 		contest_reset_widget.setLayout(contest_reset_layout)
 		contest_reset_widget.setObjectName('content_box')
 		return (
-			contest_reset_widget, account_reset_button, 
-			submission_reset_button, query_reset_button, 
-			client_reset_button, server_reset_button,
+			contest_reset_widget, 
+			account_reset_button, 
+			submission_reset_button, 
+			query_reset_button, 
+			client_reset_button, 
+			server_reset_button,
 			timer_reset_button
-			)
+		)
 
 	def contest_ranking_settings(self):
 		# TODO
@@ -936,9 +940,13 @@ class ui_widgets:
 		heading = QLabel('Server Settings')
 		heading.setObjectName('main_screen_heading')
 		(
-			time_management_widget, contest_time_entry, 
-			change_time_entry, set_button, start_button, 
-			update_button, stop_button
+			time_management_widget, 
+			contest_time_entry, 
+			change_time_entry, 
+			set_button, 
+			start_button, 
+			update_button, 
+			stop_button
 		) = ui_widgets.contest_time_settings(self)
 
 		(
@@ -1466,7 +1474,8 @@ class manage_submission_ui(QMainWindow):
 		run_info_widget.setLayout(run_info_layout)
 
 		verdict_sub_heading = QLabel("Judgement:")
-		judge_verdict = QLabel("Judge Verdict:  ")
+		judge = submissions_management.get_judge(self.run_id)
+		judge_verdict = QLabel(judge + ' Verdict:  ')
 
 		try:
 			verdict = QLabel(self.verdict_dict[self.verdict])
@@ -1492,7 +1501,7 @@ class manage_submission_ui(QMainWindow):
 		manual_judgement_entry.addItem(self.verdict_dict['RE'])
 		manual_judgement_entry.addItem(self.verdict_dict['OLE'])
 		manual_judgement_entry.addItem(self.verdict_dict['NZEC'])
-		# manual_judgement_entry.activated[str].connect(new_accounts_ui.combo_box_data_changed)
+		
 		accept_select_button = QPushButton("Accept Selected")
 		accept_select_button.setFixedSize(200, 50)
 		accept_select_button.clicked.connect(
@@ -1507,11 +1516,13 @@ class manage_submission_ui(QMainWindow):
 		verdict_layout.addWidget(send_button, 0, 2)
 		verdict_layout.addWidget(manual_judgement_label, 1, 0)
 		verdict_layout.addWidget(manual_judgement_entry, 1, 1)
-		verdict_layout.addWidget(accept_select_button, 1, 2)		
+		verdict_layout.addWidget(accept_select_button, 1, 2)	
+		verdict_layout.setRowStretch(1,60)
+
 		verdict_widget = QWidget()
 		verdict_widget.setLayout(verdict_layout)
 
-		verdict_layout.setRowStretch(1,60)
+		
 
 		rejudge_button = QPushButton('Rejudge')
 		rejudge_button.setFixedSize(150, 40)
@@ -1522,20 +1533,20 @@ class manage_submission_ui(QMainWindow):
 		view_output_source_button = QPushButton('Submission Source and Data')
 		view_output_source_button.setFixedSize(250, 40)
 		view_output_source_button.clicked.connect(
-			lambda:manage_submission_ui.final_status(self)
+			lambda:manage_submission_ui.load_submission_data(self)
 			)
 		
-		cancel_button = QPushButton('Cancel')
-		cancel_button.setFixedSize(150, 40)
-		cancel_button.clicked.connect(
-			lambda:manage_submission_ui.cancel(self)
+		close_button = QPushButton('Close')
+		close_button.setFixedSize(150, 40)
+		close_button.clicked.connect(
+			lambda:manage_submission_ui.close(self)
 			)
-		cancel_button.setDefault(True)
+		close_button.setDefault(True)
 
 		button_layout = QHBoxLayout()
 		button_layout.addWidget(rejudge_button)
 		button_layout.addWidget(view_output_source_button)
-		button_layout.addWidget(cancel_button)
+		button_layout.addWidget(close_button)
 		button_widget = QWidget()
 		button_widget.setLayout(button_layout)
 
@@ -1579,7 +1590,7 @@ class manage_submission_ui(QMainWindow):
 		accept_select_button.setObjectName('interior_button')
 		rejudge_button.setObjectName('interior_button')
 		view_output_source_button.setObjectName('interior_button')
-		cancel_button.setObjectName('interior_button')
+		close_button.setObjectName('interior_button')
 		return main
 
 	def rejudge(self):
@@ -1612,7 +1623,7 @@ class manage_submission_ui(QMainWindow):
 
 		local_run_id = submissions_management.get_local_run_id(self.run_id)
 		message = {
-			'Code' : 'JUDGE', 
+			'Code' : 'RJUDGE', 
 			'Client ID' : self.client_id, 
 			'Client Username' : client_username,
 			'Run ID' : self.run_id,
@@ -1657,8 +1668,8 @@ class manage_submission_ui(QMainWindow):
 				self, 
 				'Confirm Selection', 
 				'Are you sure you want to give \'' + manual_verdict + '\' verdict', 
-				QMessageBox.Yes | QMessageBox.No, 
-				QMessageBox.No
+				QMessageBox.Yes | QMessageBox.No, 	# Button Options
+				QMessageBox.No 			# Default button
 			)
 			if buttonReply == QMessageBox.Yes:
 				pass
@@ -1673,13 +1684,14 @@ class manage_submission_ui(QMainWindow):
 			'Local Run ID' : local_run_id,
 			'Run ID' : self.run_id,
 			'Status' : self.inverted_verdict_dict[manual_verdict],
-			'Message' : self.get_message(self.run_id)
+			'Message' : self.get_message(self.run_id),
+			'Judge' : 'ADMIN'
 		}
 		message = json.dumps(message)
 		self.task_queue.put(message)
 		print('[ VERDICT ][ SENT ] Manual Verdict:' + manual_verdict + 'Sent to Client ' + client_username)
 
-		# TODO: UPDATE LEADERBOARD AND SUBMISSION TABLE
+		# TODO: UPDATE LEADERBOARD
 
 		self.data_changed_flags[8] = 0
 		self.close()
@@ -1704,13 +1716,15 @@ class manage_submission_ui(QMainWindow):
 
 		client_username = client_authentication.get_client_username(self.client_id)
 		local_run_id = submissions_management.get_local_run_id(self.run_id)
+		judge = submissions_management.get_judge(self.run_id)
 		message = {
 			'Code' : 'VRDCT', 
 			'Receiver' : client_username,
 			'Local Run ID' : local_run_id,
 			'Run ID' : self.run_id,
 			'Status' : self.verdict,
-			'Message' : self.get_message(self.run_id)
+			'Message' : self.get_message(self.run_id),
+			'Judge' : judge
 		}
 		message = json.dumps(message)
 		self.task_queue.put(message)
@@ -1718,20 +1732,143 @@ class manage_submission_ui(QMainWindow):
 
 		# TODO: UPDATE LEADERBOARD AND SUBMISSION TABLE
 
-
 		self.data_changed_flags[8] = 0
 		self.close()
 
 	def get_message(self, run_id):
-		return "No Error"
+		try:
+			filename = './Client_Submissions/' + str(self.run_id) + '_latest.info'
+			with open(filename) as file:
+				data = file.read()
+			if data != '':
+				return data
+			else:
+				return 'No Error data received!'
+		except:
+			return 'No Error data received!'
 
-	def final_status(self):
+	def load_submission_data(self):
+		self.submission_ui = submission_data_ui(self.data_changed_flags, self.run_id)
 		self.data_changed_flags[8] = 0
-		self.close()
+		self.submission_ui.show()
 
 	def cancel(self):
 		self.data_changed_flags[8] = 0
 		self.close()
+
+
+class submission_data_ui(QMainWindow):
+	def __init__(
+			self, 
+			data_changed_flags, 
+			run_id, 
+			parent = None
+		):
+		super(submission_data_ui, self).__init__(parent)
+		
+		self.data_changed_flags = data_changed_flags
+		self.run_id = run_id
+		
+		self.setWindowTitle('Run ' + str(self.run_id))
+
+		width = 800
+		height = 500
+		self.setGeometry(550, 300, width, height)
+		self.setFixedSize(width, height)
+		main = self.main_submission_data_ui()
+		self.setCentralWidget(main)
+		return
+
+	def main_submission_data_ui(self):
+		self.tabs = QTabWidget()
+		self.tabs.setObjectName('main_tabs')
+		self.tab_bar = QTabBar()
+		self.tab_bar.setObjectName('problem_tabs')
+
+		self.tab1 = self.get_tab1_widget()
+		self.tab2 = self.get_tab2_widget()
+		
+		self.tabs.addTab(self.tab1, '')
+		self.tabs.addTab(self.tab2, '')
+		self.tab_bar.addTab('Source Data')
+		self.tab_bar.addTab('Error Data')
+		self.tabs.setTabBar(self.tab_bar)
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(self.tabs)
+		main = QWidget()
+		main.setLayout(main_layout)
+
+		main.setObjectName('account_window')
+		return main
+
+	def get_tab1_widget(self):
+		source_layout = QVBoxLayout()
+		heading1 = QLabel('Source Data')
+
+		# Read source file
+		filename = './Client_Submissions/' + submissions_management.get_source_file_name(self.run_id)
+		file_label = QLabel('File: ')
+		filename_label = QLabel(filename)
+		label_layout = QHBoxLayout()
+		label_layout.addWidget(file_label)
+		label_layout.addWidget(filename_label)
+		label_layout.addStretch(1)
+		label_widget = QWidget()
+		label_widget.setLayout(label_layout)
+		try:
+			with open(filename) as file:
+				data = file.read()
+		except:
+			data = 'Error: File not found!'
+
+		content = QTextEdit()
+		content.setText(data)
+
+		source_layout.addWidget(heading1)
+		source_layout.addWidget(label_widget)
+		source_layout.addWidget(content)
+		source_widget = QWidget()
+		source_widget.setLayout(source_layout)
+
+		heading1.setObjectName('main_screen_heading')
+		file_label.setObjectName('main_screen_sub_heading')
+		filename_label.setObjectName('main_screen_content')
+		return source_widget
+
+	def get_tab2_widget(self):
+		error_layout = QVBoxLayout()
+		heading1 = QLabel('Error Data')
+		# Read error file
+		filename = './Client_Submissions/' + str(self.run_id) + '.info'
+		file_label = QLabel('File: ')
+		filename_label = QLabel(filename)
+		label_layout = QHBoxLayout()
+		label_layout.addWidget(file_label)
+		label_layout.addWidget(filename_label)
+		label_layout.addStretch(1)
+		label_widget = QWidget()
+		label_widget.setLayout(label_layout)
+		try:
+			with open(filename) as file:
+				data = file.read()
+		except:
+			data = 'Error: File not found!'
+
+		content = QTextEdit()
+		content.setText(data)
+
+		error_layout.addWidget(heading1)
+		error_layout.addWidget(label_widget)
+		error_layout.addWidget(content)
+		error_widget = QWidget()
+		error_widget.setLayout(error_layout)
+
+		heading1.setObjectName('main_screen_heading')
+		file_label.setObjectName('main_screen_sub_heading')
+		filename_label.setObjectName('main_screen_content')
+		return error_widget
+
 
  
 class account_edit_ui(QMainWindow):

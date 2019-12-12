@@ -4,7 +4,7 @@ import os
 import signal
 import sys
 import time
-
+ 
 from time import sleep
 from client_connections import manage_clients
 from database_management import manage_database
@@ -242,4 +242,6 @@ def manage_process(
 	core_pid = core_process.pid
 	return client_pid, judge_pid, core_pid
 
-main()
+if __name__ == '__main__':
+	# If this file is run natively, and not imported
+	main()

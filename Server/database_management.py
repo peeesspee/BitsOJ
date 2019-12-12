@@ -24,7 +24,7 @@ class manage_database():
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
 			cur.execute("create table if not exists connected_clients(client_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10), state varchar2(15))")
 			cur.execute("create table if not exists connected_judges(judge_id varchar2(10), user_name varchar2(10), password varchar2(10), state varchar2(15))")
-			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'WAITING')")
+			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'WAITING', judge varchar2(15) DEFAULT '-')")
 			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
 			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text)")
 			
@@ -289,19 +289,20 @@ class submissions_management(manage_database):
 		run_id = int(run_id)
 		client_id = int(client_id)
 		local_run_id = int(local_run_id)
+		print('Inserting verdict : ' + verdict)
 		try:
-			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, 'WAITING', ))
+			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, 'WAITING', '-', ))
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not insert into submission : " + str(error))
 		return
 
-	def update_submission_status(run_id, verdict, sent_status):
+	def update_submission_status(run_id, verdict, sent_status, judge = '-'):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
 		run_id = int(run_id)
 		try:
-			cur.execute("UPDATE submissions SET verdict = ?, sent_status = ? WHERE run_id = ?", (verdict, sent_status, run_id,))
+			cur.execute("UPDATE submissions SET verdict = ?, sent_status = ?, judge = ? WHERE run_id = ?", (verdict, sent_status, judge, run_id,))
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not update submission submission : " + str(error))
@@ -321,6 +322,18 @@ class submissions_management(manage_database):
 		try:
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(timestamp) FROM submissions WHERE client_id = ?" , (client_id,))
+			data = cur.fetchall()
+			if data[0][0] == None:
+				return "NONE"
+			else:
+				return data[0][0]
+		except Exception as error:
+			return "NONE"
+
+	def get_judge(run_id):
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT judge FROM submissions WHERE run_id = ?" , (run_id,))
 			data = cur.fetchall()
 			if data[0][0] == None:
 				return "NONE"

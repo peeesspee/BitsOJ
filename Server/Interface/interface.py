@@ -46,7 +46,7 @@ class server_window(QMainWindow):
 		
 		###########################################################
 		self.db = self.init_qt_database()
-		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status FROM submissions ORDER BY run_id DESC"
+		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status, judge FROM submissions ORDER BY run_id DESC"
 		self.leaderboard_query = "SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC"
 		###########################################################
 		self.config = initialize_server.read_config()
@@ -212,8 +212,7 @@ class server_window(QMainWindow):
 		self.right_widget.addTab(self.tab8, '')
 		self.right_widget.addTab(self.tab9, '')
 		self.right_widget.setObjectName("main_tabs")
-		
-
+	
 		# Screen 1 will be our initial screen 
 		self.right_widget.setCurrentIndex(0)
 

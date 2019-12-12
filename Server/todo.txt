@@ -1,0 +1,15 @@
+1. Leaderboard updation from interface reviews
+2. Client submission validation
+3. Long style ranklist ( High Priority ) and ACM style ranklist ( Low Priority )
+4. Rabbitmq queue security
+5. Password change and auto sign out for any client
+		6. Show judge who gave verdict
+		7. Store all verdicts of a submission and show them
+8. Recieve and store all clients IP Address 
+9. Disconnect a judge
+10. Rejudge all submissions with given problem code
+11. Generate Report		VIMP
+12. Problem edit UI
+13. Export Accounts CSV			- NEXT
+14. Show unanswered query/submission count on sidebar buttons 
+15. Admin password from config
