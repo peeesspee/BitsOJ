@@ -458,3 +458,55 @@ QLineEdit#ask_query
 } 
 
 
+
+/*---------------Heading-----------------*/
+
+QLabel#problem_heading{
+    color:#FFFFFF;
+    font: bold 30px 'Arial';
+    margin-bottom : 40px;
+    qproperty-alignment: AlignCenter;
+}
+
+QLabel#problem_heading_2{
+    color:#FFFFFF;
+    font: bold 18px 'Arial';
+    margin-bottom : 30px;
+}
+
+QLabel#problem_heading_3{
+    color:#FFFFFF;
+    font: bold 18px 'Arial';
+    margin-bottom : 20px;
+    margin-left : 25px;
+}
+
+QLabel#problem_heading_4{
+    color:#FFFFFF;
+    font: bold 18px 'Arial';
+}
+
+QLabel#problem_text{
+    color:#FFFFFF;
+    font: 15px 'Arial';
+    margin-bottom : 10px;
+}
+
+QLabel#problem_text_2{
+    color:#FFFFFF;
+    font: 15px 'Arial';
+    margin-bottom : 10px;
+    margin-left : 30px;
+}
+
+
+QVBoxLayout#view_problem
+{
+	background-color : #271C0E;
+}
+
+
+QScrollArea#view_problem_2
+{
+	background-color : #271C0E;
+}

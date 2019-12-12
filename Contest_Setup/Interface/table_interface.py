@@ -215,7 +215,7 @@ class add_problem_ui(QMainWindow):
 					"Example Input" : self.example_input_text.toPlainText(),
 					"Example Output" : self.example_output_text.toPlainText()
 				}
-				with open('./Problem_Statement/Problem_' + str(add_problem_ui.no), 'w') as write:
+				with open('./Problem_Statement/Problem_' + str(add_problem_ui.no) + '.json', 'w') as write:
 					json.dump(problem, write, indent = 4)
 			except Exception as Error:
 				print(str(Error))

@@ -1,0 +1,12 @@
+{
+    "Problem Name": "Hudson's Mystery",
+    "Problem Code": "HUM",
+    "Time Limit": "1",
+    "Author Name": "Sachinam",
+    "Problem Statement": "Sherlock is in the mid of a mystery and he has very less time to solve the mystery and save Ms. Hudson.\nWatson gives Sherlock a number N and tells him to find the answer to it and that number is the code to the door inside which Ms. Hudson is stuck.  He gives him a clue to solve the task and tells him to determine how many pairs of X, Y and Z exists in the list of numbers 1 to N(inclusive) such that the sum of the elements is an even number and X\u2260Y\u2260Z (all are distinct) and there is no repetition. If there are no such elements, then the output is considered to be zero.",
+    "Input": "The first line of the input contains a single integer T denoting the number of test cases. The description of T test cases follows.\nThe first and only line of each test case contains an integer N.",
+    "Output": "For each test case, print a single line containing a number of pairs of X, Y and Z that exists in the list of numbers 1 to N(inclusive) such that the sum of the elements is an even number and X\u2260Y\u2260Z",
+    "Constraints": "1 \u2264 T \u2264 50,000\n1 \u2264 N \u2264 103",
+    "Example Input": "2\n6\n10\n",
+    "Example Output": "10\n60"
+}

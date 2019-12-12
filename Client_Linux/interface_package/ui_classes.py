@@ -47,7 +47,7 @@ class ui_widgets():
 			ui_widgets.var['Problem {}'.format(number_of_buttons)] = QPushButton('Problem '+str(number_of_buttons) + '\n' + problem_name,self)
 			ui_widgets.var['Problem {}'.format(number_of_buttons)].setObjectName('problem_buttons')
 			ui_widgets.var['Problem {}'.format(number_of_buttons)].setFixedSize(500, 200)
-			ui_widgets.var['Problem {}'.format(number_of_buttons)].clicked.connect(partial(ui_widgets.show_problem, number_of_buttons, self.data_changed_flag, self))
+			ui_widgets.var['Problem {}'.format(number_of_buttons)].clicked.connect(partial(self.show_problem, number_of_buttons, self.data_changed_flag))
 			problems_layout.addWidget(ui_widgets.var['Problem {}'.format(number_of_buttons)],row,column)
 			if(column==1):
 				row+=1;
@@ -342,17 +342,26 @@ class ui_widgets():
 
 
 
-	def show_problem(i,data_changed_flag,self):
-		if data_changed_flag[0] == 0:
-			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
-		else:
-			config = handle_config.read_config_json()
-			if config["Problems"]["Problem " + str(i)][2] == 0:
-				webbrowser.open('Problems/Problem_'+str(i)+'.pdf')
-			else:
-				pass
+	# def show_problem(i,data_changed_flag,self):
+	# 	if data_changed_flag[0] == 0:
+	# 		QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
+	# 	else:
+	# 		config = handle_config.read_config_json()
+	# 		try:
+	# 			with open('./Problems/Problem_'+str(i)+'.json') as read:
+	# 				problem = json.load(read)
+	# 		except Exception as Error:
+	# 			print(str(Error))
+	# 		try:
+	# 			self.problem_window = view_problem_ui(str(i), data_changed_flag, problem, self)
+	# 			self.problem_window.show()
+	# 		except Exception as Error:
+	# 			print(str(Error))
+			# if config["Problems"]["Problem " + str(i)][2] == 0:
+			# 	webbrowser.open('Problems/Problem_'+str(i)+'.pdf')
+			# else:
+			# 	pass
 		return
-		# print('Button {0} clicked'.format(i))
 
 
 	def sending(self,data_changed_flag):
@@ -524,4 +533,117 @@ class view_submission_ui(QMainWindow):
 
 
 		return main
+
+
+
+
+class view_problem_ui(QMainWindow):
+
+	def __init__(self, i, data_changed_flags, problem_file, parent=None):
+		super(view_problem_ui, self).__init__(parent)
+
+		self.data_changed_flags = data_changed_flags
+		self.setWindowTitle('Problem ' + i)
+		self.setFixedSize(900,830)
+		main = self.main_problem_view_ui(i, problem_file)
+		self.setCentralWidget(main)
+		return
+
+	def main_problem_view_ui(self, i, problem_file):
+
+		main_scroll = QScrollArea()
+		main_scroll.setObjectName('view_problem_2')
+
+		main_layout = QVBoxLayout()
+		main_layout.setObjectName('view_problem')
+		heading = QLabel(problem_file["Problem Name"])
+		heading.setObjectName('problem_heading')
+		problem_statement = QLabel(problem_file["Problem Statement"])
+		problem_statement.setWordWrap(True)
+		problem_statement.setObjectName('problem_text')
+
+		problem_code_label = QLabel('Problem Code : ' + problem_file["Problem Code"])
+		problem_code_label.setObjectName('problem_heading_2')
+
+		input_label = QLabel('Input :')
+		input_label.setObjectName('problem_heading_2')
+		input_statement = QLabel(problem_file["Input"])
+		input_statement.setWordWrap(True)
+		input_statement.setObjectName('problem_text')
+
+		output_label = QLabel('Output :')
+		output_label.setObjectName('problem_heading_2')
+		output_statement = QLabel(problem_file["Output"])
+		output_statement.setWordWrap(True)
+		output_statement.setObjectName('problem_text')
+
+		constraints_label = QLabel('Constraints :')
+		constraints_label.setObjectName('problem_heading_2')
+		constraints_statement = QLabel(problem_file["Constraints"])
+		constraints_statement.setWordWrap(True)
+		constraints_statement.setObjectName('problem_text')
+
+		time_limit = QHBoxLayout()
+		time_limit_label = QLabel('Time Limit :')
+		time_limit_label.setObjectName('problem_heading_4')
+		time_limit_statement = QLabel(problem_file["Time Limit"])
+		time_limit_statement.setWordWrap(True)
+		time_limit_statement.setObjectName('problem_text')
+		time_limit.addWidget(time_limit_label)
+		time_limit.addWidget(time_limit_statement)
+		time_limit.addStretch(0)
+		time_limit.addSpacing(1)
+		time_limit.addWidget(problem_code_label, alignment = Qt.AlignRight)
+		time_limit_widget = QWidget()
+		time_limit_widget.setLayout(time_limit)
+
+
+		example_label = QLabel('Example : ')
+		example_label.setObjectName('problem_heading_2')
+		example_input_label = QLabel('Input :')
+		example_input_label.setObjectName('problem_heading_3')
+		example_input_statement = QLabel(problem_file["Example Input"])
+		example_input_statement.setWordWrap(True)
+		example_input_statement.setObjectName('problem_text_2')
+		example_output_label = QLabel('Output :')
+		example_output_label.setObjectName('problem_heading_3')
+		example_output_statement = QLabel(problem_file["Example Output"])
+		example_output_statement.setWordWrap(True)
+		example_output_statement.setObjectName('problem_text_2')
+
+		author_label = QLabel('Author : ' + problem_file["Author Name"])
+		author_label.setObjectName('problem_heading_2')
+
+		main_layout.addWidget(heading, alignment = Qt.AlignCenter)
+		main_layout.addWidget(time_limit_widget)
+		main_layout.addWidget(problem_statement)
+		main_layout.addWidget(input_label)
+		main_layout.addWidget(input_statement)
+		main_layout.addWidget(output_label)
+		main_layout.addWidget(output_statement)
+		main_layout.addWidget(constraints_label)
+		main_layout.addWidget(constraints_statement)
+		main_layout.addWidget(example_label)
+		main_layout.addWidget(example_input_label)
+		main_layout.addWidget(example_input_statement)
+		main_layout.addWidget(example_output_label)
+		main_layout.addWidget(example_output_statement)
+		main_layout.addWidget(author_label)
+		main_layout.addStretch(0)
+		main_layout.addSpacing(1)
+
+		main = QWidget()
+		main.setLayout(main_layout)
+		main_scroll.setWidget(main)
+		main_scroll.setWidgetResizable(True)
+		main_scroll.setFixedWidth(880)
+
+		layout = QVBoxLayout()
+		layout.addWidget(main_scroll)
+		main_widget = QWidget()
+		main_widget.setLayout(layout)
+
+
+
+		return main_widget
 

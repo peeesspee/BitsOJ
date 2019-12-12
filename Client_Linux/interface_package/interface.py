@@ -528,6 +528,21 @@ class client_window(QMainWindow):
 				print(str(Error))
 		
 
+	def show_problem(self, i, data_changed_flags):
+		if data_changed_flags[0] == 0:
+			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
+		else:
+			try:
+				with open('./Problems/Problem_'+str(i)+'.json') as read:
+					problem = json.load(read)
+			except Exception as Error:
+					print(str(Error))
+			try:
+				self.problem_window = view_problem_ui(str(i), data_changed_flags, problem)
+				self.problem_window.show()
+			except Exception as Error:
+				print(str(Error))
+
 
 	def view_reply(self,selected_row):
 		try:
