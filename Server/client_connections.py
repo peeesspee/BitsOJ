@@ -6,7 +6,7 @@ import threading
 from database_management import *
 from client_submissions import submission
 from init_server import initialize_server
- 
+
 
 class manage_clients():
 	channel = ''
@@ -437,7 +437,7 @@ class manage_clients():
 				'Code' : 'SRJCT',
 				'Receiver' : client_username,
 				'Message' : 'Your submission could not be processed! Contest status: NOT RUNNING.'
-				}
+			}
 			message = json.dumps(message)
 			try:
 				response.publish_message(manage_clients.channel, client_username, message)
@@ -453,7 +453,7 @@ class manage_clients():
 				'Code' : 'SRJCT',
 				'Receiver' : client_username,
 				'Message' : 'Your submission could not be processed! Wait for contest start.'
-				}
+			}
 			message = json.dumps(message)
 			try:
 				response.publish_message(manage_clients.channel, client_username, message)
@@ -468,7 +468,7 @@ class manage_clients():
 				'Code' : 'SRJCT',
 				'Receiver' : client_username,
 				'Message' : 'Your submission could not be processed. Please Login to send submissions.'
-				}
+			}
 			message = json.dumps(message)
 			try:
 				response.publish_message(manage_clients.channel, client_username, message)
@@ -498,7 +498,7 @@ class manage_clients():
 					'Code' : 'SRJCT',
 					'Receiver' : client_username,
 					'Message' : 'Your submission could not be processed. Resend after ' + str(time_seconds_limit - difference_seconds) + ' Seconds'
-					}
+				}
 				message = json.dumps(message)
 				try:
 					response.publish_message(manage_clients.channel, client_username, message)
@@ -513,9 +513,16 @@ class manage_clients():
 			else:
 				run_id, source_file_name = submission.new_submission(client_id, problem_code, language, time_stamp, source_code)
 				# Update database
-				status = 'Running'
-				
-				submissions_management.insert_submission(run_id, local_run_id, client_id, language, source_file_name, problem_code, status, time_stamp)
+				submissions_management.insert_submission(
+					run_id, 
+					local_run_id, 
+					client_id, 
+					language, 
+					source_file_name, 
+					problem_code, 
+					'RUNNING', 
+					time_stamp
+				)
 				manage_clients.data_changed_flags[0] = 1
 				
 				# Push the submission in judging queue

@@ -4,7 +4,7 @@ import os
 import signal
 import sys
 import time
-
+ 
 from time import sleep
 from client_connections import manage_clients
 from database_management import manage_database
@@ -88,6 +88,7 @@ def main():
 	#	19		0/1			1: UPDATE remaining time broadcast to all clients
 	#	20		0/1			1: Manual Review Allowed
 	#	21		X			X: Submission time limit 0 < X 
+	#	22		0/1			1: Problem table changed
 	
 
 	#####################################################################################
@@ -242,4 +243,6 @@ def manage_process(
 	core_pid = core_process.pid
 	return client_pid, judge_pid, core_pid
 
-main()
+if __name__ == '__main__':
+	# If this file is run natively, and not imported
+	main()

@@ -1,10 +1,10 @@
 import pika
 import sys
-import json
+import json, time
 from database_management import submissions_management, scoreboard_management
 from init_server import initialize_server
 updated_config = 0
-
+ 
 class manage_judges():
 	channel = ''
 	data_changed_flags = ''
@@ -98,7 +98,7 @@ class manage_judges():
 				if code == 'VRDCT':
 					run_id = json_data['Run ID']
 					# Mark the submission
-					submissions_management.update_submission_status(run_id, 'SECURITY', 'HALTED')
+					submissions_management.update_submission_status(run_id, 'SECURITY', 'HALTED', 'UNKNOWN')
 				manage_judges.data_changed_flags[0] = 1
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
@@ -112,6 +112,43 @@ class manage_judges():
 				message = json_data['Message']
 				p_code = json_data['PCode']
 				time_stamp = json_data['Time Stamp']
+				judge = json_data['Judge']
+				print('[ VERDICT ] ' + judge + ' :: ' + status)
+
+				# Save message details to file
+				filename = './Client_Submissions/' + str(run_id) + '.info'
+				current_time = time.strftime("%H:%M:%S", time.localtime())
+				try:
+					# read file
+					with open(filename) as file:
+						data = file.read()
+				except:
+					# New file write
+					data = '=========='
+					pass
+
+				try:
+					# write file
+					file = open(filename, 'w')
+					file.write('Run Time: ' + current_time + '\n')
+					file.write('Verdict from: ' + judge + ' : ' + status + '\n')
+					file.write(json_data['Message'])
+					file.write('\n\n')
+					# Write previous run info
+					file.write(data)
+					# This ensures the latest run data is at top
+					
+				except Exception as error:
+					print('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
+
+				try:
+					# write file
+					filename = './Client_Submissions/' + str(run_id) + '_latest.info'
+					file = open(filename, 'w')
+					file.write(json_data['Message'])
+					
+				except Exception as error:
+					print('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
 
 				# Create response to send to client
 				message = {
@@ -120,13 +157,15 @@ class manage_judges():
 					'Local Run ID' : local_run_id,
 					'Run ID' : run_id,
 					'Status' : status,
-					'Message' : message
+					'Message' : message,
+					'Judge' : judge
 				}
 				message = json.dumps(message)
 
 				# Publish message to client if allowed
 				# Update scoreboard also when manual review is ON
 				if manage_judges.data_changed_flags[20] == 0:
+					
 					try:
 						# Put response to task queue, to further connect to the client
 						manage_judges.task_queue.put(message)
@@ -160,7 +199,7 @@ class manage_judges():
 						# Flag 18 signals interface to update scoreboard
 						manage_judges.data_changed_flags[18] = 1
 				else:
-					submissions_management.update_submission_status(run_id, status, 'REVIEW')
+					submissions_management.update_submission_status(run_id, status, 'REVIEW', judge)
 					# Update submission GUI
 					manage_judges.data_changed_flags[0] = 1
 
@@ -180,10 +219,5 @@ class manage_judges():
 			ch.basic_ack(delivery_tag = method.delivery_tag)
 			print('[ ERROR ] Could not parse judge JSON data : ' + str(error))
 			return
-
-
-
-
-
 
 		return

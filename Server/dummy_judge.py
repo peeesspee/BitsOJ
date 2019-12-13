@@ -55,7 +55,7 @@ def login():
 
 
 def handler(ch, method, properties, body):
-	global client_id, key
+	global client_id, key, username
 	server_data = str(body.decode("utf-8"))
 	if(server_data == ''):
 		print("Empty!")
@@ -76,7 +76,7 @@ def handler(ch, method, properties, body):
 		code = json_data['Code']
 		if code == 'JUDGE':
 			run_id = json_data['Run ID']
-			username = json_data['Client Username'] 
+			client_username = json_data['Client Username'] 
 			client_id = json_data['Client ID']
 			language = json_data['Language']
 			PCode = json_data['PCode']
@@ -94,14 +94,15 @@ def handler(ch, method, properties, body):
 			message = {
 			'Judge Key' : key,
 			'Code' : 'VRDCT', 
-			'Client Username' : username,
+			'Client Username' : client_username,
 			'Client ID' : client_id,
 			'Status' : status,
 			'Run ID' : run_id,
 			'Message' : 'No Error',
 			'Local Run ID' : local_run_id,
 			'PCode' : PCode,
-			'Time Stamp' : time_stamp
+			'Time Stamp' : time_stamp,
+			'Judge' : username
 			}
 			message = json.dumps(message)
 			print('\nRunning....')

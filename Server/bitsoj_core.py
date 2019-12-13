@@ -3,7 +3,7 @@
 import json, pika, sys, time
 from init_server import initialize_server
 from database_management import client_authentication, submissions_management
-  
+   
 class core():
 	data_changed_flags = ''
 	task_queue = ''
@@ -32,7 +32,7 @@ class core():
 			if status == 1:
 				break
 			# Poll every second
-			time.sleep(1)
+			time.sleep(0.5)
 
 		# If we reach this point, it means the Server Shutdown has been initiated.
 		print("[ STOP ] Core subprocess terminated successfully!")
@@ -67,9 +67,9 @@ class core():
 				# Data in the task queue is in JSON format
 				data = task_queue.get()
 				data = json.loads(data)
-				
+				code = data['Code']
 				# Contest START signal
-				if data['Code'] == 'START':
+				if code == 'START':
 					print('[ EVENT ][ BROADCAST ] START Contest')
 					message = {
 					'Code' : 'START',
@@ -86,7 +86,7 @@ class core():
 					)
 				
 				# Contest STOP signal
-				elif data['Code'] == 'STOP':
+				elif code == 'STOP':
 					# Don't allow Submissions
 					print('[ EVENT ][ BROADCAST ] STOP Contest')
 					message = {
@@ -98,9 +98,65 @@ class core():
 						routing_key = '', 
 						body = message
 					)
+
+				# Contest EXTeND signal
+				elif code == 'EXTND':
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = core.broadcast_exchange, 
+						routing_key = '', 
+						body = message
+					)
+
+				elif code == 'VRDCT':
+					receiver = data['Receiver']
+					run_id = data['Run ID']
+					status = data['Status']
+					try:
+						judge = data['Judge']
+					except:
+						print('No judge')
+						judge = 'OOPS'
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = core.unicast_exchange, 
+						routing_key = receiver, 
+						body = message
+					)
+					# Update Database
+					submissions_management.update_submission_status(run_id, status, 'SENT', judge)
+					# Update GUI
+					core.data_changed_flags[0] = 1
+
+				elif code == 'JUDGE':
+					run_id = data['Run ID']
+					# Refresh GUI
+					core.data_changed_flags[0] = 1
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = 'connection_manager', 
+						routing_key = 'judge_requests', 
+						body = message, 
+						properties = pika.BasicProperties(delivery_mode = 2)
+					) 
+
+				elif code == 'RJUDGE':
+					run_id = data['Run ID']
+					# Update submission status
+					submissions_management.update_submission_status(run_id, 'REJUDGE', 'REJUDGE')
+					# Refresh GUI
+					core.data_changed_flags[0] = 1
+					data['Code'] = 'JUDGE'
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = 'connection_manager', 
+						routing_key = 'judge_requests', 
+						body = message, 
+						properties = pika.BasicProperties(delivery_mode = 2)
+					) 
 				
 				# UPDATE client timer to match server value
-				elif data['Code'] == 'UPDATE':
+				elif code == 'UPDATE':
 					# Don't allow Submissions
 					print('[ EVENT ][ BROADCAST ] UPDATE Contest')
 					message = {
@@ -113,9 +169,18 @@ class core():
 						routing_key = '', 
 						body = message
 					)
+
+				# Contest SCoReBoarD
+				elif code == 'SCRBD':
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = core.broadcast_exchange, 
+						routing_key = '', 
+						body = message
+					)
 				
 				# QUERY reply to client or broadcast
-				elif data['Code'] == 'QUERY':
+				elif code == 'QUERY':
 					if data['Mode'] == 'Client':
 						print('[ EVENT ][ UNICAST ] New Query response to client')
 						client_username = client_authentication.get_client_username(data['Client ID'])
@@ -149,7 +214,7 @@ class core():
 						)
 						
 				# Client has been DiSCoNnecTed
-				elif data['Code'] == 'DSCNT':
+				elif code == 'DSCNT':
 					if data['Mode'] == 1:
 						client = data['Client']
 						print('[ EVENT ] Disconnect client : ' + str(client))
@@ -177,25 +242,7 @@ class core():
 							body = message
 						)
 					
-				# Contest SCoReBoarD
-				elif data['Code'] == 'SCRBD':
-					message = json.dumps(data)
-					core.channel.basic_publish(
-						exchange = core.broadcast_exchange, 
-						routing_key = '', 
-						body = message
-					)
-
-				# Contest EXTeND signal
-				elif data['Code'] == 'EXTND':
-					message = json.dumps(data)
-					core.channel.basic_publish(
-						exchange = core.broadcast_exchange, 
-						routing_key = '', 
-						body = message
-					)
-
-				elif data['Code'] in ['VALID', 'INVLD', 'LRJCT', 'SRJCT']:
+				elif code in ['VALID', 'INVLD', 'LRJCT', 'SRJCT']:
 					# Pass the message to appropiate recipient, nothing to process in data
 					receiver = data['Receiver']
 					message = json.dumps(data)
@@ -204,36 +251,6 @@ class core():
 						routing_key = receiver, 
 						body = message
 					)
-
-				elif data['Code'] == 'VRDCT':
-					receiver = data['Receiver']
-					run_id = data['Run ID']
-					status = data['Status']
-					message = json.dumps(data)
-					core.channel.basic_publish(
-						exchange = core.unicast_exchange, 
-						routing_key = receiver, 
-						body = message
-					)
-					# Update Database
-					submissions_management.update_submission_status(run_id, status, 'SENT')
-					# Update GUI
-					core.data_changed_flags[0] = 1
-
-				elif data['Code'] == 'JUDGE':
-					run_id = data['Run ID']
-					# Update submission status
-					submissions_management.update_submission_status(run_id, 'REJUDGE', 'REJUDGE')
-					# Refresh GUI
-					core.data_changed_flags[0] = 1
-					message = json.dumps(data)
-					core.channel.basic_publish(
-						exchange = 'connection_manager', 
-						routing_key = 'judge_requests', 
-						body = message, 
-						properties = pika.BasicProperties(delivery_mode = 2)
-					) 
-
 			return
 		except Exception as error:
 			print('[ ERROR ] Data could not be broadcasted : ' + str(error)) 
