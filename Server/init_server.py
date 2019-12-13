@@ -81,6 +81,18 @@ class initialize_server():
 		initialize_server.read_config()
 		return initialize_server.config['Contest End Time']
 
+	def get_problem_details(problem_code):
+		try:
+			problems = initialize_server.config['Problems']
+			for problem, content in problems.items():
+				if content['Code'] == problem_code:
+					return content
+			return 'NULL'
+		except Exception as error:
+			print('[ ERROR ] ' + str(error))
+			return 'NULL'
+
+
 class save_status():
 	def write_config(
 		rabbitmq_username, rabbitmq_password, judge_username, judge_password,
@@ -95,7 +107,7 @@ class save_status():
 		allow_submission = str(allow_submission) 
 				
 		json_data = {
-			"Server Username": "BitsOJ",
+		    "Server Username": "BitsOJ",
 		    "Server Password": "root",
 		    "Server IP": "localhost",
 		    "Judge Username": "judge1",
@@ -112,22 +124,82 @@ class save_status():
 		    "Contest Start Time": "00:00:00",
 		    "Contest End Time": "00:00:00",
 		    "Contest Set Time": 0,
-		    "Number Of Problems": "5",
-		    "Problems": {
-		        "Problem 1": "('The Begining of the End','TBE', 1, 1)",
-		        "Problem 2": "('Privet Drive','PD', 1, 1)",
-		        "Problem 3": "('Dumbledores Cloak','DC', 1, 1)",
-		        "Problem 4": "('The Auror Mania','TAM', 1, 1)",
-		        "Problem 5": "('A New Start','ANS', 1, 1)"
-		    },
-		    "Problem Codes": "('TBE', 'PD', 'DC', 'TAM', 'ANS')",
+		    "Problem Codes": "('SAC', 'TPH', 'TFS', 'TAM', 'ANS')",
 		    "Languages": "('C','C++','JAVA','PYTHON-2')",
 		    "Ranking Algorithm": "IOI",
 		    "AC Points": 100,
 		    "Penalty Score": -20,
 		    "Penalty Time": 20,
 		    "Manual Review": "False",
-		    "Submission Time Limit": 0
+		    "Submission Time Limit": 0,
+		    "Number Of Problems": "5",
+		    "Problems": {
+		        "Problem 1": {
+		            "Title": "The Pursuit of Happyness",
+		            "Code": "TPH",
+		            "Time Limit": 1,
+		            "Author": "Prakhar",
+		            "Statement": "This is a long, long story of a boy named Harry!",
+		            "Input Format": "First line has test cases, each of the following T lines are cases.",
+		            "Output Format": "Print each answer in a separate line.",
+		            "Constraints": "1 \u2264 N \u2264 1000",
+		            "Example Input": "1 2",
+		            "Example Output": "3",
+		            "IO Files": 1
+		        },
+		        "Problem 2": {
+		            "Title": "The Fight for Survival",
+		            "Code": "TFS",
+		            "Time Limit": 1,
+		            "Author": "Prakhar",
+		            "Statement": "This is a long, long story of a girl\nnamed Hermione!",
+		            "Input Format": "First line has test cases, each of the following T lines are cases.",
+		            "Output Format": "Print each answer in a separate line.",
+		            "Constraints": "1 N 1000",
+		            "Example Input": "1 2",
+		            "Example Output": "3",
+		            "IO Files": 1
+		        },
+		        "Problem 3": {
+		            "Title": "The Triwizard Cup",
+		            "Code": "SAC2",
+		            "Time Limit": "2",
+		            "Author": "Remus",
+		            "Statement": "This is a long, long story of a boy\nnamed Ronald Weasley. :)",
+		            "Input Format": "First line has test cases, each of the following T lines are cases.",
+		            "Output Format": "Print each answer in a separate line.",
+		            "Constraints": "1 \u2264 N  \u2265 1000",
+		            "Example Input": "1\n2",
+		            "Example Output": "3",
+		            "IO Files": 1
+		        },
+		        "Problem 4": {
+		            "Title": "The Accio Magic",
+		            "Code": "TAM",
+		            "Time Limit": 1,
+		            "Author": "Sirius",
+		            "Statement": "This is a long, long story of a boy\nnamed Neville!",
+		            "Input Format": "First line has test cases, each of the following T lines are cases.",
+		            "Output Format": "Print each answer in a separate line.",
+		            "Constraints": "1 N 1000",
+		            "Example Input": "1 2",
+		            "Example Output": "3",
+		            "IO Files": 1
+		        },
+		        "Problem 5": {
+		            "Title": "The Big Elemental",
+		            "Code": "TBE",
+		            "Time Limit": 1,
+		            "Author": "James",
+		            "Statement": "This is a long, long story of a girl\nnamed Ginny!",
+		            "Input Format": "First line has test cases, each of the following T lines are cases.",
+		            "Output Format": "Print each answer in a separate line.",
+		            "Constraints": "1 N \u2264 1000",
+		            "Example Input": "1 2",
+		            "Example Output": "3",
+		            "IO Files": 1
+		        }
+		    }
 		}
 
 		with open("config.json", "w") as data_file:
@@ -154,5 +226,22 @@ class save_status():
 			print('[ ERROR ] Could not update json file : ' + str(error))
 		finally:
 			return
+
+	def update_problem_content(code, key, value):
+		try:
+			problems_content = initialize_server.config['Problems']
+			for problem, content in problems_content.items():
+				if content['Code'] == code:
+					# Match found
+					content[key] = value
+					break
+			initialize_server.config['Problems'] = problems_content
+			with open("config.json", "w") as data_file:
+				json.dump(initialize_server.config, data_file, indent=4)
+
+			return 0
+		except Exception as error:
+			print('[ ERROR ] Could not update problem: ' + str(error))
+			return 1
 
 

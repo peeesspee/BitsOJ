@@ -1,5 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
+from init_server import initialize_server, save_status
+from database_management import problem_management
 
 
 class view_case_ui(QMainWindow):
@@ -147,6 +149,14 @@ class problem_edit_ui(QMainWindow):
 		self.example_input_format_changed = 0 
 		self.example_output_format_changed = 0 
 
+		self.author = 'Not Found'
+		self.statement = 'Not Found'
+		self.input_syntax= 'Not Found' 
+		self.output_syntax= 'Not Found'
+		self.constraints= 'Not Found'
+		self.example_input_syntax= 'Not Found' 
+		self.example_output_syntax= 'Not Found' 
+
 		self.setWindowTitle(self.problem)
 		self.width = 1250
 		self.height = 768
@@ -155,7 +165,7 @@ class problem_edit_ui(QMainWindow):
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		
 		self.tab1 = self.get_problem_widget()
-		self.tab2 = self.get_files_ui(self.problem, self.code, self.test_files, self.time_limit)
+		self.tab2 = self.get_files_ui(self.test_files)
 
 		self.tabs = QTabWidget()
 		self.tabs.setObjectName('main_tabs')
@@ -197,65 +207,82 @@ class problem_edit_ui(QMainWindow):
 		main.setObjectName('account_window')
 		self.setCentralWidget(main)
 
-	def final_status(self):
-		self.data_changed_flags[14] = 0
-		self.close()
-
-	def exit(self):
-		self.data_changed_flags[14] = 0
-		self.close()
-
 	def get_problem_widget(self):
+		problem = initialize_server.get_problem_details(self.code)
+		if problem != 'NULL':
+			self.author = problem['Author']
+			self.statement = problem['Statement']
+			self.input_syntax= problem['Input Format'] 
+			self.output_syntax= problem['Output Format']
+			self.constraints= problem['Constraints']
+			self.example_input_syntax= problem['Example Input'] 
+			self.example_output_syntax= problem['Example Output'] 
+
+
 		heading = QLabel('Edit Problem')
 		problem_label = QLabel('Name: ')
-		problem_content = QLineEdit()
-		problem_content.setText(self.problem)
-		problem_content.setFixedSize(250, 28)
+		self.problem_content = QLineEdit()
+		self.problem_content.setText(self.problem)
+		self.problem_content.setFixedSize(250, 28)
+		self.problem_content.textChanged.connect(lambda: self.handle_change(1))
+
 		code_label = QLabel('Code: ')
-		code_content = QLineEdit()
-		code_content.setText(self.code)
-		code_content.setFixedSize(70, 28)
+		self.code_content = QLineEdit()
+		self.code_content.setText(self.code)
+		self.code_content.setFixedSize(70, 28)
+		self.code_content.textChanged.connect(lambda: self.handle_change(2))
+
 		time_limit_label = QLabel('Time Limit: ')
-		time_limit_content = QLineEdit()
-		time_limit_content.setText(str(self.time_limit))
-		time_limit_content.setFixedSize(70, 28)
+		self.time_limit_content = QLineEdit()
+		self.time_limit_content.setText(str(self.time_limit))
+		self.time_limit_content.setFixedSize(70, 28)
+		self.time_limit_content.textChanged.connect(lambda: self.handle_change(3))
+
 		author_label = QLabel('Author: ')
-		author_content = QLineEdit()
-		# author_content.setText(str(self.author_limit))
-		author_content.setFixedSize(150, 28)
+		self.author_content = QLineEdit()
+		self.author_content.setText(str(self.author))
+		self.author_content.setFixedSize(150, 28)
+		self.author_content.textChanged.connect(lambda: self.handle_change(4))
+
 		level1_layout = QHBoxLayout()
 		level1_layout.addWidget(problem_label)
-		level1_layout.addWidget(problem_content)
+		level1_layout.addWidget(self.problem_content)
 		level1_layout.addStretch(20)
 		level1_layout.addWidget(code_label)
-		level1_layout.addWidget(code_content)
+		level1_layout.addWidget(self.code_content)
 		level1_layout.addStretch(20)
 		level1_layout.addWidget(time_limit_label)
-		level1_layout.addWidget(time_limit_content)
+		level1_layout.addWidget(self.time_limit_content)
 		level1_layout.addStretch(20)
 		level1_layout.addWidget(author_label)
-		level1_layout.addWidget(author_content)
+		level1_layout.addWidget(self.author_content)
 		level1_widget = QWidget()
 		level1_widget.setLayout(level1_layout)
 
 		statement_label = QLabel('Problem Statement: ')
-		statement_content = QTextEdit()
-		# statement_content.setText(self.statement)
-		statement_content.setFixedHeight(500)
+		self.statement_content = QTextEdit()
+		self.statement_content.setText(self.statement)
+		# self.statement_content.setFixedHeight(500)
+		self.statement_content.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.MinimumExpanding)
+		self.statement_content.textChanged.connect(lambda: self.handle_change(5))
 
 		input_syntax_label = QLabel('Input Format: ')
+		self.input_syntax_content = QTextEdit()
+		self.input_syntax_content.setText(self.input_syntax)
+		self.input_syntax_content.setFixedHeight(200)
+		self.input_syntax_content.textChanged.connect(lambda: self.handle_change(6))
+
 		output_syntax_label = QLabel('Output Format: ')
-		input_syntax_content = QTextEdit()
-		# input_syntax_content.setText(self.input_syntax)
-		input_syntax_content.setFixedHeight(200)
-		output_syntax_content = QTextEdit()
-		# output_syntax_content.setText(self.output_syntax)
-		output_syntax_content.setFixedHeight(200)
+		self.output_syntax_content = QTextEdit()
+		self.output_syntax_content.setText(self.output_syntax)
+		self.output_syntax_content.setFixedHeight(200)
+		self.output_syntax_content.textChanged.connect(lambda: self.handle_change(7))
 
 		constraints_label = QLabel('Constraints: ')
-		constraints_content = QTextEdit()
-		# constraints_content.setText(self.constraints)
-		constraints_content.setFixedHeight(150)
+		self.constraints_content = QTextEdit()
+		self.constraints_content.setText(self.constraints)
+		self.constraints_content.setFixedHeight(150)
+		self.constraints_content.textChanged.connect(lambda: self.handle_change(8))
 
 		example_input_syntax_label = QLabel('Example Input: ')
 		example_output_syntax_label = QLabel('Example Output: ')
@@ -265,15 +292,17 @@ class problem_edit_ui(QMainWindow):
 		example_label_widget = QWidget()
 		example_label_widget.setLayout(example_label_layout)
 
-		example_input_syntax_content = QTextEdit()
-		# example_input_syntax_content.setText(self.example_input_syntax)
-		example_input_syntax_content.setFixedHeight(200)
-		example_output_syntax_content = QTextEdit()
-		# example_output_syntax_content.setText(self.example_output_syntax)
-		example_output_syntax_content.setFixedHeight(200)
+		self.example_input_syntax_content = QTextEdit()
+		self.example_input_syntax_content.setText(self.example_input_syntax)
+		self.example_input_syntax_content.setFixedHeight(200)
+		self.example_input_syntax_content.textChanged.connect(lambda: self.handle_change(9))
+		self.example_output_syntax_content = QTextEdit()
+		self.example_output_syntax_content.setText(self.example_output_syntax)
+		self.example_output_syntax_content.setFixedHeight(200)
+		self.example_output_syntax_content.textChanged.connect(lambda: self.handle_change(10))
 		example_layout = QHBoxLayout()
-		example_layout.addWidget(example_input_syntax_content)
-		example_layout.addWidget(example_output_syntax_content)
+		example_layout.addWidget(self.example_input_syntax_content)
+		example_layout.addWidget(self.example_output_syntax_content)
 		example_widget = QWidget()
 		example_widget.setLayout(example_layout)
 
@@ -281,20 +310,22 @@ class problem_edit_ui(QMainWindow):
 		source_layout.addWidget(heading)
 		source_layout.addWidget(level1_widget)
 		source_layout.addWidget(statement_label)
-		source_layout.addWidget(statement_content)
+		source_layout.addWidget(self.statement_content)
 		source_layout.addWidget(input_syntax_label)
-		source_layout.addWidget(input_syntax_content)
+		source_layout.addWidget(self.input_syntax_content)
 		source_layout.addWidget(output_syntax_label)
-		source_layout.addWidget(output_syntax_content)
+		source_layout.addWidget(self.output_syntax_content)
 		source_layout.addWidget(constraints_label)
-		source_layout.addWidget(constraints_content)
+		source_layout.addWidget(self.constraints_content)
 		source_layout.addWidget(example_label_widget)
 		source_layout.addWidget(example_widget)
-		# source_layout.addWidget(button_widget)
 		
 		source_layout.addStretch(1)
 		source_widget = QWidget()
 		source_widget.setLayout(source_layout)
+		source_widget.setToolTip(
+			'Use \'&le\', \'&ge\' and \'&ne\' for \'less than or equal to\', \n\'greater than or equal to\' and \'not equal to\' symbols respectively.'
+		)
 		
 		scroll_area = QScrollArea()
 		scroll_area.setWidget(source_widget)
@@ -313,7 +344,7 @@ class problem_edit_ui(QMainWindow):
 		heading.setObjectName('main_screen_heading')
 		return scroll_area
 
-	def get_files_ui(self, problem_name, problem_code, time_limit, cases):
+	def get_files_ui(self, cases):
 		heading = QLabel('View Files')
 		cases = int(cases)
 		test_cases_table = QTableWidget()
@@ -377,3 +408,114 @@ class problem_edit_ui(QMainWindow):
 		# elif column == 2:
 		# 	print("Disable File " + str(row) + " for problem " + problem_code)
 		return
+
+	def handle_change(self, type):
+		if type == 1:
+			self.name_changed = 1
+		elif type == 2:
+			self.code_changed = 1
+		elif type == 3:
+			self.time_limit_changed = 1
+		elif type ==4:
+			self.author_changed = 1
+		elif type == 5:
+			self.statement_changed = 1
+		elif type == 6:
+			self.input_format_changed = 1
+		elif type == 7:
+			self.output_format_changed = 1
+		elif type == 8:
+			self.constraints_changed = 1
+		elif type == 9:
+			self.example_input_format_changed = 1
+		elif type == 10:
+			self.example_output_format_changed = 1
+		
+	def final_status(self):
+		# Ask for confirmation TODO
+		try:
+			if self.name_changed != 0:
+				content_data = self.modify(self.problem_content.text())
+				status = save_status.update_problem_content(self.code, 'Title', content_data)
+				# TODO if status is 1, raise an error box maybe?
+
+				# Update database
+				problem_management.update_problem(1, self.code, content_data)
+				# Update problems view
+				self.data_changed_flags[22] = 1
+
+			if self.code_changed != 0:
+				if self.data_changed_flags[10] == 0:
+					content_data = self.modify(self.code_content.text())
+					status = save_status.update_problem_content(self.code, 'Code', content_data)
+					problem_management.update_problem(2, self.code, content_data)
+					# Update problems view
+					self.data_changed_flags[22] = 1
+				else:
+					info_box = QMessageBox()
+					info_box.setIcon(QMessageBox.Critical)
+					info_box.setWindowTitle('Error')
+					info_box.setText('Problem code could not be changed.\nContest status is not SETUP')
+					info_box.setStandardButtons(QMessageBox.Ok)
+					info_box.exec_()
+
+			if self.time_limit_changed != 0:
+				content_data =  int(self.time_limit_content.text())
+				status = save_status.update_problem_content(self.code, 'Time Limit', content_data)
+				problem_management.update_problem(4, self.code, content_data)
+				# Update problems view
+				self.data_changed_flags[22] = 1
+
+			if self.author_changed != 0:
+				content_data = self.modify(self.author_content.text())
+				status = save_status.update_problem_content(self.code, 'Author', content_data)
+
+			if self.statement_changed != 0:
+				content_data = self.modify(self.statement_content.toPlainText())
+				status = save_status.update_problem_content(self.code, 'Statement', content_data)
+
+			if self.input_format_changed != 0: 
+				content_data = self.modify(self.input_syntax_content.toPlainText())
+				status = save_status.update_problem_content(self.code, 'Input Format', content_data)
+
+			if self.output_format_changed != 0:
+				content_data = self.modify(self.output_syntax_content.toPlainText())
+				status = save_status.update_problem_content(self.code, 'Output Format', content_data)
+
+			if self.constraints_changed != 0:
+				content_data = self.modify(self.constraints_content.toPlainText())
+				status = save_status.update_problem_content(self.code, 'Constraints', content_data)
+
+			if self.example_input_format_changed != 0: 
+				content_data = self.modify(self.example_input_syntax_content.toPlainText())
+				status = save_status.update_problem_content(self.code, 'Example Input', content_data)
+
+			if self.example_output_format_changed != 0:
+				content_data = self.modify(self.self.example_output_syntax_content.toPlainText()) 		
+				status = save_status.update_problem_content(self.code, 'Example Output', content_data)
+
+			
+			
+		except:
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Critical)
+			info_box.setWindowTitle('Error')
+			info_box.setText('Problem data could not be changed.\nMake sure all the values are of expected datatype.')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+		finally:
+			# Reset critical flag
+			self.data_changed_flags[14] = 0
+			self.close()
+
+	def modify(self, content_data):
+		content_data = content_data.replace('&le', '\u2264')
+		content_data = content_data.replace('&ge', '\u2265')
+		content_data = content_data.replace('&ne', '\u2260')
+		return content_data
+
+
+	def exit(self):
+		# Reset critical flag
+		self.data_changed_flags[14] = 0
+		self.close()

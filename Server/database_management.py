@@ -53,20 +53,62 @@ class manage_database():
 		except:
 			print("[ CRITICAL ERROR ] Table drop error")
 
-
-
-	def insert_user(user_name, password, ctype, cur, conn):
-		try:
-			cur.execute("INSERT INTO accounts VALUES (?,?,?)",(user_name, password, ctype,))
-			conn.commit()
-		except Exception as error:
-			print("[ CRITICAL ERROR ] Database insertion error : " + str(error))
-
 	def get_cursor():
 		return manage_database.cur
 
 	def get_connection_object():
 		return manage_database.conn
+
+class problem_management(manage_database):
+	def init_problems(problem_dictionary):
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+		except Exception as error:
+			print('[ CRITICAL ] Could not load problems! '  + str(error))
+			return
+
+		try:
+			cur.execute('DELETE FROM problems')
+		except:
+			print('[ ERROR ] Could not refresh problems!')
+			return
+
+		try:
+			for problem, content in problem_dictionary.items():
+				problem_name = content['Title']
+				problem_code = content['Code']
+				problem_time = content['Time Limit']
+				files = content['IO Files']
+				cur.execute(
+					"INSERT INTO problems VALUES(?, ?, ?, ?)",
+					(problem_name, problem_code, files, problem_time, )
+				)
+				conn.commit()
+		except Exception as error:
+			print('[ ERROR ] Corrupted config file: ' + str(error))
+			
+			cur.execute('rollback')
+		return
+
+	def update_problem(change_type, key, new_value):
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			
+			if change_type == 1:
+				cur.execute("UPDATE problems SET problem_name = ? WHERE problem_code = ?", (new_value, key, ))
+				conn.commit()
+			elif change_type == 2:
+				cur.execute("UPDATE problems SET problem_code = ? WHERE problem_code = ?", (new_value, key, ))
+				conn.commit()
+			elif change_type == 4:
+				new_value = int(new_value)
+				cur.execute("UPDATE problems SET time_limit = ? WHERE problem_code = ?", (new_value, key, ))
+				conn.commit()
+			return
+		except Exception as error:
+			print('[ ERROR ] Could not update database: ' + str(error))
 
 class scoreboard_management():
 	def insert_new_user(client_id, user_name, score, problems_solved, total_time):

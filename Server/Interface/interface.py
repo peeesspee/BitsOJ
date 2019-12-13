@@ -322,6 +322,10 @@ class server_window(QMainWindow):
 			if self.data_changed_flags[1] == 1:
 				self.client_model.select()
 				self.data_changed_flags[1] = 0
+			# Update problems table
+			if self.data_changed_flags[22] == 1:
+				self.problem_model.select()
+				self.data_changed_flags[22] = 0
 			# Update accounts table
 			if self.data_changed_flags[5] == 1:
 				self.account_model.select()
@@ -368,9 +372,7 @@ class server_window(QMainWindow):
 				message = json.dumps(message)
 				self.task_queue.put(message)
 
-			if self.data_changed_flags[22] == 1:
-				self.data_changed_flags[22] = 0
-				self.problem_model.select()
+			
 
 			# While contest is RUNNING
 			# This block is last as it may cause a return call and not allow further function block executions
