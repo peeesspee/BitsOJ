@@ -11,7 +11,6 @@ from init_client import initialize_contest, handle_config
 from database_management import source_code
 
 
-
 global current_status 
 current_status = "STOPPED" 
 

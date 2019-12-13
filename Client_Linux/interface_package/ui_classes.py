@@ -552,7 +552,7 @@ class view_problem_ui(QMainWindow):
 	def main_problem_view_ui(self, i, problem_file):
 
 		main_scroll = QScrollArea()
-		main_scroll.setObjectName('view_problem_2')
+		main_scroll.setObjectName('view_problem')
 
 		main_layout = QVBoxLayout()
 		main_layout.setObjectName('view_problem')
