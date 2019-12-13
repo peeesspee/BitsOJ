@@ -388,12 +388,12 @@ class ui_widgets:
 		heading = QLabel('Manage Problems')
 		heading.setObjectName('main_screen_heading')
 
-		edit_problem_button = QPushButton('Edit Problem', self)
-		edit_problem_button.setFixedSize(200, 50)
-		edit_problem_button.clicked.connect(
-			lambda:self.edit_problem(problem_table.selectionModel().currentIndex().row())
+		view_problem_button = QPushButton('View Problem', self)
+		view_problem_button.setFixedSize(200, 50)
+		view_problem_button.clicked.connect(
+			lambda:self.view_problem(problem_table.selectionModel().currentIndex().row())
 		)
-		edit_problem_button.setObjectName("topbar_button")
+		view_problem_button.setObjectName("topbar_button")
 
 		delete_problem_button = QPushButton('Delete Problem', self)
 		delete_problem_button.setFixedSize(200, 50)
@@ -410,12 +410,12 @@ class ui_widgets:
 		problem_model.setHeaderData(3, Qt.Horizontal, 'Time Limit')
 		problem_table = self.generate_view(problem_model)
 		problem_table.doubleClicked.connect(
-			lambda:self.edit_problem(problem_table.selectionModel().currentIndex().row())
+			lambda:self.view_problem(problem_table.selectionModel().currentIndex().row())
 		)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
-		head_layout.addWidget(edit_problem_button)
+		head_layout.addWidget(view_problem_button)
 		head_layout.addWidget(delete_problem_button)
 		
 		head_layout.setStretch(0, 80)

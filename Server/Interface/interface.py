@@ -906,7 +906,7 @@ class server_window(QMainWindow):
 			return
 
 	@pyqtSlot()
-	def edit_problem(self, selected_row):
+	def view_problem(self, selected_row):
 		if self.data_changed_flags[14] == 0:
 			# Set critical flag
 			self.data_changed_flags[14] = 1

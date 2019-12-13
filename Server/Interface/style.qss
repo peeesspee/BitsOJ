@@ -263,37 +263,33 @@ QWidget#content_box{
 
 
 /* Style of content */
-
 QLabel#main_screen_content{
 	color : #999999;
-	font-size : 20px;
+	font-size : 16px;
 }
 QLabel#main_screen_green_content{
 	color : #00AA00;
-	font-size : 20px;
+	font-size : 16px;
 }
 QLabel#main_screen_red_content{
 	color : #AA0000;
-	font-size : 20px;
+	font-size : 16px;
 }
-
-
-
 QLabel#main_screen_heading{
 	color : #ADFF2F;
-	font-size : 30px;
+	font-size : 28px;
 }
 
 QLabel#main_screen_sub_heading{
 	color : #23B2EE;
-	font-size : 26px;
+	font-size : 18px;
 }
-
 QLabel#about_screen_heading{
 	margin-top : 200px;
 	color : #E91E63;
 	font-size : 30px;
 }
+
 QLCDNumber{
 	color: #AAAAAA;
 	border : 0px;
@@ -429,6 +425,7 @@ QWidget#account_window
 {
 	background-color : #171B1F;
 }
+
 QTextEdit
 {
 	background : #2D353D;
@@ -436,6 +433,22 @@ QTextEdit
 }
 
 QLineEdit
+{
+	height : 30px;
+	background : #2D353D;
+	color : #AAAAAA;
+	border : 1px solid #171B1F;
+}
+QScrollArea QWidget
+{
+	background-color : #171B1F;
+}
+QScrollArea QTextEdit
+{
+	background : #2D353D;
+	color : #AAAAAA;
+}
+QScrollArea QLineEdit
 {
 	height : 30px;
 	background : #2D353D;
@@ -498,7 +511,7 @@ QScrollBar:vertical{
 QScrollBar::handle:vertical{
 	background : qlineargradient( spread:Reflect, x1:0, y1:0, x2:0, y2:1 , stop:0 #171B1F, stop:0.5 #38424C, stop:1 #171B1F);
 	width : 25px;
-	min-height : 500px;
+	min-height : 70px;
 	margin-left : 0px;
 	margin-top : 1px;
 	margin-bottom : 1px;
