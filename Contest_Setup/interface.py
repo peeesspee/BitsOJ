@@ -24,8 +24,14 @@ class contest_setup(QMainWindow):
 		self.setWindowTitle('BitsOJ v1.0.1 Contest Setup')
 		self.resize(1200,700)
 		cur = manage_database.initialize_client_tables()
-		os.system('mkdir Problems')
-		os.system('mkdir Problem_Statement')
+		if os.path.isdir('./Problems'):
+			pass
+		else:
+			os.system('mkdir Problems')
+		if os.path.isdir('./Problem_Statement'):
+			pass
+		else:
+			os.system('mkdir Problem_Statement')
 		for i in os.listdir('./Problem_Statement'):
 			os.remove('./Problem_Statement/' + i)
 		for i in os.listdir('./Problems'):
@@ -118,6 +124,7 @@ class contest_setup(QMainWindow):
 		contest_setup.contest(self)
 		# contest_setup.security(self)
 		contest_setup.ranking(self)
+		contest_setup.final_save(self)
 		return
 
 	def init_GUI(self):
@@ -892,6 +899,54 @@ class contest_setup(QMainWindow):
 
 
 
+	def final_save(self):
+		main = QVBoxLayout()
+
+		heading = QLabel('Create Config Files')
+		heading.setObjectName('heading')
+
+		client_config = QPushButton('Client Config')
+		client_config.setObjectName('general')
+		client_config.setFixedSize(200,50)
+		client_config.clicked.connect(lambda:self.create_file(0))
+
+		server_config = QPushButton('Server Config')
+		server_config.setObjectName('general')
+		server_config.setFixedSize(200,50)
+		server_config.clicked.connect(lambda:self.create_file(1))
+
+		judge_config = QPushButton('Judge Config')
+		judge_config.setObjectName('general')
+		judge_config.setFixedSize(200,50)
+		judge_config.clicked.connect(lambda:self.create_file(2))
+
+		main.addWidget(heading, alignment = Qt.AlignCenter)
+		main.addWidget(server_config)
+		main.addWidget(client_config)
+		main.addWidget(judge_config)
+		main.addStretch(0)
+		main.addSpacing(1)
+
+		self.final_tab.setLayout(main)
+
+
+
+	def create_file(self,i):
+		os.system('mkdir Server')
+		os.system('mkdir Client')
+		os.system('mkdir Judge')
+		if i == 0:
+			with open('Client/config.json', 'w') as write:
+				json.dump(self.client_config, write, indent = 4)
+		elif i == 1:
+			with open('Server/config.json', 'w') as write:
+				json.dump(self.server_config, write, indent = 4)
+		elif i == 2:
+			with open('Judge/config.json', 'w') as write:
+				json.dump(self.judge_config, write, indent = 4)
+
+
+
 
 
 	def generate_key(self,i):
@@ -906,8 +961,8 @@ class contest_setup(QMainWindow):
 			self.judge_key_text.setReadOnly(True)
 		else:
 			key = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(10))
-			self.problems_password_text.setText(key)
-			self.problems_password_text.setReadOnly(True)
+			self.problem_password_key_text.setText(key)
+			self.problem_password_key_text.setReadOnly(True)
 
 
 	def save_rank_tab(self):
@@ -1004,25 +1059,26 @@ class contest_setup(QMainWindow):
 			self.server_config["Judge Key"] = self.judge_key_text.text()
 			self.server_config["File Password"] = self.problem_password_key_text.text()
 			self.judge_config["judge_key"] = self.judge_key_text.text()
+			self.contest_name_text.setReadOnly(True)
 			self.contest_theme_text.setReadOnly(True)
-			self.client_key_text.setReadOnly(True)
-			self.contest_duration_text.setReadOnly(True)
-			self.start_time_text.setReadOnly(True)
-			self.am_pm.setEnabled(False)
-			self.hour_12.setEnabled(False)
-			self.hour_24.setEnabled(False)
+			# self.client_key_text.setReadOnly(True)
+			# self.contest_duration_text.setReadOnly(True)
+			# self.start_time_text.setReadOnly(True)
+			# self.am_pm.setEnabled(False)
+			# self.hour_12.setEnabled(False)
+			# self.hour_24.setEnabled(False)
 			QMessageBox.warning(self,'Message','Contest Details has been saved')
 
 	########################## EDIT CONTEST TAB #################################
 	def edit_contest_tab(self):
 		self.contest_name_text.setReadOnly(False)
 		self.contest_theme_text.setReadOnly(False)
-		self.client_key_text.setReadOnly(False)
-		self.contest_duration_text.setReadOnly(False)
-		self.start_time_text.setReadOnly(False)
-		self.am_pm.setEnabled(True)
-		self.hour_12.setEnabled(True)
-		self.hour_24.setEnabled(True)
+		# self.client_key_text.setReadOnly(False)
+		# self.contest_duration_text.setReadOnly(False)
+		# self.start_time_text.setReadOnly(False)
+		# self.am_pm.setEnabled(True)
+		# self.hour_12.setEnabled(True)
+		# self.hour_24.setEnabled(True)
 
 	######################### SELECT AM OR PM ###################################
 	def select_format(self,button):
