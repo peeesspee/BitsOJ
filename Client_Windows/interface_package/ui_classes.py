@@ -534,17 +534,18 @@ class view_problem_ui(QMainWindow):
 		self.setFixedSize(900,830)
 		main = self.main_problem_view_ui(i, problem_file)
 		self.setCentralWidget(main)
-		# self.setStyleSheet(open('Elements/style.qss', "r").read())
 		return
 
 	def main_problem_view_ui(self, i, problem_file):
 
 		main_scroll = QScrollArea()
+		main_scroll.setObjectName('view_problem')
 
 		main_layout = QVBoxLayout()
+		main_layout.setObjectName('view_problem')
 		heading = QLabel(problem_file["Problem Name"])
 		heading.setObjectName('problem_heading')
-		problem_statement = QLabel(problem_file["Problem Statement"])
+		problem_statement = QLabel(problem_file["Statement"])
 		problem_statement.setWordWrap(True)
 		problem_statement.setObjectName('problem_text')
 
@@ -571,10 +572,10 @@ class view_problem_ui(QMainWindow):
 
 		time_limit = QHBoxLayout()
 		time_limit_label = QLabel('Time Limit :')
-		time_limit_label.setObjectName('problem_heading_2')
-		time_limit_statement = QLabel(problem_file["Time Limit"])
+		time_limit_label.setObjectName('problem_heading_4')
+		time_limit_statement = QLabel(str(problem_file["Time Limit"]))
 		time_limit_statement.setWordWrap(True)
-		time_limit_statement.setObjectName('problem_text')
+		time_limit_statement.setObjectName('problem_heading_4')
 		time_limit.addWidget(time_limit_label)
 		time_limit.addWidget(time_limit_statement)
 		time_limit.addStretch(0)
@@ -585,6 +586,7 @@ class view_problem_ui(QMainWindow):
 
 
 		example_label = QLabel('Example : ')
+		example_label.setObjectName('problem_heading_2')
 		example_input_label = QLabel('Input :')
 		example_input_label.setObjectName('problem_heading_3')
 		example_input_statement = QLabel(problem_file["Example Input"])
@@ -600,7 +602,6 @@ class view_problem_ui(QMainWindow):
 		author_label.setObjectName('problem_heading_2')
 
 		main_layout.addWidget(heading, alignment = Qt.AlignCenter)
-		# main_layout.addWidget(problem_code_label, alignment = Qt.AlignRight)
 		main_layout.addWidget(time_limit_widget)
 		main_layout.addWidget(problem_statement)
 		main_layout.addWidget(input_label)
@@ -609,7 +610,6 @@ class view_problem_ui(QMainWindow):
 		main_layout.addWidget(output_statement)
 		main_layout.addWidget(constraints_label)
 		main_layout.addWidget(constraints_statement)
-		# main_layout.addWidget(time_limit_widget, alignment = Qt.AlignLeft)
 		main_layout.addWidget(example_label)
 		main_layout.addWidget(example_input_label)
 		main_layout.addWidget(example_input_statement)

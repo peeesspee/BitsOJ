@@ -27,7 +27,10 @@ class manage_database():
 		except Exception as Error: 
 			print(Error)
 		try:
-			os.system('mkdir -p Solution')
+			if os.path.isdir('./Solution'):
+				pass
+			else:
+				os.system('mkdir -p Solution')
 		except Exception as Error:
 			print(str(Error))
 
