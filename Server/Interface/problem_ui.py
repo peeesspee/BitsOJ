@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from init_server import initialize_server, save_status
 from database_management import problem_management
+import json
 
 
 class view_case_ui(QMainWindow):
@@ -124,6 +125,7 @@ class problem_edit_ui(QMainWindow):
 	def __init__(
 			self, 
 			data_changed_flags, 
+			task_queue,
 			problem, 
 			code, 
 			test_files, 
@@ -133,6 +135,7 @@ class problem_edit_ui(QMainWindow):
 		super(problem_edit_ui, self).__init__(parent)
 		
 		self.data_changed_flags = data_changed_flags
+		self.task_queue = task_queue
 		self.problem = problem
 		self.code = code
 		self.test_files = test_files
@@ -174,7 +177,7 @@ class problem_edit_ui(QMainWindow):
 		self.tabs.addTab(self.tab1, '')
 		self.tabs.addTab(self.tab2, '')
 		self.tab_bar.addTab('Problem')
-		self.tab_bar.addTab('I/O Files')
+		self.tab_bar.addTab('Test Files')
 		self.tabs.setTabBar(self.tab_bar)
 		
 		confirm_button = QPushButton('Confirm')
@@ -444,6 +447,16 @@ class problem_edit_ui(QMainWindow):
 				# Update problems view
 				self.data_changed_flags[22] = 1
 
+				# Send data to task queue:
+				message = {
+					"Code" : "EDIT",
+					"Problem Code" : self.code,
+					"Type" : "Name",
+					"Data" : content_data
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+
 			if self.code_changed != 0:
 				if self.data_changed_flags[10] == 0:
 					content_data = self.modify(self.code_content.text())
@@ -451,6 +464,17 @@ class problem_edit_ui(QMainWindow):
 					problem_management.update_problem(2, self.code, content_data)
 					# Update problems view
 					self.data_changed_flags[22] = 1
+
+					# Send data to task queue:
+					message = {
+						"Code" : "EDIT",
+						"Problem Code" : self.code,
+						"Type" : "Code",
+						"Data" : content_data
+					}
+					message = json.dumps(message)
+					self.task_queue.put(message)
+
 				else:
 					info_box = QMessageBox()
 					info_box.setIcon(QMessageBox.Critical)
@@ -465,37 +489,107 @@ class problem_edit_ui(QMainWindow):
 				problem_management.update_problem(4, self.code, content_data)
 				# Update problems view
 				self.data_changed_flags[22] = 1
+				# Send data to task queue:
+				message = {
+					"Code" : "EDIT",
+					"Problem Code" : self.code,
+					"Type" : "Time Limit",
+					"Data" : content_data
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
 
 			if self.author_changed != 0:
 				content_data = self.modify(self.author_content.text())
 				status = save_status.update_problem_content(self.code, 'Author', content_data)
+				# Send data to task queue:
+				message = {
+					"Code" : "EDIT",
+					"Problem Code" : self.code,
+					"Type" : "Author",
+					"Data" : content_data
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
 
 			if self.statement_changed != 0:
 				content_data = self.modify(self.statement_content.toPlainText())
 				status = save_status.update_problem_content(self.code, 'Statement', content_data)
+				# Send data to task queue:
+				message = {
+					"Code" : "EDIT",
+					"Problem Code" : self.code,
+					"Type" : "Statement",
+					"Data" : content_data
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
 
 			if self.input_format_changed != 0: 
 				content_data = self.modify(self.input_syntax_content.toPlainText())
 				status = save_status.update_problem_content(self.code, 'Input Format', content_data)
+				# Send data to task queue:
+				message = {
+					"Code" : "EDIT",
+					"Problem Code" : self.code,
+					"Type" : "Input Format",
+					"Data" : content_data
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
 
 			if self.output_format_changed != 0:
 				content_data = self.modify(self.output_syntax_content.toPlainText())
 				status = save_status.update_problem_content(self.code, 'Output Format', content_data)
+				# Send data to task queue:
+				message = {
+					"Code" : "EDIT",
+					"Problem Code" : self.code,
+					"Type" : "Output Format",
+					"Data" : content_data
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
 
 			if self.constraints_changed != 0:
 				content_data = self.modify(self.constraints_content.toPlainText())
 				status = save_status.update_problem_content(self.code, 'Constraints', content_data)
+				# Send data to task queue:
+				message = {
+					"Code" : "EDIT",
+					"Problem Code" : self.code,
+					"Type" : "Constraints",
+					"Data" : content_data
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
 
 			if self.example_input_format_changed != 0: 
 				content_data = self.modify(self.example_input_syntax_content.toPlainText())
 				status = save_status.update_problem_content(self.code, 'Example Input', content_data)
+				# Send data to task queue:
+				message = {
+					"Code" : "EDIT",
+					"Problem Code" : self.code,
+					"Type" : "Example Input",
+					"Data" : content_data
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
 
 			if self.example_output_format_changed != 0:
 				content_data = self.modify(self.self.example_output_syntax_content.toPlainText()) 		
 				status = save_status.update_problem_content(self.code, 'Example Output', content_data)
+				# Send data to task queue:
+				message = {
+					"Code" : "EDIT",
+					"Problem Code" : self.code,
+					"Type" : "Example Output",
+					"Data" : content_data
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
 
-			
-			
 		except:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Critical)

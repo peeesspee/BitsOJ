@@ -455,6 +455,11 @@ QScrollArea QLineEdit
 	color : #AAAAAA;
 	border : 1px solid #171B1F;
 }
+QToolTip
+{
+	color : #AAAAAA;
+	background : #2D353D;
+}
 
 
 

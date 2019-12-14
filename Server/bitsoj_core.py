@@ -128,13 +128,24 @@ class core():
 					# Update GUI
 					core.data_changed_flags[0] = 1
 
+				elif code == "EDIT":
+					print('[ CORE ] Problem Edit in progress...')
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = core.broadcast_exchange, 
+						routing_key = 'judge_requests', 
+						body = message, 
+						properties = pika.BasicProperties(delivery_mode = 2)
+					) 
+
+
 				elif code == 'JUDGE':
 					run_id = data['Run ID']
 					# Refresh GUI
 					core.data_changed_flags[0] = 1
 					message = json.dumps(data)
 					core.channel.basic_publish(
-						exchange = 'connection_manager', 
+						exchange = core.unicast_exchange,
 						routing_key = 'judge_requests', 
 						body = message, 
 						properties = pika.BasicProperties(delivery_mode = 2)
@@ -149,7 +160,7 @@ class core():
 					data['Code'] = 'JUDGE'
 					message = json.dumps(data)
 					core.channel.basic_publish(
-						exchange = 'connection_manager', 
+						exchange = core.unicast_exchange, 
 						routing_key = 'judge_requests', 
 						body = message, 
 						properties = pika.BasicProperties(delivery_mode = 2)

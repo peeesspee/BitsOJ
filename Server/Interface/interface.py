@@ -926,7 +926,7 @@ class server_window(QMainWindow):
 				self.data_changed_flags[14] = 0
 				pass
 			else:
-				self.edit_window = problem_edit_ui(self.data_changed_flags, problem, code, test_files, time_limit)
+				self.edit_window = problem_edit_ui(self.data_changed_flags, self.task_queue, problem, code, test_files, time_limit)
 				self.edit_window.show()
 			
 		except Exception as error: 

@@ -31,7 +31,7 @@
             "Code": "TPH",
             "Time Limit": 1,
             "Author": "Prakhar",
-            "Statement": "This is a long, long story of a boy named Harry!",
+            "Statement": "This is a long, long story of a boy named Harry",
             "Input Format": "First line has test cases, each of the following T lines are cases.",
             "Output Format": "Print each answer in a separate line.",
             "Constraints": "1 \u2264 N \u2264 1000",
@@ -53,7 +53,7 @@
             "IO Files": 1
         },
         "Problem 3": {
-            "Title": "The Triwizard Cup",
+            "Title": "The Triwizard Cup1",
             "Code": "SAC",
             "Time Limit": "2",
             "Author": "Remus",
