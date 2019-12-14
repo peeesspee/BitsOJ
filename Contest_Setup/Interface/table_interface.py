@@ -208,7 +208,7 @@ class add_problem_ui(QMainWindow):
 					"Problem Code" : self.problem_code_text.text(),
 					"Time Limit" : self.time_limit_text.text(),
 					"Author Name" : self.author_text.text(),
-					"Problem Statement" : self.problem_statement_text.toPlainText(),
+					"Statement" : self.problem_statement_text.toPlainText(),
 					"Input" : self.input_text.toPlainText(),
 					"Output" : self.output_text.toPlainText(),
 					"Constraints" : self.constraints_text.toPlainText(),

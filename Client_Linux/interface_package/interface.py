@@ -536,7 +536,7 @@ class client_window(QMainWindow):
 				with open('./Problems/Problem_'+str(i)+'.json') as read:
 					problem = json.load(read)
 			except Exception as Error:
-					print(str(Error))
+				print(str(Error))
 			try:
 				self.problem_window = view_problem_ui(str(i), data_changed_flags, problem)
 				self.problem_window.show()

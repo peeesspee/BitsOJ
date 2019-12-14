@@ -79,9 +79,30 @@ class start_listening():
 			pass
 		elif code == 'EXTND':
 			start_listening.extended_time(json_data)
+		elif code == 'EDIT':
+			start_listening.edit_problem(json_data)
 		else:
 			print(code)
 			print("WRONG INPUT")
+
+
+
+	def edit_problem(server_data):
+		config = handle_config.read_config_json()
+		problem_no = config["Code"][server_data["Problem Code"]]
+		print('./Problems/Problem_' + problem_no[-1:-2:-1] + '.json')
+		try:
+			with open('./Problems/Problem_' + problem_no[-1:-2:-1] + '.json','r') as write:
+				problem_file = json.load(write)
+				print('step3')
+		except Exception as Error:
+			print(str(Error))
+		problem_file[server_data["Type"]] = server_data["Data"]
+		try:
+			with open('./Problems/Problem_' + problem_no[-1:-2:-1] + '.json','w') as write:
+				json.dump(problem_file, write, indent = 4)
+		except Exception as Error:
+			print(str(Error))
 
 
 	def extended_time(server_data):

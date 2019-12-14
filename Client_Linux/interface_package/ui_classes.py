@@ -341,29 +341,6 @@ class ui_widgets():
 
 
 
-
-	# def show_problem(i,data_changed_flag,self):
-	# 	if data_changed_flag[0] == 0:
-	# 		QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
-	# 	else:
-	# 		config = handle_config.read_config_json()
-	# 		try:
-	# 			with open('./Problems/Problem_'+str(i)+'.json') as read:
-	# 				problem = json.load(read)
-	# 		except Exception as Error:
-	# 			print(str(Error))
-	# 		try:
-	# 			self.problem_window = view_problem_ui(str(i), data_changed_flag, problem, self)
-	# 			self.problem_window.show()
-	# 		except Exception as Error:
-	# 			print(str(Error))
-			# if config["Problems"]["Problem " + str(i)][2] == 0:
-			# 	webbrowser.open('Problems/Problem_'+str(i)+'.pdf')
-			# else:
-			# 	pass
-		return
-
-
 	def sending(self,data_changed_flag):
 		if data_changed_flag[0] == 0:
 			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
@@ -543,7 +520,7 @@ class view_problem_ui(QMainWindow):
 		super(view_problem_ui, self).__init__(parent)
 
 		self.data_changed_flags = data_changed_flags
-		self.setWindowTitle('Problem ' + i)
+		self.setWindowTitle('Problem ' + str(i))
 		self.setFixedSize(900,830)
 		main = self.main_problem_view_ui(i, problem_file)
 		self.setCentralWidget(main)
@@ -558,7 +535,7 @@ class view_problem_ui(QMainWindow):
 		main_layout.setObjectName('view_problem')
 		heading = QLabel(problem_file["Problem Name"])
 		heading.setObjectName('problem_heading')
-		problem_statement = QLabel(problem_file["Problem Statement"])
+		problem_statement = QLabel(problem_file["Statement"])
 		problem_statement.setWordWrap(True)
 		problem_statement.setObjectName('problem_text')
 
@@ -586,9 +563,9 @@ class view_problem_ui(QMainWindow):
 		time_limit = QHBoxLayout()
 		time_limit_label = QLabel('Time Limit :')
 		time_limit_label.setObjectName('problem_heading_4')
-		time_limit_statement = QLabel(problem_file["Time Limit"])
+		time_limit_statement = QLabel(str(problem_file["Time Limit"]))
 		time_limit_statement.setWordWrap(True)
-		time_limit_statement.setObjectName('problem_text')
+		time_limit_statement.setObjectName('problem_heading_4')
 		time_limit.addWidget(time_limit_label)
 		time_limit.addWidget(time_limit_statement)
 		time_limit.addStretch(0)
