@@ -7,7 +7,7 @@ import time
  
 from time import sleep
 from client_connections import manage_clients
-from database_management import manage_database
+from database_management import manage_database, problem_management
 from Interface.interface import server_window, init_gui
 from judge_connections import manage_judges
 from bitsoj_core import core
@@ -141,7 +141,16 @@ def main():
 	# SYSTEM SHUT flag
 	data_changed_flags[7] = 0
 	# Contest state flag(0/1/2 values assigned from interface, -1 signifies nothing)
-	data_changed_flags[10] = -1
+	if config["Contest Status"] == "RUNNING":
+		data_changed_flags[10] = 1
+	elif config["Contest Status"] == "STOPPED":
+		data_changed_flags[10] = 2
+	elif config["Contest Status"] == "SETUP":
+		data_changed_flags[10] = 0
+		# Load Problems into problems table
+		print('[ SETUP ] Loading problems...')
+		problem_management.init_problems(config['Problems'])
+
 	#####################################################################################
 
 	# Manage subprocesses

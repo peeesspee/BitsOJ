@@ -322,6 +322,10 @@ class server_window(QMainWindow):
 			if self.data_changed_flags[1] == 1:
 				self.client_model.select()
 				self.data_changed_flags[1] = 0
+			# Update problems table
+			if self.data_changed_flags[22] == 1:
+				self.problem_model.select()
+				self.data_changed_flags[22] = 0
 			# Update accounts table
 			if self.data_changed_flags[5] == 1:
 				self.account_model.select()
@@ -368,9 +372,7 @@ class server_window(QMainWindow):
 				message = json.dumps(message)
 				self.task_queue.put(message)
 
-			if self.data_changed_flags[22] == 1:
-				self.data_changed_flags[22] = 0
-				self.problem_model.select()
+			
 
 			# While contest is RUNNING
 			# This block is last as it may cause a return call and not allow further function block executions
@@ -906,7 +908,7 @@ class server_window(QMainWindow):
 			return
 
 	@pyqtSlot()
-	def edit_problem(self, selected_row):
+	def view_problem(self, selected_row):
 		if self.data_changed_flags[14] == 0:
 			# Set critical flag
 			self.data_changed_flags[14] = 1
@@ -924,7 +926,7 @@ class server_window(QMainWindow):
 				self.data_changed_flags[14] = 0
 				pass
 			else:
-				self.edit_window = problem_edit_ui(self.data_changed_flags, problem, code, test_files, time_limit)
+				self.edit_window = problem_edit_ui(self.data_changed_flags, self.task_queue, problem, code, test_files, time_limit)
 				self.edit_window.show()
 			
 		except Exception as error: 

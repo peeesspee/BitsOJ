@@ -339,61 +339,17 @@ class ui_widgets:
 		main.show()
 		return main, score_model, scoring_label
 
-
-	# def problem_ui(self):
-	# 	main_layout = QVBoxLayout()
-	# 	heading = QLabel('Manage Problems')
-	# 	heading.setObjectName('main_screen_heading')
-	# 	# This is the dictionary which contains all problems in the format:
-	# 	# ProblemName, Code, TimeLimit, NoOfTestFiles
-	# 	try:
-	# 		problem_dict = self.config["Problems"]
-	# 		no_of_problems = int(self.config["Number Of Problems"])
-	# 		# Problems in the dict are in format "Problem i" where
-	# 		# 1<= i <= no_of_problems
-	# 		problem_tabs = QTabWidget()
-	# 		problem_tabs.setObjectName('main_tabs')
-	# 		problem_tabbar = QTabBar()
-	# 		problem_tabbar.setObjectName('problem_tabs')
-
-	# 		for i in range(1, no_of_problems + 1):
-	# 			problem_str = problem_dict['Problem ' + str(i)]
-	# 			problem_tuple = eval(problem_str)
-
-	# 			widget = ui_widgets.get_problem_ui(
-	# 				self,
-	# 				problem_tuple[0], 
-	# 				problem_tuple[1], 
-	# 				problem_tuple[2], 
-	# 				problem_tuple[3]
-	# 			)
-	# 			problem_tabs.addTab(widget, '')
-	# 			problem_tabbar.addTab('Problem ' + str(i))	
-
-	# 		problem_tabs.setTabBar(problem_tabbar)
-	# 		main_layout.addWidget(heading)
-	# 		main_layout.addWidget(problem_tabs)
-	# 		main_layout.setStretch(0,10)
-	# 		main_layout.setStretch(1,90)
-			
-	# 	except Exception as error:
-	# 		print("[ ERROR ]" + str(error))
-		
-	# 	main = QWidget()
-	# 	main.setLayout(main_layout)
-	# 	main.setObjectName("main_screen");
-	# 	return main
-
 	def problem_ui(self):
 		heading = QLabel('Manage Problems')
 		heading.setObjectName('main_screen_heading')
 
-		edit_problem_button = QPushButton('Edit Problem', self)
-		edit_problem_button.setFixedSize(200, 50)
-		edit_problem_button.clicked.connect(
-			lambda:self.edit_problem(problem_table.selectionModel().currentIndex().row())
+		view_problem_button = QPushButton('Manage Problem', self)
+		view_problem_button.setFixedSize(200, 50)
+		view_problem_button.clicked.connect(
+			lambda:self.view_problem(problem_table.selectionModel().currentIndex().row())
 		)
-		edit_problem_button.setObjectName("topbar_button")
+		view_problem_button.setObjectName("topbar_button")
+		view_problem_button.setToolTip('View/Edit Problems')
 
 		delete_problem_button = QPushButton('Delete Problem', self)
 		delete_problem_button.setFixedSize(200, 50)
@@ -401,6 +357,7 @@ class ui_widgets:
 		# 	lambda:self.delete_problem(problem_table.selectionModel().selectedRows())
 		# )
 		delete_problem_button.setObjectName("topbar_button")
+		delete_problem_button.setToolTip('Work under progress!')
 		
 
 		problem_model = self.manage_models(self.db, 'problems')
@@ -410,12 +367,12 @@ class ui_widgets:
 		problem_model.setHeaderData(3, Qt.Horizontal, 'Time Limit')
 		problem_table = self.generate_view(problem_model)
 		problem_table.doubleClicked.connect(
-			lambda:self.edit_problem(problem_table.selectionModel().currentIndex().row())
+			lambda:self.view_problem(problem_table.selectionModel().currentIndex().row())
 		)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
-		head_layout.addWidget(edit_problem_button)
+		head_layout.addWidget(view_problem_button)
 		head_layout.addWidget(delete_problem_button)
 		
 		head_layout.setStretch(0, 80)

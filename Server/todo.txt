@@ -11,7 +11,7 @@
 9. Disconnect a judge																				medium
 10. Rejudge all submissions with given problem code													low
 11. Generate Report		VIMP																		low
-12. Problem edit UI 																				high
-13. Export Accounts CSV																				medium
+		12. Problem edit UI 																				
+13. Export Accounts CSV																				in progress
 14. Show unanswered query/submission count on sidebar buttons 										low
 15. Admin password from config																		medium
