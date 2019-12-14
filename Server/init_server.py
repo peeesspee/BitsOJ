@@ -62,6 +62,16 @@ class initialize_server():
 				time2_s - time1_s 
 			)
 
+	def get_abs_time_difference(time1, time2):
+		# Return difference between time2 and time1 in hhmmss format
+		time1_s = initialize_server.convert_to_seconds(time1)
+		time2_s = initialize_server.convert_to_seconds(time2)
+		if time1_s >= time2_s:
+			val = time1_s - time2_s
+		else:
+			val = time2_s - time1_s
+		return val
+
 	def get_remaining_time():
 		initialize_server.read_config()
 		current_time = initialize_server.convert_to_seconds(time.strftime("%H:%M:%S", time.localtime()))

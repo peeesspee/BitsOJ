@@ -1,5 +1,6 @@
 from database_management import previous_data
 global run_id_counter
+global query_id_counter
 
 class submission():
 	# Manage a new submission
@@ -42,7 +43,16 @@ class submission():
 		run_id_counter = run_id_counter + 1
 		return run_id
 
+	def generate_query_id():
+		global query_id_counter
+		query_id = query_id_counter
+		query_id_counter = query_id_counter + 1
+		print('[ QUERY ] Generating Query ID: ' + str(query_id))
+		return query_id
+
 	def init_run_id():
 		global run_id_counter
+		global query_id_counter
 		# Get max run_id from submissions and add 1 to it, to initialize run_id counter
 		run_id_counter = int(previous_data.get_last_run_id()) + 1
+		query_id_counter = int(previous_data.get_last_query_id()) + 1

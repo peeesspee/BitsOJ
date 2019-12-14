@@ -226,6 +226,7 @@ class previous_data(manage_database):
 			else:
 				return int(data[0][0])
 		except:
+			print('[ INIT ] Run ID initialised to 0')
 			return 0
 
 	def get_last_client_id():
@@ -244,37 +245,53 @@ class previous_data(manage_database):
 			client_id_counter = 0
 
 	def get_last_query_id():
-		global query_id_counter
 		try:
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(query_id) FROM queries")
 			data =  cur.fetchall()
-			if(data[0][0] != ''):
-				query_id_counter = int(data[0][0])
+			if(data[0][0] == ''):
+				return 0
 			else:
-				query_id_counter = 0
-
+				return int(data[0][0])
 		except:
 			print('[ INIT ] Query ID initialised to 0')
-			query_id_counter = 0
+			return 0
+
 			
 
 
 
 
 class client_authentication(manage_database):
-
 	#This function validates the (user_name, password, client_id) in the database.
 	def validate_client(user_name, password):
 		#Validate client in database
 		cur = manage_database.get_cursor()
-		cur.execute("SELECT exists(SELECT * FROM accounts WHERE user_name = ? and password = ?)", (user_name,password,))
+		cur.execute(
+			"SELECT exists(SELECT * FROM accounts WHERE user_name = ? and password = ?)", 
+			(user_name, password, )
+		)
 		validation_result = cur.fetchall()
 		
 		if validation_result[0][0] == 1:
 			return True
 		else:
 			return False
+
+	def validate_connected_client(user_name, client_id, session_key = 'None'):
+		#Validate client in database
+		cur = manage_database.get_cursor()
+		cur.execute(
+			"SELECT exists(SELECT * FROM connected_clients WHERE user_name = ? and client_id = ?)",
+			(user_name, client_id, )
+		)
+		validation_result = cur.fetchall()
+		
+		if validation_result[0][0] == 1:
+			return True
+		else:
+			return False
+		return
 
 	#This function generates a new client_id for new connections
 	def generate_new_client_id():
@@ -287,7 +304,10 @@ class client_authentication(manage_database):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("INSERT INTO " + table_name + " values(?, ?, ?, ?)", (client_id, user_name, password, state, ))
+			cur.execute(
+				"INSERT INTO " + table_name + " values(?, ?, ?, ?)", 
+				(client_id, user_name, password, state, )
+			)
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not add client : " + str(error))
@@ -299,7 +319,10 @@ class client_authentication(manage_database):
 	def get_client_id(user_name):
 		try:
 			cur = manage_database.get_cursor()
-			cur.execute("SELECT client_id FROM connected_clients WHERE user_name = ?", (user_name, ))
+			cur.execute(
+				"SELECT client_id FROM connected_clients WHERE user_name = ?", 
+				(user_name, )
+			)
 			client_id = cur.fetchall()
 			return client_id[0][0]
 		except Exception as error:
@@ -337,7 +360,6 @@ class submissions_management(manage_database):
 		run_id = int(run_id)
 		client_id = int(client_id)
 		local_run_id = int(local_run_id)
-		print('Inserting verdict : ' + verdict)
 		try:
 			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, 'WAITING', '-', ))
 			conn.commit()
@@ -420,7 +442,8 @@ class query_management(manage_database):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
 		try:
-			cur.execute("INSERT INTO queries values(?, ?, ?, ?)", (query_id,client_id, query,'TO BE ANSWERED', ))
+			cur.execute("INSERT INTO queries values(?, ?, ?, ?)", (query_id, client_id, query, 'TO BE ANSWERED', ))
+			cur.execute('commit')
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not insert into submission : " + str(error))
@@ -435,12 +458,6 @@ class query_management(manage_database):
 		except Exception as error:
 			print("[ ERROR ] Could not insert into submission : " + str(error))
 		return
-
-	def generate_new_query_id():
-		global query_id_counter
-		query_id_counter = query_id_counter + 1
-		query_id = int(query_id_counter)
-		return query_id
 
 	def delete_all():
 		try:

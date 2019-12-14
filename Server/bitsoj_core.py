@@ -12,11 +12,14 @@ class core():
 	unicast_exchange = 'connection_manager'
 	broadcast_exchange = 'broadcast_manager'
 
-	def init_core(data_changed_flags, task_queue):
-		print('  [ START ] Core subprocess started.')
+	def init_core(data_changed_flags, task_queue, log_queue):
 		core.data_changed_flags = data_changed_flags
 		core.task_queue = task_queue
+		core.log_queue = log_queue
 		config = initialize_server.read_config()
+		
+		print('  [ START ] Core subprocess started.')
+		core.log('  [ START ] Core subprocess started.')
 
 		superuser_username = config['Server Username']
 		superuser_password = config['Server Password']
@@ -36,7 +39,11 @@ class core():
 
 		# If we reach this point, it means the Server Shutdown has been initiated.
 		print("[ STOP ] Core subprocess terminated successfully!")
-		return
+		core.log("[ STOP ] Core subprocess terminated successfully!")
+		sys.exit(0)
+
+	def log(message):
+		core.log_queue.put(message)
 
 	def init_connection(superuser_username, superuser_password, host):
 		try:
@@ -52,6 +59,7 @@ class core():
 		
 		except Exception as error:
 			print('[ CRITICAL ] Core could not connect to RabbitMQ server : ' + str(error))
+			core.log('[ CRITICAL ] Core could not connect to RabbitMQ server : ' + str(error))
 			core.data_changed_flags[7] = 1
 			sys.exit()
 		return 
@@ -71,6 +79,7 @@ class core():
 				# Contest START signal
 				if code == 'START':
 					print('[ EVENT ][ BROADCAST ] START Contest')
+					core.log('[ EVENT ][ BROADCAST ] START Contest')
 					message = {
 					'Code' : 'START',
 					'Duration' : data['Duration'],
@@ -89,6 +98,7 @@ class core():
 				elif code == 'STOP':
 					# Don't allow Submissions
 					print('[ EVENT ][ BROADCAST ] STOP Contest')
+					core.log('[ EVENT ][ BROADCAST ] STOP Contest')
 					message = {
 					'Code' : 'STOP'
 					}
@@ -130,6 +140,7 @@ class core():
 
 				elif code == "EDIT":
 					print('[ CORE ] Problem Edit in progress...')
+					core.log('[ CORE ] Problem Edit in progress...')
 					message = json.dumps(data)
 					core.channel.basic_publish(
 						exchange = core.broadcast_exchange, 
@@ -170,6 +181,7 @@ class core():
 				elif code == 'UPDATE':
 					# Don't allow Submissions
 					print('[ EVENT ][ BROADCAST ] UPDATE Contest')
+					core.log('[ EVENT ][ BROADCAST ] UPDATE Contest')
 					message = {
 					'Code' : 'UPDATE',
 					'Time' : data['Time']
@@ -194,6 +206,7 @@ class core():
 				elif code == 'QUERY':
 					if data['Mode'] == 'Client':
 						print('[ EVENT ][ UNICAST ] New Query response to client')
+						core.log('[ EVENT ][ UNICAST ] New Query response to client')
 						client_username = client_authentication.get_client_username(data['Client ID'])
 						message = {
 							'Code' : 'QUERY',
@@ -210,6 +223,7 @@ class core():
 						)
 					else:
 						print('[ EVENT ][ BROADCAST ] New Query response broadcasted')
+						core.log('[ EVENT ][ BROADCAST ] New Query response broadcasted')
 						message = {
 							'Code' : 'QUERY',
 							'Client ID' : data['Client ID'],
@@ -229,6 +243,7 @@ class core():
 					if data['Mode'] == 1:
 						client = data['Client']
 						print('[ EVENT ] Disconnect client : ' + str(client))
+						core.log('[ EVENT ] Disconnect client : ' + str(client))
 						message = {
 						'Code' : 'DSCNT',
 						'Client' : client
@@ -242,6 +257,7 @@ class core():
 						)
 					elif data['Mode'] == 2:
 						print('[ EVENT ] Disconnect all clients')
+						core.log('[ EVENT ] Disconnect all clients')
 						message = {
 						'Code' : 'DSCNT',
 						'Client' : 'All'
@@ -265,5 +281,6 @@ class core():
 			return
 		except Exception as error:
 			print('[ ERROR ] Data could not be broadcasted : ' + str(error)) 
+			core.log('[ ERROR ] Data could not be broadcasted : ' + str(error))
 		finally:
 			return 0

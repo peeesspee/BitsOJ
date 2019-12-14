@@ -13,10 +13,12 @@ class manage_judges():
 	updated_config = 0
 	config = ''
 	# This function continously listens for judge verdicts
-	def listen_judges(superuser_username, superuser_password, host, data_changed_flags, task_queue):
-		print('  [ START ] Judge Manager subprocess started.')
+	def listen_judges(superuser_username, superuser_password, host, data_changed_flags, task_queue, log_queue):
 		manage_judges.data_changed_flags = data_changed_flags
 		manage_judges.task_queue = task_queue
+		manage_judges.log_queue = log_queue
+		print('  [ START ] Judge Manager subprocess started.')
+		manage_judges.log('  [ START ] Judge Manager subprocess started.')
 		# Create a connection with rabbitmq and declare exchanges and queues
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
@@ -51,6 +53,7 @@ class manage_judges():
 
 		except Exception as error:
 			print('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
+			manage_judges.log('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
 			sys.exit()
 
 		try:
@@ -58,12 +61,13 @@ class manage_judges():
 			manage_judges.config = initialize_server.read_config()
 		except:
 			print("[ ERROR ] Could not read config. Contest scores set to default values.")
-
+			manage_judges.log("[ ERROR ] Could not read config. Contest scores set to default values.")
 
 		try:
 			# Judges send responses on judge_verdicts
 			# As soon as a new message is recieved, it is sent to judge_message_handler for further processing
 			print('[ LISTEN ] Started listening on judge_verdict')
+			manage_judges.log('[ LISTEN ] Started listening on judge_verdict')
 			channel.basic_consume(
 				queue = 'judge_verdicts', 
 				on_message_callback = manage_judges.judge_message_handler
@@ -72,10 +76,15 @@ class manage_judges():
 		except (KeyboardInterrupt, SystemExit):
 			manage_judges.data_changed_flags[7] = 1
 			channel.stop_consuming()
-			print('\n[ LISTEN ] STOPPED listening to judge channel')
+			print('[ LISTEN ] STOPPED listening to judge channel')
+			manage_judges.log('[ LISTEN ] STOPPED listening to judge channel')
 			connection.close()
-			print('\n[ STOP ] Judge subprocess terminated successfully!\n')	
+			print('[ STOP ] Judge subprocess terminated successfully!')
+			manage_judges.log('[ STOP ] Judge subprocess terminated successfully!')
 			return
+
+	def log(message):
+		manage_judges.log_queue.put(message)
 
 	#This function works on judge messages and passes them on to their respective handler function
 	def judge_message_handler(ch, method, properties, body):
@@ -85,7 +94,8 @@ class manage_judges():
 
 		# Decode the message sent by judge
 		judge_message = str(body.decode('utf-8'))
-		print('\n[ PING ] Recieved a new judge verdict.')
+		print('[ PING ] Recieved a new judge verdict.')
+		manage_judges.log('[ PING ] Recieved a new judge verdict.')
 		try:
 			json_data = json.loads(judge_message)
 			code = json_data["Code"]
@@ -93,7 +103,9 @@ class manage_judges():
 			judge_key = json_data['Judge Key']
 			if judge_key != manage_judges.config['Judge Key']:
 				print('[ SECURITY ][ CRITICAL ] Judge Key did not match!')
+				manage_judges.log('[ SECURITY ][ CRITICAL ] Judge Key did not match!')
 				print('[ SECURITY ][ CRITICAL ] Full Message: ' + judge_message)
+				manage_judges.log('[ SECURITY ][ CRITICAL ] Full Message: ' + judge_message)
 				# Get Run ID
 				if code == 'VRDCT':
 					run_id = json_data['Run ID']
@@ -113,7 +125,9 @@ class manage_judges():
 				p_code = json_data['PCode']
 				time_stamp = json_data['Time Stamp']
 				judge = json_data['Judge']
+
 				print('[ VERDICT ] ' + judge + ' :: ' + status)
+				manage_judges.log('[ VERDICT ] ' + judge + ' :: ' + status)
 
 				# Save message details to file
 				filename = './Client_Submissions/' + str(run_id) + '.info'
@@ -140,6 +154,7 @@ class manage_judges():
 					
 				except Exception as error:
 					print('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
+					manage_judges.log('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
 
 				try:
 					# write file
@@ -149,6 +164,7 @@ class manage_judges():
 					
 				except Exception as error:
 					print('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
+					manage_judges.log('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
 
 				# Create response to send to client
 				message = {
@@ -170,9 +186,11 @@ class manage_judges():
 						# Put response to task queue, to further connect to the client
 						manage_judges.task_queue.put(message)
 						print('[ VERDICT ] New verdict sent to ' + client_username)
+						manage_judges.log('[ VERDICT ] New verdict sent to ' + client_username)
 					except Exception as error:
 						ch.basic_ack(delivery_tag = method.delivery_tag)
 						print('[ ERROR ] Could not publish result to client : ' + str(error))
+						manage_judges.log('[ ERROR ] Could not publish result to client : ' + str(error))
 						return
 
 					# Update scoreboard
@@ -213,11 +231,13 @@ class manage_judges():
 			else:
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				print('[ ERROR ] Judge data could not be parsed. Recheck judge Authenticity.')
+				manage_judges.log('[ ERROR ] Judge data could not be parsed. Recheck judge Authenticity.')
 				return
 
 		except Exception as error:
 			ch.basic_ack(delivery_tag = method.delivery_tag)
 			print('[ ERROR ] Could not parse judge JSON data : ' + str(error))
+			manage_judges.log('[ ERROR ] Could not parse judge JSON data : ' + str(error))
 			return
 
 		return

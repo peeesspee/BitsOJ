@@ -1197,6 +1197,7 @@ class query_reply_ui(QMainWindow):
 		query_management.update_query(query_reply_ui.query_id, response)
 		self.data_changed_flags[8] = 0
 		self.data_changed_flags[9] = 1
+		self.data_changed_flags[23] -= 1
 		self.close()
 
 	def cancel(self):
