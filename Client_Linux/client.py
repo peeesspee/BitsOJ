@@ -52,6 +52,7 @@ def main():
 	# 4        0/1/3         Timer Stopped/ Timer running/Update Timer   
 	# 5        0/1/2         Proper Connection/Single Client Disconnected/All Clients Disconnected
 	# 6        1             Leader Board Update
+	# 7        1             Problem Edited
 
 	##################################
 	# Makes connection with RabbitMQ

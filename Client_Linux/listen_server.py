@@ -103,6 +103,8 @@ class start_listening():
 				json.dump(problem_file, write, indent = 4)
 		except Exception as Error:
 			print(str(Error))
+		start_listening.queue.put(problem_no)
+		start_listening.data_changed_flags[7] = 1
 
 
 	def extended_time(server_data):

@@ -69,29 +69,22 @@ class contest_setup(QMainWindow):
             "Judge Key": "000000000000000",
             "Client Key": "000000000000000",
             "File Password": "papa",
-            "Contest Duration": "00:00:00",
+            "Contest Duration": "02:00:00",
             "Contest Status": "SETUP",
             "Contest Start Time": "00:00:00",
             "Contest End Time": "00:00:00",
             "Contest Set Time": 0,
-            "Contest Name" : '',
-			"Contest Theme" : '',
-            "Number Of Problems": "5",
-            "Problems": {
-                "Problem 1": "('The Begining of the End','TBE', 1, 1)",
-                "Problem 2": "('Privet Drive','PD', 1, 1)",
-                "Problem 3": "('Dumbledores Cloak','DC', 1, 1)",
-                "Problem 4": "('The Auror Mania','TAM', 1, 1)",
-                "Problem 5": "('A New Start','ANS', 1, 1)"
-            },
-            "Problem Codes": "('TBE', 'PD', 'DC', 'TAM', 'ANS')",
+            "Problem Codes": "('SAC', 'TPH', 'TFS', 'TAM', 'ANS')",
             "Languages": "('C','C++','JAVA','PYTHON-2')",
             "Ranking Algorithm": "IOI",
             "AC Points": 100,
             "Penalty Score": -20,
             "Penalty Time": 20,
             "Manual Review": "False",
-            "Submision Time Limit" : 0
+            "Submission Time Limit": 0,
+            "Number Of Problems": "5",
+            "Problems": {
+            }
 		}
 		self.judge_config = {
 			"rabbitmq_username" : "",
