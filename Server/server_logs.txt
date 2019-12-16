@@ -71,3 +71,559 @@
 2019-12-16 17:15:47.000251  :  #### SERVER EXIT ####
 
  ###
+2019-12-16 23:17:42.762136  :  #### SERVER START #### ###
+2019-12-16 23:17:42.762250  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:17:42.762282  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:17:42.762306  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:17:43.763882  :  [ SETUP ] Loading problems... ###
+2019-12-16 23:17:43.764042  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:17:43.764140  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:17:43.764173  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:17:43.764211  :  [ SETUP ][ Process ] Client Manager: 16414 ###
+2019-12-16 23:17:43.764243  :  [ SETUP ][ Process ] Judge Manager: 16415 ###
+2019-12-16 23:17:43.764273  :  [ SETUP ][ Process ] Core: 16417 ###
+2019-12-16 23:17:43.764305  :  [ SETUP ][ Process ] Log Manager: 16412 ###
+2019-12-16 23:17:43.764338  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:17:43.764388  :    [ START ] Core subprocess started. ###
+2019-12-16 23:17:43.764464  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:17:43.764529  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:17:43.764595  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:17:51.775128  :  [ SET ] Contest Duration : 02:00:00 ###
+2019-12-16 23:18:22.817176  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:18:22.817254  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT ###
+2019-12-16 23:18:22.817315  :  [ LOGIN ][ team00001 ] Assigned : 1 ###
+2019-12-16 23:18:22.817357  :  [ PUBLISH ] new message TO team00001 ###
+2019-12-16 23:18:22.817397  :  [ LOGIN ][ RESPONSE ] VALID to team00001 ###
+2019-12-16 23:18:35.333698  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:18:35.333776  :  [ LOGIN REQUEST ] ::: 0 :::judge00001@bits1[ TYPE ] JUDGE ###
+2019-12-16 23:18:35.333823  :  [ LOGIN ][ judge00001 ][ JUDGE ][ VALID ] Sending response... ###
+2019-12-16 23:18:35.333867  :  [ PUBLISH ] new message TO judge00001 ###
+2019-12-16 23:18:42.843055  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:18:42.843135  :  [ VERDICT ] judge00001 :: AC ###
+2019-12-16 23:18:42.843182  :  [ VERDICT ] New verdict sent to team00001 ###
+2019-12-16 23:19:40.420540  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:19:40.420636  :  [ LOGIN REQUEST ] ::: 0 :::judge00001@bits1[ TYPE ] JUDGE ###
+2019-12-16 23:19:40.420697  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2019-12-16 23:19:40.420752  :  [ PUBLISH ] new message TO judge00001 ###
+2019-12-16 23:19:47.429488  :  [ EVENT ][ BROADCAST ] START Contest ###
+2019-12-16 23:20:01.948654  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:20:01.948795  :  [ SUBMISSION ] Client ID :1 Username: team00001 Problem:TPH Language :C++ Time stamp :23:20:01 ###
+2019-12-16 23:20:01.948879  :  [ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: 0 Seconds  ###
+2019-12-16 23:20:01.948963  :  [ JUDGE ] Requesting a new judgement ###
+2019-12-16 23:20:01.949031  :  [ REQUEST ] New judging request sent successfully. ###
+2019-12-16 23:20:06.955727  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:20:06.955806  :  [ VERDICT ] judge00001 :: AC ###
+2019-12-16 23:20:06.955855  :  [ VERDICT ] New verdict sent to team00001 ###
+2019-12-16 23:20:53.016372  :  [ EXIT ] Signal passed ###
+2019-12-16 23:20:53.016449  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:20:53.016495  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:20:53.016536  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:20:53.016575  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:20:53.016612  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:20:53.016653  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:20:53.517387  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:20:54.018192  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:22:43.804014  :  #### SERVER START #### ###
+2019-12-16 23:22:43.804121  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:22:43.804152  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:22:43.804175  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:22:44.304902  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:22:44.304976  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:22:44.305012  :  [ SETUP ][ Process ] Client Manager: 16872 ###
+2019-12-16 23:22:44.305043  :  [ SETUP ][ Process ] Judge Manager: 16873 ###
+2019-12-16 23:22:44.305072  :  [ SETUP ][ Process ] Core: 16874 ###
+2019-12-16 23:22:44.305102  :  [ SETUP ][ Process ] Log Manager: 16870 ###
+2019-12-16 23:22:44.305130  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:22:44.305159  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:22:44.305187  :    [ START ] Core subprocess started. ###
+2019-12-16 23:22:44.305214  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:22:44.305242  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:22:44.305269  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:22:44.305305  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:22:44.305340  :  [ DISCONNECT ] Client: team00001 ###
+2019-12-16 23:22:58.323786  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:22:58.323927  :  [ LOGIN REQUEST ] ::: Null :::team00002@bits2[ TYPE ] CLIENT ###
+2019-12-16 23:22:58.824784  :  [ LOGIN ][ team00002 ] Assigned : 2 ###
+2019-12-16 23:22:58.824892  :  [ PUBLISH ] new message TO team00002 ###
+2019-12-16 23:22:58.824962  :  [ LOGIN ][ RESPONSE ] VALID to team00002 ###
+2019-12-16 23:22:58.825022  :  [ PUBLISH ] new message TO team00002 ###
+2019-12-16 23:22:58.825080  :  [ LOGIN ][ RESPONSE ] Sent START to team00002 ###
+2019-12-16 23:22:59.326116  :  [ EVENT ][ BROADCAST ] START Contest ###
+2019-12-16 23:23:06.836446  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:23:06.836552  :  [ SUBMISSION ] Client ID :Null Username: team00002 Problem:TPH Language :C++ Time stamp :23:23:06 ###
+2019-12-16 23:23:06.836628  :  [ SUBMISSION ][ FAIL ] Preliminary validation Failed. ###
+2019-12-16 23:23:06.836701  :  [ PUBLISH ] new message TO team00002 ###
+2019-12-16 23:23:28.865753  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:23:28.865846  :  [ SUBMISSION ] Client ID :2 Username: team00002 Problem:TPH Language :C++ Time stamp :23:23:28 ###
+2019-12-16 23:23:28.865922  :  [ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: 0 Seconds  ###
+2019-12-16 23:23:29.366676  :  [ JUDGE ] Requesting a new judgement ###
+2019-12-16 23:23:29.366761  :  [ REQUEST ] New judging request sent successfully. ###
+2019-12-16 23:23:40.381460  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:23:40.381545  :  [ VERDICT ] judge00001 :: AC ###
+2019-12-16 23:23:40.381594  :  [ VERDICT ] New verdict sent to team00002 ###
+2019-12-16 23:25:57.564440  :  [ EXIT ] Signal passed ###
+2019-12-16 23:25:57.564519  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:25:57.564566  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:25:57.564606  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:25:57.564645  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:25:57.564683  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:25:57.564720  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:25:57.564758  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:25:58.566178  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:26:01.853231  :  #### SERVER START #### ###
+2019-12-16 23:26:01.853343  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:26:01.853375  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:26:01.853398  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:26:02.354129  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:26:02.354213  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:26:02.354255  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:26:02.354292  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:26:02.354326  :  [ SETUP ][ Process ] Client Manager: 17169 ###
+2019-12-16 23:26:02.354359  :  [ SETUP ][ Process ] Judge Manager: 17170 ###
+2019-12-16 23:26:02.354393  :  [ SETUP ][ Process ] Core: 17172 ###
+2019-12-16 23:26:02.354425  :  [ SETUP ][ Process ] Log Manager: 17167 ###
+2019-12-16 23:26:02.354457  :    [ START ] Core subprocess started. ###
+2019-12-16 23:26:02.354489  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:26:02.354521  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:26:02.354553  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:26:06.359973  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:26:06.360061  :  [ DISCONNECT ] Client: team00002 ###
+2019-12-16 23:26:14.871231  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:26:14.871368  :  [ LOGIN REQUEST ] ::: Null :::team00003@bits3[ TYPE ] CLIENT ###
+2019-12-16 23:26:14.871477  :  [ LOGIN ][ team00003 ] Assigned : 3 ###
+2019-12-16 23:26:14.871554  :  [ PUBLISH ] new message TO team00003 ###
+2019-12-16 23:26:14.871624  :  [ LOGIN ][ RESPONSE ] VALID to team00003 ###
+2019-12-16 23:26:14.871693  :  [ PUBLISH ] new message TO team00003 ###
+2019-12-16 23:26:14.871761  :  [ LOGIN ][ RESPONSE ] Sent START to team00003 ###
+2019-12-16 23:26:15.372557  :  [ EVENT ][ BROADCAST ] START Contest ###
+2019-12-16 23:26:23.383352  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:26:23.383544  :  [ SUBMISSION ] Client ID :3 Username: team00003 Problem:TPH Language :C++ Time stamp :23:26:23 ###
+2019-12-16 23:26:23.383641  :  [ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: 0 Seconds  ###
+2019-12-16 23:26:23.884421  :  [ JUDGE ] Requesting a new judgement ###
+2019-12-16 23:26:23.884515  :  [ REQUEST ] New judging request sent successfully. ###
+2019-12-16 23:26:27.889932  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:26:27.890008  :  [ VERDICT ] judge00001 :: AC ###
+2019-12-16 23:26:27.890053  :  [ VERDICT ] New verdict sent to team00003 ###
+2019-12-16 23:28:37.055548  :  [ EXIT ] Signal passed ###
+2019-12-16 23:28:37.055687  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:28:37.055790  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:28:37.055869  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:28:37.055943  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:28:37.056015  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:28:37.056085  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:28:37.056157  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:28:38.057647  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:29:28.320926  :  #### SERVER START #### ###
+2019-12-16 23:29:28.321022  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:29:28.321053  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:29:28.321076  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:29:28.821852  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:29:28.821961  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:29:28.822019  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:29:28.822069  :  [ SETUP ][ Process ] Client Manager: 17629 ###
+2019-12-16 23:29:28.822117  :  [ SETUP ][ Process ] Judge Manager: 17630 ###
+2019-12-16 23:29:28.822164  :  [ SETUP ][ Process ] Core: 17632 ###
+2019-12-16 23:29:28.822211  :  [ SETUP ][ Process ] Log Manager: 17627 ###
+2019-12-16 23:29:28.822257  :    [ START ] Core subprocess started. ###
+2019-12-16 23:29:28.822302  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:29:28.822369  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:29:28.822419  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:29:30.324552  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:30:21.392421  :  [ EVENT ][ BROADCAST ] STOP Contest ###
+2019-12-16 23:30:24.396503  :  [ EVENT ] TIMER RESET TRIGGERED ###
+2019-12-16 23:30:24.396581  :  [ RESET ] Reset environment... ###
+2019-12-16 23:30:32.407185  :  [ EVENT ] CLIENT DISCONNECT TRIGGERED ###
+2019-12-16 23:30:32.407406  :  [ EVENT ][ RESET ] Disconnecting all clients... ###
+2019-12-16 23:30:32.908407  :  [ EVENT ] Disconnect all clients ###
+2019-12-16 23:30:40.418426  :  [ SET ] Contest Duration : 02:00:00 ###
+2019-12-16 23:30:58.442483  :  [ EXIT ] Signal passed ###
+2019-12-16 23:30:58.442554  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:30:58.442594  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:30:58.442627  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:30:58.442659  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:30:58.442691  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:30:58.442722  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:30:58.943129  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:30:59.443856  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:31:47.441017  :  #### SERVER START #### ###
+2019-12-16 23:31:47.441127  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:31:47.441161  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:31:47.441184  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:31:49.443789  :  [ SETUP ] Loading problems... ###
+2019-12-16 23:31:49.443874  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:31:49.443929  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:31:49.443972  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:31:49.444011  :  [ SETUP ][ Process ] Client Manager: 17844 ###
+2019-12-16 23:31:49.444049  :  [ SETUP ][ Process ] Judge Manager: 17845 ###
+2019-12-16 23:31:49.444087  :  [ SETUP ][ Process ] Core: 17847 ###
+2019-12-16 23:31:49.444122  :  [ SETUP ][ Process ] Log Manager: 17834 ###
+2019-12-16 23:31:49.444155  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:31:49.444184  :    [ START ] Core subprocess started. ###
+2019-12-16 23:31:49.944965  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:31:49.945133  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:31:49.945257  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:32:13.474958  :  [ EXIT ] Signal passed ###
+2019-12-16 23:32:13.475028  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:32:13.475063  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:32:13.475092  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:32:13.475121  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:32:13.475150  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:32:13.475179  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:32:13.475209  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:32:14.476717  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:32:17.193221  :  #### SERVER START #### ###
+2019-12-16 23:32:17.193359  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:32:17.193407  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:32:17.193445  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:32:18.194843  :  [ SETUP ] Loading problems... ###
+2019-12-16 23:32:18.194982  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:32:18.195050  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:32:18.195093  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:32:18.195120  :  [ SETUP ][ Process ] Client Manager: 17918 ###
+2019-12-16 23:32:18.195142  :  [ SETUP ][ Process ] Judge Manager: 17919 ###
+2019-12-16 23:32:18.195165  :  [ SETUP ][ Process ] Core: 17921 ###
+2019-12-16 23:32:18.195186  :  [ SETUP ][ Process ] Log Manager: 17916 ###
+2019-12-16 23:32:18.195206  :    [ START ] Core subprocess started. ###
+2019-12-16 23:32:18.195227  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:32:18.195246  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:32:18.195267  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:32:18.195287  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:32:25.705217  :  [ SET ] Contest Duration : 02:00:00 ###
+2019-12-16 23:32:29.710606  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:32:41.225772  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:32:41.225876  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT ###
+2019-12-16 23:32:41.225942  :  [ LOGIN ][ REJECT ] Rejected by ADMIN ###
+2019-12-16 23:32:41.225988  :  [ PUBLISH ] new message TO team00001 ###
+2019-12-16 23:32:55.744465  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:32:55.744570  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT ###
+2019-12-16 23:32:55.744617  :  [ RE-LOGIN ][ team00001 ][ ACCEPT ] Previous Client ID : 1 ###
+2019-12-16 23:32:55.744660  :  [ PUBLISH ] new message TO team00001 ###
+2019-12-16 23:33:02.753837  :  [ EVENT ][ BROADCAST ] START Contest ###
+2019-12-16 23:33:08.761901  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:33:08.761997  :  [ SUBMISSION ] Client ID :1 Username: team00001 Problem:TPH Language :C++ Time stamp :23:33:08 ###
+2019-12-16 23:33:08.762069  :  [ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: 0 Seconds  ###
+2019-12-16 23:33:08.762122  :  [ JUDGE ] Requesting a new judgement ###
+2019-12-16 23:33:08.762171  :  [ REQUEST ] New judging request sent successfully. ###
+2019-12-16 23:33:13.268463  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:33:13.268579  :  [ VERDICT ] judge00001 :: AC ###
+2019-12-16 23:35:14.932009  :  [ EXIT ] Signal passed ###
+2019-12-16 23:35:14.932063  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:35:14.932087  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:35:14.932108  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:35:14.932128  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:35:14.932147  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:35:14.932166  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:35:14.932185  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:35:15.933552  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:35:18.283475  :  #### SERVER START #### ###
+2019-12-16 23:35:18.283572  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:35:18.283603  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:35:18.283625  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:35:18.784307  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:35:18.784384  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:35:18.784429  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:35:18.784469  :  [ SETUP ][ Process ] Client Manager: 18189 ###
+2019-12-16 23:35:18.784509  :  [ SETUP ][ Process ] Judge Manager: 18190 ###
+2019-12-16 23:35:18.784547  :  [ SETUP ][ Process ] Core: 18192 ###
+2019-12-16 23:35:18.784586  :  [ SETUP ][ Process ] Log Manager: 18187 ###
+2019-12-16 23:35:18.784624  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:35:18.784661  :    [ START ] Core subprocess started. ###
+2019-12-16 23:35:18.784699  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:35:18.784737  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:35:18.784774  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:35:30.300836  :  [ EXIT ] Signal passed ###
+2019-12-16 23:35:30.300903  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:35:30.300929  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:35:30.300951  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:35:30.300971  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:35:30.300990  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:35:30.301011  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:35:30.801772  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:35:31.302569  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:35:55.751961  :  #### SERVER START #### ###
+2019-12-16 23:35:55.752088  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:35:55.752137  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:35:55.752176  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:35:56.252846  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:35:56.252900  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:35:56.252924  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:35:56.252944  :  [ SETUP ][ Process ] Client Manager: 18253 ###
+2019-12-16 23:35:56.252963  :  [ SETUP ][ Process ] Judge Manager: 18254 ###
+2019-12-16 23:35:56.252982  :  [ SETUP ][ Process ] Core: 18257 ###
+2019-12-16 23:35:56.253001  :  [ SETUP ][ Process ] Log Manager: 18251 ###
+2019-12-16 23:35:56.253020  :    [ START ] Core subprocess started. ###
+2019-12-16 23:35:56.253038  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:35:56.253056  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:35:56.253075  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:35:56.253093  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:36:13.275856  :  [ EXIT ] Signal passed ###
+2019-12-16 23:36:13.275947  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:36:13.275990  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:36:13.276026  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:36:13.276076  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:36:13.276139  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:36:13.776936  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:36:13.777011  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:36:14.778433  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:37:41.557352  :  #### SERVER START #### ###
+2019-12-16 23:37:41.557471  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:37:41.557540  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:37:41.557570  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:37:42.058435  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:37:42.058591  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:37:42.058676  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:37:42.058753  :  [ SETUP ][ Process ] Client Manager: 18421 ###
+2019-12-16 23:37:42.058822  :  [ SETUP ][ Process ] Judge Manager: 18422 ###
+2019-12-16 23:37:42.058891  :  [ SETUP ][ Process ] Core: 18424 ###
+2019-12-16 23:37:42.059055  :  [ SETUP ][ Process ] Log Manager: 18419 ###
+2019-12-16 23:37:42.059126  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:37:42.059195  :    [ START ] Core subprocess started. ###
+2019-12-16 23:37:42.059262  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:37:42.059328  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:37:42.059395  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:37:55.577444  :  [ EXIT ] Signal passed ###
+2019-12-16 23:37:55.577526  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:37:55.577572  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:37:55.577608  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:37:55.577640  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:37:55.577672  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:37:55.577703  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:37:56.078424  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:37:56.583758  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:39:25.084362  :  #### SERVER START #### ###
+2019-12-16 23:39:25.084484  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:39:25.084534  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:39:25.084561  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:39:25.585257  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:39:25.585309  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:39:25.585334  :  [ SETUP ][ Process ] Client Manager: 18690 ###
+2019-12-16 23:39:25.585356  :  [ SETUP ][ Process ] Judge Manager: 18691 ###
+2019-12-16 23:39:25.585376  :  [ SETUP ][ Process ] Core: 18693 ###
+2019-12-16 23:39:25.585396  :  [ SETUP ][ Process ] Log Manager: 18688 ###
+2019-12-16 23:39:25.585415  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:39:25.585434  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:39:25.585454  :    [ START ] Core subprocess started. ###
+2019-12-16 23:39:25.585473  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:39:25.585491  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:39:25.585511  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:41:07.736780  :  [ EXIT ] Signal passed ###
+2019-12-16 23:41:07.736944  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:41:07.737033  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:41:07.737108  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:41:07.737178  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:41:07.737247  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:41:07.737318  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:41:08.238170  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:41:08.739139  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:41:12.970190  :  #### SERVER START #### ###
+2019-12-16 23:41:12.970291  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:41:12.970322  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:41:12.970346  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:41:13.471055  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:41:13.471126  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:41:13.471165  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:41:13.471202  :  [ SETUP ][ Process ] Client Manager: 18888 ###
+2019-12-16 23:41:13.471238  :  [ SETUP ][ Process ] Judge Manager: 18889 ###
+2019-12-16 23:41:13.471260  :  [ SETUP ][ Process ] Core: 18891 ###
+2019-12-16 23:41:13.471284  :  [ SETUP ][ Process ] Log Manager: 18886 ###
+2019-12-16 23:41:13.471316  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:41:13.471348  :    [ START ] Core subprocess started. ###
+2019-12-16 23:41:13.471380  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:41:13.471413  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:41:13.471446  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:41:19.980740  :  [ EVENT ][ BROADCAST ] STOP Contest ###
+2019-12-16 23:41:25.989173  :  [ EVENT ] TIMER RESET TRIGGERED ###
+2019-12-16 23:41:25.989258  :  [ RESET ] Reset environment... ###
+2019-12-16 23:41:45.514540  :  [ EVENT ] CLIENT DISCONNECT TRIGGERED ###
+2019-12-16 23:41:45.514797  :  [ EVENT ][ RESET ] Disconnecting all clients... ###
+2019-12-16 23:41:46.015653  :  [ EVENT ] Disconnect all clients ###
+2019-12-16 23:42:05.041344  :  [ EVENT ] SERVER RESET TRIGGERED ###
+2019-12-16 23:42:05.041466  :  [ RESET ] Disconnecting all clients... ###
+2019-12-16 23:42:05.041543  :  [ RESET ] Disconnecting all Judges... ###
+2019-12-16 23:42:05.041610  :  [ RESET ] Clearing scoreboard... ###
+2019-12-16 23:42:05.041676  :  [ RESET ] Resetting Accounts... ###
+2019-12-16 23:42:05.041739  :  [ RESET ] Resetting Submissions... ###
+2019-12-16 23:42:05.542571  :  [ EVENT ] Disconnect all clients ###
+2019-12-16 23:42:05.542774  :  [ RESET ] Resetting Queries... ###
+2019-12-16 23:42:05.543020  :  [ RESET ] Reset environment... ###
+2019-12-16 23:42:33.083140  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:42:33.083232  :  [ LOGIN REQUEST ] ::: 0 :::judge00001@bits1[ TYPE ] JUDGE ###
+2019-12-16 23:42:33.583979  :  [ LOGIN ][ judge00001 ][ JUDGE ][ VALID ] Sending response... ###
+2019-12-16 23:42:33.584073  :  [ PUBLISH ] new message TO judge00001 ###
+2019-12-16 23:42:38.591129  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:42:53.109189  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:42:53.109338  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT ###
+2019-12-16 23:42:53.109432  :  [ LOGIN ][ REJECT ] Rejected by ADMIN ###
+2019-12-16 23:42:53.109515  :  [ PUBLISH ] new message TO team00001 ###
+2019-12-16 23:43:05.625828  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:43:05.625948  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT ###
+2019-12-16 23:43:06.126832  :  [ LOGIN ][ team00001 ] Assigned : 4 ###
+2019-12-16 23:43:06.127074  :  [ PUBLISH ] new message TO team00001 ###
+2019-12-16 23:43:06.127175  :  [ LOGIN ][ RESPONSE ] VALID to team00001 ###
+2019-12-16 23:43:25.653271  :  [ SET ] Contest Duration : 02:00:00 ###
+2019-12-16 23:43:27.155239  :  [ EVENT ][ BROADCAST ] START Contest ###
+2019-12-16 23:43:34.164724  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:43:34.164859  :  [ SUBMISSION ] Client ID :4 Username: team00001 Problem:TPH Language :C++ Time stamp :23:43:33 ###
+2019-12-16 23:43:34.164941  :  [ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: 0 Seconds  ###
+2019-12-16 23:43:34.165103  :  [ JUDGE ] Requesting a new judgement ###
+2019-12-16 23:43:34.165278  :  [ REQUEST ] New judging request sent successfully. ###
+2019-12-16 23:43:38.671920  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:43:38.672007  :  [ VERDICT ] judge00001 :: AC ###
+2019-12-16 23:44:16.224585  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:44:16.224703  :  [ VERDICT ] judge00001 :: WA ###
+2019-12-16 23:44:53.277154  :  [ EXIT ] Signal passed ###
+2019-12-16 23:44:53.277214  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:44:53.277239  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:44:53.277261  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:44:53.277281  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:44:53.277301  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:44:53.277320  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:44:53.778120  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:44:54.279091  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:45:19.426178  :  #### SERVER START #### ###
+2019-12-16 23:45:19.426294  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:45:19.426334  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:45:19.426370  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:45:19.927303  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:45:19.927527  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:45:19.927595  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:45:19.927639  :  [ SETUP ][ Process ] Client Manager: 19254 ###
+2019-12-16 23:45:19.927680  :  [ SETUP ][ Process ] Judge Manager: 19255 ###
+2019-12-16 23:45:19.927719  :  [ SETUP ][ Process ] Core: 19257 ###
+2019-12-16 23:45:19.927760  :  [ SETUP ][ Process ] Log Manager: 19252 ###
+2019-12-16 23:45:19.927802  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:45:19.927839  :    [ START ] Core subprocess started. ###
+2019-12-16 23:45:19.927875  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:45:19.927919  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:45:19.927959  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:45:23.933389  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:45:24.434269  :  [ DISCONNECT ] Client: team00001 ###
+2019-12-16 23:45:31.443729  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:45:31.444011  :  [ LOGIN REQUEST ] ::: Null :::team00002@bits2[ TYPE ] CLIENT ###
+2019-12-16 23:45:31.945015  :  [ LOGIN ][ team00002 ] Assigned : 5 ###
+2019-12-16 23:45:31.945155  :  [ PUBLISH ] new message TO team00002 ###
+2019-12-16 23:45:31.945250  :  [ LOGIN ][ RESPONSE ] VALID to team00002 ###
+2019-12-16 23:45:31.945338  :  [ PUBLISH ] new message TO team00002 ###
+2019-12-16 23:45:31.945421  :  [ LOGIN ][ RESPONSE ] Sent START to team00002 ###
+2019-12-16 23:45:31.945500  :  [ EVENT ][ BROADCAST ] START Contest ###
+2019-12-16 23:45:38.455005  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:45:38.455123  :  [ SUBMISSION ] Client ID :5 Username: team00002 Problem:TPH Language :C++ Time stamp :23:45:38 ###
+2019-12-16 23:45:38.455194  :  [ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: 0 Seconds  ###
+2019-12-16 23:45:38.455255  :  [ JUDGE ] Requesting a new judgement ###
+2019-12-16 23:45:38.455323  :  [ REQUEST ] New judging request sent successfully. ###
+2019-12-16 23:45:42.461254  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:45:42.461378  :  [ VERDICT ] judge00001 :: AC ###
+2019-12-16 23:47:53.639067  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:47:53.639141  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:47:53.639188  :  [ EXIT ] Signal passed ###
+2019-12-16 23:47:53.639241  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:47:53.639284  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:47:53.639328  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:47:53.639370  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:47:54.140154  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:47:54.641003  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:47:58.922934  :  #### SERVER START #### ###
+2019-12-16 23:47:58.923096  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:47:58.923154  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:47:58.923201  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:47:59.424422  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:47:59.424820  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:47:59.425050  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:47:59.425276  :  [ SETUP ][ Process ] Client Manager: 19496 ###
+2019-12-16 23:47:59.425457  :  [ SETUP ][ Process ] Judge Manager: 19497 ###
+2019-12-16 23:47:59.425674  :  [ SETUP ][ Process ] Core: 19499 ###
+2019-12-16 23:47:59.425776  :  [ SETUP ][ Process ] Log Manager: 19494 ###
+2019-12-16 23:47:59.425856  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:47:59.425880  :    [ START ] Core subprocess started. ###
+2019-12-16 23:47:59.425903  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:47:59.425924  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:47:59.425945  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:48:03.932031  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:48:04.432886  :  [ DISCONNECT ] Client: team00002 ###
+2019-12-16 23:48:08.438535  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:48:08.438619  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT ###
+2019-12-16 23:48:08.939226  :  [ RE-LOGIN ][ team00001 ][ ACCEPT ] Previous Client ID : 4 ###
+2019-12-16 23:48:08.939376  :  [ PUBLISH ] new message TO team00001 ###
+2019-12-16 23:48:10.942518  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:48:11.443126  :  [ DISCONNECT ] Client: team00001 ###
+2019-12-16 23:48:18.453267  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:48:18.453414  :  [ LOGIN REQUEST ] ::: Null :::team00003@bits3[ TYPE ] CLIENT ###
+2019-12-16 23:48:18.954311  :  [ LOGIN ][ team00003 ] Assigned : 6 ###
+2019-12-16 23:48:18.954446  :  [ PUBLISH ] new message TO team00003 ###
+2019-12-16 23:48:18.954530  :  [ LOGIN ][ RESPONSE ] VALID to team00003 ###
+2019-12-16 23:48:18.954604  :  [ PUBLISH ] new message TO team00003 ###
+2019-12-16 23:48:18.954675  :  [ LOGIN ][ RESPONSE ] Sent START to team00003 ###
+2019-12-16 23:48:19.455450  :  [ EVENT ][ BROADCAST ] START Contest ###
+2019-12-16 23:48:23.962037  :  [ ALERT ] Recieved a new client message. ###
+2019-12-16 23:48:23.962128  :  [ SUBMISSION ] Client ID :6 Username: team00003 Problem:TPH Language :C++ Time stamp :23:48:23 ###
+2019-12-16 23:48:23.962184  :  [ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: 0 Seconds  ###
+2019-12-16 23:48:23.962235  :  [ JUDGE ] Requesting a new judgement ###
+2019-12-16 23:48:23.962302  :  [ REQUEST ] New judging request sent successfully. ###
+2019-12-16 23:48:28.468779  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:48:28.468934  :  [ VERDICT ] judge00001 :: AC ###
+2019-12-16 23:49:11.026959  :  [ EXIT ] Signal passed ###
+2019-12-16 23:49:11.027018  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:49:11.027043  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:49:11.027064  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:49:11.027084  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:49:11.027103  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:49:11.027122  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:49:11.027142  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:49:12.028614  :  #### SERVER EXIT ####
+
+ ###
+2019-12-16 23:49:15.765222  :  #### SERVER START #### ###
+2019-12-16 23:49:15.765353  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2019-12-16 23:49:15.765385  :  [ SETUP ] Initialising server... ###
+2019-12-16 23:49:15.765408  :  [ SETUP ] Initialising database... ###
+2019-12-16 23:49:16.266232  :  [ SETUP ] Initialising subprocesses... ###
+2019-12-16 23:49:16.266366  :    [ START ] Client Manager subprocess started. ###
+2019-12-16 23:49:16.266445  :  [ SETUP ] Subprocesses started ###
+2019-12-16 23:49:16.266515  :  [ SETUP ][ Process ] Client Manager: 19651 ###
+2019-12-16 23:49:16.266580  :  [ SETUP ][ Process ] Judge Manager: 19652 ###
+2019-12-16 23:49:16.266645  :  [ SETUP ][ Process ] Core: 19654 ###
+2019-12-16 23:49:16.266709  :  [ SETUP ][ Process ] Log Manager: 19649 ###
+2019-12-16 23:49:16.266770  :    [ START ] Judge Manager subprocess started. ###
+2019-12-16 23:49:16.266833  :    [ START ] Core subprocess started. ###
+2019-12-16 23:49:16.266954  :  [ LISTEN ] Started listening on judge_verdict ###
+2019-12-16 23:49:16.267040  :  [ LISTEN ] Started listening on client_requests ###
+2019-12-16 23:49:16.267104  :    [ START ] Interface subprocess started. ###
+2019-12-16 23:50:13.345592  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:50:13.345871  :  [ VERDICT ] judge00001 :: AC ###
+2019-12-16 23:50:59.909307  :  [ PING ] Recieved a new judge verdict. ###
+2019-12-16 23:50:59.909466  :  [ VERDICT ] judge00001 :: AC ###
+2019-12-16 23:52:04.500462  :  [ EXIT ] Signal passed ###
+2019-12-16 23:52:04.500557  :  [ LISTEN ] STOPPED listening to client channel ###
+2019-12-16 23:52:04.500619  :  [ EXIT ] Saving Server state to file. ###
+2019-12-16 23:52:04.500674  :  [ LISTEN ] STOPPED listening to judge channel ###
+2019-12-16 23:52:04.500728  :  [ STOP ] Judge subprocess terminated successfully! ###
+2019-12-16 23:52:04.500779  :  [ STOP ] Client subprocess terminated successfully! ###
+2019-12-16 23:52:04.500830  :  [ EXIT ] Saved Server state to file. ###
+2019-12-16 23:52:04.500880  :  [ STOP ] Core subprocess terminated successfully! ###
+2019-12-16 23:52:05.502390  :  #### SERVER EXIT ####
+
+ ###
