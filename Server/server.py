@@ -234,13 +234,13 @@ def main():
 	save_status.update_entry('Manual Review', manual_review)
 	save_status.update_entry('Submission Time Limit', submission_time_limit)
 	#####################################################################################
-
-	log_queue.put("#### SERVER EXIT ####")
+	log_queue.put("#### SERVER EXIT ####\n\n")
 	# Stop logger service
 	data_changed_flags[23] = 1
 
 	# EXIT
 	sleep(2)
+	
 	print("  ################################################")
 	print("  #----------SERVER CLOSED SUCCESSFULLY----------#")
 	print("  ################################################")

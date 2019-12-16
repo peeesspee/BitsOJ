@@ -2,7 +2,7 @@
 # It also sends data to clients/judges either in unicast or in broadcast.
 import json, pika, sys, time
 from init_server import initialize_server
-from database_management import client_authentication, submissions_management
+from database_management import client_authentication, submissions_management, scoreboard_management
    
 class core():
 	data_changed_flags = ''
@@ -11,24 +11,25 @@ class core():
 	file_password = ''
 	unicast_exchange = 'connection_manager'
 	broadcast_exchange = 'broadcast_manager'
+	config = ''
 
 	def init_core(data_changed_flags, task_queue, log_queue):
 		core.data_changed_flags = data_changed_flags
 		core.task_queue = task_queue
 		core.log_queue = log_queue
-		config = initialize_server.read_config()
+		core.config = initialize_server.read_config()
 		
 		print('  [ START ] Core subprocess started.')
 		core.log('  [ START ] Core subprocess started.')
 
-		superuser_username = config['Server Username']
-		superuser_password = config['Server Password']
-		host = config['Server IP']
-		core.file_password = config["File Password"]
+		superuser_username = core.config['Server Username']
+		superuser_password = core.config['Server Password']
+		host = core.config['Server IP']
+		core.file_password = core.config["File Password"]
 	
 		channel = core.init_connection(superuser_username, superuser_password, host)
 		core.channel = channel
-
+		core.ranking_algoritm = core.data_changed_flags[17]
 		# Infinite Loop to Poll the task_queue every second
 		while True:
 			status = core.poll(task_queue)
@@ -122,6 +123,9 @@ class core():
 					receiver = data['Receiver']
 					run_id = data['Run ID']
 					status = data['Status']
+					client_id = data['Client ID']
+					p_code = data['Problem Code']
+					time_stamp = data['Timestamp']
 					try:
 						judge = data['Judge']
 					except:
@@ -135,8 +139,31 @@ class core():
 					)
 					# Update Database
 					submissions_management.update_submission_status(run_id, status, 'SENT', judge)
-					# Update GUI
+					# Update Submissions GUI
 					core.data_changed_flags[0] = 1
+
+					# Update scoreboard
+					problem_max_score = core.config['AC Points']
+					problem_penalty = core.config['Penalty Score']
+					time_penalty = core.config['Penalty Time']
+					# call scoreboard updation function		TODO MOVE TO CORE
+					scoreboard_management.update_user_score(
+						client_id, 
+						run_id,
+						problem_max_score, 
+						problem_penalty,
+						status, 
+						p_code,
+						time_stamp,
+						core.ranking_algoritm # Ranking Algorithm
+					)
+					# Update scoreboard view in server
+					core.data_changed_flags[16] = 1
+					# Broadcast new scoreboard to clients whenever a new AC is recieved 
+					# and scoreboard update is allowed.
+					if status == 'AC' and core.data_changed_flags[15] == 1:
+						# Flag 18 signals interface to update scoreboard
+						core.data_changed_flags[18] = 1 
 
 				elif code == "EDIT":
 					print('[ CORE ] Problem Edit in progress...')

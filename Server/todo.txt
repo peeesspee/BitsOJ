@@ -1,5 +1,5 @@
 				TASK																				
-1. Leaderboard updation from interface reviews														
+1. Leaderboard updation from interface reviews				: Score increases but not decreases										
 		2. Client submission validation																		
 3. Long style ranklist ( High Priority ) and ACM style ranklist ( Low Priority )					
 4. Rabbitmq queue security																			
@@ -8,7 +8,7 @@
 		7. Store all verdicts of a submission and show them
 8. Recieve and store all clients IP Address 														
 9. Disconnect a judge																				
-10. Rejudge all submissions with given problem code													
+10. Rejudge all submissions with given problem code		Future Update
 11. Generate Report		VIMP																		
 		12. Problem edit UI 																				
 13. Export Accounts CSV																				

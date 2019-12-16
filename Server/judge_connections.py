@@ -32,8 +32,6 @@ class manage_judges():
 			channel = connection.channel()
 			manage_judges.channel = channel
 
-			manage_judges.ranking_algoritm = manage_judges.data_changed_flags[17]
-			
 			channel.exchange_declare(
 				exchange = 'judge_manager', 
 				exchange_type = 'direct', 
@@ -149,8 +147,9 @@ class manage_judges():
 					file.write(json_data['Message'])
 					file.write('\n\n')
 					# Write previous run info
-					file.write(data)
 					# This ensures the latest run data is at top
+					file.write(data)
+					file.close()
 					
 				except Exception as error:
 					print('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
@@ -161,6 +160,7 @@ class manage_judges():
 					filename = './Client_Submissions/' + str(run_id) + '_latest.info'
 					file = open(filename, 'w')
 					file.write(json_data['Message'])
+					file.close()
 					
 				except Exception as error:
 					print('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
@@ -174,7 +174,10 @@ class manage_judges():
 					'Run ID' : run_id,
 					'Status' : status,
 					'Message' : message,
-					'Judge' : judge
+					'Judge' : judge,
+					'Client ID' : client_id,
+					'Problem Code' : p_code,
+					'Timestamp' : time_stamp
 				}
 				message = json.dumps(message)
 
@@ -193,29 +196,6 @@ class manage_judges():
 						manage_judges.log('[ ERROR ] Could not publish result to client : ' + str(error))
 						return
 
-					# Update scoreboard
-					problem_max_score = manage_judges.config['AC Points']
-					problem_penalty = manage_judges.config['Penalty Score']
-					time_penalty = manage_judges.config['Penalty Time']
-					# call scoreboard updation function		TODO MOVE TO CORE
-					scoreboard_management.update_user_score(
-						client_id, 
-						run_id,
-						problem_max_score, 
-						problem_penalty,
-						status, 
-						p_code,
-						time_stamp,
-						manage_judges.ranking_algoritm # Ranking Algorithm
-					)
-
-					# Update scoreboard view in server
-					manage_judges.data_changed_flags[16] = 1
-					# Broadcast new scoreboard to clients whenever a new AC is recieved 
-					# and scoreboard update is allowed.
-					if status == 'AC' and manage_judges.data_changed_flags[15] == 1:
-						# Flag 18 signals interface to update scoreboard
-						manage_judges.data_changed_flags[18] = 1
 				else:
 					submissions_management.update_submission_status(run_id, status, 'REVIEW', judge)
 					# Update submission GUI
@@ -223,10 +203,6 @@ class manage_judges():
 
 				# Send Acknowldgement of message recieved and processed
 				ch.basic_ack(delivery_tag = method.delivery_tag)
-
-
-
-
 
 			else:
 				ch.basic_ack(delivery_tag = method.delivery_tag)

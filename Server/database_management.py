@@ -169,7 +169,7 @@ class scoreboard_management():
 					score = problem_max_score
 					new_ac_submission = 1
 				else:
-					# IGNORE this submission in leaderboard
+					print('[ SCOREBOARD ][ PASS ] Already received AC Verdict on this problem.')
 					return
 
 			elif status == 'CE':
@@ -501,10 +501,9 @@ class user_management(manage_database):
 
 			cur.execute("commit")
 
-		except:
-			print('[ CRITICAL ] Database insertion error! Roll back')
-			cur.execute("rollback")
-
+		except Exception as error:
+			print('[ CRITICAL ] Database insertion error: ' + str(error))
+			
 		# INSERTION FINISHED
 		return
 

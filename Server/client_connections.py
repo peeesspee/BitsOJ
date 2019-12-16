@@ -443,7 +443,7 @@ class manage_clients():
 
 		# Validate client submisssion datatypes:
 		flag = 0
-		if len(client_id) > 10 or len(client_username) > 20 or len(local_run_id) > 5 or len(problem_code) > 10 or len(language) > 10:
+		if len(str(client_id)) > 10 or len(client_username) > 20 or len(str(local_run_id)) > 5 or len(problem_code) > 10 or len(language) > 10:
 			flag = 1
 		if len(time_stamp) != len('HH:MM:SS'):
 			flag = 1
@@ -470,21 +470,23 @@ class manage_clients():
 				response.publish_message(manage_clients.channel, client_username, message)
 			except Exception as error:
 				print('[ ERROR ][ SECURITY ] Could not send message to client: ', str(error))
-				manage_clients.log('[ ERROR ][ SECURITY ] Could not send message to client: ', str(error))
+				manage_clients.log('[ ERROR ][ SECURITY ] Could not send message to client: ' + str(error))
 			return
 		
 		# Validate Time
 		# If the time sent by client is too far away from current time
 		# then timestamp is considered to be the time server recieves the submission
 		current_time = time.strftime("%H:%M:%S", time.localtime())	
+		# current_time = initialize_server.get_time_difference(contest_start_time, current_time)
 		time_difference = initialize_server.get_abs_time_difference(current_time, time_stamp)
 		if time_difference > 20:
 			print('[ SUBMISSION ][ CONFLICT ] Time difference: ', time_difference, ' Seconds ')
-			manage_clients.log('[ SUBMISSION ][ CONFLICT ] Time difference: ', time_difference, ' Seconds ')
+			print('current time: ' + current_time)
+			manage_clients.log('[ SUBMISSION ][ CONFLICT ] Time difference: ' + str( time_difference) + ' Seconds ')
 			time_stamp = initialize_server.get_time_difference(contest_start_time, current_time)
 		else:
-			print('[ SUBMISSION ][ PASS ] Time difference: ', time_difference, ' Seconds ')
-			manage_clients.log('[ SUBMISSION ][ PASS ] Time difference: ', time_difference, ' Seconds ')
+			print('[ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: ', time_difference, ' Seconds ')
+			manage_clients.log('[ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: ' + str(time_difference) + ' Seconds ')
 			time_stamp = initialize_server.get_time_difference(contest_start_time, time_stamp)
 		# Validation Finished
 

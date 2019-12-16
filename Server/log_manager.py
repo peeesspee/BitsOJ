@@ -17,9 +17,6 @@ class handle_logs():
 			# Poll every second
 			time.sleep(0.5)
 
-		# If we reach this point, it means the Server Shutdown has been initiated.
-		print("[ STOP ] Log subprocess terminated successfully!")
-		handle_logs.log(file, "[ STOP ] Log subprocess terminated successfully!")
 		file.close()
 		sys.exit(0)
 

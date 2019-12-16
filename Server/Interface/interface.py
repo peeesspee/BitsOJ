@@ -7,8 +7,13 @@ from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from Interface.ui_classes import *
 from Interface.problem_ui import *
+from Interface.submission_ui import *
+from Interface.accounts_edit_ui import *
+from Interface.query_reply_ui import *
+from Interface.new_accounts_ui import *
 from init_server import initialize_server, save_status
 from database_management import user_management, submissions_management, query_management, scoreboard_management
+
 
  
 # This is to ignore some warnings which were thrown when gui exited and 
