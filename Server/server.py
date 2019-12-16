@@ -11,39 +11,16 @@ from database_management import manage_database, problem_management
 from Interface.interface import server_window, init_gui
 from judge_connections import manage_judges
 from bitsoj_core import core
+from log_manager import handle_logs
 from init_server import initialize_server, save_status
+
 
 sys.path.append('../')
 
 def main():
-	# Initialize server
-	print('[ SETUP ] Initialising server...')
-
-
-# save_status.write_config(
-# 		'BitsOJ', 
-# 		'root', 
-# 		'judge1', 
-# 		'judge1', 
-# 		'localhost', 
-# 		'True', 
-# 		'True',
-#		'True',
-#		'True' ,
-# 		'abcdefghij12345', 
-# 		'abcdefghij12345', 
-# 		'papa', 
-# 		'02:00',
-# 		'SETUP',
-# 		'00:00:00',
-# 		'00:00:00',
-#		'0'
-# 		)
-
-
 	config = initialize_server.read_config()
-	judge_username = config["Judge Username"]
-	judge_password = config["Judge Password"]
+	judge_username = config["Server Username"]
+	judge_password = config["Server Password"]
 	host = config["Server IP"]
 	login_status = config["Login Allowed"]
 	judge_login = config["Judge Login Allowed"]
@@ -52,51 +29,56 @@ def main():
 	ranking_algorithm = config["Ranking Algorithm"]
 	manual_review = config["Manual Review"]
 	submission_time_limit = config["Submission Time Limit"]
-	####################################################
 
-	# Initialize database
-	print('[ SETUP ] Initialising database...')
-	conn, cur = manage_database.initialize_database()
-	
-	##################################
+	####################################################################
 	# Create variables/lists that will be shared between processes
-	data_changed_flags = multiprocessing.Array('i', 25)
+	data_changed_flags = multiprocessing.Array('i', 30)
 	# This queue will be polled from bitsoj_core for handling tasks like 
 	# database updates or data transmission
-	task_queue = multiprocessing.Queue(maxsize = 1000)    
+	task_queue = multiprocessing.Queue(maxsize = 1000)   
+	# This queue handles logs from all the 3 processes 
+	log_queue = multiprocessing.Queue(maxsize = 100)
+	####################################################################
 
-	#index		value		meaning
-	#	0		0/1			0/1: No new/ New submission data to refresh
-	#	1		0/1			0/1: No new/ New login : Refresh connected clients view
-	#	2		0/1 		0/1: Disallow/Allow logins
-	#	3		0/1			0/1: Disallow/Allow submissions
-	#	4		0/1			1: A create accounts window is open
-	#	5		0/1			1: New users generated, update view
-	#   6		0/1			1: Account deletion under progress
-	#	7		0/1			1: Server shutdown
-	#   8		0/1			1: Query reply GUI open
-	#	9		0/1			1: Refresh query gui
-	# 	10		0/1/2		0: SETUP 1: START 2: STOPPED
-	#	11		0/1			1: Delete all accounts open
-	#	12		0/1			1: JUDGE logins allowed
-	#   13		0/1			1: Refresh Judge GUI
-	#	14		0/1			1: Client Edit under progress
-	#	15		0/1			1: Scoreboard update allowed
-	# 	16		0/1			1: Update Scoreboard GUI
-	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
-	#	18		0/1			1: Broadcast Scoreboard to all clients
-	#	19		0/1			1: UPDATE remaining time broadcast to all clients
-	#	20		0/1			1: Manual Review Allowed
-	#	21		X			X: Submission time limit 0 < X 
-	#	22		0/1			1: Problem table changed
-	
+	log_process = multiprocessing.Process(
+		target = handle_logs.init_logs,
+		args = (data_changed_flags, log_queue, )
+	)
+	log_process.start()
+	log_pid = log_process.pid
 
-	#####################################################################################
+	log_queue.put('#### SERVER START ####')
+	####################################################################
+	# System check
+	# This checks if the server shut down correctly during last system exit.
+	flag = system_check()
+	if flag == 0:
+		# Unsafe
+		print('[ SELF CHECK ][ FAIL ] Detected an abnormal system exit.')
+		log_queue.put('[ SELF CHECK ][ FAIL ] Detected an abnormal system exit.')
+		print('[ SELF CHECK ][ FAIL ] Please check that there are no active connections to RabbitMQ server', end = ' ' )
+		print('in RabbitMQ Management portal ( http://localhost:15672/#/channels )')
+		print('[ SELF CHECK ] Press any key when checked...')
+		input()
+	else:
+		print('[ SELF CHECK ][ PASS ] Systems OK.')
+		log_queue.put('[ SELF CHECK ][ PASS ] Systems OK.')
+		pass
+
+	####################################################################
+
+	# Initialize server
+	print('[ SETUP ] Initialising server...')
+	log_queue.put('[ SETUP ] Initialising server...')
+	# Initialize database
+	print('[ SETUP ] Initialising database...')
+	log_queue.put('[ SETUP ] Initialising database...')
+	conn, cur = manage_database.initialize_database()
+
 	# Set local variables and flags :
-
 	# Set submission time limit
 	data_changed_flags[21] = submission_time_limit
- 
+	data_changed_flags[23] = 0
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	if login_status == 'True' or login_status == 'true':
 		data_changed_flags[2] = 1
@@ -150,21 +132,73 @@ def main():
 		# Load Problems into problems table
 		print('[ SETUP ] Loading problems...')
 		problem_management.init_problems(config['Problems'])
+		log_queue.put('[ SETUP ] Loading problems...')
 
 	#####################################################################################
 
 	# Manage subprocesses
 	print('[ SETUP ] Initialising subprocesses...')
+	log_queue.put('[ SETUP ] Initialising subprocesses...')
 	client_pid, judge_pid, core_pid = manage_process(
-		judge_username, judge_password, host, 
-		data_changed_flags, task_queue
-		)
+		judge_username, 
+		judge_password, 
+		host, 
+		data_changed_flags, 
+		task_queue,
+		log_queue
+	)
+	print('[ SETUP ] Subprocesses started')
+	print('[ SETUP ][ Process ] Client Manager: ', client_pid)
+	print('[ SETUP ][ Process ] Judge Manager: ', judge_pid)
+	print('[ SETUP ][ Process ] Core: ', core_pid)
+	print('[ SETUP ][ Process ] Log Manager: ', log_pid)
+
+	log_queue.put('[ SETUP ] Subprocesses started')
+	log_queue.put('[ SETUP ][ Process ] Client Manager: ' + str(client_pid))
+	log_queue.put('[ SETUP ][ Process ] Judge Manager: ' + str(judge_pid))
+	log_queue.put('[ SETUP ][ Process ] Core: ' + str(core_pid))
+	log_queue.put('[ SETUP ][ Process ] Log Manager: ' + str(log_pid))
+
+
+	#####################################################################################
+
+	#index		value		meaning
+	#	0		0/1			0/1: No new/ New submission data to refresh
+	#	1		0/1			0/1: No new/ New login : Refresh connected clients view
+	#	2		0/1 		0/1: Disallow/Allow logins
+	#	3		0/1			0/1: Disallow/Allow submissions
+	#	4		0/1			1: A create accounts window is open
+	#	5		0/1			1: New users generated, update view
+	#   6		0/1			1: Account deletion under progress
+	#	7		0/1			1: Server shutdown
+	#   8		0/1			1: Query reply GUI open
+	#	9		0/1			1: Refresh query gui
+	# 	10		0/1/2		0: SETUP 1: START 2: STOPPED	Contest Status
+	#	11		0/1			1: Delete all accounts open
+	#	12		0/1			1: JUDGE logins allowed
+	#   13		0/1			1: Refresh Judge GUI
+	#	14		0/1			1: Client Edit under progress
+	#	15		0/1			1: Scoreboard update allowed
+	# 	16		0/1			1: Update Scoreboard GUI
+	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
+	#	18		0/1			1: Broadcast Scoreboard to all clients
+	#	19		0/1			1: UPDATE remaining time broadcast to all clients
+	#	20		0/1			1: Manual Review Allowed
+	#	21		X			X: Submission time limit 0 < X 
+	#	22		0/1			1: Problem table changed
+	#	23		0/1			1: Stop logger
+
+	#####################################################################################
+
+	
+	
 
 	# Initialize GUI handler
 	try:
-		init_gui(data_changed_flags, task_queue)
+		init_gui(data_changed_flags, task_queue, log_queue)
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
+		log_queue.put("[ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
 	#####################################################################################
 	# Server process is in idle state here on. Active processes are:
 	# client_manager
@@ -174,6 +208,9 @@ def main():
 	# If we reach here, it means the GUI process has ended, 
 	# which further means the Server has been shut down by press of Close button.
 	print("[ EXIT ] Signal passed")
+	log_queue.put("[ EXIT ] Signal passed")
+
+	
 	# Send SIGINT to both client and judge subprocesses
 	# SIGINT : Keyboard Interrupt ( Handled by both subprocesses internally )
 	# We're not exactly Killing the processes. They get the time to shut down on their own :)
@@ -209,48 +246,92 @@ def main():
 
 	submission_time_limit = data_changed_flags[21]
 
+	print('[ EXIT ] Saving Server state to file.')
+	log_queue.put('[ EXIT ] Saving Server state to file.')
+
 	save_status.update_entry('Judge Login Allowed', judge_login)
 	save_status.update_entry('Login Allowed', login_status)
 	save_status.update_entry('Submission Allowed', submission_status)
 	save_status.update_entry('Scoreboard Update Allowed', scoreboard_status)
 	save_status.update_entry('Manual Review', manual_review)
 	save_status.update_entry('Submission Time Limit', submission_time_limit)
+	print('[ EXIT ] Saved Server state to file.')
+	log_queue.put('[ EXIT ] Saved Server state to file.')
 	#####################################################################################
-
+	
 	# EXIT
-	sleep(2)
+	sleep(1)
+	log_queue.put("#### SERVER EXIT ####\n\n")
+	# Stop logger service
+	data_changed_flags[23] = 1
+	system_stop()
+	sleep(1)
 	print("  ################################################")
 	print("  #----------SERVER CLOSED SUCCESSFULLY----------#")
 	print("  ################################################")
 
 
 def manage_process(
-	judge_username, judge_password, host, 
-	data_changed_flags, task_queue
+		judge_username, 
+		judge_password, 
+		host, 
+		data_changed_flags, 
+		task_queue,
+		log_queue
 	):
 	client_handler_process = multiprocessing.Process(
 		target = manage_clients.prepare, 
-		args = (data_changed_flags, task_queue, )
+		args = (data_changed_flags, task_queue, log_queue, )
 		)
 	judge_handler_process = multiprocessing.Process(
 		target = manage_judges.listen_judges, 
-		args = (judge_username, judge_password, host, data_changed_flags, task_queue,)
+		args = (judge_username, judge_password, host, data_changed_flags, task_queue, log_queue, )
 		)
 	core_process = multiprocessing.Process(
 		target = core.init_core,
-		args = (data_changed_flags, task_queue, )
+		args = (data_changed_flags, task_queue, log_queue, )
 	)
-
+	
 	client_handler_process.start()
 	judge_handler_process.start()
 	core_process.start()
+	
 
 	# We return process ids of both client and server subprocesses to main()
 	# to interrupt them when close button is pressed in GUI
 	client_pid = client_handler_process.pid
 	judge_pid = judge_handler_process.pid
 	core_pid = core_process.pid
+	
 	return client_pid, judge_pid, core_pid
+
+def system_check():
+	flag = -1
+	try:
+		file = open('state_check.info', 'r')
+		data = file.read()
+		if data == 'SAFE':
+			flag = 1
+		elif data == 'UNSAFE':
+			flag = 0
+		file.close()
+
+		if flag == 1:
+			file = open('state_check.info', 'w')
+			file.write('UNSAFE')
+			file.close()
+		return flag
+	except Exception as error:
+		return 0
+	
+def system_stop():
+	try:
+		file = open('state_check.info', 'w+')
+		file.write('SAFE')
+		file.close()
+	except:
+		pass
+
 
 if __name__ == '__main__':
 	# If this file is run natively, and not imported

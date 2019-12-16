@@ -12,23 +12,5 @@ manage_database.reset_database(conn)
 conn, cur = manage_database.initialize_database()
 
 
-save_status.write_config(
-		'BitsOJ', 
-		'root', 
-		'judge1', 
-		'judge1', 
-		'localhost', 
-		'True', 
-		'True',
-		'True', 
-		'True',
-		'000000000000000', 
-		'000000000000000', 
-		'papa', 
-		'02:00:00',
-		'SETUP',
-		'00:00:00',
-		'00:00:00',
-		0
-		)
+save_status.write_config()
 

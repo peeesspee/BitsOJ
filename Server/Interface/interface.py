@@ -7,8 +7,13 @@ from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from Interface.ui_classes import *
 from Interface.problem_ui import *
+from Interface.submission_ui import *
+from Interface.accounts_edit_ui import *
+from Interface.query_reply_ui import *
+from Interface.new_accounts_ui import *
 from init_server import initialize_server, save_status
 from database_management import user_management, submissions_management, query_management, scoreboard_management
+
 
  
 # This is to ignore some warnings which were thrown when gui exited and 
@@ -20,7 +25,7 @@ qInstallMessageHandler(handler)
 
 # This class handles the main window of server
 class server_window(QMainWindow):
-	def __init__(self, data_changed_flags2, task_queue):
+	def __init__(self, data_changed_flags2, task_queue, log_queue):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo.png'))
@@ -44,6 +49,8 @@ class server_window(QMainWindow):
 		# make data_changed_flag accessible from the class methods
 		self.data_changed_flags = data_changed_flags2
 		self.task_queue = task_queue
+		self.log_queue = log_queue
+		self.log('  [ START ] Interface subprocess started.')
 		
 		###########################################################
 		self.db = self.init_qt_database()
@@ -137,14 +144,15 @@ class server_window(QMainWindow):
 		self.tab9 = ui_widgets.about_us_ui(self)
 		
 		###########################################################
-		
-		
 		# Initialize GUI elements
 		server_window.init_UI(self)
 		# Load previous state in case of server restart
 		server_window.load_previous_state(self)
 		return
-	
+
+	def log(self, message):
+		self.log_queue.put(message)
+
 	def init_UI(self):
 		self.set_status('SETUP')
 		# Define Layout for sidebar
@@ -309,6 +317,7 @@ class server_window(QMainWindow):
 			# Just set this flag, update data will take care of it
 			self.data_changed_flags[18] = 1
 			print('[ EVENT ] Scoreboard broadcast to clients ( Time Out )')
+			self.log('[ EVENT ] Scoreboard broadcast to clients ( Time Out )')
 			
 	def update_data(self):
 		try:
@@ -395,11 +404,11 @@ class server_window(QMainWindow):
 
 		except Exception as error:
 			print('[ ERROR ] Interface updation error: ' + str(error))
+			self.log('[ ERROR ] Interface updation error: ' + str(error))
 			
 		return
 
 	def convert_to_seconds(time_str):
-		print("I got: " + time_str)
 		h, m, s = time_str.split(':')
 		return int(h) * 3600 + int(m) * 60 + int(s)
 
@@ -498,7 +507,8 @@ class server_window(QMainWindow):
 
 	def process_event(self, data, extra_data):
 		if data == 'SET':
-			print('\n[ SET ] Contest Duration : ' + str(extra_data))
+			print('[ SET ] Contest Duration : ' + str(extra_data))
+			self.log('[ SET ] Contest Duration : ' + str(extra_data))
 			save_status.update_entry('Contest Duration', str(extra_data))
 			self.timer_widget.display(extra_data)
 			self.duration = str(extra_data)
@@ -553,6 +563,7 @@ class server_window(QMainWindow):
 		elif data == 'UPDATE':
 			# Send UPDATE signal
 			print('[ UPDATE ] Contest time ' + str(extra_data))
+			self.log('[ UPDATE ] Contest time ' + str(extra_data))
 			self.contest_set_time = self.contest_set_time + int(extra_data) * 60
 			# self.data_changed_flags[19] = 1
 			message = {
@@ -624,11 +635,9 @@ class server_window(QMainWindow):
 	def allow_scoreboard_update_handler(self, state):
 		if(state == Qt.Checked):
 			# Allow scoreboard update
-			print("Allow")
 			self.set_flags(15, 1)
 		else:
 			# Stop scoreboard update
-			print("Disallow")
 			self.set_flags(15, 0)
 		return
 
@@ -671,6 +680,7 @@ class server_window(QMainWindow):
 			return db
 		except:
 			print('[ CRITICAL ] Database loading error!')
+			self.log('[ CRITICAL ] Database loading error!')
 
 
 	def manage_models(self, db, table_name):
@@ -682,6 +692,7 @@ class server_window(QMainWindow):
 			return model
 		else:
 			print('[ CRITICAL ] Model Error: DB is not open')
+			self.log('[ CRITICAL ] Model Error: DB is not open')
 			return None
 
 	def manage_leaderboard_model(self, db, table_name):
@@ -692,6 +703,7 @@ class server_window(QMainWindow):
 			return model
 		else:
 			print('[ CRITICAL ] Model Error: DB is not open')
+			self.log('[ CRITICAL ] Model Error: DB is not open')
 			return None
 
 	def manage_submissions_model(self, db, table_name):
@@ -702,6 +714,7 @@ class server_window(QMainWindow):
 			return model
 		else:
 			print('[ CRITICAL ] Model Error: DB is not open')
+			self.log('[ CRITICAL ] Model Error: DB is not open')
 			return None
 
 	def generate_view(self, model):
@@ -763,6 +776,7 @@ class server_window(QMainWindow):
 
 			except Exception as error: 
 				print('[ ERROR ] : ' + str(error))
+				self.log('[ ERROR ] : ' + str(error))
 			finally:
 				return
 		else:
@@ -787,6 +801,7 @@ class server_window(QMainWindow):
 
 			except Exception as error: 
 				print('[ ERROR ] : ' + str(error))
+				self.log('[ ERROR ] : ' + str(error))
 			finally:
 				return
 		else:
@@ -816,6 +831,7 @@ class server_window(QMainWindow):
 			if user_input == password:
 				return 1
 			else:
+				self.log('[ SECURITY ] Password verification failed.')
 				return 0
 		return 2		
 
@@ -903,6 +919,7 @@ class server_window(QMainWindow):
 			
 		except Exception as error: 
 			print('[ ERROR ]' + str(error))
+			self.log('[ ERROR ]' + str(error))
 			self.data_changed_flags[14] = 0
 		finally:
 			return
@@ -931,6 +948,7 @@ class server_window(QMainWindow):
 			
 		except Exception as error: 
 			print('[ ERROR ]' + str(error))
+			self.log('[ ERROR ]' + str(error))
 			self.data_changed_flags[14] = 0
 		finally:
 			return
@@ -974,7 +992,8 @@ class server_window(QMainWindow):
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except:
-			print('Could not reset database!')
+			print('[ ERROR ] Could not reset database!')
+			self.log('[ ERROR ] Could not reset database!')
 
 		finally:
 			# Reset critical flag
@@ -1022,6 +1041,7 @@ class server_window(QMainWindow):
 				pass
 		except Exception as error:
 			print('Could not reset database : ' + str(error))
+			self.log('Could not reset database : ' + str(error))
 
 		finally:
 			# Reset critical flag
@@ -1068,6 +1088,7 @@ class server_window(QMainWindow):
 				pass
 		except Exception as error:
 			print('Could not reset database : ' + str(error))
+			self.log('Could not reset database : ' + str(error))
 
 		finally:
 			# Reset critical flag
@@ -1109,7 +1130,9 @@ class server_window(QMainWindow):
 
 			if custom_close_box.clickedButton() == button_yes:
 				print('[ EVENT ] SERVER RESET TRIGGERED')
+				self.log('[ EVENT ] SERVER RESET TRIGGERED')
 				print('[ RESET ] Disconnecting all clients...')
+				self.log('[ RESET ] Disconnecting all clients...')
 				# TODO : Broadcast this to all clients...
 				message = {
 				'Code' : 'DSCNT',
@@ -1122,26 +1145,32 @@ class server_window(QMainWindow):
 				self.data_changed_flags[1] = 1
 
 				print('[ RESET ] Disconnecting all Judges...')
+				self.log('[ RESET ] Disconnecting all Judges...')
 				# Update judges view
 				self.data_changed_flags[13] = 1
 				# TODO Broadcast this to all judges
 
 				print('[ RESET ] Clearing scoreboard...')
+				self.log('[ RESET ] Clearing scoreboard...')
 				self.data_changed_flags[16] = 1
 
 				print('[ RESET ] Resetting Accounts...')
+				self.log('[ RESET ] Resetting Accounts...')
 				user_management.delete_all()
 				# Update Accounts View
 				self.data_changed_flags[5] = 1
 				print('[ RESET ] Resetting Submissions...')
+				self.log('[ RESET ] Resetting Submissions...')
 				submissions_management.delete_all()
 				# Update Submissions View
 				self.data_changed_flags[0] = 1
 				print('[ RESET ] Resetting Queries...')
+				self.log('[ RESET ] Resetting Queries...')
 				query_management.delete_all()
 				# Update Queriess View
 				self.data_changed_flags[9] = 1
 				print('[ RESET ] Reset environment...')
+				self.log('[ RESET ] Reset environment...')
 				server_window.set_button_behavior(self, 'SETUP')
 				save_status.update_entry('Contest Duration', '00:00:00')
 				save_status.update_entry('Contest Status', 'SETUP')
@@ -1153,7 +1182,8 @@ class server_window(QMainWindow):
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
-			print('Could not reset server : ' + str(error))
+			print('[ ERROR ] Could not reset server : ' + str(error))
+			self.log('[ ERROR ] Could not reset server : ' + str(error))
 
 		finally:
 			# Reset critical flag
@@ -1194,7 +1224,9 @@ class server_window(QMainWindow):
 
 			if custom_close_box.clickedButton() == button_yes:
 				print('[ EVENT ] TIMER RESET TRIGGERED')
+				self.log('[ EVENT ] TIMER RESET TRIGGERED')
 				print('[ RESET ] Reset environment...')
+				self.log('[ RESET ] Reset environment...')
 				server_window.set_button_behavior(self, 'SETUP')
 				save_status.update_entry('Contest Duration', '00:00:00')
 				save_status.update_entry('Contest Status', 'SETUP')
@@ -1205,7 +1237,8 @@ class server_window(QMainWindow):
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
-			print('Could not reset timer : ' + str(error))
+			print('[ ERROR ] Could not reset timer : ' + str(error))
+			self.log('[ ERROR ] Could not reset timer : ' + str(error))
 
 		finally:
 			# Reset critical flag
@@ -1258,7 +1291,9 @@ class server_window(QMainWindow):
 
 			if custom_close_box.clickedButton() == button_yes:
 				print('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
+				self.log('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
 				print('[ EVENT ][ RESET ] Disconnecting all clients...')
+				self.log('[ EVENT ][ RESET ] Disconnecting all clients...')
 				message = {
 				'Code' : 'DSCNT',
 				'Mode' : 2
@@ -1273,7 +1308,7 @@ class server_window(QMainWindow):
 				pass
 		except Exception as error:
 			print('Could not reset database : ' + str(error))
-
+			self.log('Could not reset database : ' + str(error))
 		finally:
 			# Reset critical flag
 			self.data_changed_flags[11] = 0
@@ -1300,6 +1335,7 @@ class server_window(QMainWindow):
 				return
 			else:
 				QMessageBox.about(self, "Access Denied!", "Authentication failed!")
+				self.log('[ SECURITY ] Server Close attempt : Password mismatch.')
 				event.ignore()
 				return
 
@@ -1337,7 +1373,7 @@ class server_window(QMainWindow):
 
 
 class init_gui(server_window):
-	def __init__(self, data_changed_flags, task_queue):
+	def __init__(self, data_changed_flags, task_queue, log_queue):
 		# make a reference of App class
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
@@ -1345,7 +1381,7 @@ class init_gui(server_window):
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
-		server_app = server_window(data_changed_flags, task_queue)
+		server_app = server_window(data_changed_flags, task_queue, log_queue)
 
 		# Splash screen
 		# splash = QSplashScreen(QPixmap("Elements/bitwise.png"))

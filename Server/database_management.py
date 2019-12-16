@@ -3,7 +3,7 @@ import sys
 import random
 import string
 
-
+import os
 
 global client_id_counter
 global query_id_counter
@@ -24,9 +24,9 @@ class manage_database():
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
 			cur.execute("create table if not exists connected_clients(client_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10), state varchar2(15))")
 			cur.execute("create table if not exists connected_judges(judge_id varchar2(10), user_name varchar2(10), password varchar2(10), state varchar2(15))")
-			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'WAITING', judge varchar2(15) DEFAULT '-')")
+			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'WAITING', judge varchar2(15) DEFAULT '-', score integer DEFAULT 0)")
 			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
-			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text)")
+			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text, penalty integer)")
 			cur.execute("create table if not exists problems(problem_name varchar2(30), problem_code varchar(10), test_files integer, time_limit integer)")
 			
 		except Exception as error:
@@ -95,7 +95,6 @@ class problem_management(manage_database):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			
 			if change_type == 1:
 				cur.execute("UPDATE problems SET problem_name = ? WHERE problem_code = ?", (new_value, key, ))
 				conn.commit()
@@ -115,7 +114,7 @@ class scoreboard_management():
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("INSERT INTO scoreboard values(?, ?, ?, ?, ?)", (client_id, user_name, score, problems_solved, total_time, ))
+			cur.execute("INSERT INTO scoreboard values(?, ?, ?, ?, ?, ?)", (client_id, user_name, score, problems_solved, total_time, 0))
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not add scoreboard entry : " + str(error))
@@ -132,87 +131,187 @@ class scoreboard_management():
 			print("[ CRITICAL ] Could not get scoreboard : " + str(error))
 		return	
 
-	def update_user_score(client_id, run_id, problem_max_score, problem_penalty, status, problem_code, time_stamp, ranking_algorithm):
-		
-		try:
-			new_ac_submission = 0
+	def update_user_score(
+			client_id,
+			run_id, 
+			problem_max_score, 
+			penalty_score, 
+			penalty_time, 
+			status, 
+			problem_code, 
+			time_stamp, 
+			ranking_algorithm
+		):
+		problem_max_score = int(problem_max_score)
+		# scoreboard(client_id user_name score problems_solved total_time penalty) <- Here, score is total score
+		# submissions(run_id client_run_id client_id language source_file problem_code 
+		# verdict timestamp sent_status judge score) <- This score is submission score
+		if ranking_algorithm == 1:
+			# ACM style ranklist
+			# For every unsolved problem, if it is a wrong answer, penalty of penalty_time is added 
+			# For every unsolved problem, the first AC submission time is recorded 
+			# along with all the penalties for the solved problems.
+			try:
+				pass
+			except Exception as error:
+				print('[ CRITICAL ][ SCOREBOARD ] Updation error')
+			finally:
+				return
+		elif ranking_algorithm == 2:
+			# IOI style ranklist
+			# For every unsolved problem, if there is a wrong answer, no penalty is issued
+			# If there is an AC submission, then problem_max_score is issued to the problem.
+			# If there is an AC submission for an already solved problem, no points are issued.
+			# Tie breaker is done through total time taken to solve the problems. 
+			# Minimum time is preferred.
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			# Get number of problems solved till now based on client_id
-			cur.execute("SELECT DISTINCT problem_code FROM submissions WHERE client_id = ? AND verdict = 'AC'", (client_id, ))
-			data = cur.fetchall()
-			if data == None:
-				problems_solved = 0
-			else:
-				problems_solved = len(data)
-
-
-			# Get Previous score of the client
-			cur.execute("SELECT score FROM scoreboard WHERE client_id = ?", (client_id, ))
-			data = cur.fetchall()
-			# Data can not be NONE (Guarenteed)
-			if data == None: # Meh, Anyways 
-				previous_score = 0
-			else:
-				previous_score = data[0][0]
-
-			# Check if this verdict is a new AC or a pre-scored AC
-			# So that score is not updated when user sends same AC code again.
-			if status == 'AC':
+			try:
+				# Get number of problems solved till now based on client_id
 				cur.execute(
-					"SELECT * FROM submissions WHERE client_id = ? and problem_code = ? and verdict = 'AC'", 
-					(client_id, problem_code, )
+				"SELECT DISTINCT problem_code FROM submissions WHERE client_id = ? AND verdict = 'AC'",
+					(
+						client_id, 
+					)
 				)
 				data = cur.fetchall()
-				# If there is only one such entry, it means this is a new AC (The same AC that the entry was for)
-				if data == None or len(data) == 1:
-					score = problem_max_score
-					new_ac_submission = 1
+				if data == None:
+					problems_solved = 0
 				else:
-					# IGNORE this submission in leaderboard
-					return
+					problems_solved = len(data)
 
-			elif status == 'CE':
-				score = 0
-			elif ranking_algorithm == 1:	# For ACM style contest, there is penalty
-				score = problem_penalty
-			else:							# For Long contest or IOI style contest, no penalty
-				score = 0
+				# Get Previous total score of the client
+				cur.execute("SELECT score FROM scoreboard WHERE client_id = ?", (client_id, ))
+				data = cur.fetchall()
+				if data == None or len(data) == 0: 
+					previous_total_score = 0
+				else:
+					previous_total_score = int(data[0][0])
 
-			# Get Previous timestamp of the client
-			cur.execute("SELECT timestamp FROM submissions WHERE run_id = ?", (run_id, ))
-			data = cur.fetchall()
-			# Data can not be NONE (Guarenteed)
-			if data == None: # Meh, Anyways 
-				previous_timestamp = '00:00:00'
-			else:
-				previous_timestamp = data[0][0]
+				# Get Previous problem score of the run_id
+				cur.execute("SELECT score FROM submissions WHERE run_id = ?", (run_id, ))
+				data = cur.fetchall()
+				# Data can not be NONE (Guarenteed)
+				if data == None: # Meh, Anyways 
+					previous_score = 0
+				else:
+					previous_score = int(data[0][0])
 
-		except Exception as error:
-			print("[ ERROR ] Could Not Fetch data : " + str(error))
-			return
+				# Check if this is the first AC of this problem
+				if status == 'AC':
+					cur.execute(
+						"SELECT * FROM submissions WHERE client_id = ? and problem_code = ? and verdict = 'AC'", 
+						(
+							client_id, 
+							problem_code, 
+						)
+					)
+					data = cur.fetchall()
+					# If there is only one such entry, it means this is a new AC (The same AC that the entry was for)
+					if data == None or len(data) == 1:
+						print('[ SCOREBOARD ][ RUN ' + str(run_id) + ' ][ PASS ] New AC')
+						# We are here, which means this is a new AC submission
+						# We don't care about wrong answers in IOI stle, so, Meh
+						new_total_score = previous_total_score + problem_max_score
 
-		# If it is a new AC submission, total time taken by user is updated.
-		if new_ac_submission == 1:
-			updated_time_stamp = time_stamp
-		else:
-			updated_time_stamp = previous_timestamp
+						print(
+							'[ SCOREBOARD ][ UPDATE ] Client: ' 
+							+ str(client_id) 
+							+ " Prev Score :" 
+							+ str(previous_total_score) 
+							+ " New Score:" 
+							+ str(new_total_score)
+						)
+						cur.execute(
+							"UPDATE scoreboard SET score = ?, problems_solved = ?, total_time = ? WHERE client_id = ? ", 
+							(
+								new_total_score, 
+								problems_solved, 
+								time_stamp, 
+								client_id,
+							)
+						)
+						conn.commit()
+						cur.execute(
+							"UPDATE submissions SET score = ? WHERE run_id = ? ", 
+							(
+								problem_max_score,
+								run_id,
+							)
+						)
+						conn.commit()
 
-		new_score = previous_score + score
-		
-		try:
-			print('[ SCOREBOARD ][ UPDATE ] Client: ' + str(client_id) + " Prev Score :" + str(previous_score) + " New Score:" + str(new_score))
-			cur.execute(
-				"UPDATE scoreboard SET score = ?, problems_solved = ?, total_time = ? WHERE client_id = ? ", 
-				(new_score, problems_solved, updated_time_stamp, client_id)
-			)
-			conn.commit()
+					else:
+						print('[ SCOREBOARD ][ RUN ' + str(run_id) + ' ][ SKIP ] Already received AC Verdict on this problem.')
+						cur.execute(
+							"UPDATE submissions SET score = 0 WHERE run_id = ? ", 
+							(
+								run_id,
+							)
+						)
+						conn.commit()
 
-		except Exception as error:
-			print('[ ERROR ][ CRITICAL ] Scoreboard could not be updated : ' + str(error))
+						return
 
-		return
+				else:
+					# Check if the client had recieved AC verdict earlier?
+					# If verdict is not AC but RUN SCORE is non zero, then this score
+					# must be removed
+					
+					if previous_score == problem_max_score:
+						new_total_score = previous_total_score - problem_max_score
+						# Get previous total_time : Last AC time
+						cur.execute("SELECT timestamp FROM submissions WHERE client_id = ? and verdict = 'AC' ORDER BY run_id DESC", (client_id, ))
+						data = cur.fetchall()
+						# Data can not be NONE (Guarenteed)
+						if data == None or len(data) == 0: # Meh, Anyways 
+							previous_timestamp = '00:00:00'
+						else:
+							previous_timestamp = data[0][0]
 
+						# Update submissions table first, then find out the new problems_solved count
+						cur.execute(
+							"UPDATE submissions SET score = 0 WHERE run_id = ? ", 
+							(
+								run_id,
+							)
+						)
+						conn.commit()
+						# The problem_solved count automatically takes this into account
+						print(
+							'[ SCOREBOARD ][ UPDATE ] Client: ' 
+							+ str(client_id) 
+							+ " Prev Score :" 
+							+ str(previous_total_score) 
+							+ " New Score:" 
+							+ str(new_total_score)
+						)
+						cur.execute(
+							"UPDATE scoreboard SET score = ?, problems_solved = ?, total_time = ? WHERE client_id = ? ", 
+							(
+								new_total_score,
+								problems_solved,
+								previous_timestamp,
+								client_id,
+							)
+						)
+						conn.commit()
+
+			except Exception as error:
+				print('[ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error))
+				exc_type, exc_obj, exc_tb = sys.exc_info()
+				fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+				print(exc_type, fname, exc_tb.tb_lineno)
+			finally:
+				return
+		elif ranking_algorithm == 3:
+			# LONG style ranklist
+			try:
+				pass
+			except Exception as error:
+				print('[ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error))
+			finally:
+				return
 
 class previous_data(manage_database):
 	def get_last_run_id():
@@ -226,6 +325,7 @@ class previous_data(manage_database):
 			else:
 				return int(data[0][0])
 		except:
+			print('[ INIT ] Run ID initialised to 0')
 			return 0
 
 	def get_last_client_id():
@@ -244,37 +344,48 @@ class previous_data(manage_database):
 			client_id_counter = 0
 
 	def get_last_query_id():
-		global query_id_counter
 		try:
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(query_id) FROM queries")
 			data =  cur.fetchall()
-			if(data[0][0] != ''):
-				query_id_counter = int(data[0][0])
+			if(data[0][0] == ''):
+				return 0
 			else:
-				query_id_counter = 0
-
+				return int(data[0][0])
 		except:
 			print('[ INIT ] Query ID initialised to 0')
-			query_id_counter = 0
-			
-
-
-
+			return 0
 
 class client_authentication(manage_database):
-
 	#This function validates the (user_name, password, client_id) in the database.
 	def validate_client(user_name, password):
 		#Validate client in database
 		cur = manage_database.get_cursor()
-		cur.execute("SELECT exists(SELECT * FROM accounts WHERE user_name = ? and password = ?)", (user_name,password,))
+		cur.execute(
+			"SELECT exists(SELECT * FROM accounts WHERE user_name = ? and password = ?)", 
+			(user_name, password, )
+		)
 		validation_result = cur.fetchall()
 		
 		if validation_result[0][0] == 1:
 			return True
 		else:
 			return False
+
+	def validate_connected_client(user_name, client_id, session_key = 'None'):
+		#Validate client in database
+		cur = manage_database.get_cursor()
+		cur.execute(
+			"SELECT exists(SELECT * FROM connected_clients WHERE user_name = ? and client_id = ?)",
+			(user_name, client_id, )
+		)
+		validation_result = cur.fetchall()
+		
+		if validation_result[0][0] == 1:
+			return True
+		else:
+			return False
+		return
 
 	#This function generates a new client_id for new connections
 	def generate_new_client_id():
@@ -287,7 +398,10 @@ class client_authentication(manage_database):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("INSERT INTO " + table_name + " values(?, ?, ?, ?)", (client_id, user_name, password, state, ))
+			cur.execute(
+				"INSERT INTO " + table_name + " values(?, ?, ?, ?)", 
+				(client_id, user_name, password, state, )
+			)
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not add client : " + str(error))
@@ -299,7 +413,10 @@ class client_authentication(manage_database):
 	def get_client_id(user_name):
 		try:
 			cur = manage_database.get_cursor()
-			cur.execute("SELECT client_id FROM connected_clients WHERE user_name = ?", (user_name, ))
+			cur.execute(
+				"SELECT client_id FROM connected_clients WHERE user_name = ?", 
+				(user_name, )
+			)
 			client_id = cur.fetchall()
 			return client_id[0][0]
 		except Exception as error:
@@ -337,9 +454,8 @@ class submissions_management(manage_database):
 		run_id = int(run_id)
 		client_id = int(client_id)
 		local_run_id = int(local_run_id)
-		print('Inserting verdict : ' + verdict)
 		try:
-			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, 'WAITING', '-', ))
+			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, 'WAITING', '-', 0, ))
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not insert into submission : " + str(error))
@@ -362,6 +478,8 @@ class submissions_management(manage_database):
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			cur.execute("DELETE FROM submissions")
+			conn.commit()
+			cur.execute("DELETE FROM scoreboard")
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Database deletion error : " + str(error))
@@ -420,7 +538,8 @@ class query_management(manage_database):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
 		try:
-			cur.execute("INSERT INTO queries values(?, ?, ?, ?)", (query_id,client_id, query,'TO BE ANSWERED', ))
+			cur.execute("INSERT INTO queries values(?, ?, ?, ?)", (query_id, client_id, query, 'TO BE ANSWERED', ))
+			cur.execute('commit')
 			conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not insert into submission : " + str(error))
@@ -435,12 +554,6 @@ class query_management(manage_database):
 		except Exception as error:
 			print("[ ERROR ] Could not insert into submission : " + str(error))
 		return
-
-	def generate_new_query_id():
-		global query_id_counter
-		query_id_counter = query_id_counter + 1
-		query_id = int(query_id_counter)
-		return query_id
 
 	def delete_all():
 		try:
@@ -484,10 +597,9 @@ class user_management(manage_database):
 
 			cur.execute("commit")
 
-		except:
-			print('[ CRITICAL ] Database insertion error! Roll back')
-			cur.execute("rollback")
-
+		except Exception as error:
+			print('[ CRITICAL ] Database insertion error: ' + str(error))
+			
 		# INSERTION FINISHED
 		return
 

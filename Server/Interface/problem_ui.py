@@ -123,7 +123,7 @@ class view_case_ui(QMainWindow):
 
 class problem_edit_ui(QMainWindow):
 	def __init__(
-			self, 
+			self,
 			data_changed_flags, 
 			task_queue,
 			problem, 
@@ -176,7 +176,7 @@ class problem_edit_ui(QMainWindow):
 		self.tab_bar.setObjectName('problem_tabs')
 		self.tabs.addTab(self.tab1, '')
 		self.tabs.addTab(self.tab2, '')
-		self.tab_bar.addTab('Problem')
+		self.tab_bar.addTab('Edit Problem')
 		self.tab_bar.addTab('Test Files')
 		self.tabs.setTabBar(self.tab_bar)
 		
@@ -228,12 +228,18 @@ class problem_edit_ui(QMainWindow):
 		self.problem_content.setText(self.problem)
 		self.problem_content.setFixedSize(250, 28)
 		self.problem_content.textChanged.connect(lambda: self.handle_change(1))
+		# Changing problem Name and code causes multiple issues client and judge side
+		# So it is Read Only
+		self.problem_content.setReadOnly(True)	
 
 		code_label = QLabel('Code: ')
 		self.code_content = QLineEdit()
 		self.code_content.setText(self.code)
 		self.code_content.setFixedSize(70, 28)
 		self.code_content.textChanged.connect(lambda: self.handle_change(2))
+		# Changing problem Name and code causes multiple issues client and judge side
+		# So it is Read Only
+		self.code_content.setReadOnly(True)
 
 		time_limit_label = QLabel('Time Limit: ')
 		self.time_limit_content = QLineEdit()
@@ -310,7 +316,7 @@ class problem_edit_ui(QMainWindow):
 		example_widget.setLayout(example_layout)
 
 		source_layout = QVBoxLayout()
-		source_layout.addWidget(heading)
+		# source_layout.addWidget(heading)
 		source_layout.addWidget(level1_widget)
 		source_layout.addWidget(statement_label)
 		source_layout.addWidget(self.statement_content)
@@ -380,7 +386,7 @@ class problem_edit_ui(QMainWindow):
 			
 
 		problem_layout = QVBoxLayout()
-		problem_layout.addWidget(heading)
+		# problem_layout.addWidget(heading)
 		problem_layout.addWidget(test_cases_table)
 		problem_layout.addStretch(1)
 		widget = QWidget()
@@ -578,7 +584,7 @@ class problem_edit_ui(QMainWindow):
 				self.task_queue.put(message)
 
 			if self.example_output_format_changed != 0:
-				content_data = self.modify(self.self.example_output_syntax_content.toPlainText()) 		
+				content_data = self.modify(self.example_output_syntax_content.toPlainText()) 		
 				status = save_status.update_problem_content(self.code, 'Example Output', content_data)
 				# Send data to task queue:
 				message = {
@@ -590,7 +596,8 @@ class problem_edit_ui(QMainWindow):
 				message = json.dumps(message)
 				self.task_queue.put(message)
 
-		except:
+		except Exception as error:
+			print('[ ERROR ] Could not change problem details: ' + str(error))
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Critical)
 			info_box.setWindowTitle('Error')
@@ -603,10 +610,13 @@ class problem_edit_ui(QMainWindow):
 			self.close()
 
 	def modify(self, content_data):
-		content_data = content_data.replace('&le', '\u2264')
-		content_data = content_data.replace('&ge', '\u2265')
-		content_data = content_data.replace('&ne', '\u2260')
-		return content_data
+		try:
+			content_data = content_data.replace('&le', '\u2264')
+			content_data = content_data.replace('&ge', '\u2265')
+			content_data = content_data.replace('&ne', '\u2260')
+			return content_data
+		except:
+			return content_data
 
 
 	def exit(self):

@@ -62,6 +62,16 @@ class initialize_server():
 				time2_s - time1_s 
 			)
 
+	def get_abs_time_difference(time1, time2):
+		# Return difference between time2 and time1 in hhmmss format
+		time1_s = initialize_server.convert_to_seconds(time1)
+		time2_s = initialize_server.convert_to_seconds(time2)
+		if time1_s >= time2_s:
+			val = time1_s - time2_s
+		else:
+			val = time2_s - time1_s
+		return val
+
 	def get_remaining_time():
 		initialize_server.read_config()
 		current_time = initialize_server.convert_to_seconds(time.strftime("%H:%M:%S", time.localtime()))
@@ -94,18 +104,8 @@ class initialize_server():
 
 
 class save_status():
-	def write_config(
-		rabbitmq_username, rabbitmq_password, judge_username, judge_password,
-		host, allow_login, allow_judge, allow_submission, allow_scoreboard,
-		client_key, judge_key, file_password, contest_duration, status,
-		contest_start_time, contest_end_time, contest_set_time
-		):
-
-		print('\n[ WRITE ] config.json')
-
-		allow_login = str(allow_login)
-		allow_submission = str(allow_submission) 
-				
+	def write_config():
+		print('\n[ WRITE ] config.json')		
 		json_data = {
 		    "Server Username": "BitsOJ",
 		    "Server Password": "root",

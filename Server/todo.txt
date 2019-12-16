@@ -1,17 +1,16 @@
-				TASK																				PRIORITY
-
-1. Leaderboard updation from interface reviews														high
-2. Client submission validation																		high
-3. Long style ranklist ( High Priority ) and ACM style ranklist ( Low Priority )					medium
-4. Rabbitmq queue security																			high
-5. Password change and auto sign out for any clients 												low
+				TASK																				
+1. Leaderboard updation from interface reviews				: Score increases but not decreases										
+		2. Client submission validation																		
+3. Long style ranklist ( High Priority ) and ACM style ranklist ( Low Priority )					
+4. Rabbitmq queue security																			
+5. Password change and auto sign out for any clients 												
 		6. Show judge who gave verdict
 		7. Store all verdicts of a submission and show them
-8. Recieve and store all clients IP Address 														medium
-9. Disconnect a judge																				medium
-10. Rejudge all submissions with given problem code													low
-11. Generate Report		VIMP																		low
+8. Recieve and store all clients IP Address 														
+9. Disconnect a judge																				
+10. Rejudge all submissions with given problem code		Future Update
+11. Generate Report		VIMP																		
 		12. Problem edit UI 																				
-13. Export Accounts CSV																				in progress
-14. Show unanswered query/submission count on sidebar buttons 										low
-15. Admin password from config																		medium
+13. Export Accounts CSV																				
+14. Admin password from config																	
+		15. Server Logs	

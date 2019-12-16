@@ -85,11 +85,12 @@ def handler(ch, method, properties, body):
 			time_stamp = json_data['Time Stamp']
 
 			
-			num = randrange(8)
-			try:
-				status = verdicts[num]
-			except:
-				status = 'AC'
+			# num = randrange(8)
+			# try:
+			# 	status = verdicts[num]
+			# except:
+			# 	status = 'AC'
+			status = input('Enter verdict [ AC, WA, TLE, RE, CMPL, NZEC, OLE, PE] : ')
 
 			message = {
 			'Judge Key' : key,

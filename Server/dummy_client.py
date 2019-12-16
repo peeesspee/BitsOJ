@@ -48,7 +48,7 @@ def login():
 	print("Sent")
 
 def send():
-	global client_id, key
+	global client_id, key, username
 	print("Sending code")
 	code = '#include<iostream>\n int main(void){ std::cout<<"Hello"; return 0; }'
 
@@ -57,9 +57,10 @@ def send():
 	message = {
 		'Client Key' : key,
 		'Code' : 'SUBMT', 
+		'Username' : username,
 		'ID' : client_id,
-		'PCode' : 'TBE',
-		'Language' : 'CPP',
+		'PCode' : 'TPH',
+		'Language' : 'C++',
 		'Time' : ctime,
 		'Source' : code,
 		'Local Run ID' : 1
@@ -70,7 +71,7 @@ def send():
 	print("sent code")
 
 def query():
-	global client_id, key
+	global client_id, key, username
 	print("Sending Query")
 	code = 'Hello server! How are you?'
 
@@ -78,7 +79,8 @@ def query():
 		'Client Key' : key,
 		'Code' : 'QUERY', 
 		'Query' : code,
-		'ID' : client_id
+		'ID' : client_id,
+		'Username' : username
 		}
 	message = json.dumps(message)
 	
