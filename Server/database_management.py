@@ -24,9 +24,9 @@ class manage_database():
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
 			cur.execute("create table if not exists connected_clients(client_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10), state varchar2(15))")
 			cur.execute("create table if not exists connected_judges(judge_id varchar2(10), user_name varchar2(10), password varchar2(10), state varchar2(15))")
-			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'WAITING', judge varchar2(15) DEFAULT '-')")
+			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'WAITING', judge varchar2(15) DEFAULT '-', score integer)")
 			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
-			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text)")
+			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text, penalty integer)")
 			cur.execute("create table if not exists problems(problem_name varchar2(30), problem_code varchar(10), test_files integer, time_limit integer)")
 			
 		except Exception as error:
@@ -95,7 +95,6 @@ class problem_management(manage_database):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			
 			if change_type == 1:
 				cur.execute("UPDATE problems SET problem_name = ? WHERE problem_code = ?", (new_value, key, ))
 				conn.commit()
@@ -133,7 +132,6 @@ class scoreboard_management():
 		return	
 
 	def update_user_score(client_id, run_id, problem_max_score, problem_penalty, status, problem_code, time_stamp, ranking_algorithm):
-		
 		try:
 			new_ac_submission = 0
 			cur = manage_database.get_cursor()
@@ -212,6 +210,33 @@ class scoreboard_management():
 			print('[ ERROR ][ CRITICAL ] Scoreboard could not be updated : ' + str(error))
 
 		return
+
+	def update_user_score2(
+			client_id,
+			run_id, 
+			problem_max_score, 
+			penalty_score, 
+			penalty_time, 
+			status, 
+			problem_code, 
+			time_stamp, 
+			ranking_algorithm
+		):
+		if ranking_algorithm == 1:
+			# ACM style ranklist
+			# For every unsolved problem, if it is a wrong answer, penalty of penalty_time is added 
+			return
+		elif ranking_algorithm == 2:
+			# IOI style ranklist
+			# For every unsolved problem, if there is a wrong answer, no penalty is issued
+			# If there is an AC submission, then problem_max_score is issued to the problem.
+			# If there is an AC submission for an already solved problem, no points are issued.
+			# Tie breaker is done through total time taken to solve the problems. 
+			# Minimum time is preferred.
+			return
+		elif ranking_algorithm == 3:
+			# LONG style ranklist
+			return
 
 
 class previous_data(manage_database):

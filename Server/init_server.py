@@ -104,18 +104,8 @@ class initialize_server():
 
 
 class save_status():
-	def write_config(
-		rabbitmq_username, rabbitmq_password, judge_username, judge_password,
-		host, allow_login, allow_judge, allow_submission, allow_scoreboard,
-		client_key, judge_key, file_password, contest_duration, status,
-		contest_start_time, contest_end_time, contest_set_time
-		):
-
-		print('\n[ WRITE ] config.json')
-
-		allow_login = str(allow_login)
-		allow_submission = str(allow_submission) 
-				
+	def write_config():
+		print('\n[ WRITE ] config.json')		
 		json_data = {
 		    "Server Username": "BitsOJ",
 		    "Server Password": "root",

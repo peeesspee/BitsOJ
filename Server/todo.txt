@@ -12,5 +12,5 @@
 11. Generate Report		VIMP																		
 		12. Problem edit UI 																				
 13. Export Accounts CSV																				
-14. Admin password from config																		
-		15. Server Logs																						
+14. Admin password from config																	
+		15. Server Logs	

@@ -14,6 +14,7 @@ from bitsoj_core import core
 from log_manager import handle_logs
 from init_server import initialize_server, save_status
 
+
 sys.path.append('../')
 
 def main():
@@ -47,6 +48,24 @@ def main():
 	log_pid = log_process.pid
 
 	log_queue.put('#### SERVER START ####')
+	####################################################################
+	# System check
+	# This checks if the server shut down correctly during last system exit.
+	flag = system_check()
+	if flag == 0:
+		# Unsafe
+		print('[ SELF CHECK ][ FAIL ] Detected an abnormal system exit.')
+		log_queue.put('[ SELF CHECK ][ FAIL ] Detected an abnormal system exit.')
+		print('[ SELF CHECK ][ FAIL ] Please check that there are no active connections to RabbitMQ server', end = ' ' )
+		print('in RabbitMQ Management portal ( http://localhost:15672/#/channels )')
+		print('[ SELF CHECK ] Press any key when checked...')
+		input()
+	else:
+		print('[ SELF CHECK ][ PASS ] Systems OK.')
+		log_queue.put('[ SELF CHECK ][ PASS ] Systems OK.')
+		pass
+
+	####################################################################
 
 	# Initialize server
 	print('[ SETUP ] Initialising server...')
@@ -227,20 +246,26 @@ def main():
 
 	submission_time_limit = data_changed_flags[21]
 
+	print('[ EXIT ] Saving Server state to file.')
+	log_queue.put('[ EXIT ] Saving Server state to file.')
+
 	save_status.update_entry('Judge Login Allowed', judge_login)
 	save_status.update_entry('Login Allowed', login_status)
 	save_status.update_entry('Submission Allowed', submission_status)
 	save_status.update_entry('Scoreboard Update Allowed', scoreboard_status)
 	save_status.update_entry('Manual Review', manual_review)
 	save_status.update_entry('Submission Time Limit', submission_time_limit)
+	print('[ EXIT ] Saved Server state to file.')
+	log_queue.put('[ EXIT ] Saved Server state to file.')
 	#####################################################################################
+	
+	# EXIT
+	sleep(1)
 	log_queue.put("#### SERVER EXIT ####\n\n")
 	# Stop logger service
 	data_changed_flags[23] = 1
-
-	# EXIT
-	sleep(2)
-	
+	system_stop()
+	sleep(1)
 	print("  ################################################")
 	print("  #----------SERVER CLOSED SUCCESSFULLY----------#")
 	print("  ################################################")
@@ -279,6 +304,34 @@ def manage_process(
 	core_pid = core_process.pid
 	
 	return client_pid, judge_pid, core_pid
+
+def system_check():
+	flag = -1
+	try:
+		file = open('state_check.info', 'r')
+		data = file.read()
+		if data == 'SAFE':
+			flag = 1
+		elif data == 'UNSAFE':
+			flag = 0
+		file.close()
+
+		if flag == 1:
+			file = open('state_check.info', 'w')
+			file.write('UNSAFE')
+			file.close()
+		return flag
+	except Exception as error:
+		return 0
+	
+def system_stop():
+	try:
+		file = open('state_check.info', 'w+')
+		file.write('SAFE')
+		file.close()
+	except:
+		pass
+
 
 if __name__ == '__main__':
 	# If this file is run natively, and not imported

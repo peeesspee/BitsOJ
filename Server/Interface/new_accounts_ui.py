@@ -12,9 +12,9 @@ class new_accounts_ui(QMainWindow):
 	def __init__(self, data_changed_flags, parent=None):
 		super(new_accounts_ui, self).__init__(parent)
 		new_accounts_ui.data_changed_flags = data_changed_flags
-		self.setGeometry(800, 450, 300, 200)
+		self.setGeometry(700, 350, 300, 200)
 		self.setWindowTitle('Add new accounts')
-		self.setFixedSize(300, 200)
+		self.setFixedSize(500, 300)
 		main = self.add_new_accounts_ui()
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)

@@ -144,14 +144,15 @@ class core():
 
 					# Update scoreboard
 					problem_max_score = core.config['AC Points']
-					problem_penalty = core.config['Penalty Score']
-					time_penalty = core.config['Penalty Time']
+					penalty_score = core.config['Penalty Score']
+					penalty_time = core.config['Penalty Time']
 					# call scoreboard updation function		TODO MOVE TO CORE
 					scoreboard_management.update_user_score(
 						client_id, 
 						run_id,
 						problem_max_score, 
-						problem_penalty,
+						penalty_score,
+						penalty_time,
 						status, 
 						p_code,
 						time_stamp,
@@ -162,7 +163,7 @@ class core():
 					# Broadcast new scoreboard to clients whenever a new AC is recieved 
 					# and scoreboard update is allowed.
 					if status == 'AC' and core.data_changed_flags[15] == 1:
-						# Flag 18 signals interface to update scoreboard
+						# Flag 18 signals interface to send scoreboard to all clients if allowed
 						core.data_changed_flags[18] = 1 
 
 				elif code == "EDIT":
