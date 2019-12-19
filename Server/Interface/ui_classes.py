@@ -304,11 +304,11 @@ class ui_widgets:
 
 		score_model = self.manage_leaderboard_model(self.db, 'scoreboard')
 
-		score_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
-		score_model.setHeaderData(1, Qt.Horizontal, 'Team')
-		score_model.setHeaderData(2, Qt.Horizontal, 'Score')
-		score_model.setHeaderData(3, Qt.Horizontal, 'Problems Solved')
-		score_model.setHeaderData(4, Qt.Horizontal, 'Total Time')
+		# score_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
+		# score_model.setHeaderData(1, Qt.Horizontal, 'Team')
+		# score_model.setHeaderData(2, Qt.Horizontal, 'Score')
+		# score_model.setHeaderData(3, Qt.Horizontal, 'Problems Solved')
+		# score_model.setHeaderData(4, Qt.Horizontal, 'Total Time')
 		
 		score_table = self.generate_view(score_model)
 		score_table.setSortingEnabled(False)

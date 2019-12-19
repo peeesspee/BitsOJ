@@ -301,6 +301,7 @@ class server_window(QMainWindow):
 	####################################################
 	# Functions related to GUI updates
 	def load_previous_state(self):
+		server_window.set_leaderboard_behavior(self)
 		if self.config["Contest Status"] == "RUNNING":
 			server_window.set_button_behavior(self, 'RUNNING')
 		elif self.config["Contest Status"] == "STOPPED":
@@ -411,6 +412,35 @@ class server_window(QMainWindow):
 	def convert_to_seconds(time_str):
 		h, m, s = time_str.split(':')
 		return int(h) * 3600 + int(m) * 60 + int(s)
+
+	def set_leaderboard_behavior(self):
+		if self.data_changed_flags[17] == 1:
+			# ACM style leaderboard
+			pass
+		elif self.data_changed_flags[17] == 3:
+			# Long style ranklist
+			self.leaderboard_query = (
+				"SELECT user_name, problems_solved, score FROM scoreboard ORDER BY score DESC, total_time ASC"
+			)
+			self.score_model.setQuery(self.leaderboard_query)
+			self.score_model.setHeaderData(0, Qt.Horizontal, 'Team Name')
+			self.score_model.setHeaderData(1, Qt.Horizontal, 'Problems Solved')
+			self.score_model.setHeaderData(2, Qt.Horizontal, 'Score')
+		else:
+			# IOI style ranklist DEFAULT
+			self.leaderboard_query = (
+				"SELECT user_name, problems_solved, score, total_time  FROM scoreboard ORDER BY score DESC, total_time ASC"
+			)
+			self.score_model.setQuery(self.leaderboard_query)
+			self.score_model.setHeaderData(0, Qt.Horizontal, 'Team Name')
+			self.score_model.setHeaderData(1, Qt.Horizontal, 'Problems Solved')
+			self.score_model.setHeaderData(2, Qt.Horizontal, 'Score')
+			self.score_model.setHeaderData(3, Qt.Horizontal, 'Total Time')
+
+
+		# Refresh leaderboard
+		self.data_changed_flags[16] == 1
+
 
 	def set_button_behavior(self, status):
 		if status == "SETUP":
@@ -698,7 +728,6 @@ class server_window(QMainWindow):
 	def manage_leaderboard_model(self, db, table_name):
 		if db.open():
 			model = QSqlQueryModel()
-			model.setQuery(self.leaderboard_query)
 			# model.setEditStrategy()
 			return model
 		else:
