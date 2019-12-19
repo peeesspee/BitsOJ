@@ -154,16 +154,25 @@ class scoreboard_management():
 			try:
 				pass
 			except Exception as error:
-				print('[ CRITICAL ][ SCOREBOARD ] Updation error')
+				exc_type, exc_obj, exc_tb = sys.exc_info()
+				fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+				print('[ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error) + 'On ', exc_type, fname, exc_tb.tb_lineno)
 			finally:
 				return
-		elif ranking_algorithm == 2:
+		elif ranking_algorithm == 2 or ranking_algorithm == 3:
 			# IOI style ranklist
 			# For every unsolved problem, if there is a wrong answer, no penalty is issued
 			# If there is an AC submission, then problem_max_score is issued to the problem.
 			# If there is an AC submission for an already solved problem, no points are issued.
 			# Tie breaker is done through total time taken to solve the problems. 
 			# Minimum time is preferred.
+
+			# LONG style ranklist
+			# No penalty for wrong answers, and no tie breaker 
+
+			# No logical difference between LONG and IOI styles, so their algo is same
+			# Only that we do not consider time in LONG style
+
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			try:
@@ -298,18 +307,9 @@ class scoreboard_management():
 						conn.commit()
 
 			except Exception as error:
-				print('[ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error))
 				exc_type, exc_obj, exc_tb = sys.exc_info()
 				fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-				print(exc_type, fname, exc_tb.tb_lineno)
-			finally:
-				return
-		elif ranking_algorithm == 3:
-			# LONG style ranklist
-			try:
-				pass
-			except Exception as error:
-				print('[ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error))
+				print('[ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error) + 'On ', exc_type, fname, exc_tb.tb_lineno)
 			finally:
 				return
 
