@@ -588,7 +588,7 @@ class view_problem_ui(QMainWindow):
 		example_output_statement.setWordWrap(True)
 		example_output_statement.setObjectName('problem_text_2')
 
-		author_label = QLabel('Author : ' + problem_file["Author Name"])
+		author_label = QLabel('Author : ' + problem_file["Author"])
 		author_label.setObjectName('problem_heading_2')
 
 		main_layout.addWidget(heading, alignment = Qt.AlignCenter)

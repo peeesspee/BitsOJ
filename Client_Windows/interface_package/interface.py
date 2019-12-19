@@ -395,6 +395,12 @@ class client_window(QMainWindow):
 				QMessageBox.warning(self, 'Alert', 'All Clients are disconnected by the admin.\nPlease contact Administrator.')
 				QApplication.quit()
 
+
+			if(self.data_changed_flag[7] == 1):
+				message = self.queue.get()
+				QMessageBox.warning(self, 'Update', message + 'has been updated.\nPlease reload the problem.')
+				self.data_changed_flag[7] = 0
+
 			return
 		except Exception as Error:
 			print(str(Error))
