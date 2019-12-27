@@ -122,6 +122,8 @@ def main():
 	data_changed_flags[4] = 0
 	# SYSTEM SHUT flag
 	data_changed_flags[7] = 0
+	# Server lock flag
+	data_changed_flags[24] = 0
 	# Contest state flag(0/1/2 values assigned from interface, -1 signifies nothing)
 	if config["Contest Status"] == "RUNNING":
 		data_changed_flags[10] = 1
@@ -187,6 +189,7 @@ def main():
 	#	21		X			X: Submission time limit 0 < X 
 	#	22		0/1			1: Problem table changed
 	#	23		0/1			1: Stop logger
+	#	24		0/1			1: Server locked
 
 	#####################################################################################
 
