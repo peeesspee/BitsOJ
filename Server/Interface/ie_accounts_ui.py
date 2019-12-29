@@ -43,7 +43,7 @@ class ie_accounts_ui(QMainWindow):
 				file_entry.text()
 			)
 		)
-		cancel_button = QPushButton('Cancel')
+		cancel_button = QPushButton('Close')
 		cancel_button.setFixedSize(100, 30)
 		cancel_button.clicked.connect(
 			lambda:ie_accounts_ui.cancel(
@@ -72,11 +72,11 @@ class ie_accounts_ui(QMainWindow):
 		return main
 		
 	def import_manager(self, filename):
-		if filename == '':
+		if filename == ''  or ie_accounts_ui.validate_filename(filename) == 0:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)
 			info_box.setWindowTitle('Alert')
-			info_box.setText('Please enter a valid file path.')
+			info_box.setText('Please enter a valid file path/name.')
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
 			return
@@ -92,6 +92,7 @@ class ie_accounts_ui(QMainWindow):
 			info_box.setText('File could not be read.')
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
+			return
 		else:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Critical)
@@ -99,6 +100,7 @@ class ie_accounts_ui(QMainWindow):
 			info_box.setText('File not found, or is locked.')
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
+			return
 		# Reset the critical section flag
 		ie_accounts_ui.data_changed_flags[4] = 0
 		# Indicate new insertions in accounts
@@ -106,15 +108,16 @@ class ie_accounts_ui(QMainWindow):
 		self.close()
 
 	def export_manager(self, filename):
-		if filename == '':
+		if filename == '' or ie_accounts_ui.validate_filename(filename) == 0:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)
 			info_box.setWindowTitle('Alert')
-			info_box.setText('Please enter a valid file path.')
+			info_box.setText('Please enter a valid file path/name.')
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
 			return
 
+		
 		print('[ ACCOUNT ] Export Accounts to ' + filename)
 		u_list, p_list, t_list = user_management.get_sheet_accounts()
 		io_manager.write_file(u_list, p_list, t_list)
@@ -129,3 +132,7 @@ class ie_accounts_ui(QMainWindow):
 		ie_accounts_ui.data_changed_flags[4] = 0
 		self.close()
 
+	def validate_filename(filename):
+		if filename[-5:] == '.xlsx':
+			return 1
+		return 0
