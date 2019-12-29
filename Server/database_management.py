@@ -599,7 +599,7 @@ class user_management(manage_database):
 
 		except Exception as error:
 			print('[ CRITICAL ] Database insertion error: ' + str(error))
-			
+			cur.execute('rollback')
 		# INSERTION FINISHED
 		return
 
@@ -756,6 +756,7 @@ class user_management(manage_database):
 
 		cur = manage_database.get_cursor()
 		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
+
 		cur.execute("begin")
 		try:
 			for i in range(0, u_len):
@@ -764,9 +765,11 @@ class user_management(manage_database):
 
 		except Exception as error:
 			print('[ CRITICAL ] Database insertion error: ' + str(error))
+			cur.execute('rollback')
+			return 0
 			
 		# INSERTION FINISHED
-		return
+		return 1
 
 	def get_sheet_accounts():
 		cur = manage_database.get_cursor()
@@ -784,5 +787,5 @@ class user_management(manage_database):
 
 		except Exception as error:
 			print('[ CRITICAL ] Database fetch error: ' + str(error))
-			
+
 		return u_list, p_list, t_list
