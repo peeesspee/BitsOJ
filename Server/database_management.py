@@ -745,3 +745,44 @@ class user_management(manage_database):
 		except Exception as error:
 			print(str(error))
 			return 0
+
+	def add_sheet_accounts(user_list, password_list, type_list):
+		u_len = len(user_list)
+		p_len = len(password_list)
+		t_len = len(type_list)
+		if u_len != p_len or u_len != t_len:
+			print('[ CRITICAL ] Database insertion error: Incorrect datatype or amount')
+			return
+
+		cur = manage_database.get_cursor()
+		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
+		cur.execute("begin")
+		try:
+			for i in range(0, u_len):
+				cur.execute("INSERT into accounts values (?, ?, ? )" , (user_list[i], password_list[i], type_list[i], ))
+			cur.execute("commit")
+
+		except Exception as error:
+			print('[ CRITICAL ] Database insertion error: ' + str(error))
+			
+		# INSERTION FINISHED
+		return
+
+	def get_sheet_accounts():
+		cur = manage_database.get_cursor()
+		u_list = []
+		p_list = []
+		t_list = []
+		try:
+			cur.execute("SELECT * FROM accounts")
+			data = cur.fetchall()
+			if data != '' and len(data) != 0:
+				for entry in data:
+					u_list.append(entry[0])
+					p_list.append(entry[1])
+					t_list.append(entry[2])
+
+		except Exception as error:
+			print('[ CRITICAL ] Database fetch error: ' + str(error))
+			
+		return u_list, p_list, t_list

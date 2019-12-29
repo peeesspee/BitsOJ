@@ -11,6 +11,7 @@ from Interface.submission_ui import *
 from Interface.accounts_edit_ui import *
 from Interface.query_reply_ui import *
 from Interface.new_accounts_ui import *
+from Interface.ie_accounts_ui import *
 from init_server import initialize_server, save_status
 from database_management import user_management, submissions_management, query_management, scoreboard_management
 
@@ -877,6 +878,17 @@ class server_window(QMainWindow):
 		return
 
 	@pyqtSlot()
+	def import_export_accounts(self):
+		if self.data_changed_flags[4] == 0:
+			# CRITICAL section flag set
+			self.data_changed_flags[4] = 1
+			self.window = ie_accounts_ui(self.data_changed_flags)
+			self.window.show()			
+		else:
+			pass
+		return
+
+	@pyqtSlot()
 	def password_verification(self):
 		password = self.admin_password
 		input_dialog = QInputDialog()
@@ -1388,6 +1400,13 @@ class server_window(QMainWindow):
 	###################################################
 
 	def closeEvent(self, event):
+		# if lock is set, ignore
+		if self.data_changed_flags[24] == 1:
+			QMessageBox.about(self, "Access Denied", "Server is locked!")
+			self.log('[ SECURITY ] Server Close attempt -> Denied: Server was locked.')
+			event.ignore()
+			return
+
 		# if contest is running,
 		if self.data_changed_flags[10] == 1:
 			status = self.password_verification()
@@ -1397,8 +1416,8 @@ class server_window(QMainWindow):
 				event.ignore()
 				return
 			else:
-				QMessageBox.about(self, "Access Denied!", "Authentication failed!")
-				self.log('[ SECURITY ] Server Close attempt : Password mismatch.')
+				QMessageBox.about(self, "Access Denied", "Authentication failed!")
+				self.log('[ SECURITY ] Server Close attempt -> Denied: Password mismatch.')
 				event.ignore()
 				return
 
@@ -1430,6 +1449,7 @@ class server_window(QMainWindow):
 
 		if custom_close_box.clickedButton() == button_yes:
 			self.data_changed_flags[7] = 1
+			self.log('[ SECURITY ] Server Close attempt -> Accepted.')
 			event.accept()
 		elif custom_close_box.clickedButton() == button_no : 
 			event.ignore()
