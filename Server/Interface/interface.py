@@ -12,6 +12,7 @@ from Interface.accounts_edit_ui import *
 from Interface.query_reply_ui import *
 from Interface.new_accounts_ui import *
 from Interface.ie_accounts_ui import *
+from Interface.rejudge_problem_ui import *
 from init_server import initialize_server, save_status
 from database_management import user_management, submissions_management, query_management, scoreboard_management
 
@@ -269,7 +270,7 @@ class server_window(QMainWindow):
 		return
 
 	def read_password(self):
-		return ''
+		return self.config['Admin Password']
 
 	@pyqtSlot()
 	def manage_accounts(self):
@@ -872,6 +873,18 @@ class server_window(QMainWindow):
 			# CRITICAL section flag set
 			self.data_changed_flags[4] = 1
 			self.window = new_accounts_ui(self.data_changed_flags)
+			self.window.show()			
+		else:
+			pass
+		return
+
+	@pyqtSlot()
+	def rejudge_problem(self):
+		if self.data_changed_flags[25] == 0:
+			# CRITICAL section flag set
+			self.data_changed_flags[25] = 1
+			codes = self.config['Problem Codes']
+			self.window = rejudge_problem_ui(self.data_changed_flags, self.task_queue, codes)
 			self.window.show()			
 		else:
 			pass

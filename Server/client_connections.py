@@ -229,8 +229,11 @@ class manage_clients():
 				# If client has NOT logged in for the first time
 				# MAYBE A SECURITY EVENT?
 				# Raise a confirmation box to ADMIN maybe?
+				client_id = client_authentication.get_client_id(client_username)
+				if client_id == -1:
+					# Not possible
+					pass
 				if previously_connected_state == 'Connected':
-					client_id = client_authentication.get_client_id(client_username)
 					print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Previous Client ID : ' + str(client_id) )
 					manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Previous Client ID : ' + str(client_id) )
 					# Reject client login
@@ -244,7 +247,6 @@ class manage_clients():
 
 					# Raise a security event?
 				elif previously_connected_state == 'Disconnected':
-					client_id = client_authentication.get_client_id(client_username)
 					print('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
 					manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
 				

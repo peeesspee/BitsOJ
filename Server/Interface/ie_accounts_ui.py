@@ -4,7 +4,7 @@ from database_management import user_management
 from account_io import *
 
 class ie_accounts_ui(QMainWindow):
-	filename = './accounts.xlsx'
+	filename = ''
 	def __init__(self, data_changed_flags, parent=None):
 		super(ie_accounts_ui, self).__init__(parent)
 		ie_accounts_ui.data_changed_flags = data_changed_flags
@@ -21,13 +21,14 @@ class ie_accounts_ui(QMainWindow):
 
 		self.file_entry = QLineEdit()
 		self.file_entry.setText(ie_accounts_ui.filename)
-		self.file_entry.setPlaceholderText('Enter file name (.xlsx Files only)')
+		self.file_entry.setPlaceholderText('Enter file path (.xlsx files only)')
 		self.file_entry.setFixedSize(350, 40)
 		browse_button = QPushButton('...')
 		browse_button.setFixedSize(40, 40)
 		browse_button.clicked.connect(
 			self.browse_manager
 		)
+		browse_button.setToolTip('Browse for files')
 
 		file_entry_layout = QHBoxLayout()
 		file_entry_layout.addStretch(50)
@@ -174,3 +175,4 @@ class ie_accounts_ui(QMainWindow):
 		except:
 			pass
 		self.file_entry.setText(file_name[0])
+		ie_accounts_ui.filename = file_name[0]

@@ -93,6 +93,14 @@ class ui_widgets:
 		edit_submission_button.setObjectName("topbar_button")
 		edit_submission_button.setToolTip('Review selected submission')
 
+		rejudge_problem_button = QPushButton('Group Rejudge', self)
+		rejudge_problem_button.setFixedSize(200, 50)
+		rejudge_problem_button.clicked.connect(
+			lambda:self.rejudge_problem()
+		)
+		rejudge_problem_button.setObjectName("topbar_button")
+		rejudge_problem_button.setToolTip('Rejudge all submissions for a problem for selected client.\nThis is a costly operation!')
+
 		submission_model = self.manage_submissions_model(self.db, 'submissions')
 
 		# run_id, client_id, problem_code, language, timestamp, verdict, sent_status
@@ -119,6 +127,7 @@ class ui_widgets:
 		head_layout.addWidget(allow_submission_label)
 		head_layout.addWidget(allow_submission_button)
 		head_layout.addWidget(edit_submission_button)
+		head_layout.addWidget(rejudge_problem_button)
 		head_layout.setStretch(0, 80)
 		head_layout.setStretch(1, 5)
 		head_layout.setStretch(2, 5)
