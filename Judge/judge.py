@@ -2,12 +2,16 @@ from file_creation import file_manager
 from connection import manage_connection
 from login_request import authenticate_judge 
 from communicate_server import communicate_server
+from init_judge import initialize_judge
 
-rabbitmq_username = "judge1"
-rabbitmq_password = "judge1"
-host = "192.168.43.239"
+
+initialize_judge.read_config()
+
+rabbitmq_username = initialize_judge.rabbitmq_username
+rabbitmq_password = initialize_judge.rabbitmq_password
+host = initialize_judge.host_ip
 # host = 'localhost'
-key = '000000000000000'
+key = initialize_judge.key
 
 
 channel,connection = manage_connection.initialize_connection(rabbitmq_username,rabbitmq_password,host)

@@ -1,0 +1,21 @@
+import json
+
+class initialize_judge():
+	
+	rabbitmq_username = ''
+	rabbitmq_password = ''
+	host_ip = ''
+	key = ''
+	processlimit = ''
+
+	def read_config():
+		with open("./config.json",'r') as read_json:
+			config = json.load(read_json)
+			initialize_judge.rabbitmq_username = config["rabbitmq_username"]
+			initialize_judge.rabbitmq_password = config["rabbitmq_password"]
+			initialize_judge.host_ip = config["host_ip"]
+			initialize_judge.key = config["key"]
+			initialize_judge.processlimit = config["processlimit"]
+
+# if __name__=='__main__':
+# 	initialize_judge.read_config()
