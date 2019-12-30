@@ -5,6 +5,7 @@ import filecmp
 import multiprocessing
 import time
 import signal
+import resource
 
 class verdict():
 
@@ -85,8 +86,14 @@ class verdict():
 					if ext == 'in':
 						print("STARTED RUNNING SUBMITTED FILE")
 						# start = time.time()
-						command = 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
+						command = 'ulimit -p 500 && '
+						command = command + 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
+						print("command is ->", command)
 						process = subprocess.run(command, capture_output=True, text=True, shell=True)
+						
+						# soft, hard = resource.getrlimit(resource.RLIMIT_AS) 
+						# resource.setrlimit(resource.RLIMIT_AS, (1048, hard)) 
+
 						print("I am RUNNING")
 						print(process)
 
@@ -262,7 +269,8 @@ class verdict():
 
 
 # v,r=verdict.main(file_name, file_with_ext, lang, problem_code, run_id, timelimit)
-# print("verdict is --->",v)
-# print("result is ---->",r)
+v,r=verdict.main("SAC14", "SAC14.c", "GCC", "SAC", "987", "5")
+print("verdict is --->",v)
+print("result is ---->",r)
 
 # _main_ = verdict.trial("ABCD1234", "ABCD1234.cpp")
