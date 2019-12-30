@@ -55,7 +55,9 @@ class server_window(QMainWindow):
 		###########################################################
 		self.db = self.init_qt_database()
 		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status, judge FROM submissions ORDER BY run_id DESC"
+			# Default leaderboard query
 		self.leaderboard_query = "SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC"
+
 		###########################################################
 		self.config = initialize_server.read_config()
 		self.contest_set_time = self.config['Contest Set Time']
@@ -118,6 +120,11 @@ class server_window(QMainWindow):
 		self.button_9.clicked.connect(self.show_about)
 		self.button_9.setObjectName("sidebar_button")
 
+		self.button_10 = QPushButton('Lock', self)
+		self.button_10.setFixedSize(button_width, button_height)
+		self.button_10.clicked.connect(self.set_lock)
+		self.button_10.setObjectName("sidebar_button")
+
 		###########################################################
 
 		###########################################################
@@ -142,6 +149,7 @@ class server_window(QMainWindow):
 		) = ui_widgets.settings_ui(self)
 
 		self.tab9 = ui_widgets.about_us_ui(self)
+		self.tab10 = ui_widgets.lock_ui(self)
 		
 		###########################################################
 		# Initialize GUI elements
@@ -169,6 +177,9 @@ class server_window(QMainWindow):
 		side_bar_layout.addWidget(self.button_7)
 		side_bar_layout.addWidget(self.button_8)
 		side_bar_layout.addWidget(self.button_9)
+		# Add some spacing for lock button
+		side_bar_layout.addStretch(33)
+		side_bar_layout.addWidget(self.button_10)
 
 
 		# Set stretch and spacing
@@ -220,6 +231,7 @@ class server_window(QMainWindow):
 		self.right_widget.addTab(self.tab7, '')
 		self.right_widget.addTab(self.tab8, '')
 		self.right_widget.addTab(self.tab9, '')
+		self.right_widget.addTab(self.tab10, '')
 		self.right_widget.setObjectName("main_tabs")
 	
 		# Screen 1 will be our initial screen 
@@ -260,43 +272,60 @@ class server_window(QMainWindow):
 
 	@pyqtSlot()
 	def manage_accounts(self):
-		self.right_widget.setCurrentIndex(0)
+		if self.data_changed_flags[24] != 1:
+			self.right_widget.setCurrentIndex(0)
 
 	@pyqtSlot()
 	def view_submissions(self):
-		self.right_widget.setCurrentIndex(1)
+		if self.data_changed_flags[24] != 1:
+			self.right_widget.setCurrentIndex(1)
 
 	@pyqtSlot()
 	def manage_judges(self):
-		self.right_widget.setCurrentIndex(2)
+		if self.data_changed_flags[24] != 1:
+			self.right_widget.setCurrentIndex(2)
 
 	@pyqtSlot()
 	def manage_clients(self):
-		self.right_widget.setCurrentIndex(3)
+		if self.data_changed_flags[24] != 1:
+			self.right_widget.setCurrentIndex(3)
 
 	@pyqtSlot()
 	def manage_queries(self):
-		self.right_widget.setCurrentIndex(4)
+		if self.data_changed_flags[24] != 1:
+			self.right_widget.setCurrentIndex(4)
 
 	@pyqtSlot()
 	def manage_leaderboard(self):
-		self.right_widget.setCurrentIndex(5)
+		if self.data_changed_flags[24] != 1:
+			self.right_widget.setCurrentIndex(5)
 
 	@pyqtSlot()
 	def manage_problems(self):
-		self.right_widget.setCurrentIndex(6)
+		if self.data_changed_flags[24] != 1:
+			self.right_widget.setCurrentIndex(6)
 
 	@pyqtSlot()
 	def show_stats(self):
-		self.right_widget.setCurrentIndex(7)
+		if self.data_changed_flags[24] != 1:
+			self.right_widget.setCurrentIndex(7)
 
 	@pyqtSlot()
 	def contest_settings(self):
-		self.right_widget.setCurrentIndex(8)
+		if self.data_changed_flags[24] != 1:
+			self.right_widget.setCurrentIndex(8)
 
 	@pyqtSlot()
 	def show_about(self):
-		self.right_widget.setCurrentIndex(9)
+		if self.data_changed_flags[24] != 1:
+			self.right_widget.setCurrentIndex(9)
+
+	@pyqtSlot()
+	def set_lock(self):
+		print('[ GUI ][ LOCK ] Server GUI has been locked.')
+		self.log('[ GUI ][ LOCK ] Server GUI has been locked.')
+		self.data_changed_flags[24] = 1
+		self.right_widget.setCurrentIndex(10)
 
 	####################################################
 	# Functions related to GUI updates
@@ -857,12 +886,18 @@ class server_window(QMainWindow):
 				self, "Authentication", "Enter Contest Password: ", QLineEdit.Password, ""
 			)
 		if button_pressed_flag:
-			if user_input == password:
+			if self.validate_password(user_input):
 				return 1
 			else:
 				self.log('[ SECURITY ] Password verification failed.')
 				return 0
-		return 2		
+		return 2	
+
+	def validate_password(self, input):
+		if input == self.admin_password:
+			return 1
+		return 0
+
 
 	@pyqtSlot()
 	def delete_account(self, selected_rows):
@@ -880,18 +915,17 @@ class server_window(QMainWindow):
 			self.data_changed_flags[6] = 0
 			return
 		message = "Are you sure you want to delete : " + username + " ? "
-	
-		custom_close_box = QMessageBox()
-		custom_close_box.setIcon(QMessageBox.Critical)
-		custom_close_box.setWindowTitle('Confirm Deletion')
-		custom_close_box.setText(message)
+		custom_box = QMessageBox()
+		custom_box.setIcon(QMessageBox.Critical)
+		custom_box.setWindowTitle('Confirm Deletion')
+		custom_box.setText(message)
 
-		custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
-		custom_close_box.setDefaultButton(QMessageBox.No)
+		custom_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
+		custom_box.setDefaultButton(QMessageBox.No)
 
-		button_yes = custom_close_box.button(QMessageBox.Yes)
+		button_yes = custom_box.button(QMessageBox.Yes)
 		button_yes.setText('Yes')
-		button_no = custom_close_box.button(QMessageBox.No)
+		button_no = custom_box.button(QMessageBox.No)
 		button_no.setText('No')
 
 		button_yes.setObjectName("close_button_yes")
@@ -900,9 +934,9 @@ class server_window(QMainWindow):
 		button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
 		button_no.setStyleSheet(open('Interface/style.qss', "r").read())
 
-		custom_close_box.exec_()
+		custom_box.exec_()
 
-		if custom_close_box.clickedButton() == button_yes:
+		if custom_box.clickedButton() == button_yes:
 			# Delete from accounts table and connected clients table
 			user_management.delete_user(username)
 			# Broadcast this user disconnection
@@ -916,7 +950,7 @@ class server_window(QMainWindow):
 			# Update Accounts and connected clients View
 			self.data_changed_flags[5] = 1
 			self.data_changed_flags[1] = 1
-		elif custom_close_box.clickedButton() == button_no : 
+		elif custom_box.clickedButton() == button_no : 
 			pass
 
 		# Reset critical flag

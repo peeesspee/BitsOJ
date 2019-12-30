@@ -861,18 +861,6 @@ class ui_widgets:
 			timer_reset_button
 		)
 
-	def contest_ranking_settings(self):
-		# TODO
-		# 1.Select Ranking algorithm
-		# 	1.Select Penalty Duration
-		# 2.Set if leaderboard is to be shown to clients
-		
-		main_layout = QVBoxLayout()
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName('account_window')
-		return main
-
 	def settings_ui(self):
 		heading = QLabel('Server Settings')
 		heading.setObjectName('main_screen_heading')
@@ -887,16 +875,16 @@ class ui_widgets:
 		) = ui_widgets.contest_time_settings(self)
 
 		(
-			contest_reset_widget, account_reset_button, 
-			submission_reset_button, query_reset_button, 
-			client_reset_button, server_reset_button, timer_reset_button
+			contest_reset_widget, 
+			account_reset_button, 
+			submission_reset_button, 
+			query_reset_button, 
+			client_reset_button, 
+			server_reset_button, 
+			timer_reset_button
 		) = ui_widgets.contest_reset_settings(self)
 
-		(
-			main
-		) = ui_widgets.contest_ranking_settings(self)
-
-
+		
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
 		main_layout.addWidget(time_management_widget)
@@ -907,12 +895,20 @@ class ui_widgets:
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		return (
-			main, contest_time_entry, change_time_entry, 
-			set_button, start_button, update_button, stop_button, 
-			account_reset_button, submission_reset_button, 
-			query_reset_button, client_reset_button, server_reset_button,
+			main, 
+			contest_time_entry, 
+			change_time_entry, 
+			set_button, 
+			start_button, 
+			update_button, 
+			stop_button, 
+			account_reset_button, 
+			submission_reset_button, 
+			query_reset_button, 
+			client_reset_button, 
+			server_reset_button,
 			timer_reset_button
-			)
+		)
 
 	def about_us_ui(self):
 		head1 = QLabel('Made with <3 by team Bitwise')
@@ -933,3 +929,61 @@ class ui_widgets:
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		return main
+
+	def lock_ui(self):
+		head1 = QLabel('SERVER LOCKED')
+		head1.setObjectName('about_screen_heading')
+		head1.setAlignment(Qt.AlignCenter)
+		head2 = QLabel('Please Enter Admin Password to unlock server')
+		head2.setObjectName('main_screen_content')
+		head2.setAlignment(Qt.AlignCenter)
+		
+		password_input = QLineEdit()
+		password_input.setFixedSize(200, 35)
+		password_input.setAlignment(Qt.AlignCenter)
+		password_input.setPlaceholderText('Admin Password')
+		password_input.setEchoMode(QLineEdit.Password)
+		submit_button = QPushButton('Confirm')
+		submit_button.setFixedSize(100, 33)
+		submit_button.setObjectName('interior_button')
+		submit_button.clicked.connect(lambda: ui_widgets.unlock_ui(self, password_input.text()))
+		password_layout = QHBoxLayout()
+		password_layout.addStretch(50)
+		password_layout.addWidget(password_input)
+		password_layout.addWidget(submit_button)
+		password_layout.addStretch(50)
+		password_widget = QWidget()
+		password_widget.setLayout(password_layout)
+		
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(head1)
+		main_layout.addWidget(head2)
+		main_layout.addWidget(password_widget)
+		
+		main_layout.addStretch(5)
+		main = QWidget()
+		main.setLayout(main_layout)
+		main.setObjectName("main_screen");
+		return main
+
+	def unlock_ui(self, entry):
+		status = self.validate_password(entry)
+		if status:
+			# Password verified
+			self.data_changed_flags[24] = 0		# Set unlock flag
+			print('[ GUI ][ LOCK ] Server GUI has been unlocked.')
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Information)
+			info_box.setWindowTitle('Success')
+			info_box.setText('Server Unlocked!')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+		else:
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Critical)
+			info_box.setWindowTitle('Failure')
+			info_box.setText('Password verification failed!')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+
+
