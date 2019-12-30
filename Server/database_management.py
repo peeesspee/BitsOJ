@@ -144,7 +144,7 @@ class scoreboard_management():
 		):
 		problem_max_score = int(problem_max_score)
 		# scoreboard(client_id user_name score problems_solved total_time penalty) <- Here, score is total score
-		# submissions(run_id client_run_id client_id language source_file problem_code 
+		# submissions(run_id client_run_id client_id language source_file problem_code) 
 		# verdict timestamp sent_status judge score) <- This score is submission score
 		if ranking_algorithm == 1:
 			# ACM style ranklist
@@ -421,6 +421,7 @@ class client_authentication(manage_database):
 			return client_id[0][0]
 		except Exception as error:
 			print("[ ERROR ] : The user does not have a client id yet.")
+			return -1
 
 	# Get user_name when client_id is known
 	def get_client_username(client_id):
@@ -489,7 +490,7 @@ class submissions_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(timestamp) FROM submissions WHERE client_id = ?" , (client_id,))
 			data = cur.fetchall()
-			if data[0][0] == None:
+			if len(data) == 0 or data[0][0] == None:
 				return "NONE"
 			else:
 				return data[0][0]
@@ -501,7 +502,7 @@ class submissions_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT judge FROM submissions WHERE run_id = ?" , (run_id,))
 			data = cur.fetchall()
-			if data[0][0] == None:
+			if len(data) == 0 or data[0][0] == None:
 				return "NONE"
 			else:
 				return data[0][0]
@@ -513,7 +514,7 @@ class submissions_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT client_run_id FROM submissions WHERE run_id = ?" , (run_id,))
 			data = cur.fetchall()
-			if data[0][0] == None:
+			if len(data) == 0 or data[0][0] == None:
 				return "NONE"
 			else:
 				return data[0][0]
@@ -525,12 +526,73 @@ class submissions_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT source_file FROM submissions WHERE run_id = ?" , (run_id,))
 			data = cur.fetchall()
-			if data[0][0] == None:
+			if len(data) == 0 or data[0][0] == None:
 				return "NONE"
 			else:
 				return data[0][0]
 		except Exception as error:
 			return "NONE"
+
+	def get_submission_data(code, client):
+		items = 'client_id, run_id, language, problem_code, source_file, client_run_id, timestamp'
+		if client == '*' and code == '*':
+			try:
+				cur = manage_database.get_cursor()
+				query = "SELECT " + items + " FROM submissions ORDER BY timestamp ASC"
+				cur.execute(query)
+				data = cur.fetchall()
+				if data == '' or len(data) == 0:
+					return "NF"
+				else:
+					return data
+			except Exception as error:
+				print('[ ERROR ] ' + str(error))
+				return "NONE"
+
+		elif client == '*':
+			try:
+				cur = manage_database.get_cursor()
+				query = (
+					"SELECT " + 
+					items + 
+					" FROM submissions " +
+					" WHERE problem_code = '" +
+					code +
+					"' " +
+					"ORDER BY timestamp ASC"
+				)
+				cur.execute(query)
+				data = cur.fetchall()
+				if data == '' or len(data) == 0:
+					return "NF"
+				else:
+					return data
+			except Exception as error:
+				print('[ ERROR ] ' + str(error))
+				return "NONE"
+
+		elif code == '*':
+			try:
+				cur = manage_database.get_cursor()
+				query = (
+					"SELECT " + 
+					items + 
+					" FROM submissions " +
+					" WHERE client_id = '" +
+					client + 
+					"' " + 
+					"ORDER BY timestamp ASC"
+				)
+				cur.execute(query)
+				data = cur.fetchall()
+				if data == '' or len(data) == 0:
+					return "NONE"
+				else:
+					return data
+			except Exception as error:
+				print('[ ERROR ] ' + str(error))
+				return "NONE"
+
 
 
 class query_management(manage_database):
@@ -599,7 +661,7 @@ class user_management(manage_database):
 
 		except Exception as error:
 			print('[ CRITICAL ] Database insertion error: ' + str(error))
-			
+			cur.execute('rollback')
 		# INSERTION FINISHED
 		return
 
@@ -745,3 +807,47 @@ class user_management(manage_database):
 		except Exception as error:
 			print(str(error))
 			return 0
+
+	def add_sheet_accounts(user_list, password_list, type_list):
+		u_len = len(user_list)
+		p_len = len(password_list)
+		t_len = len(type_list)
+		if u_len != p_len or u_len != t_len:
+			print('[ CRITICAL ] Database insertion error: Incorrect datatype or amount')
+			return
+
+		cur = manage_database.get_cursor()
+		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
+
+		cur.execute("begin")
+		try:
+			for i in range(0, u_len):
+				cur.execute("INSERT into accounts values (?, ?, ? )" , (user_list[i], password_list[i], type_list[i], ))
+			cur.execute("commit")
+
+		except Exception as error:
+			print('[ CRITICAL ] Database insertion error: ' + str(error))
+			cur.execute('rollback')
+			return 0
+			
+		# INSERTION FINISHED
+		return 1
+
+	def get_sheet_accounts():
+		cur = manage_database.get_cursor()
+		u_list = []
+		p_list = []
+		t_list = []
+		try:
+			cur.execute("SELECT * FROM accounts")
+			data = cur.fetchall()
+			if data != '' and len(data) != 0:
+				for entry in data:
+					u_list.append(entry[0])
+					p_list.append(entry[1])
+					t_list.append(entry[2])
+
+		except Exception as error:
+			print('[ CRITICAL ] Database fetch error: ' + str(error))
+
+		return u_list, p_list, t_list

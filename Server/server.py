@@ -76,6 +76,36 @@ def main():
 	conn, cur = manage_database.initialize_database()
 
 	# Set local variables and flags :
+	#####################################################################################
+	#index		value		meaning
+	#	0		0/1			0/1: No new/ New submission data to refresh
+	#	1		0/1			0/1: No new/ New login : Refresh connected clients view
+	#	2		0/1 		0/1: Disallow/Allow logins
+	#	3		0/1			0/1: Disallow/Allow submissions
+	#	4		0/1			1: A create accounts window is open
+	#	5		0/1			1: New users generated, update view
+	#   6		0/1			1: Account deletion under progress
+	#	7		0/1			1: Server shutdown
+	#   8		0/1			1: Query reply GUI open
+	#	9		0/1			1: Refresh query gui
+	# 	10		0/1/2		0: SETUP 1: START 2: STOPPED	Contest Status
+	#	11		0/1			1: Delete all accounts open
+	#	12		0/1			1: JUDGE logins allowed
+	#   13		0/1			1: Refresh Judge GUI
+	#	14		0/1			1: Client Edit under progress
+	#	15		0/1			1: Scoreboard update allowed
+	# 	16		0/1			1: Update Scoreboard GUI
+	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
+	#	18		0/1			1: Broadcast Scoreboard to all clients
+	#	19		0/1			1: UPDATE remaining time broadcast to all clients
+	#	20		0/1			1: Manual Review Allowed
+	#	21		X			X: Submission time limit 0 < X 
+	#	22		0/1			1: Problem table changed
+	#	23		0/1			1: Stop logger
+	#	24		0/1			1: Server locked
+	#	25		0/1			1: Rejudge problem ui open
+	#####################################################################################
+	
 	# Set submission time limit
 	data_changed_flags[21] = submission_time_limit
 	data_changed_flags[23] = 0
@@ -124,6 +154,7 @@ def main():
 	data_changed_flags[7] = 0
 	# Server lock flag
 	data_changed_flags[24] = 0
+	data_changed_flags[25] = 0
 	# Contest state flag(0/1/2 values assigned from interface, -1 signifies nothing)
 	if config["Contest Status"] == "RUNNING":
 		data_changed_flags[10] = 1
@@ -160,41 +191,6 @@ def main():
 	log_queue.put('[ SETUP ][ Process ] Judge Manager: ' + str(judge_pid))
 	log_queue.put('[ SETUP ][ Process ] Core: ' + str(core_pid))
 	log_queue.put('[ SETUP ][ Process ] Log Manager: ' + str(log_pid))
-
-
-	#####################################################################################
-
-	#index		value		meaning
-	#	0		0/1			0/1: No new/ New submission data to refresh
-	#	1		0/1			0/1: No new/ New login : Refresh connected clients view
-	#	2		0/1 		0/1: Disallow/Allow logins
-	#	3		0/1			0/1: Disallow/Allow submissions
-	#	4		0/1			1: A create accounts window is open
-	#	5		0/1			1: New users generated, update view
-	#   6		0/1			1: Account deletion under progress
-	#	7		0/1			1: Server shutdown
-	#   8		0/1			1: Query reply GUI open
-	#	9		0/1			1: Refresh query gui
-	# 	10		0/1/2		0: SETUP 1: START 2: STOPPED	Contest Status
-	#	11		0/1			1: Delete all accounts open
-	#	12		0/1			1: JUDGE logins allowed
-	#   13		0/1			1: Refresh Judge GUI
-	#	14		0/1			1: Client Edit under progress
-	#	15		0/1			1: Scoreboard update allowed
-	# 	16		0/1			1: Update Scoreboard GUI
-	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
-	#	18		0/1			1: Broadcast Scoreboard to all clients
-	#	19		0/1			1: UPDATE remaining time broadcast to all clients
-	#	20		0/1			1: Manual Review Allowed
-	#	21		X			X: Submission time limit 0 < X 
-	#	22		0/1			1: Problem table changed
-	#	23		0/1			1: Stop logger
-	#	24		0/1			1: Server locked
-
-	#####################################################################################
-
-	
-	
 
 	# Initialize GUI handler
 	try:

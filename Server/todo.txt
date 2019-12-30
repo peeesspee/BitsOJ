@@ -1,17 +1,9 @@
-				TASK																				
-		1. Leaderboard updation from interface reviews				: Score increases but not decreases										
-		2. Client submission validation																		
-		3.1 Long style ranklist
-3.2 ACM style ranklist ( Low Priority )					
-4. Rabbitmq queue security																			
-5. Password change
-		6. Show judge who gave verdict
-		7. Store all verdicts of a submission and show them
-8. Recieve and store all clients IP Address 														
-9. Disconnect a judge			Cancelled																	
-10. Rejudge all submissions with given problem code		Future Update
-11. Generate Report		VIMP																		
-		12. Problem edit UI 																				
-13. Export Accounts CSV																				
-14. Admin password from config																	
-		15. Server Logs	
+				TASK					
+		1 ACM style ranklist ( Low Priority )					
+2. Rabbitmq queue security	( High Priority )																	
+3. Password change ( Low Priority )
+4. Recieve and store all clients IP Address ( Low Priority )													
+		5. Rejudge all submissions with given problem code ( Today  90% done, fetch client list remaining)
+6. Generate Report	( High Priority)																	
+7. Decrypt config file	( Low Priority )
+8. Finish server logs for ui classes

@@ -11,12 +11,17 @@ class ui_widgets:
 		heading = QLabel('Manage Accounts')
 		heading.setObjectName('main_screen_heading')
 
-		create_accounts_button = QPushButton('Create Accounts', self)
+		ie_accounts_button = QPushButton('Import/Export', self)
+		ie_accounts_button.setFixedSize(200, 50)
+		ie_accounts_button.clicked.connect(self.import_export_accounts)
+		ie_accounts_button.setObjectName("topbar_button")
+
+		create_accounts_button = QPushButton('Generate', self)
 		create_accounts_button.setFixedSize(200, 50)
 		create_accounts_button.clicked.connect(self.create_accounts)
 		create_accounts_button.setObjectName("topbar_button")
 
-		delete_account_button = QPushButton('Delete Account', self)
+		delete_account_button = QPushButton('Delete', self)
 		delete_account_button.setFixedSize(200, 50)
 		delete_account_button.clicked.connect(
 			lambda:self.delete_account(accounts_table.selectionModel().selectedRows())
@@ -32,8 +37,10 @@ class ui_widgets:
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
+		head_layout.addWidget(ie_accounts_button)
 		head_layout.addWidget(create_accounts_button)
 		head_layout.addWidget(delete_account_button)
+
 		
 		head_layout.setStretch(0, 80)
 		head_layout.setStretch(1, 10)
@@ -86,6 +93,14 @@ class ui_widgets:
 		edit_submission_button.setObjectName("topbar_button")
 		edit_submission_button.setToolTip('Review selected submission')
 
+		rejudge_problem_button = QPushButton('Group Rejudge', self)
+		rejudge_problem_button.setFixedSize(200, 50)
+		rejudge_problem_button.clicked.connect(
+			lambda:self.rejudge_problem()
+		)
+		rejudge_problem_button.setObjectName("topbar_button")
+		rejudge_problem_button.setToolTip('Rejudge all submissions for a problem for selected client.\nThis is a costly operation!')
+
 		submission_model = self.manage_submissions_model(self.db, 'submissions')
 
 		# run_id, client_id, problem_code, language, timestamp, verdict, sent_status
@@ -112,6 +127,7 @@ class ui_widgets:
 		head_layout.addWidget(allow_submission_label)
 		head_layout.addWidget(allow_submission_button)
 		head_layout.addWidget(edit_submission_button)
+		head_layout.addWidget(rejudge_problem_button)
 		head_layout.setStretch(0, 80)
 		head_layout.setStretch(1, 5)
 		head_layout.setStretch(2, 5)

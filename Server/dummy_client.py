@@ -59,7 +59,7 @@ def send():
 		'Code' : 'SUBMT', 
 		'Username' : username,
 		'ID' : client_id,
-		'PCode' : 'TPH',
+		'PCode' : 'TFS',
 		'Language' : 'C++',
 		'Time' : ctime,
 		'Source' : code,
