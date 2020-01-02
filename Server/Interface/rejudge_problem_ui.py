@@ -16,6 +16,7 @@ class rejudge_problem_ui(QMainWindow):
 			self, 
 			data_changed_flags, 
 			task_queue,
+			log_queue,
 			codes = [], 
 			client_list = [], 
 			parent=None
@@ -23,6 +24,7 @@ class rejudge_problem_ui(QMainWindow):
 		super(rejudge_problem_ui, self).__init__(parent)
 		rejudge_problem_ui.data_changed_flags = data_changed_flags
 		rejudge_problem_ui.task_queue = task_queue
+		self.log_queue = log_queue
 		try:
 			rejudge_problem_ui.problem_codes = eval(codes)
 		except:
@@ -39,6 +41,9 @@ class rejudge_problem_ui(QMainWindow):
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		return
+
+	def log(self, text):
+		self.log_queue.put(text)
 
 	def code_combo_box_data_changed(text):
 		if text != rejudge_problem_ui.select_text:
@@ -68,6 +73,7 @@ class rejudge_problem_ui(QMainWindow):
 		confirm_button = QPushButton('Confirm')
 		confirm_button.setFixedSize(200, 50)
 		confirm_button.clicked.connect(lambda:rejudge_problem_ui.final_account_status(self))
+		confirm_button.setDefault(True)
 		cancel_button = QPushButton('Cancel')
 		cancel_button.setFixedSize(200, 50)
 		cancel_button.clicked.connect(lambda:rejudge_problem_ui.cancel(self))
@@ -108,6 +114,7 @@ class rejudge_problem_ui(QMainWindow):
 			info_box.exec_()
 			return
 		print('[ REJUDGE ][ ' + selected_code_ + ' ][ ' + selected_client_ + ' ]')
+		self.log('[ REJUDGE ][ ' + selected_code_ + ' ][ ' + selected_client_ + ' ]')
 		if selected_code_ == 'All':
 			selected_code_ = '*'
 		if selected_client_ == 'All':

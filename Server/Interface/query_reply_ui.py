@@ -9,14 +9,21 @@ class query_reply_ui(QMainWindow):
 	query_id = ''
 	client_id = ''
 	def __init__(
-		self, data_changed_flags,task_queue, 
-		query, client_id, query_id, parent=None
+			self, 
+			data_changed_flags,
+			task_queue, 
+			log_queue,
+			query, 
+			client_id, 
+			query_id, 
+			parent=None
 		):
 		super(query_reply_ui, self).__init__(parent)
 		query_reply_ui.button_mode = 1
 
 		self.data_changed_flags = data_changed_flags
 		self.task_queue = task_queue
+		self.log_queue = log_queue
 		query_reply_ui.query = query
 		query_reply_ui.query_id = query_id
 		query_reply_ui.client_id = client_id
@@ -76,6 +83,7 @@ class query_reply_ui(QMainWindow):
 		confirm_button.clicked.connect(
 			lambda:query_reply_ui.final_status(self, query_text.toPlainText(), response_entry.toPlainText())
 		)
+		confirm_button.setDefault(True)
 		cancel_button = QPushButton('Cancel')
 		cancel_button.setFixedSize(200, 50)
 		cancel_button.clicked.connect(
@@ -124,6 +132,9 @@ class query_reply_ui(QMainWindow):
 				query_reply_ui.button_mode = 2
 		return
 
+	def log(self, text):
+		self.log_queue.put(text)
+
 	def final_status(self, query, response):
 		if query_reply_ui.client_id != -1:
 			if query_reply_ui.button_mode == 2:
@@ -141,6 +152,8 @@ class query_reply_ui(QMainWindow):
 			message = json.dumps(message)
 			self.task_queue.put(message)
 			query_management.update_query(query_reply_ui.query_id, query, response)
+			print('[ QUERY ][ RSPONSE ][ ' + send_type + ' ] New query response sent by ADMIN')
+			self.log('[ QUERY ][ RSPONSE ][ ' + send_type + ' ] New query response sent by ADMIN')
 		else:
 			message ={
 				'Code' : 'QUERY',
@@ -153,6 +166,8 @@ class query_reply_ui(QMainWindow):
 			message = json.dumps(message)
 			self.task_queue.put(message)
 			query_management.update_query(query_reply_ui.query_id, query, response)
+			print('[ ANNOUNCEMENT ] New Announcement sent by ADMIN')
+			self.log('[ ANNOUNCEMENT ] New Announcement sent by ADMIN')
 
 		self.data_changed_flags[8] = 0
 		self.data_changed_flags[9] = 1
@@ -162,4 +177,5 @@ class query_reply_ui(QMainWindow):
 	def cancel(self):
 		self.data_changed_flags[8] = 0
 		self.close()
+
 

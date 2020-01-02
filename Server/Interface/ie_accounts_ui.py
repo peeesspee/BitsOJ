@@ -5,9 +5,12 @@ from account_io import *
 
 class ie_accounts_ui(QMainWindow):
 	filename = ''
-	def __init__(self, data_changed_flags, parent=None):
+	def log(self, text):
+		self.log_queue.put(text)
+	def __init__(self, data_changed_flags, log_queue, parent=None):
 		super(ie_accounts_ui, self).__init__(parent)
 		ie_accounts_ui.data_changed_flags = data_changed_flags
+		self.log_queue = log_queue
 		self.setGeometry(700, 350, 500, 200)
 		self.setWindowTitle('Import/Export Accounts')
 		self.setFixedSize(500, 200)
@@ -47,6 +50,7 @@ class ie_accounts_ui(QMainWindow):
 				self.file_entry.text()
 			)
 		)
+		import_button.setDefault(True)
 		export_button = QPushButton('Export')
 		export_button.setFixedSize(100, 30)
 		export_button.clicked.connect(
@@ -55,6 +59,7 @@ class ie_accounts_ui(QMainWindow):
 				self.file_entry.text()
 			)
 		)
+		export_button.setDefault(True)
 		cancel_button = QPushButton('Close')
 		cancel_button.setFixedSize(100, 30)
 		cancel_button.clicked.connect(
@@ -98,6 +103,7 @@ class ie_accounts_ui(QMainWindow):
 			return
 
 		print('[ ACCOUNT ] Import Accounts from ' + filename )
+		self.log('[ ACCOUNT ] Import Accounts from ' + filename )
 		u_list, p_list, t_list = io_manager.read_file(filename)
 		if len(u_list) != 0:
 			status = user_management.add_sheet_accounts(u_list, p_list, t_list)
@@ -145,6 +151,7 @@ class ie_accounts_ui(QMainWindow):
 
 		
 		print('[ ACCOUNT ] Export Accounts to ' + filename)
+		self.log('[ ACCOUNT ] Export Accounts to ' + filename)
 		u_list, p_list, t_list = user_management.get_sheet_accounts()
 		io_manager.write_file(u_list, p_list, t_list)
 		# Reset the critical section flag

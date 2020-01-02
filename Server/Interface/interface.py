@@ -822,6 +822,7 @@ class server_window(QMainWindow):
 					self.window = manage_submission_ui(
 						self.data_changed_flags,
 						self.task_queue,
+						self.log_queue,
 						run_id,
 						client_id,
 						problem_code,
@@ -855,7 +856,7 @@ class server_window(QMainWindow):
 					self.data_changed_flags[8] = 0
 					return
 				
-				self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query,client_id, query_id)
+				self.window = query_reply_ui(self.data_changed_flags,self.task_queue, self.log_queue ,query,client_id, query_id)
 				self.window.show()
 
 			except Exception as error: 
@@ -891,7 +892,7 @@ class server_window(QMainWindow):
 		if self.data_changed_flags[4] == 0:
 			# CRITICAL section flag set
 			self.data_changed_flags[4] = 1
-			self.window = new_accounts_ui(self.data_changed_flags)
+			self.window = new_accounts_ui(self.data_changed_flags, self.log_queue)
 			self.window.show()			
 		else:
 			pass
@@ -905,7 +906,7 @@ class server_window(QMainWindow):
 			codes = self.config['Problem Codes']
 			client_list = []
 			client_list = client_authentication.get_connected_clients()
-			self.window = rejudge_problem_ui(self.data_changed_flags, self.task_queue, codes, client_list)
+			self.window = rejudge_problem_ui(self.data_changed_flags, self.task_queue, self.log_queue, codes, client_list)
 			self.window.show()			
 		else:
 			pass
@@ -916,7 +917,7 @@ class server_window(QMainWindow):
 		if self.data_changed_flags[4] == 0:
 			# CRITICAL section flag set
 			self.data_changed_flags[4] = 1
-			self.window = ie_accounts_ui(self.data_changed_flags)
+			self.window = ie_accounts_ui(self.data_changed_flags, self.log_queue)
 			self.window.show()			
 		else:
 			pass
@@ -1024,7 +1025,7 @@ class server_window(QMainWindow):
 				self.data_changed_flags[14] = 0
 				pass
 			else:
-				self.edit_window = account_edit_ui(self.data_changed_flags, self.task_queue, client_id, username, password, state, ip)
+				self.edit_window = account_edit_ui(self.data_changed_flags, self.task_queue, self.log_queue, client_id, username, password, state, ip)
 				self.edit_window.show()
 			
 		except Exception as error: 
@@ -1053,7 +1054,7 @@ class server_window(QMainWindow):
 				pass
 			else:
 				# print("Sending ", username, password, ctype)
-				self.edit_window = password_change_ui(self.data_changed_flags, username, password, ctype)
+				self.edit_window = password_change_ui(self.data_changed_flags, self.log_queue, username, password, ctype)
 				self.edit_window.show()
 			
 		except Exception as error: 
@@ -1082,7 +1083,7 @@ class server_window(QMainWindow):
 				self.data_changed_flags[14] = 0
 				pass
 			else:
-				self.edit_window = problem_edit_ui(self.data_changed_flags, self.task_queue, problem, code, test_files, time_limit)
+				self.edit_window = problem_edit_ui(self.data_changed_flags, self.task_queue, self.log_queue, problem, code, test_files, time_limit)
 				self.edit_window.show()
 			
 		except Exception as error: 
