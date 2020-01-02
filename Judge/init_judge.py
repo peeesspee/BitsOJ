@@ -1,12 +1,13 @@
 import json
+import socket
 
 class initialize_judge():
 	
-	rabbitmq_username = ''
-	rabbitmq_password = ''
-	host_ip = ''
-	key = ''
-	processlimit = ''
+	rabbitmq_username = 'Nul'
+	rabbitmq_password = 'Nul'
+	host_ip = 'Nul'
+	key = 'Nul'
+	processlimit = 'Nul'
 
 	def read_config():
 		with open("./config.json",'r') as read_json:
@@ -17,5 +18,17 @@ class initialize_judge():
 			initialize_judge.key = config["key"]
 			initialize_judge.processlimit = config["processlimit"]
 
+	def key():
+		with open("./config.json",'r') as read_json:
+			config = json.load(read_json)
+			return config["key"]
+
+	def my_ip():
+		hostname = socket.gethostname()
+		IPAddr = socket.gethostbyname(hostname)
+		return IPAddr
+
+
+
 # if __name__=='__main__':
-# 	initialize_judge.read_config()
+# 	initialize_judge.my_ip()

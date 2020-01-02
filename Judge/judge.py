@@ -10,12 +10,10 @@ initialize_judge.read_config()
 rabbitmq_username = initialize_judge.rabbitmq_username
 rabbitmq_password = initialize_judge.rabbitmq_password
 host = initialize_judge.host_ip
-# host = 'localhost'
 key = initialize_judge.key
 
 
 channel,connection = manage_connection.initialize_connection(rabbitmq_username,rabbitmq_password,host)
-
 print(type (channel))
 print("................ BitsOJ Judge .................\n")
 
