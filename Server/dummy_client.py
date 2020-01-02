@@ -39,7 +39,8 @@ def login():
 		'Username' : username, 
 		'Password' : password,
 		'ID' : client_id,
-		'Type' : 'CLIENT'
+		'Type' : 'CLIENT',
+		'IP' : '192.168.0.0'
 		}
 	
 	message = json.dumps(message)
@@ -63,7 +64,8 @@ def send():
 		'Language' : 'C++',
 		'Time' : ctime,
 		'Source' : code,
-		'Local Run ID' : 1
+		'Local Run ID' : 1,
+		'IP' : '192.168.0.0'
 		}
 	message = json.dumps(message)
 	
@@ -80,7 +82,8 @@ def query():
 		'Code' : 'QUERY', 
 		'Query' : code,
 		'ID' : client_id,
-		'Username' : username
+		'Username' : username,
+		'IP' : '192.168.0.0'
 		}
 	message = json.dumps(message)
 	
@@ -167,7 +170,8 @@ def main():
 					'Client Key' : key,
 					'Code' : 'DSCNT', 
 					'ID' : client_id,
-					'Username' : username
+					'Username' : username,
+					'IP' : '192.168.0.0'
 					}
 				message = json.dumps(message)
 				print('Disconnecting...')

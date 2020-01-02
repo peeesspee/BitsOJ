@@ -357,6 +357,7 @@ class manage_submission_ui(QMainWindow):
 			# self.log('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
 
 		self.data_changed_flags[8] = 0
+		self.data_changed_flags[18] = 1
 		self.close()
 
 	def accept_verdict(self):

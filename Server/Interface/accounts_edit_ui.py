@@ -10,23 +10,33 @@ class account_edit_ui(QMainWindow):
 	password = ''
 	state = ''
 	state_type = ''
+	ip = ''
 	changed = 0
 	def __init__(
-		self, data_changed_flags, client_id, 
-		username, password, state, parent=None
+			self, 
+			data_changed_flags, 
+			task_queue,
+			client_id, 
+			username, 
+			password, 
+			state, 
+			ip,
+			parent=None
 		):
 		super(account_edit_ui, self).__init__(parent)
 		
 		self.data_changed_flags = data_changed_flags
+		self.task_queue = task_queue
 		account_edit_ui.client_id = client_id
 		account_edit_ui.username = username
 		account_edit_ui.password = password
 		account_edit_ui.state = state
 		account_edit_ui.state_type = state
+		account_edit_ui.ip = ip
 		
 		self.setWindowTitle('Manage Client')
-		self.setGeometry(750, 350, 500, 300)
-		self.setFixedSize(500,300)
+		self.setGeometry(750, 350, 500, 400)
+		self.setFixedSize(500,400)
 		main = self.main_account_edit_ui()
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
@@ -40,6 +50,9 @@ class account_edit_ui(QMainWindow):
 
 		password_label = QLabel('Password: ')
 		password_content = QLabel(account_edit_ui.password)
+
+		ip_label = QLabel('IP: ')
+		ip_content = QLabel(account_edit_ui.ip)
 
 		state_label = QLabel('Current State: ')
 		current_state = QLabel(account_edit_ui.state)
@@ -57,10 +70,12 @@ class account_edit_ui(QMainWindow):
 		inner_layout.addWidget( username_content, 0, 1)
 		inner_layout.addWidget(password_label, 1, 0)
 		inner_layout.addWidget(password_content, 1, 1)
-		inner_layout.addWidget(state_label, 2, 0)
-		inner_layout.addWidget(current_state, 2, 1)
-		inner_layout.addWidget(state_entry_label, 3, 0)
-		inner_layout.addWidget(state_entry, 3, 1)
+		inner_layout.addWidget(ip_label, 2, 0)
+		inner_layout.addWidget(ip_content, 2, 1)
+		inner_layout.addWidget(state_label, 3, 0)
+		inner_layout.addWidget(current_state, 3, 1)
+		inner_layout.addWidget(state_entry_label, 4, 0)
+		inner_layout.addWidget(state_entry, 4, 1)
 
 		inner_layout.setColumnMinimumWidth(0,50)
 		inner_layout.setColumnMinimumWidth(1,50)
@@ -107,6 +122,8 @@ class account_edit_ui(QMainWindow):
 		username_content.setObjectName('main_screen_content')
 		password_label.setObjectName('main_screen_sub_heading')
 		password_content.setObjectName('main_screen_content')
+		ip_label.setObjectName('main_screen_sub_heading')
+		ip_content.setObjectName('main_screen_content')
 		state_label.setObjectName('main_screen_sub_heading')
 		current_state.setObjectName('main_screen_content')
 		state_entry_label.setObjectName('main_screen_sub_heading')
@@ -125,6 +142,12 @@ class account_edit_ui(QMainWindow):
 		if account_edit_ui.changed == 1:
 			user_management.update_user_state(account_edit_ui.username, account_edit_ui.state_type)
 			print('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
+			message = {
+				"Code" : "BLOCK",
+				"Receiver" : account_edit_ui.username
+			}
+			message = json.dumps(message)
+			self.task_queue.put(message)
 			self.data_changed_flags[1] = 1
 		self.data_changed_flags[14] = 0
 		self.close()

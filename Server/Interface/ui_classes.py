@@ -4,8 +4,7 @@ from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from database_management import user_management, query_management, client_authentication, submissions_management
 import json, time
-import ast
-
+  
 class ui_widgets:
 	def accounts_ui(self):
 		heading = QLabel('Manage Accounts')
@@ -34,6 +33,9 @@ class ui_widgets:
 		accounts_model.setHeaderData(1, Qt.Horizontal, 'Password')
 		accounts_model.setHeaderData(2, Qt.Horizontal, 'Type')
 		accounts_table = self.generate_view(accounts_model)
+		accounts_table.doubleClicked.connect(
+			lambda:self.edit_account(accounts_table.selectionModel().currentIndex().row())
+		)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
@@ -154,7 +156,8 @@ class ui_widgets:
 		client_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
 		client_model.setHeaderData(1, Qt.Horizontal, 'Username')
 		client_model.setHeaderData(2, Qt.Horizontal, 'Password')
-		client_model.setHeaderData(3, Qt.Horizontal, 'State')
+		client_model.setHeaderData(3, Qt.Horizontal, 'IP Address')
+		client_model.setHeaderData(4, Qt.Horizontal, 'State')
 		client_view = self.generate_view(client_model)
 
 		client_view.doubleClicked.connect(
@@ -174,7 +177,7 @@ class ui_widgets:
 		allow_login_button.setChecked(login_allowed_flag)
 		allow_login_button.stateChanged.connect(self.allow_login_handler)
 
-		edit_client_button = QPushButton('Edit Client', self)
+		edit_client_button = QPushButton('Edit State', self)
 		edit_client_button.setFixedSize(200, 50)
 		edit_client_button.clicked.connect(
 			lambda:self.edit_client(client_view.selectionModel().currentIndex().row())
@@ -224,7 +227,8 @@ class ui_widgets:
 		judge_model.setHeaderData(0, Qt.Horizontal, 'Judge ID')
 		judge_model.setHeaderData(1, Qt.Horizontal, 'Username')
 		judge_model.setHeaderData(2, Qt.Horizontal, 'Password')
-		judge_model.setHeaderData(3, Qt.Horizontal, 'State')
+		judge_model.setHeaderData(3, Qt.Horizontal, 'IP Address')
+		judge_model.setHeaderData(4, Qt.Horizontal, 'State')
 
 		judge_view = self.generate_view(judge_model)
 
@@ -264,6 +268,13 @@ class ui_widgets:
 			)
 		reply_button.setObjectName("topbar_button")
 
+		announcement_button = QPushButton('Announcement')
+		announcement_button.setFixedSize(200, 50)
+		announcement_button.clicked.connect(
+			lambda: self.announcement()
+			)
+		announcement_button.setObjectName("topbar_button")
+
 		query_model = self.manage_models(self.db, 'queries')
 		query_model.setHeaderData(0, Qt.Horizontal, 'Query ID')
 		query_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
@@ -277,6 +288,7 @@ class ui_widgets:
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
+		head_layout.addWidget(announcement_button)
 		head_layout.addWidget(reply_button)
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
@@ -367,15 +379,6 @@ class ui_widgets:
 		view_problem_button.setObjectName("topbar_button")
 		view_problem_button.setToolTip('View/Edit Problems')
 
-		delete_problem_button = QPushButton('Delete Problem', self)
-		delete_problem_button.setFixedSize(200, 50)
-		# delete_problem_button.clicked.connect(
-		# 	lambda:self.delete_problem(problem_table.selectionModel().selectedRows())
-		# )
-		delete_problem_button.setObjectName("topbar_button")
-		delete_problem_button.setToolTip('Work under progress!')
-		
-
 		problem_model = self.manage_models(self.db, 'problems')
 		problem_model.setHeaderData(0, Qt.Horizontal, 'Problem Name')
 		problem_model.setHeaderData(1, Qt.Horizontal, 'Code')
@@ -389,7 +392,6 @@ class ui_widgets:
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
 		head_layout.addWidget(view_problem_button)
-		head_layout.addWidget(delete_problem_button)
 		
 		head_layout.setStretch(0, 80)
 		head_layout.setStretch(1, 10)

@@ -9,15 +9,14 @@ from Interface.ui_classes import *
 from Interface.problem_ui import *
 from Interface.submission_ui import *
 from Interface.accounts_edit_ui import *
+from Interface.password_change_ui import *
 from Interface.query_reply_ui import *
 from Interface.new_accounts_ui import *
 from Interface.ie_accounts_ui import *
 from Interface.rejudge_problem_ui import *
 from init_server import initialize_server, save_status
-from database_management import user_management, submissions_management, query_management, scoreboard_management
+from database_management import user_management, submissions_management, query_management, scoreboard_management, client_authentication
 
-
- 
 # This is to ignore some warnings which were thrown when gui exited and 
 # python deleted some assests in wrong order
 # Nothing critical :)
@@ -402,18 +401,17 @@ class server_window(QMainWindow):
 				self.task_queue.put(message)
 
 			if self.data_changed_flags[18] == 1:
+				print('[ SCOREBOARD ][ BROADCAST ]')
 				self.data_changed_flags[18] = 0
 				# Broadcast scoreboard
 				scoreboard = scoreboard_management.get_scoreboard()
 				data = str(scoreboard)
 				message = {
-				'Code':'SCRBD',
-				'Data' : data
+					'Code':'SCRBD',
+					'Data' : data
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
-
-			
 
 			# While contest is RUNNING
 			# This block is last as it may cause a return call and not allow further function block executions
@@ -853,11 +851,32 @@ class server_window(QMainWindow):
 				client_id = self.query_model.index(selected_row, 1).data()
 				query_id = self.query_model.index(selected_row, 0).data()
 				
-				if client_id == None and query_id == None:
-					pass
-				else:
-					self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query,client_id, query_id)
-					self.window.show()
+				if client_id == None or query_id == None or query_id == 0:
+					self.data_changed_flags[8] = 0
+					return
+				
+				self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query,client_id, query_id)
+				self.window.show()
+
+			except Exception as error: 
+				print('[ ERROR ] : ' + str(error))
+				self.log('[ ERROR ] : ' + str(error))
+			finally:
+				return
+		else:
+			return
+
+	@pyqtSlot()
+	def announcement(self):
+		if self.data_changed_flags[8] == 0:
+			# CRITICAL section flag set
+			self.data_changed_flags[8] = 1
+			try:
+				query = 'Announcement'
+				client_id = -1
+				query_id = -1
+				self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query,client_id, query_id)
+				self.window.show()
 
 			except Exception as error: 
 				print('[ ERROR ] : ' + str(error))
@@ -884,7 +903,9 @@ class server_window(QMainWindow):
 			# CRITICAL section flag set
 			self.data_changed_flags[25] = 1
 			codes = self.config['Problem Codes']
-			self.window = rejudge_problem_ui(self.data_changed_flags, self.task_queue, codes)
+			client_list = []
+			client_list = client_authentication.get_connected_clients()
+			self.window = rejudge_problem_ui(self.data_changed_flags, self.task_queue, codes, client_list)
 			self.window.show()			
 		else:
 			pass
@@ -996,18 +1017,48 @@ class server_window(QMainWindow):
 			client_id = self.client_model.index(selected_row, 0).data()
 			username = self.client_model.index(selected_row, 1).data()
 			password = self.client_model.index(selected_row, 2).data()
-			state = self.client_model.index(selected_row, 3).data()
+			ip = self.client_model.index(selected_row, 3).data()
+			state = self.client_model.index(selected_row, 4).data()
 
 			if username == None or client_id == None or password == None or state == None:
 				self.data_changed_flags[14] = 0
 				pass
 			else:
-				self.edit_window = account_edit_ui(self.data_changed_flags, client_id, username, password, state)
+				self.edit_window = account_edit_ui(self.data_changed_flags, self.task_queue, client_id, username, password, state, ip)
 				self.edit_window.show()
 			
 		except Exception as error: 
 			print('[ ERROR ]' + str(error))
 			self.log('[ ERROR ]' + str(error))
+			self.data_changed_flags[14] = 0
+		finally:
+			return
+
+	@pyqtSlot()
+	def edit_account(self, selected_row):
+		if self.data_changed_flags[14] == 0:
+			# Set critical flag
+			self.data_changed_flags[14] = 1
+		else:
+			# If one client edit window is already opened, process it first.
+			return
+		# If no row is selected, return
+		try:
+			username = self.account_model.index(selected_row, 0).data()
+			password = self.account_model.index(selected_row, 1).data()
+			ctype = self.account_model.index(selected_row, 2).data()
+
+			if username == None or password == None or ctype == None:
+				self.data_changed_flags[14] = 0
+				pass
+			else:
+				# print("Sending ", username, password, ctype)
+				self.edit_window = password_change_ui(self.data_changed_flags, username, password, ctype)
+				self.edit_window.show()
+			
+		except Exception as error: 
+			print('[ ERROR ][ EDIT ] ' + str(error))
+			self.log('[ ERROR ][ EDIT ] ' + str(error))
 			self.data_changed_flags[14] = 0
 		finally:
 			return
