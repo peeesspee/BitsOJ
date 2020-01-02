@@ -114,7 +114,7 @@ class rejudge_problem_ui(QMainWindow):
 			selected_client_ = '*'
 		else:
 			# Get client id
-			client_id = client_authentication.get_client_id(selected_client_)
+			selected_client_ = str(client_authentication.get_client_id(selected_client_))
 
 		data = submissions_management.get_submission_data(selected_code_, selected_client_)
 		if data == 'NONE':
