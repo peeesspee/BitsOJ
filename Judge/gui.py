@@ -53,7 +53,7 @@ class App(QWidget):
             self.login_button = QPushButton('Login', self)
             self.login_button.setFixedWidth(300)
             self.login_button.setFixedHeight(80)
-            self.login_button.clicked.connect(lambda : self.onClick)
+            self.login_button.clicked.connect(self.login_handler)
             self.login_button.setDefault(True)
             self.login_button.setObjectName('login')
 
@@ -77,8 +77,15 @@ class App(QWidget):
             print(e)
         return 
 
-    def onClick(self):
-        print("button clicked")
+    # def onClick(self):
+    #     print("button clicked")
+
+
+    def login_handler(self):
+
+        if self.judge_id.text() == '' or self.password.text() == '':
+            QMessageBox.warning(self,'Error','kya hai be')
+
         
 
 if __name__ == '__main__':

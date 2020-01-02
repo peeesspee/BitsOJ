@@ -1,10 +1,11 @@
 from file_creation import file_manager
+from init_judge import initialize_judge
 import subprocess
 import os
-import filecmp
 import multiprocessing
 import time
 import signal
+import resource
 
 class verdict():
 
@@ -26,24 +27,24 @@ class verdict():
 		runfile = ''
 		PATH = verdict.pwd + '/submission_files/'
 
-		if lang == 'CPP':
+		if lang == 'C++':
 			classfile = 'g++ -o ' + PATH + file_name + ' ' + PATH + file_with_ext
 			runfile = PATH + file_name
 
-		if lang == 'GCC':
+		if lang == 'C':
 			classfile = 'gcc -o ' + PATH + file_name + ' ' + PATH + file_with_ext
 			runfile = PATH + file_name
 
-		if lang == 'JVA':
+		if lang == 'JAVA':
 			classfile = 'javac ' + PATH + file_with_ext
 			runfile = 'java' + PATH + file_name
 
-		if lang == 'PY2':
+		if lang == 'PYTHON-2':
 			classfile = 'python'
 			runfile = 'python2 ' + PATH + file_with_ext
 
 		# if file.split('.')[0][-1] == '3':
-		if lang == 'PY3': 
+		if lang == 'PYTHON-3': 
 			classfile = 'python'
 			runfile = 'python3 ' + PATH + file_with_ext
 
@@ -53,7 +54,7 @@ class verdict():
 
 	def compile_file(classfile, lang):
 
-		if lang != 'PY2' or lang != 'PY3':
+		if lang != 'PYTHON-2' or lang != 'PYTHON-3':
 			print("COMPILING...")
 			process = subprocess.run(classfile, capture_output=True, text=True, shell=True)
 			exit_code = process.returncode
@@ -85,8 +86,14 @@ class verdict():
 					if ext == 'in':
 						print("STARTED RUNNING SUBMITTED FILE")
 						# start = time.time()
-						command = 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
+						command = 'ulimit -p ' + initialize_judge.processlimit + ' && '
+						command = command + 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
+						print("command is ->", command)
 						process = subprocess.run(command, capture_output=True, text=True, shell=True)
+						
+						# soft, hard = resource.getrlimit(resource.RLIMIT_AS) 
+						# resource.setrlimit(resource.RLIMIT_AS, (1048, hard)) 
+
 						print("I am RUNNING")
 						print(process)
 
@@ -108,7 +115,6 @@ class verdict():
 							os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
 							return verdict.ERROR
 
-
 						if process.returncode == 0:
 							print("NO RUN TIME ERROR")
 							pass
@@ -121,7 +127,7 @@ class verdict():
 	def remove_object(file_name, file_with_ext, lang):
 		# print(PATH)
 		# print(verdict.ERROR )
-		if (lang == 'C' or lang == 'CPP'):
+		if (lang == 'C' or lang == 'C++'):
 			PATH = verdict.pwd + '/submission_files/' + file_name
 			os.remove(PATH)
 
@@ -262,7 +268,8 @@ class verdict():
 
 
 # v,r=verdict.main(file_name, file_with_ext, lang, problem_code, run_id, timelimit)
-# print("verdict is --->",v)
-# print("result is ---->",r)
+v,r=verdict.main("SAC3", "SAC3.cpp", "C++", "SAC", "980", "2")
+print("verdict is --->",v)
+print("result is ---->",r)
 
 # _main_ = verdict.trial("ABCD1234", "ABCD1234.cpp")

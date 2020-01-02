@@ -1,5 +1,6 @@
 import pika
 import json
+from init_judge import initialize_judge
 
 class authenticate_judge():
 	username = ''
@@ -7,7 +8,10 @@ class authenticate_judge():
 	client_id = 0
 	channel = ''
 	login_status = ''
-	key = '000000000000000'
+	# here is a change
+	# here is a change
+	# here is a change
+	key = initialize_judge.key
 
 
 	def login(channel, host):
@@ -36,7 +40,6 @@ class authenticate_judge():
 			'Password': authenticate_judge.password,
 			'ID': authenticate_judge.client_id,
 			'Type': 'JUDGE'
-
 		}
 
 		message = json.dumps(message)

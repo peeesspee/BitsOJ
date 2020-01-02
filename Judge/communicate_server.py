@@ -77,6 +77,8 @@ class communicate_server():
 		#						 	}
 		#						 	message = json.dumps(message)
 
+		# username = 'judge00001'
+
 		message = {
 			'Judge Key' : communicate_server.key,
 			'Code' : 'VRDCT', 
@@ -87,7 +89,8 @@ class communicate_server():
 			'Message' : error,
 			'Local Run ID' : local_run_id,
 			'PCode': problem_code,
-			'Time Stamp' : time_stamp
+			'Time Stamp' : time_stamp,
+			'Judge' : "judge00001"
 			}
 		
 		message = json.dumps(message)
@@ -115,23 +118,23 @@ class communicate_server():
 
 
 
-	def verdict_of_submission(run_id, problem_code, language, source_code, file_name, file_with_ext):
+	# def verdict_of_submission(run_id, problem_code, language, source_code, file_name, file_with_ext):
 
-		# file,pos,lang = verdict.find_file()
-		result = ''
-		error = ''
-		classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, language)
-		try:
-			verdict.compile_file(classfile,language)
-		except Exception as error:
-			print("error in compiling")
-			result = ''
-			error = 'Compilation Error'
-		verdict.run_file(runfile, problem_code, run_id)
-		verdict.remove_object(file_name, file_with_ext, language)
-		result = verdict.compare_outputs(problem_code, run_id)
-		# print(file,pos,lang)
-		# print(classfile,runfile)
-		print(result)
+	# 	# file,pos,lang = verdict.find_file()
+	# 	result = ''
+	# 	error = ''
+	# 	classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, language)
+	# 	try:
+	# 		verdict.compile_file(classfile,language)
+	# 	except Exception as error:
+	# 		print("error in compiling")
+	# 		result = ''
+	# 		error = 'Compilation Error'
+	# 	verdict.run_file(runfile, problem_code, run_id)
+	# 	verdict.remove_object(file_name, file_with_ext, language)
+	# 	result = verdict.compare_outputs(problem_code, run_id)
+	# 	# print(file,pos,lang)
+	# 	# print(classfile,runfile)
+	# 	print(result)
 
-		return result,error
+	# 	return result,error
