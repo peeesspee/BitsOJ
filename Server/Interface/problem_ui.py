@@ -361,7 +361,7 @@ class problem_edit_ui(QMainWindow):
 		test_cases_table.setColumnCount(2)
 		test_cases_table.setObjectName('inner_table')
 		test_cases_table.setHorizontalHeaderLabels(
-			("Input Files", "Output Files", "Status")
+			("Input Files", "Output Files")
 		)
 		test_cases_table.resizeColumnsToContents()
 		test_cases_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -374,7 +374,7 @@ class problem_edit_ui(QMainWindow):
 
 		test_cases_table.cellDoubleClicked.connect(
 			lambda:self.manage_io_file(
-				problem_code,
+				self.code,
 				test_cases_table.selectionModel().currentIndex().row(),
 				test_cases_table.selectionModel().currentIndex().column()
 			)

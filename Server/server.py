@@ -58,13 +58,15 @@ def main():
 		log_queue.put('[ SELF CHECK ][ FAIL ] Detected an abnormal system exit.')
 		print('[ SELF CHECK ][ FAIL ] Please check that there are no active connections to RabbitMQ server', end = ' ' )
 		print('in RabbitMQ Management portal ( http://localhost:15672/#/channels )')
-		print('[ SELF CHECK ] Press any key when checked...')
+		print('[ SELF CHECK ] Also close any running instances of the server from the task manager')
+		print('[ SELF CHECK ] ( For Linux, use \'ps -a\' Command, and \'kill -9 pid\' where pid is the process id of server process.')
+		print('[ SELF CHECK ] Press ENTER to continue')
 		input()
+
 	else:
 		print('[ SELF CHECK ][ PASS ] Systems OK.')
 		log_queue.put('[ SELF CHECK ][ PASS ] Systems OK.')
-		pass
-
+		
 	####################################################################
 
 	# Initialize server
@@ -79,11 +81,11 @@ def main():
 	#####################################################################################
 	#index		value		meaning
 	#	0		0/1			0/1: No new/ New submission data to refresh
-	#	1		0/1			0/1: No new/ New login : Refresh connected clients view
+	#	1		0/1			0/1: New login : Refresh connected clients view
 	#	2		0/1 		0/1: Disallow/Allow logins
 	#	3		0/1			0/1: Disallow/Allow submissions
 	#	4		0/1			1: A create accounts window is open
-	#	5		0/1			1: New users generated, update view
+	#	5		0/1			1: Update accounts view
 	#   6		0/1			1: Account deletion under progress
 	#	7		0/1			1: Server shutdown
 	#   8		0/1			1: Query reply GUI open

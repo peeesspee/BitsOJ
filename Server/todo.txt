@@ -1,9 +1,6 @@
 				TASK					
 		1 ACM style ranklist ( Low Priority )					
 2. Rabbitmq queue security	( High Priority )																	
-3. Password change ( Low Priority )
-4. Recieve and store all clients IP Address ( Low Priority )													
-		5. Rejudge all submissions with given problem code ( Today  90% done, fetch client list remaining)
-6. Generate Report	( High Priority)																	
+6. Generate Report	( High Priority )											
 7. Decrypt config file	( Low Priority )
 8. Finish server logs for ui classes

@@ -1,5 +1,7 @@
 import pika
 from connection import manage_connection
+from init_judge import initialize_judge
+from login_request import authenticate_judge
 from verdict import verdict
 from file_creation import file_manager
 import time
@@ -7,7 +9,8 @@ import json
 
 class communicate_server():
 	message = ''
-	key = '000000000000000'
+	key = initialize_judge.key()
+	my_ip = initialize_judge.my_ip()
 
 	def listen_server():
 
@@ -22,8 +25,7 @@ class communicate_server():
 		channel.queue_bind( exchange = 'judge_manager', queue = 'judge_verdicts')
 
 		channel.basic_qos(prefetch_count = 1)
-		
-		
+				
 		channel.basic_consume(queue = 'judge_requests', on_message_callback = communicate_server.server_response_handler, auto_ack = True)
 		# print("[ERROR]" + "error in consuming") 
 		channel.start_consuming()
@@ -77,6 +79,9 @@ class communicate_server():
 		#						 	}
 		#						 	message = json.dumps(message)
 
+		username = authenticate_judge.get_judge_details()
+		print("username and password of judge is ->",username)
+
 		message = {
 			'Judge Key' : communicate_server.key,
 			'Code' : 'VRDCT', 
@@ -87,7 +92,9 @@ class communicate_server():
 			'Message' : error,
 			'Local Run ID' : local_run_id,
 			'PCode': problem_code,
-			'Time Stamp' : time_stamp
+			'Time Stamp' : time_stamp,
+			'Judge' : "judge00001",
+			'IP': communicate_server.my_ip
 			}
 		
 		message = json.dumps(message)
@@ -112,26 +119,3 @@ class communicate_server():
 		if file_with_ext != "INVALID FILENAME":
 			file_manager.create_file(source_code, language, file_with_ext)
 			return file_name,file_with_ext
-
-
-
-	def verdict_of_submission(run_id, problem_code, language, source_code, file_name, file_with_ext):
-
-		# file,pos,lang = verdict.find_file()
-		result = ''
-		error = ''
-		classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, language)
-		try:
-			verdict.compile_file(classfile,language)
-		except Exception as error:
-			print("error in compiling")
-			result = ''
-			error = 'Compilation Error'
-		verdict.run_file(runfile, problem_code, run_id)
-		verdict.remove_object(file_name, file_with_ext, language)
-		result = verdict.compare_outputs(problem_code, run_id)
-		# print(file,pos,lang)
-		# print(classfile,runfile)
-		print(result)
-
-		return result,error

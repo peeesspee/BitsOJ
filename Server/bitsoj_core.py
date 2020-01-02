@@ -223,6 +223,8 @@ class core():
 
 				# Contest SCoReBoarD
 				elif code == 'SCRBD':
+					print('[ CORE ][ SCOREBOARD ][ BROADCAST ]')
+					core.log('[ CORE ][ SCOREBOARD ][ BROADCAST ]')
 					message = json.dumps(data)
 					core.channel.basic_publish(
 						exchange = core.broadcast_exchange, 
@@ -254,7 +256,7 @@ class core():
 						core.log('[ EVENT ][ BROADCAST ] New Query response broadcasted')
 						message = {
 							'Code' : 'QUERY',
-							'Client ID' : data['Client ID'],
+							'Client ID' : '0',
 							'Query' : data['Query'],
 							'Response' : data['Response'],
 							'Type' : data['Mode']
@@ -296,7 +298,19 @@ class core():
 							routing_key = '', 
 							body = message
 						)
-					
+
+				elif code == 'BLOCK':
+					username = data['Receiver']
+					print('[ EVENT ] Block ' + username)
+					core.log('[ EVENT ] Block ' + username)
+				
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = core.unicast_exchange, 
+						routing_key = username, 
+						body = message
+					)
+				
 				elif code in ['VALID', 'INVLD', 'LRJCT', 'SRJCT']:
 					# Pass the message to appropiate recipient, nothing to process in data
 					receiver = data['Receiver']
@@ -308,7 +322,7 @@ class core():
 					)
 			return
 		except Exception as error:
-			print('[ ERROR ] Data could not be broadcasted : ' + str(error)) 
-			core.log('[ ERROR ] Data could not be broadcasted : ' + str(error))
+			print('[ ERROR ] Data could not be transmitted : ' + str(error)) 
+			core.log('[ ERROR ] Data could not be transmitted : ' + str(error))
 		finally:
 			return 0

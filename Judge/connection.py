@@ -4,15 +4,19 @@ import pika
 class manage_connection():
 
 	channel = ''
-
+	
 	# Function to establish connection
 	def initialize_connection(rabbitmq_username,rabbitmq_password,host):
 		try:
+			creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
+			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+			connection = pika.BlockingConnection(params)
 
-			connection = pika.BlockingConnection(
-			pika.URLParameters(
-				"amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"
-				))	
+			# connection = pika.BlockingConnection(
+			# pika.URLParameters(
+			# 	"amqp://" + rabbitmq_username + ":" + rabbitmq_password + "@" + host + "/%2f"
+			# 	))	
+
 			channel = connection.channel()
 			manage_connection.channel = channel
 

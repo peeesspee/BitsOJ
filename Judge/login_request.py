@@ -1,13 +1,15 @@
 import pika
 import json
+from init_judge import initialize_judge
 
 class authenticate_judge():
-	username = ''
-	password = ''
+	username = 'Nouser'
+	password = 'Nopass'
 	client_id = 0
 	channel = ''
 	login_status = ''
-	key = '000000000000000'
+	key = initialize_judge.key()
+	my_ip = initialize_judge.my_ip()
 
 
 	def login(channel, host):
@@ -35,8 +37,8 @@ class authenticate_judge():
 			'Username': authenticate_judge.username,
 			'Password': authenticate_judge.password,
 			'ID': authenticate_judge.client_id,
-			'Type': 'JUDGE'
-
+			'Type': 'JUDGE',
+			'IP' : authenticate_judge.my_ip
 		}
 
 		message = json.dumps(message)
@@ -47,8 +49,6 @@ class authenticate_judge():
 			routing_key = 'client_requests',
 			body = message
 			)
-
-
 
 		print("Request sent for authentication... ")
 		print("[LISTENING]:" + authenticate_judge.username + '@'  + authenticate_judge.password )
@@ -79,10 +79,8 @@ class authenticate_judge():
 
 
 		status = json_data['Code']
-		# print(status)
 
 		if(status == 'VALID'):
-		# 	status = server_data
 			print("[STATUS]: " + status  )
 			authenticate_judge.channel.stop_consuming()
 			authenticate_judge.login_status = status
@@ -102,5 +100,5 @@ class authenticate_judge():
 
 
 	def get_judge_details():
-		return authenticate_judge.client_id, authenticate_judge.username
+		return authenticate_judge.client_id, authenticate_judge.username, authenticate_judge.password
 

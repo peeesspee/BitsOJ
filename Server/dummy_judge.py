@@ -46,6 +46,7 @@ def login():
 		'Username' : username, 
 		'Password' : password,
 		'ID' : client_id,
+		'IP' : "000.000.000.000",
 		'Type' : 'JUDGE'
 		}
 	

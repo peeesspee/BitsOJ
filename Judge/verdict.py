@@ -1,10 +1,11 @@
 from file_creation import file_manager
+from init_judge import initialize_judge
 import subprocess
 import os
-import filecmp
 import multiprocessing
 import time
 import signal
+import resource
 
 class verdict():
 
@@ -26,24 +27,24 @@ class verdict():
 		runfile = ''
 		PATH = verdict.pwd + '/submission_files/'
 
-		if lang == 'CPP':
+		if lang == 'C++':
 			classfile = 'g++ -o ' + PATH + file_name + ' ' + PATH + file_with_ext
 			runfile = PATH + file_name
 
-		if lang == 'GCC':
+		if lang == 'C':
 			classfile = 'gcc -o ' + PATH + file_name + ' ' + PATH + file_with_ext
 			runfile = PATH + file_name
 
-		if lang == 'JVA':
+		if lang == 'JAVA':
 			classfile = 'javac ' + PATH + file_with_ext
 			runfile = 'java' + PATH + file_name
 
-		if lang == 'PY2':
+		if lang == 'PYTHON-2':
 			classfile = 'python'
 			runfile = 'python2 ' + PATH + file_with_ext
 
 		# if file.split('.')[0][-1] == '3':
-		if lang == 'PY3': 
+		if lang == 'PYTHON-3': 
 			classfile = 'python'
 			runfile = 'python3 ' + PATH + file_with_ext
 
@@ -53,7 +54,7 @@ class verdict():
 
 	def compile_file(classfile, lang):
 
-		if lang != 'PY2' or lang != 'PY3':
+		if lang != 'PYTHON-2' and lang != 'PYTHON-3':
 			print("COMPILING...")
 			process = subprocess.run(classfile, capture_output=True, text=True, shell=True)
 			exit_code = process.returncode
@@ -68,6 +69,10 @@ class verdict():
 				verdict.result = error
 				print("COMPILATION ERROR !!!")
 				return verdict.ERROR
+
+		else:
+			print("language is python")
+			verdict.ERROR
 			
 
 	def run_file(runfile, problem_code, run_id, time_limit):
@@ -84,10 +89,10 @@ class verdict():
 					ext = file[pos+1:]
 					if ext == 'in':
 						print("STARTED RUNNING SUBMITTED FILE")
-						# start = time.time()
-						command = 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
+						command = 'ulimit -p ' + initialize_judge.processlimit + ' && '
+						command = command + 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
+						print("command is ->", command)
 						process = subprocess.run(command, capture_output=True, text=True, shell=True)
-						print("I am RUNNING")
 						print(process)
 
 
@@ -108,7 +113,6 @@ class verdict():
 							os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
 							return verdict.ERROR
 
-
 						if process.returncode == 0:
 							print("NO RUN TIME ERROR")
 							pass
@@ -121,7 +125,7 @@ class verdict():
 	def remove_object(file_name, file_with_ext, lang):
 		# print(PATH)
 		# print(verdict.ERROR )
-		if (lang == 'C' or lang == 'CPP'):
+		if (lang == 'C' or lang == 'C++'):
 			PATH = verdict.pwd + '/submission_files/' + file_name
 			os.remove(PATH)
 
@@ -178,10 +182,30 @@ class verdict():
 
 		classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, lang)
 
+		if lang == 'PYTHON-2' or lang == 'PYTHON-3':
+			time_limit = timelimit + 's '
+			e = verdict.run_file(runfile, problem_code, run_id, time_limit)
+			if e == True:
+				result = verdict.result
+				verd = verdict.VERDICT
+
+				verdict.VERDICT = 'Nul'
+				verdict.result = 'Nul'
+				verdict.ERROR = False
+				return verd,result
+
+			if e == False:
+				result,verd = verdict.compare_outputs(problem_code, run_id)
+				verdict.VERDICT = 'Nul'
+				verdict.result = 'Nul'
+				verdict.ERROR = False
+				return verd,result
+
+
 		e = verdict.compile_file(classfile, lang)
-		print(verdict.ERROR)
-		print(verdict.VERDICT)
-		print(verdict.result)
+		# print(verdict.ERROR)
+		# print(verdict.VERDICT)
+		# print(verdict.result)
 
 		if e == True:
 			result = verdict.result
@@ -200,6 +224,7 @@ class verdict():
 			print(verdict.VERDICT)
 			print(verdict.result)
 			verdict.remove_object(file_name, file_with_ext, lang)
+
 			if e == True:
 				result = verdict.result
 				verd = verdict.VERDICT
@@ -207,6 +232,7 @@ class verdict():
 				verdict.VERDICT = 'Nul'
 				verdict.result = 'Nul'
 				verdict.ERROR = False
+				print(verd,result)
 				return verd,result
 
 			if e == False:
@@ -218,50 +244,8 @@ class verdict():
 				return verd,result
 
 
-
-
-
-		# if e == True: #  if there is compilation error
-		# 	result = verdict.result
-		# 	verd = verdict.VERDICT
-		# 	return verd,result
-		# if e == False:
-		# 	tle_process = multiprocessing.Process(target=verdict.run_file, args=(runfile, problem_code, run_id,))
-		# 	start = time.time()
-		# 	# verdict.run_file(runfile, problem_code, run_id)
-		# 	tle_process.start()
-		# 	tle_process.join(int(timelimit))
-		# 	end = time.time()
-		# 	print("Process terminated", end-start)
-			
-		# 	verdict.ERROR = True
-		# 	verdict.result = "Time Limit Exceeded"
-		# 	verdict.VERDICT = "TLE"
-			# if tle_process.is_alive() :
-			# 	tle_process_pid = tle_process.pid
-			# 	print(tle_process_pid)
-			# 	os.kill(tle_process_pid, signal.SIGTERM)
-			# 	print("Process terminated")
-			# 	verdict.ERROR = True
-			# 	verdict.result = "Time Limit Exceeded"
-			# 	verdict.VERDICT = "TLE"
-			# 	print("time taken to execute file",end-start)
-
-			# e = verdict.ERROR
-			# verdict.remove_object(file_name, file_with_ext, lang)
-
-			# if e == True:  # if there is run time error
-			# 	result = verdict.result
-			# 	verd = verdict.VERDICT
-			# 	return verd,result
-			# if e == False: # if there is no compilation error and no run time error  
-			# 	result,verd = verdict.compare_outputs(problem_code, run_id)
-			# 	print(result)
-			# 	print(verd)
-			# 	return verd,result
-
-
 # v,r=verdict.main(file_name, file_with_ext, lang, problem_code, run_id, timelimit)
+# v,r=verdict.main("SAC3", "SAC3.cpp", "C++", "SAC", "980", "2")
 # print("verdict is --->",v)
 # print("result is ---->",r)
 

@@ -111,15 +111,10 @@ class manage_clients():
 				manage_clients.log('[ SECURITY ] Client Key did not match. Client ID: ' + str(json_data['ID']))
 				print('[ SECURITY ] Complete Message: ' + client_message)
 				manage_clients.log('[ SECURITY ] Complete Message: ' + client_message)
-				# Send a response? 
-				# message = {
-				# 	'Code' : 'LRJCT',
-				# 	'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
-				# }
-				# message = json.dumps(message)
-				# response.publish_message(manage_clients.channel, client_username, message)
 				return
+
 			client_code = json_data["Code"]
+			client_ip = json_data["IP"]
 			if client_code == 'LOGIN':
 				client_username = json_data["Username"]
 				client_password = json_data["Password"]
@@ -129,7 +124,8 @@ class manage_clients():
 					client_username, 
 					client_password, 
 					client_id, 
-					client_type
+					client_type,
+					client_ip
 				)
 			elif client_code == 'SUBMT':
 				# recieved_client_username = json_data["Username"]
@@ -142,6 +138,7 @@ class manage_clients():
 				username = json_data['Username']
 				manage_clients.client_submission_handler(
 					client_id,
+					client_ip,
 					username,
 					local_run_id, 
 					problem_code, 
@@ -168,7 +165,8 @@ class manage_clients():
 				client_id = json_data["ID"]
 				manage_clients.client_logout_handler(
 					client_username, 
-					client_id
+					client_id,
+					client_ip
 				)
 			else:
 				print('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
@@ -182,7 +180,7 @@ class manage_clients():
 		return
 	
 	# This function handles all client login requests
-	def client_login_handler(client_username, client_password, client_id, client_type):
+	def client_login_handler(client_username, client_password, client_id, client_type, client_ip):
 		message = ''
 		print('[ LOGIN REQUEST ] ::: ' + str(client_id) + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
 		manage_clients.log('[ LOGIN REQUEST ] ::: ' + str(client_id) + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
@@ -231,7 +229,7 @@ class manage_clients():
 				# Raise a confirmation box to ADMIN maybe?
 				client_id = client_authentication.get_client_id(client_username)
 				if client_id == -1:
-					# Not possible
+					# New client
 					pass
 				if previously_connected_state == 'Connected':
 					print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Previous Client ID : ' + str(client_id) )
@@ -247,30 +245,43 @@ class manage_clients():
 
 					# Raise a security event?
 				elif previously_connected_state == 'Disconnected':
-					print('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
-					manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
-				
-					message = {
-						'Code' : 'VALID',
-						'Receiver' : client_username,
-						'Client ID' : client_id, 
-						'Message' : 'Welcome back!.'
-					}
-					message = json.dumps(message)
-					response.publish_message(manage_clients.channel, client_username, message)
+					state = client_authentication.check_client_ip(client_id, client_ip)
+					if state == 1:
+						print('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
+						manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
+					
+						message = {
+							'Code' : 'VALID',
+							'Receiver' : client_username,
+							'Client ID' : client_id, 
+							'Message' : 'Welcome back!.'
+						}
+						message = json.dumps(message)
+						response.publish_message(manage_clients.channel, client_username, message)
 
-					# Update client state from Disconnected to Connected 
-					user_management.update_user_state(client_username, 'Connected')
+						# Update client state from Disconnected to Connected 
+						user_management.update_user_state(client_username, 'Connected')
 
-					# Update GUI
-					manage_clients.data_changed_flags[1] = 1
-
+						# Update GUI
+						manage_clients.data_changed_flags[1] = 1
+					else:
+						print('[ RE-LOGIN ][ ' + client_username + ' ][ REJECT ] IP validation failed')
+						manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ REJECT ] IP validation failed')
+						message = {
+							'Code' : 'LRJCT',
+							'Receiver' : client_username,
+							'Client ID' : client_id, 
+							'Message' : 'Preliminary Validation Failed. Contact site Admin for more information.'
+						}
+						message = json.dumps(message)
+						response.publish_message(manage_clients.channel, client_username, message)
+					
 				# If client has logged in for the first time
 				elif previously_connected_state == 'New':
 					# Fetch new client ID
 					client_id = client_authentication.generate_new_client_id()
 					# Add client to connected users database
-					client_authentication.add_client(client_id, client_username, client_password, 'Connected', 'connected_clients')
+					client_authentication.add_client(client_id, client_username, client_password, client_ip, 'Connected', 'connected_clients')
 					scoreboard_management.insert_new_user(client_id, client_username, 0, 0, '00:00:00')
 
 					print('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
@@ -382,7 +393,7 @@ class manage_clients():
 				# If client has logged in for the first time
 				elif previously_connected_state == 'New':
 					# Add client to connected users database
-					client_authentication.add_client('__JUDGE__', client_username, client_password, 'Connected', 'connected_judges')
+					client_authentication.add_client('__JUDGE__', client_username, client_password, client_ip, 'Connected', 'connected_judges')
 					print('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
 					manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
 
@@ -427,9 +438,11 @@ class manage_clients():
 		return
 
 
+	def validate_ip(ip):
+		return True
 
 
-	def client_submission_handler(client_id, client_username, local_run_id, problem_code, language, time_stamp, source_code):
+	def client_submission_handler(client_id, client_ip, client_username, local_run_id, problem_code, language, time_stamp, source_code):
 		# This block ensures that the config read by this process is latest
 		if manage_clients.already_read == 0:
 			manage_clients.already_read = 1
@@ -437,10 +450,24 @@ class manage_clients():
 			manage_clients.codes = manage_clients.config['Problem Codes']
 			manage_clients.languages = manage_clients.config['Languages']
 
-		print('[ SUBMISSION ] Client ID :' + str(client_id) + ' Username: ' + client_username + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp)
-		manage_clients.log(
-			'[ SUBMISSION ] Client ID :' + str(client_id) + ' Username: ' + client_username + ' Problem:' + problem_code + ' Language :' + language + ' Time stamp :' + time_stamp
+		text = (
+			'[ SUBMISSION ] Client ID :' + 
+			str(client_id) + 
+			' IP:' + 
+			client_ip + 
+			' Username: ' + 
+			client_username + 
+			' Problem:' + 
+			problem_code + 
+			' Language :' + 
+			language + 
+			' Time stamp :' + 
+			time_stamp
 		)
+
+		print(text)
+		manage_clients.log(text)
+			
 		contest_start_time = manage_clients.config['Contest Start Time']
 
 		# Validate client submisssion datatypes:
@@ -451,13 +478,15 @@ class manage_clients():
 			flag = 1
 		if initialize_server.convert_to_seconds(time_stamp) == -1:
 			flag = 1
+		if manage_clients.validate_ip(client_ip) == False:
+			flag = 1
 		
 
 		# Validate client submission data
 		if flag == 1:
 			status = False
 		else:
-			status = client_authentication.validate_connected_client(client_username, client_id)
+			status = client_authentication.validate_connected_client(client_username, client_id, client_ip)
 
 		if status == False or problem_code not in manage_clients.codes or language not in manage_clients.languages:
 			print('[ SUBMISSION ][ FAIL ] Preliminary validation Failed.')
@@ -482,8 +511,8 @@ class manage_clients():
 		# current_time = initialize_server.get_time_difference(contest_start_time, current_time)
 		time_difference = initialize_server.get_abs_time_difference(current_time, time_stamp)
 		if time_difference > 20:
-			print('[ SUBMISSION ][ CONFLICT ] Time difference: ', time_difference, ' Seconds ')
-			print('current time: ' + current_time)
+			print('[ SUBMISSION ][ CONFLICT ] Time difference: ', time_difference, ' Seconds ', )
+			print('Current Time: ' + current_time)
 			manage_clients.log('[ SUBMISSION ][ CONFLICT ] Time difference: ' + str( time_difference) + ' Seconds ')
 			time_stamp = initialize_server.get_time_difference(contest_start_time, current_time)
 		else:
@@ -628,9 +657,13 @@ class manage_clients():
 
 
 	# This function handles client logout requests
-	def client_logout_handler(client_username, client_id):
+	def client_logout_handler(client_username, client_id, client_ip):
 		# Get client username from database and validate
 		database_client_username = client_authentication.get_client_username(client_id) 
+		status = client_authentication.check_client_ip(client_id, client_ip)
+		# If IP does not match
+		if status == 0:
+			return
 		if database_client_username == client_username:
 			# ie, client_username and client_id pair matches, 
 			# check if client is connected

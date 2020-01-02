@@ -30,13 +30,21 @@ class query_reply_ui(QMainWindow):
 		return
 
 	def main_query_reply_ui(self):
-		query_heading = QLabel('New Clarification')
-		query_sub_heading = QLabel('Query:')
-		response_sub_heading = QLabel('Response:')
+		if query_reply_ui.query_id != -1:
+			query_heading = QLabel('New Clarification')
+			query_sub_heading = QLabel('Query:')
+			response_sub_heading = QLabel('Response:')
+			query_text = QTextEdit()
+			query_text.setText(query_reply_ui.query)
+			query_text.setReadOnly(True)
+		else:
+			query_heading = QLabel('New Announcement')
+			query_sub_heading = QLabel('Announcement Heading:')
+			response_sub_heading = QLabel('Announcement Content:')
+			query_text = QTextEdit()
+			query_reply_ui.query = 'Announcement'
+			query_text.setText(query_reply_ui.query)
 		
-		query_text = QTextEdit()
-		query_text.setText(query_reply_ui.query)
-		query_text.setReadOnly(True)
 		response_entry = QTextEdit()
 		response_entry.setPlaceholderText('Max. 500 Characters')
 
@@ -66,7 +74,7 @@ class query_reply_ui(QMainWindow):
 		confirm_button = QPushButton('Confirm')
 		confirm_button.setFixedSize(200, 50)
 		confirm_button.clicked.connect(
-			lambda:query_reply_ui.final_status(self, response_entry.toPlainText())
+			lambda:query_reply_ui.final_status(self, query_text.toPlainText(), response_entry.toPlainText())
 		)
 		cancel_button = QPushButton('Cancel')
 		cancel_button.setFixedSize(200, 50)
@@ -90,7 +98,8 @@ class query_reply_ui(QMainWindow):
 		main_layout.addWidget(query_text)
 		main_layout.addWidget(response_sub_heading)
 		main_layout.addWidget(response_entry)
-		main_layout.addWidget(radiobutton_widget)
+		if query_reply_ui.client_id != -1:
+			main_layout.addWidget(radiobutton_widget)
 		main_layout.addWidget(button_widget)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -115,22 +124,36 @@ class query_reply_ui(QMainWindow):
 				query_reply_ui.button_mode = 2
 		return
 
-	def final_status(self, response):
-		if query_reply_ui.button_mode == 2:
-			send_type = 'Broadcast'
+	def final_status(self, query, response):
+		if query_reply_ui.client_id != -1:
+			if query_reply_ui.button_mode == 2:
+				send_type = 'Broadcast'
+			else:
+				send_type = 'Client'
+			message ={
+				'Code' : 'QUERY',
+				'Query' : query_reply_ui.query,
+				'Response' : response,
+				'Mode' : send_type,
+				'Query ID' : query_reply_ui.query_id,
+				'Client ID' : query_reply_ui.client_id
+			}
+			message = json.dumps(message)
+			self.task_queue.put(message)
+			query_management.update_query(query_reply_ui.query_id, query, response)
 		else:
-			send_type = 'Client'
-		message ={
-			'Code' : 'QUERY',
-			'Query' : query_reply_ui.query,
-			'Response' : response,
-			'Mode' : send_type,
-			'Query ID' : query_reply_ui.query_id,
-			'Client ID' : query_reply_ui.client_id
-		}
-		message = json.dumps(message)
-		self.task_queue.put(message)
-		query_management.update_query(query_reply_ui.query_id, response)
+			message ={
+				'Code' : 'QUERY',
+				'Query' : query,
+				'Response' : response,
+				'Mode' : 'Broadcast',
+				'Query ID' : query_reply_ui.query_id,
+				'Client ID' : query_reply_ui.client_id
+			}
+			message = json.dumps(message)
+			self.task_queue.put(message)
+			query_management.update_query(query_reply_ui.query_id, query, response)
+
 		self.data_changed_flags[8] = 0
 		self.data_changed_flags[9] = 1
 		self.data_changed_flags[23] -= 1
