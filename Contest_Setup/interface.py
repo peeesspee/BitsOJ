@@ -947,18 +947,24 @@ class contest_setup(QMainWindow):
 
 
 	def create_file(self,i):
-		os.system('mkdir Server/Problem Data')
+		os.system("mkdir Server/'Problem Data'")
 		os.system('mkdir Client/Problems')
 		os.system('mkdir Judge/problems')
 		if i == 0:
-			with open('Client/config.json', 'w') as write:
+			with open('./Client/config.json', 'w') as write:
 				json.dump(self.client_config, write, indent = 4)
+			for i in os.listdir('./Problem_Statement'):
+				os.system('cp ./Problem_Statement/' + i + ' ./Client/Problems/')
 		elif i == 1:
-			with open('Server/config.json', 'w') as write:
+			with open('./Server/config.json', 'w') as write:
 				json.dump(self.server_config, write, indent = 4)
+			for i in os.listdir('./Problems'):
+				os.system("cp -r ./Problems/" + i + " ./Server/'Problem Data'")
 		elif i == 2:
-			with open('Judge/config.json', 'w') as write:
+			with open('./Judge/config.json', 'w') as write:
 				json.dump(self.judge_config, write, indent = 4)
+			for i in os.listdir('./Problems'):
+				os.system('cp -r ./Problems/' + i + ' ./Judge/problems')
 
 
 
