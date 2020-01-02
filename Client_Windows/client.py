@@ -4,6 +4,7 @@ import os
 import signal
 import sys
 import json
+import socket
 
 from time import sleep
 from connection import manage_connection
@@ -13,8 +14,13 @@ from interface_package.login_interface import start_interface
 from listen_server import start_listening
 from init_client import handle_config,rabbitmq_detail
 
+hostname = socket.gethostname()
+ip = socket.gethostbyname(hostname)
 
 try:
+	config = handle_config.read_config_json()
+	config["IP"] = ip
+	handle_config.write_config_json(config)
 	config = handle_config.read_config_json()
 except Exception as Error:
 	print(str(Error))
@@ -36,9 +42,13 @@ def main():
 	#################################
 	# Initialize the database and returns the cursor 
 	print("[ SETUP ] INITIALISING DATABASE ............")
-	conn, cursor = manage_database.initialize_table()
-	manage_local_ids.initialize_local_id(cursor)
-	print(cursor)
+	try:
+		conn, cursor = manage_database.initialize_table()
+		manage_local_ids.initialize_local_id(cursor)
+	except Exception as error:
+		ex_type,ex_obj, ex_tb = sys.exc_info()
+		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
+		print(ex_type,f_name,ex_tb.tb_lineno)
 
 	##################################
 	# Create variables/lists that will be shared between processes
@@ -56,16 +66,22 @@ def main():
 	# 5        0/1/2         Proper Connection/Single Client Disconnected/All Clients Disconnected
 	# 6        1             Leader Board Update
 	# 7        1             Problem Edited
+	# 8        1             Blocked User
 
 	##################################
 	# Makes connection with RabbitMQ
 	# And returns channel,connection
 	print("[ SETUP ] ESTABLISHING CONNECTION .........")
-	channel,connection = manage_connection.initialize_connection(
-		rabbitmq_username, 
-		rabbitmq_password, 
-		host
-		)
+	try:
+		channel,connection = manage_connection.initialize_connection(
+			rabbitmq_username, 
+			rabbitmq_password, 
+			host
+			)
+	except:
+		ex_type,ex_obj, ex_tb = sys.exc_info()
+		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
+		print(ex_type,f_name,ex_tb.tb_lineno)
 
 
 
@@ -81,7 +97,14 @@ def main():
 	try:
 		# Manage Threads
 		print('[ SETUP ] Initialising threads....')
-		listen_pid = manage_process(rabbitmq_username,rabbitmq_password, host ,data_changed_flags, queue, scoreboard)
+		listen_pid = manage_process(
+			rabbitmq_username,
+			rabbitmq_password, 
+			host ,
+			data_changed_flags, 
+			queue, 
+			scoreboard
+			)
 	except Exception as error:
 		print('[ CRITICAL ] Could not initialize threads : ' + str(error))
 		# After successful login 
@@ -90,7 +113,9 @@ def main():
 		print('Main GUI Loading')
 		init_gui(channel,data_changed_flags, queue,scoreboard)
 	except Exception as error:
-		print(str(error))
+		ex_type,ex_obj, ex_tb = sys.exc_info()
+		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
+		print(ex_type,f_name,ex_tb.tb_lineno)
 
 	print("[EXIT] Signal Passed")
 	os.kill(listen_pid, signal.SIGINT)
@@ -104,7 +129,14 @@ def main():
 
 
 # Manageing process
-def manage_process(rabbitmq_username, rabbitmq_password, host, data_changed_flags, queue, scoreboard):
+def manage_process(
+	rabbitmq_username, 
+	rabbitmq_password, 
+	host, 
+	data_changed_flags, 
+	queue, 
+	scoreboard,
+	):
 	# this is from continuously listening from the server
 	listen_from_server = multiprocessing.Process(
 		target = start_listening.listen_server, 

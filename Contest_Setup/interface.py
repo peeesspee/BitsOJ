@@ -62,6 +62,7 @@ class contest_setup(QMainWindow):
             "Server IP": "localhost",
             "Judge Username": "judge1",
             "Judge Password": "judge1",
+            "Admin Password" : "",
             "Login Allowed": "True",
             "Judge Login Allowed": "True",
             "Submission Allowed": "True",
@@ -69,13 +70,15 @@ class contest_setup(QMainWindow):
             "Judge Key": "000000000000000",
             "Client Key": "000000000000000",
             "File Password": "papa",
+            "Contest Name" : "",
+            "Contest Theme" : "",
             "Contest Duration": "02:00:00",
             "Contest Status": "SETUP",
             "Contest Start Time": "00:00:00",
             "Contest End Time": "00:00:00",
             "Contest Set Time": 0,
-            "Problem Codes": "('SAC', 'TPH', 'TFS', 'TAM', 'ANS')",
-            "Languages": "('C','C++','JAVA','PYTHON-2')",
+            "Problem Codes": "",
+            "Languages": "('C','C++','JAVA','PYTHON-2','PYTHON-3','JAVA')",
             "Ranking Algorithm": "IOI",
             "AC Points": 100,
             "Penalty Score": -20,
@@ -90,14 +93,15 @@ class contest_setup(QMainWindow):
 			"rabbitmq_username" : "",
 			"rabbitmq_password" : "",
 			"rabbitmq_host" : "",
-			"judge_key" : "000000000000000",
+			"key" : "000000000000000",
+			"processlimit" : "500",
 			"Number of Problems" : "5",
 			"Problems": {
-                "Problem 1": "('The Begining of the End','TBE', 1, 1)",
-                "Problem 2": "('Privet Drive','PD', 1, 1)",
-                "Problem 3": "('Dumbledores Cloak','DC', 1, 1)",
-                "Problem 4": "('The Auror Mania','TAM', 1, 1)",
-                "Problem 5": "('A New Start','ANS', 1, 1)"
+                "Problem 1": {
+                "Title" : "",
+                "Code" : "",
+                "Time Limit" : "",
+                }
             },
             "Problem Codes": "('TBE', 'PD', 'DC', 'TAM', 'ANS')",
 		}
@@ -277,7 +281,7 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_server_username_label = QLabel('RABBIT_MQ USERNAME    :   ')
 		self.rabbitmq_server_username_label.setObjectName('general')
 		self.rabbitmq_server_username_text = QLineEdit()
-		self.rabbitmq_server_username_text.setPlaceholderText('Example : Client')
+		self.rabbitmq_server_username_text.setPlaceholderText('Example : Server')
 		self.rabbitmq_server_username_text.setObjectName('general_text')
 		self.rabbitmq_server_username_text.setFixedWidth(400)
 		self.rabbitmq_server_username_text.setFixedHeight(50)
@@ -291,7 +295,7 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_server_password_label = QLabel('RABBIT_MQ PASSWORD   :   ')
 		self.rabbitmq_server_password_label.setObjectName('general')
 		self.rabbitmq_server_password_text = QLineEdit()
-		self.rabbitmq_server_password_text.setPlaceholderText('Example : Client')
+		self.rabbitmq_server_password_text.setPlaceholderText('Example : Server')
 		self.rabbitmq_server_password_text.setObjectName('general_text')
 		self.rabbitmq_server_password_text.setFixedWidth(400)
 		self.rabbitmq_server_password_text.setFixedHeight(50)
@@ -360,7 +364,7 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_judge_username_label = QLabel('RABBIT_MQ USERNAME    :   ')
 		self.rabbitmq_judge_username_label.setObjectName('general')
 		self.rabbitmq_judge_username_text = QLineEdit()
-		self.rabbitmq_judge_username_text.setPlaceholderText('Example : Client')
+		self.rabbitmq_judge_username_text.setPlaceholderText('Example : Judge')
 		self.rabbitmq_judge_username_text.setObjectName('general_text')
 		self.rabbitmq_judge_username_text.setFixedWidth(400)
 		self.rabbitmq_judge_username_text.setFixedHeight(50)
@@ -374,7 +378,7 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_judge_password_label = QLabel('RABBIT_MQ PASSWORD   :   ')
 		self.rabbitmq_judge_password_label.setObjectName('general')
 		self.rabbitmq_judge_password_text = QLineEdit()
-		self.rabbitmq_judge_password_text.setPlaceholderText('Example : Client')
+		self.rabbitmq_judge_password_text.setPlaceholderText('Example : Judge')
 		self.rabbitmq_judge_password_text.setObjectName('general_text')
 		self.rabbitmq_judge_password_text.setFixedWidth(400)
 		self.rabbitmq_judge_password_text.setFixedHeight(50)
@@ -478,7 +482,7 @@ class contest_setup(QMainWindow):
 		self.reset_problem.setFixedSize(200,50)
 		self.reset_problem.clicked.connect(lambda:self.confirm_event())
 		problem_button.addWidget(self.add_problem)
-		problem_button.addWidget(self.edit_problem)
+		# problem_button.addWidget(self.edit_problem)
 		problem_button.addWidget(self.reset_problem)
 		problem_button.addStretch(1)
 		problem_button.addSpacing(0)
@@ -693,6 +697,23 @@ class contest_setup(QMainWindow):
 		self.hour_12.toggled.connect(lambda:self.select_format(self.hour_12))
 		self.hour_24.toggled.connect(lambda:self.select_format(self.hour_24))
 
+
+		admin_password_key = QHBoxLayout()
+		admin_password_key_label = QLabel('ADMIN KEY                  :   ')
+		admin_password_key_label.setObjectName('general')
+		self.admin_password_key_text = QLineEdit()
+		self.admin_password_key_text.setPlaceholderText('')
+		self.admin_password_key_text.setObjectName('general_text')
+		self.admin_password_key_text.setEchoMode(QLineEdit.Password)
+		self.admin_password_key_text.setFixedWidth(400)
+		self.admin_password_key_text.setFixedHeight(50)
+		admin_password_key.addWidget(admin_password_key_label)
+		admin_password_key.addWidget(self.admin_password_key_text)
+		admin_password_key.addStretch(1)
+		admin_password_key.addSpacing(0)
+		admin_password_key_widget = QWidget()
+		admin_password_key_widget.setLayout(admin_password_key)
+
 		start_time.addWidget(start_time_label)
 		start_time.addWidget(self.start_time_text)
 		start_time.addWidget(self.am_pm)
@@ -725,6 +746,7 @@ class contest_setup(QMainWindow):
 		contest_tab.addWidget(client_key_widget)
 		contest_tab.addWidget(judge_key_widget)
 		contest_tab.addWidget(problem_password_key_widget)
+		contest_tab.addWidget(admin_password_key_widget)
 		# contest_tab.addWidget(problems_password_widget)
 		# contest_tab.addWidget(contest_duration_widget)
 		# contest_tab.addWidget(start_time_widget)
@@ -925,9 +947,9 @@ class contest_setup(QMainWindow):
 
 
 	def create_file(self,i):
-		os.system('mkdir Server')
-		os.system('mkdir Client')
-		os.system('mkdir Judge')
+		os.system('mkdir Server/Problem Data')
+		os.system('mkdir Client/Problems')
+		os.system('mkdir Judge/problems')
 		if i == 0:
 			with open('Client/config.json', 'w') as write:
 				json.dump(self.client_config, write, indent = 4)
@@ -962,6 +984,11 @@ class contest_setup(QMainWindow):
 		self.IOI.setDisabled(True)
 		self.ACM.setDisabled(True)
 		self.LONG.setDisabled(True)
+		self.server_config["AC Points"] = self.ac_text.text()
+		self.server_config["Penalty Score"] = self.penalty_points_text.text()
+		self.server_config["Penalty Time"] = self.penalty_time_text.text()
+		print(self.server_config)
+		print('\n')
 
 	def edit_rank_tab(self):
 		self.IOI.setDisabled(False)
@@ -973,7 +1000,7 @@ class contest_setup(QMainWindow):
 		no = manage_local_ids.get_new_id()
 		self.client_config["No_of_Problems"] = int(no)
 		self.data = read_write.read_json()
-		self.window = add_problem_ui(no,self.table_model,self.client_config,self.data)
+		self.window = add_problem_ui(no,self.table_model,self.client_config,self.data,self.server_config,self.judge_config)
 		self.window.show()
 
 	############################## EDIT PROBLEM ###############################
@@ -1041,19 +1068,28 @@ class contest_setup(QMainWindow):
 			QMessageBox.warning(self,'Message','Judge Key cannot be empty')
 		elif self.problem_password_key_text.text() == '':
 			QMessageBox.warning(self,'Message','Problem Key cannot be empty')
+		elif self.admin_password_key_text.text() == '':
+			QMessageBox.warning(self,'Message','Admin Key cannot be empty')
 		else:
 			self.client_config["Contest Name"] = self.contest_name_text.text()
 			self.client_config["Contest Theme"] = self.contest_theme_text.text()
 			self.client_config["client_key"] = self.client_key_text.text()
-			self.client_config["Problem Key"] = self.problem_password_key_text.text()
 			self.server_config["Contest Name"] = self.contest_name_text.text()
 			self.server_config["Contest Theme"] = self.contest_theme_text.text()
 			self.server_config["Client Key"] = self.client_key_text.text()
 			self.server_config["Judge Key"] = self.judge_key_text.text()
 			self.server_config["File Password"] = self.problem_password_key_text.text()
-			self.judge_config["judge_key"] = self.judge_key_text.text()
+			self.server_config["Admin Password"] = self.admin_password_key_text.text()
+			self.judge_config["key"] = self.judge_key_text.text()
 			self.contest_name_text.setReadOnly(True)
 			self.contest_theme_text.setReadOnly(True)
+			self.admin_password_key_text.setReadOnly(True)
+			print(self.client_config)
+			print('\n')
+			print(self.server_config)
+			print('\n')
+			print(self.judge_config)
+			print('\n')
 			# self.client_key_text.setReadOnly(True)
 			# self.contest_duration_text.setReadOnly(True)
 			# self.start_time_text.setReadOnly(True)
@@ -1066,6 +1102,7 @@ class contest_setup(QMainWindow):
 	def edit_contest_tab(self):
 		self.contest_name_text.setReadOnly(False)
 		self.contest_theme_text.setReadOnly(False)
+		self.admin_password_key_text.setReadOnly(False)
 		# self.client_key_text.setReadOnly(False)
 		# self.contest_duration_text.setReadOnly(False)
 		# self.start_time_text.setReadOnly(False)

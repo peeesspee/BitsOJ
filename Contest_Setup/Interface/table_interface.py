@@ -28,32 +28,33 @@ class problem_table():
 		problem_table_view.doubleClicked.connect(
 			lambda : problem_table.add_test_cases(
 				self,
-				problem_table_view.selectionModel().currentIndex().row()
+				problem_table_view.selectionModel().currentIndex().row(),
+				self.server_config
 				))
 
 		return problem_table_view,self.problem_table_model
 
-	def add_test_cases(self,selected_row):
-		self.test_file_ui = test_file(selected_row,self.problem_table_model)
+	def add_test_cases(self,selected_row,server_config):
+		self.test_file_ui = test_file(selected_row,self.problem_table_model,server_config)
 		self.test_file_ui.show()
 
 
 class add_problem_ui(QMainWindow):
 	no = ''
 
-	def __init__(self,no, table_model,client_config, data ,parent=None):
+	def __init__(self,no, table_model,client_config, data,server_config,judge_config ,parent=None):
 		super(add_problem_ui, self).__init__(parent)
 
 		self.setWindowTitle('Add Problem')
 		self.setFixedSize(1600,800)
 		add_problem_ui.no = no
 
-		main = self.add_problem_view_ui(table_model,client_config,data)
+		main = self.add_problem_view_ui(table_model,client_config,data,server_config,judge_config)
 		self.setCentralWidget(main)
 
 		return
 
-	def add_problem_view_ui(self,table_model,client_config,data):
+	def add_problem_view_ui(self,table_model,client_config,data,server_config,judge_config):
 		try:
 			main = QVBoxLayout()
 			main2 = QScrollArea()
@@ -144,7 +145,7 @@ class add_problem_ui(QMainWindow):
 			self.save = QPushButton('Save')
 			self.save.setObjectName('general')
 			self.save.setFixedSize(200,50)
-			self.save.clicked.connect(lambda:self.save_data(table_model,client_config,data))
+			self.save.clicked.connect(lambda:self.save_data(table_model,client_config,data,server_config,judge_config))
 
 			main.addWidget(problem_no, alignment = Qt.AlignCenter)
 			main.addWidget(problem_name_widget)
@@ -180,7 +181,7 @@ class add_problem_ui(QMainWindow):
 
 		return main_layout
 
-	def save_data(self,table_model,client_config,data):
+	def save_data(self,table_model,client_config,data,server_config,judge_config):
 		if self.problem_name_text.text() == '':
 			QMessageBox.warning(self, 'Message', 'Problem Name cannot be empty')
 		elif self.problem_code_text.text() == '':
@@ -215,6 +216,31 @@ class add_problem_ui(QMainWindow):
 					"Example Input" : self.example_input_text.toPlainText(),
 					"Example Output" : self.example_output_text.toPlainText()
 				}
+				time_limit = self.time_limit_text.text()
+				server_problem = {
+					"Title" : self.problem_name_text.text(),
+					"Code" : self.problem_code_text.text(),
+					"Time Limit" : int(time_limit),
+					"Author" : self.author_text.text(),
+					"Statement" : self.problem_statement_text.toPlainText(),
+					"Input Format" : self.input_text.toPlainText(),
+					"Output Format" : self.output_text.toPlainText(),
+					"Constraints" : self.constraints_text.toPlainText(),
+					"Example Input" : self.example_input_text.toPlainText(),
+					"Example Output" : self.example_output_text.toPlainText(),
+					"IO Files" : ""
+				}
+				judge_problem = {
+					"Title" : self.problem_name_text.text(),
+					"Code" : self.problem_code_text.text(),
+					"Time Limit" : int(time_limit)
+				}
+				server_config["Problems"]["Problem " + str(add_problem_ui.no)] = server_problem
+				judge_config["Problems"]["Problem " + str(add_problem_ui.no)] = judge_problem
+				print(server_config)
+				print('\n')
+				print(judge_config)
+				print('\n')
 				with open('./Problem_Statement/Problem_' + str(add_problem_ui.no) + '.json', 'w') as write:
 					json.dump(problem, write, indent = 4)
 			except Exception as Error:

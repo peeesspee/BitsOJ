@@ -75,9 +75,10 @@ class client_window(QMainWindow):
 				for j in range(5):
 					if j == 0:
 						self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
+						self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
 					else:
 						self.scoreboard.setItem(i,j, QTableWidgetItem(str(score_data[i][j-1])))
-					self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
+						self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
 					if i == 0:
 						self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
 					elif i == 1:
@@ -297,8 +298,10 @@ class client_window(QMainWindow):
 					for j in range(5):
 						if j == 0:
 							self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
+							self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
 						else:
 							self.scoreboard.setItem(i,j, QTableWidgetItem(str(score[i][j-1])))
+							self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
 						if i == 0:
 							self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
 						elif i == 1:

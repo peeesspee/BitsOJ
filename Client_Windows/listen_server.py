@@ -5,19 +5,28 @@ import sys
 import time
 from datetime import date,datetime
 from init_client import initialize_contest, handle_config
+from database_management import manage_database, manage_local_ids
+
+
+
+
 
 class start_listening():
 	channel = None
 	connection = None
-
 	host = None
 	login_status = False 
 	data_changed_flags = ''
 	queue = ''
 	scoreboard = ''
+	authenticate_login = ''
+	cursor = ''
 
 	def listen_server(rabbitmq_username, rabbitmq_password, host, data_changed_flags2, queue, scoreboard):
-		authenticate_login = handle_config.read_config_json()
+		start_listening.authenticate_login = handle_config.read_config_json()
+		conn, cursor = manage_database.initialize_table()
+		manage_local_ids.initialize_local_id(cursor)
+		start_listening.cursor = cursor
 		try:
 			creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
 			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
@@ -30,17 +39,17 @@ class start_listening():
 			start_listening.scoreboard = scoreboard
 
 			start_listening.channel.basic_consume(
-				queue = authenticate_login["Username"],
+				queue = start_listening.authenticate_login["Username"],
 				on_message_callback = start_listening.server_response_handler,
 				auto_ack = True
 				)
 			start_listening.channel.start_consuming()
 		except (KeyboardInterrupt, SystemExit):
-			print('[ DELETE ] Queue ' + authenticate_login["Username"] + ' deleted...')
+			print('[ DELETE ] Queue ' + start_listening.authenticate_login["Username"] + ' deleted...')
 			print("[ STOP ] Keyboard interrupt")
 		finally:
 			start_listening.channel.stop_consuming()
-			start_listening.channel.queue_delete(authenticate_login["Username"])
+			start_listening.channel.queue_delete(start_listening.authenticate_login["Username"])
 			
 	
 			
@@ -64,6 +73,7 @@ class start_listening():
 			start_listening.queue.put(json_data["Message"])
 			start_listening.data_changed_flags[3] = 1
 		elif code == "SCRBD":
+			print(json_data)
 			start_listening.leaderboard(json_data)
 		elif code == "START":
 			start_listening.start_status(json_data)
@@ -77,9 +87,16 @@ class start_listening():
 			start_listening.extended_time(json_data)
 		elif code == 'EDIT':
 			start_listening.edit_problem(json_data)
+		elif code == 'BLOCK':
+			start_listening.user_blocked(json_data)
 		else:
 			print(code)
 			print("WRONG INPUT")
+
+
+	def user_blocked(server_data):
+		start_listening.channel.stop_consuming()
+		start_listening.data_changed_flags[8] = 1
 
 
 
@@ -129,7 +146,7 @@ class start_listening():
 		print('[ Run ID : ' + run_id + ' ] [ Result : ' + code_result + ' ] [ error : ' + message + ' ]')
 		submission_management.update_verdict(
 			local_id,
-			authenticate_login["client_id"],
+			start_listening.authenticate_login["client_id"],
 			run_id,
 			code_result,
 			)

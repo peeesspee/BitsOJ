@@ -17,7 +17,7 @@ from judge_api import judge
 
 class test_file(QMainWindow):
 
-	def __init__(self, selected_row, selected_model, parent=None):
+	def __init__(self, selected_row, selected_model, server_config, parent=None):
 		super(test_file, self).__init__(parent)
 
 		self.data = testing.get_testing_details()
@@ -35,10 +35,10 @@ class test_file(QMainWindow):
 		self.input = []
 		self.output = []
 		self.setFixedSize(1200,800)
-		main = self.main_ui()
+		main = self.main_ui(server_config)
 		self.setCentralWidget(main)
 
-	def main_ui(self):
+	def main_ui(self,server_config):
 		main = QVBoxLayout()
 		problem_no_label = QLabel(self.problem_name)
 		problem_no_label.setObjectName('heading')
@@ -82,7 +82,7 @@ class test_file(QMainWindow):
 		solutions = QHBoxLayout()
 		upload = QPushButton('Upload')
 		upload.setFixedSize(200, 50)
-		upload.clicked.connect(lambda:self.upload_files('Problem ' + str(self.no)))
+		upload.clicked.connect(lambda:self.upload_files('Problem ' + str(self.no),server_config))
 		upload.setObjectName('submit')
 		self.check_solution_text = QLineEdit()
 		self.check_solution_text.setPlaceholderText('Solution Path')
@@ -195,7 +195,8 @@ class test_file(QMainWindow):
 			print(str(Error))
 
 
-	def upload_files(self,index):
+	def upload_files(self,index,server_config):
+		self.count = 0
 		self.input = []
 		self.output = []
 		x = QFileDialog()
@@ -208,9 +209,11 @@ class test_file(QMainWindow):
 			self.data["Problems"]["Problem " + str(self.no)]["Test File Path"] = name
 			for i in os.listdir(name):
 				if i.endswith(".in"):
+					self.count+=1
 					self.input.append(i)
 				if i.endswith(".ans"):
 					self.output.append(i)
+			server_config["Problems"]["Problem "+str(self.no)]["IO Files"] = self.count
 			self.input.sort()
 			self.output.sort()
 			try:

@@ -43,8 +43,10 @@ class manage_database():
 			# Query to drom my submissions and my query table
 			cur.execute("drop table if exists my_submissions")
 			cur.execute("drop table if exists my_query")
-		except Exception as Error:
-			print(str(Error))
+		except Exception as error:
+			ex_type,ex_obj, ex_tb = sys.exc_info()
+			f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
+			print(ex_type,f_name,ex_tb.tb_lineno)
 
 ##############################################################
 ##############################################################
@@ -55,10 +57,15 @@ class manage_database():
 class source_code(manage_database):
 
 	def get_source(run_id):
-		manage_database.cur.execute("SELECT source_file FROM my_submissions WHERE run_id = ?",(run_id,))
-		data = manage_database.cur.fetchall()
-		data = data[0][0]	
-		return data
+		try:
+			manage_database.cur.execute("SELECT source_file FROM my_submissions WHERE run_id = ?",(run_id,))
+			data = manage_database.cur.fetchall()
+			data = data[0][0]	
+			return data
+		except Exception as error:
+			ex_type,ex_obj, ex_tb = sys.exc_info()
+			f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
+			print(ex_type,f_name,ex_tb.tb_lineno)
 
 # Local Id's for all the submission to have a record for every submission locally 
 class manage_local_ids():

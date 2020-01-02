@@ -310,6 +310,7 @@ class ui_widgets():
 				client_id = config["client_id"]
 				client_key = config["client_key"]
 				username = config["Username"]
+				print(local_id)
 				submission_management.insert_verdict(
 					local_id,
 					client_id,
@@ -331,7 +332,8 @@ class ui_widgets():
 					textbox_value,
 					local_id,
 					client_key,
-					username
+					username,
+					config["IP"]
 					)
 				ui_widgets.text_area.setPlainText('')
 			except Exception as Error:
@@ -342,12 +344,12 @@ class ui_widgets():
 
 
 
-	def show_problem(i,data_changed_flag,self):
-		if data_changed_flag[0] == 0:
-			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
-		else:
-			webbrowser.open("Problems\\Problem_"+str(i)+'.pdf')
-		return
+	# def show_problem(i,data_changed_flag,self):
+	# 	if data_changed_flag[0] == 0:
+	# 		QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
+	# 	else:
+	# 		webbrowser.open("Problems\\Problem_"+str(i)+'.pdf')
+	# 	return
 		# print('Button {0} clicked'.format(i))
 
 
@@ -376,6 +378,8 @@ class ui_widgets():
 					client_id,
 					client_key,
 					query,
+					config["Username"],
+					config["IP"]
 					)
 				QMessageBox.warning(self, 'Message', 'Your Query has been successfully send')
 		return
@@ -475,7 +479,8 @@ class view_submission_ui(QMainWindow):
 		return
 
 	def main_submission_view_ui(self):
-		with open("Solution+'\\'"+view_submission_ui.source_file, 'r') as solu:
+		print(view_submission_ui.source_file)
+		with open("Solution/"+view_submission_ui.source_file, 'r') as solu:
 			data = solu.read()
 
 
