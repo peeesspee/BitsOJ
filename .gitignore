@@ -12,4 +12,5 @@ problems/
 submission_files/
 diary
 config.json
-
+todo.txt
+server_logs.txt

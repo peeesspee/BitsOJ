@@ -1,0 +1,12 @@
+{
+    "Problem Name": "Frequency Game\n",
+    "Problem Code": "TFG",
+    "Time Limit": "1",
+    "Author": "Soham",
+    "Statement": "Gandhiji and Nehruji are playing a game. In this game Nehruji gives Gandhiji N natural numbers and asks him to calculate the frequency of each distinct number. Once Gandhiji finds out the frequency of each element, he has to check how many elements have the same frequency and print each frequency along with the elements having that frequency in ascending order. Gandhiji is busy in organising the Quit India movement, so he wants your help in solving this question.\n",
+    "Input": "    \u2022 The first line takes T, the number of test cases.\n    \u2022 The next line takes N, the number of elements in the sequence.\n    \u2022 Next line contains N space separated numbers, A1....An",
+    "Output": "Print each frequency followed by the element having that frequency on the next line. The frequencies and the elements having the frequency both must be in ascending order.",
+    "Constraints": "1 < T < 100\n1 < A < 10^9\n1 < N < 10^5",
+    "Example Input": "1\n7\n1 1 1 2 2 3 3",
+    "Example Output": "2\n2 3\n3 \n1"
+}
