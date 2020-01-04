@@ -3,4 +3,3 @@
 2. Rabbitmq queue security	( High Priority )																	
 6. Generate Report	( High Priority )											
 7. Decrypt config file	( Low Priority )
-8. Finish server logs for ui classes

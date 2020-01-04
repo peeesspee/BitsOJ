@@ -52,6 +52,9 @@ class manage_judges():
 		except Exception as error:
 			print('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
 			manage_judges.log('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
+			manage_judges.data_changed_flags[26] = 1
+			while manage_judges.data_changed_flags[7] !=1:
+				time.sleep(0.5)
 			sys.exit()
 
 		try:

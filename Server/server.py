@@ -106,11 +106,13 @@ def main():
 	#	23		0/1			1: Stop logger
 	#	24		0/1			1: Server locked
 	#	25		0/1			1: Rejudge problem ui open
+	#	26		0/1			1: Connection error : Restart server
 	#####################################################################################
 	
 	# Set submission time limit
 	data_changed_flags[21] = submission_time_limit
 	data_changed_flags[23] = 0
+	data_changed_flags[26] = 0
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	if login_status == 'True' or login_status == 'true':
 		data_changed_flags[2] = 1
@@ -200,6 +202,9 @@ def main():
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
 		log_queue.put("[ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		print(exc_type, fname, exc_tb.tb_lineno)
 	#####################################################################################
 	# Server process is in idle state here on. Active processes are:
 	# client_manager

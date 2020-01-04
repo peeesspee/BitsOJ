@@ -12,10 +12,10 @@ class query_reply_ui(QMainWindow):
 			self, 
 			data_changed_flags,
 			task_queue, 
-			log_queue,
 			query, 
 			client_id, 
 			query_id, 
+			log_queue,
 			parent=None
 		):
 		super(query_reply_ui, self).__init__(parent)

@@ -14,6 +14,7 @@ from Interface.query_reply_ui import *
 from Interface.new_accounts_ui import *
 from Interface.ie_accounts_ui import *
 from Interface.rejudge_problem_ui import *
+from Interface.judge_view_ui import *
 from init_server import initialize_server, save_status
 from database_management import user_management, submissions_management, query_management, scoreboard_management, client_authentication
 
@@ -36,7 +37,7 @@ class server_window(QMainWindow):
 		# Make  the app run full-screen
 		# Initialize status bar (Bottom Bar)
 		self.status = self.statusBar()
-		self.resize(1024, 768)
+		self.setMinimumSize(1366, 768)
 
 		# Timer to update GUI and broadcast scoreboard
 		self.timer = QTimer()
@@ -352,6 +353,19 @@ class server_window(QMainWindow):
 			
 	def update_data(self):
 		try:
+			if self.data_changed_flags[26] == 1:
+				self.data_changed_flags[26] = 2
+				# Connection failure!
+				info_box = QMessageBox()
+				info_box.setIcon(QMessageBox.Critical)
+				info_box.setWindowTitle('CRITICAL')
+				info_box.setText('Connection to RabbitMQ broker lost!\nRestart Server after resolving the issue.')
+				info_box.setStandardButtons(QMessageBox.Ok)
+				info_box.exec_()
+				self.data_changed_flags[7] = 1
+				self.log_queue.put("[ EXIT ] ABNORMAL SYSTEM EXIT")
+				self.data_changed_flags[23] = 1
+				self.close()
 			# If data has changed in submission table
 			# Update submission table
 			if self.data_changed_flags[0] == 1:
@@ -856,12 +870,15 @@ class server_window(QMainWindow):
 					self.data_changed_flags[8] = 0
 					return
 				
-				self.window = query_reply_ui(self.data_changed_flags,self.task_queue, self.log_queue ,query,client_id, query_id)
+				self.window = query_reply_ui(self.data_changed_flags,self.task_queue, query, client_id, query_id, self.log_queue )
 				self.window.show()
 
 			except Exception as error: 
 				print('[ ERROR ] : ' + str(error))
 				self.log('[ ERROR ] : ' + str(error))
+				exc_type, exc_obj, exc_tb = sys.exc_info()
+				fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+				print(exc_type, fname, exc_tb.tb_lineno)
 			finally:
 				return
 		else:
@@ -876,7 +893,7 @@ class server_window(QMainWindow):
 				query = 'Announcement'
 				client_id = -1
 				query_id = -1
-				self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query,client_id, query_id)
+				self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query,client_id, query_id, self.log_queue)
 				self.window.show()
 
 			except Exception as error: 
@@ -1036,6 +1053,45 @@ class server_window(QMainWindow):
 			return
 
 	@pyqtSlot()
+	def view_judge(self, selected_row):
+		if self.data_changed_flags[14] == 0:
+			# Set critical flag
+			self.data_changed_flags[14] = 1
+		else:
+			# If one client edit window is already opened, process it first.
+			return
+		# If no row is selected, return
+		try:
+			judge_id = self.judge_model.index(selected_row, 0).data()
+			username = self.judge_model.index(selected_row, 1).data()
+			password = self.judge_model.index(selected_row, 2).data()
+			ip = self.judge_model.index(selected_row, 3).data()
+			state = self.judge_model.index(selected_row, 4).data()
+
+			if username == None or judge_id == None or password == None or state == None:
+				self.data_changed_flags[14] = 0
+				pass
+			else:
+				self.view_window = judge_view_ui(
+					self.data_changed_flags, 
+					self.task_queue, 
+					self.log_queue, 
+					judge_id, 
+					username, 
+					password, 
+					state, 
+					ip
+				)
+				self.view_window.show()
+			
+		except Exception as error: 
+			print('[ UI ][ ERROR ]' + str(error))
+			self.log('[ UI ][ ERROR ]' + str(error))
+			self.data_changed_flags[14] = 0
+		finally:
+			return
+
+	@pyqtSlot()
 	def edit_account(self, selected_row):
 		if self.data_changed_flags[14] == 0:
 			# Set critical flag
@@ -1058,8 +1114,8 @@ class server_window(QMainWindow):
 				self.edit_window.show()
 			
 		except Exception as error: 
-			print('[ ERROR ][ EDIT ] ' + str(error))
-			self.log('[ ERROR ][ EDIT ] ' + str(error))
+			print('[ UI ][ ERROR ][ EDIT ] ' + str(error))
+			self.log('[ UI ][ ERROR ][ EDIT ] ' + str(error))
 			self.data_changed_flags[14] = 0
 		finally:
 			return
@@ -1087,8 +1143,8 @@ class server_window(QMainWindow):
 				self.edit_window.show()
 			
 		except Exception as error: 
-			print('[ ERROR ]' + str(error))
-			self.log('[ ERROR ]' + str(error))
+			print('[ UI ][ ERROR ]' + str(error))
+			self.log('[ UI ][ ERROR ]' + str(error))
 			self.data_changed_flags[14] = 0
 		finally:
 			return
@@ -1132,8 +1188,8 @@ class server_window(QMainWindow):
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except:
-			print('[ ERROR ] Could not reset database!')
-			self.log('[ ERROR ] Could not reset database!')
+			print('[ UI ][ ERROR ] Could not reset database!')
+			self.log('[ UI ][ ERROR ] Could not reset database!')
 
 		finally:
 			# Reset critical flag
@@ -1180,8 +1236,8 @@ class server_window(QMainWindow):
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
-			print('Could not reset database : ' + str(error))
-			self.log('Could not reset database : ' + str(error))
+			print('[ UI ][ ERROR ] Could not reset database : ' + str(error))
+			self.log('[ UI ][ ERROR ] Could not reset database : ' + str(error))
 
 		finally:
 			# Reset critical flag
@@ -1227,8 +1283,8 @@ class server_window(QMainWindow):
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
-			print('Could not reset database : ' + str(error))
-			self.log('Could not reset database : ' + str(error))
+			print('[ UI ][ ERROR ] Could not reset database : ' + str(error))
+			self.log('[ UI ][ ERROR ] Could not reset database : ' + str(error))
 
 		finally:
 			# Reset critical flag
@@ -1322,8 +1378,8 @@ class server_window(QMainWindow):
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
-			print('[ ERROR ] Could not reset server : ' + str(error))
-			self.log('[ ERROR ] Could not reset server : ' + str(error))
+			print('[ CLOSE ][ ERROR ] Could not reset server : ' + str(error))
+			self.log('[ CLOSE ][ ERROR ] Could not reset server : ' + str(error))
 
 		finally:
 			# Reset critical flag
@@ -1463,8 +1519,11 @@ class server_window(QMainWindow):
 	def set_status(self, message = 'SETUP'):
 		self.status.showMessage('BitsOJ > ' + message)
 	###################################################
-
 	def closeEvent(self, event):
+		# If server exit is called, accept
+		if self.data_changed_flags[23] == 1:
+			event.accept()
+			sys.exit()
 		# if lock is set, ignore
 		if self.data_changed_flags[24] == 1:
 			QMessageBox.about(self, "Access Denied", "Server is locked!")
