@@ -1,10 +1,12 @@
 import pika
 import multiprocessing
+import threading
 import os
 import signal
 import sys
 import json
 import socket
+
 
 from time import sleep
 from connection import manage_connection
@@ -97,13 +99,13 @@ def main():
 	try:
 		# Manage Threads
 		print('[ SETUP ] Initialising threads....')
-		listen_pid = manage_process(
-			rabbitmq_username,
-			rabbitmq_password, 
-			host ,
-			data_changed_flags, 
-			queue, 
-			scoreboard
+		listen_thread = manage_process(
+				rabbitmq_username,
+				rabbitmq_password, 
+				host ,
+				data_changed_flags, 
+				queue, 
+				scoreboard
 			)
 	except Exception as error:
 		print('[ CRITICAL ] Could not initialize threads : ' + str(error))
@@ -117,8 +119,11 @@ def main():
 		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
 		print(ex_type,f_name,ex_tb.tb_lineno)
 
+	sys.exit(0)
+	listen_thread.join()
+
 	print("[EXIT] Signal Passed")
-	os.kill(listen_pid, signal.SIGINT)
+	# os.kill(listen_pid, signal.SIGINT)
 
 	
 
@@ -138,19 +143,20 @@ def manage_process(
 	scoreboard,
 	):
 	# this is from continuously listening from the server
-	listen_from_server = multiprocessing.Process(
+	listen_from_server = threading.Thread(
 		target = start_listening.listen_server, 
 		args = (rabbitmq_username,rabbitmq_password, host, data_changed_flags, queue, scoreboard, )
 		)
 
 	listen_from_server.start()
+	return listen_from_server
 	
 
-	listen_pid = listen_from_server.pid
+	# listen_pid = listen_from_server.pid
 	
 
 	# returning process id 
-	return listen_pid
+	# return listen_pid
 
 
 

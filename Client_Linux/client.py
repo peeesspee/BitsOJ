@@ -4,6 +4,7 @@ import os
 import signal
 import sys
 import json
+import socket
 
 from time import sleep
 from connection import manage_connection
@@ -13,11 +14,21 @@ from interface_package.login_interface import start_interface
 from listen_server import start_listening
 from init_client import handle_config,rabbitmq_detail
 
+
+hostname = socket.gethostname()
+ip = socket.gethostbyname(hostname)
+
+
 try:
+	config = handle_config.read_config_json()
+	config["IP"] = ip
+	handle_config.write_config_json(config)
 	config = handle_config.read_config_json()
 except Exception as Error:
 	print(str(Error))
 	sys.exit()
+
+	
 try:
 	# Basic credentials for login to RabbitMQ Server
 	rabbitmq_username = config["rabbitmq_username"]

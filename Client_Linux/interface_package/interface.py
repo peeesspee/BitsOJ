@@ -449,6 +449,7 @@ class client_window(QMainWindow):
 				config = handle_config.read_config_json()
 				data = {
 				"Code" : "DSCNT",
+				"IP" : config["IP"],
 				"Client Key" : config["client_key"],
 				"Username" : config["Username"],
 				"ID" : config["client_id"],
@@ -611,8 +612,8 @@ class init_gui(client_window):
 
 		# make a reference of App class
 		client_app = client_window(channel,data_changed_flag,queue,score)
-
 		client_app.showMaximized()
+
 		# server_app.showNormal()
 		# Close the server as soon as close buton is clicked
 		app.exec_()

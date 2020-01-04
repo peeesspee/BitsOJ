@@ -8,5 +8,15 @@
     "Output": "Print each frequency followed by the element having that frequency on the next line. The frequencies and the elements having the frequency both must be in ascending order.",
     "Constraints": "1 < T < 100\n1 < A < 10^9\n1 < N < 10^5",
     "Example Input": "1\n7\n1 1 1 2 2 3 3",
-    "Example Output": "2\n2 3\n3 \n1"
+    "Example Output": "2\n2 3\n3 \n1",
+    "Problem Name": "dwq",
+    "Problem Code": "dwq",
+    "Time Limit": "1",
+    "Author": "dqw",
+    "Statement": "",
+    "Input": "",
+    "Output": "",
+    "Constraints": "",
+    "Example Input": "",
+    "Example Output": ""
 }

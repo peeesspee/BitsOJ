@@ -11,7 +11,7 @@ class send_code():
 	extention = None
 
 	# Solution request function 
-	def solution_request(problem_Code,selected_language,time_stamp,code,local_run_id,client_key,username):
+	def solution_request(problem_Code,selected_language,time_stamp,code,local_run_id,client_key,username,ip):
 		if(selected_language == 'C'):
 			send_code.extention = '.c'
 			language_code = 'GCC'
@@ -29,6 +29,7 @@ class send_code():
 			language_code = 'PY2'
 		final_data = {
 			'Code' : 'SUBMT',
+			"IP" : ip,
 			'Username' : username,
 			'Client Key': client_key,
 			'Local Run ID' : local_run_id,
@@ -54,9 +55,10 @@ class send_code():
 
 
 
-	def query_request(client_id,client_key,query):
+	def query_request(client_id,client_key,query,ip):
 		final_data ={
 			'Code' : 'QUERY',
+			"IP" : ip,
 			'ID' : client_id,
 			'Client Key': client_key,
 			'Query' : query,

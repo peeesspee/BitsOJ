@@ -130,8 +130,6 @@ class authenticate_login():
 				print(str(Error))	
 			print('step2')
 
-
-
 	# Function to get user details
 	def get_user_details():
 		return authenticate_login.client_id, authenticate_login.username
