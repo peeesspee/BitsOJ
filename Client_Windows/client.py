@@ -7,6 +7,7 @@ import sys
 import json
 import socket
 
+
 from time import sleep
 from connection import manage_connection
 from database_management import manage_database, manage_local_ids

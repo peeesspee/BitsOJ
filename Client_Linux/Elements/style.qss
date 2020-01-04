@@ -469,6 +469,16 @@ QLabel#problem_heading_2{
     margin-bottom : 30px;
 }
 
+QLabel#problem_heading_2_author{
+    color:#000000;
+    font: bold 20px 'Arial';
+}
+
+QLabel#problem_heading_2_white{
+    color:#FFFFFF;
+    font: bold 20px 'Arial';
+}
+
 QLabel#problem_heading_3{
     color:#000000;
     font: bold 20px 'Arial';
@@ -495,5 +505,38 @@ QLabel#problem_text_2{
 }
 
 QScrollArea{
-	border : none;
+	border : 0px;
+}
+QScrollArea#view_problem QWidget{
+	background-color : #171B1F;
+	border : None;
+}
+QScrollArea QLabel#problem_heading{
+	color : #ADFF2F;
+}
+QScrollArea QLabel#problem_heading_1{
+	color : #23B2EE;
+}
+QScrollArea QLabel#problem_heading_2{
+	color : #23B2EE;
+}
+QScrollArea QLabel#problem_heading_2_author{
+	color : #23B2EE;
+}
+QScrollArea QLabel#problem_heading_2_white{
+	color : #FFFFFF;
+}
+QScrollArea QLabel#problem_heading_3{
+	color : #23B2EE;
+}
+QScrollArea QLabel#problem_heading_4{
+	color : #23B2EE;
+}
+
+QScrollArea QLabel#problem_text{
+	color : #FFFFFF;
+}
+
+QScrollArea QLabel#problem_text_2{
+	color : #FFFFFF;
 }

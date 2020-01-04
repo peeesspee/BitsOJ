@@ -331,7 +331,8 @@ class ui_widgets():
 					textbox_value,
 					local_id,
 					client_key,
-					username
+					username,
+					config["IP"]
 					)
 				ui_widgets.text_area.setPlainText('')
 			except Exception as Error:
@@ -366,6 +367,7 @@ class ui_widgets():
 					client_id,
 					client_key,
 					query,
+					config["IP"]
 					)
 				QMessageBox.warning(self, 'Message', 'Your Query has been successfully send')
 		return
@@ -515,7 +517,6 @@ class view_submission_ui(QMainWindow):
 
 
 class view_problem_ui(QMainWindow):
-
 	def __init__(self, i, data_changed_flags, problem_file, parent=None):
 		super(view_problem_ui, self).__init__(parent)
 
@@ -588,8 +589,18 @@ class view_problem_ui(QMainWindow):
 		example_output_statement.setWordWrap(True)
 		example_output_statement.setObjectName('problem_text_2')
 
-		author_label = QLabel('Author : ' + problem_file["Author"])
-		author_label.setObjectName('problem_heading_2')
+		author_label = QLabel('Author : ')
+		author_label.setObjectName('problem_heading_2_author')
+
+		name_label = QLabel(problem_file["Author"])
+		name_label.setObjectName('problem_heading_2_white')
+
+		hwidget = QWidget()
+		hlayout = QHBoxLayout(hwidget)
+		hlayout.addWidget(author_label)
+		hlayout.addWidget(name_label)
+		hlayout.addStretch(1)
+
 
 		main_layout.addWidget(heading, alignment = Qt.AlignCenter)
 		main_layout.addWidget(time_limit_widget)
@@ -605,12 +616,13 @@ class view_problem_ui(QMainWindow):
 		main_layout.addWidget(example_input_statement)
 		main_layout.addWidget(example_output_label)
 		main_layout.addWidget(example_output_statement)
-		main_layout.addWidget(author_label)
+		main_layout.addWidget(hwidget)
 		main_layout.addStretch(0)
 		main_layout.addSpacing(1)
 
 		main = QWidget()
 		main.setLayout(main_layout)
+
 		main_scroll.setWidget(main)
 		main_scroll.setWidgetResizable(True)
 		main_scroll.setFixedWidth(880)
@@ -619,8 +631,10 @@ class view_problem_ui(QMainWindow):
 		layout.addWidget(main_scroll)
 		main_widget = QWidget()
 		main_widget.setLayout(layout)
+		main_widget.setStyleSheet(
+			'''QWidget{ background : #171B1F;}'''
+		)
 
-
-
+		
 		return main_widget
 
