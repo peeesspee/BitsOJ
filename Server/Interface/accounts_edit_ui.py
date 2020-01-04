@@ -16,6 +16,7 @@ class account_edit_ui(QMainWindow):
 			self, 
 			data_changed_flags, 
 			task_queue,
+			log_queue,
 			client_id, 
 			username, 
 			password, 
@@ -27,6 +28,7 @@ class account_edit_ui(QMainWindow):
 		
 		self.data_changed_flags = data_changed_flags
 		self.task_queue = task_queue
+		self.log_queue = log_queue
 		account_edit_ui.client_id = client_id
 		account_edit_ui.username = username
 		account_edit_ui.password = password
@@ -41,6 +43,9 @@ class account_edit_ui(QMainWindow):
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		return
+
+	def log(self, text):
+		self.log_queue.put(text)
 
 	def main_account_edit_ui(self):
 		heading = QLabel('Edit user status')
@@ -92,6 +97,7 @@ class account_edit_ui(QMainWindow):
 		confirm_button = QPushButton('Confirm')
 		confirm_button.setFixedSize(200, 50)
 		confirm_button.clicked.connect(lambda:account_edit_ui.final_status(self))
+		confirm_button.setDefault(True)
 		cancel_button = QPushButton('Cancel')
 		cancel_button.setFixedSize(200, 50)
 		cancel_button.clicked.connect(lambda:account_edit_ui.exit(self))
@@ -142,6 +148,7 @@ class account_edit_ui(QMainWindow):
 		if account_edit_ui.changed == 1:
 			user_management.update_user_state(account_edit_ui.username, account_edit_ui.state_type)
 			print('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
+			self.log('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
 			message = {
 				"Code" : "BLOCK",
 				"Receiver" : account_edit_ui.username

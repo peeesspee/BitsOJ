@@ -30,6 +30,7 @@ class manage_submission_ui(QMainWindow):
 			self, 
 			data_changed_flags,
 			task_queue, 
+			log_queue,
 			run_id,
 			client_id,
 			problem_code,
@@ -44,6 +45,7 @@ class manage_submission_ui(QMainWindow):
 
 		self.data_changed_flags = data_changed_flags
 		self.task_queue = task_queue
+		self.log_queue = log_queue
 		self.run_id = run_id
 		self.client_id = client_id
 		self.problem_code = problem_code
@@ -61,6 +63,9 @@ class manage_submission_ui(QMainWindow):
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		return
+
+	def log(self, text):
+		self.log_queue.put(text)
 
 	def main_manage_sub_ui(self):
 		submission_heading = QLabel('Manual Validation')
@@ -138,23 +143,22 @@ class manage_submission_ui(QMainWindow):
 		verdict_layout.addWidget(manual_judgement_entry, 1, 1)
 		verdict_layout.addWidget(accept_select_button, 1, 2)	
 		verdict_layout.setRowStretch(1,60)
-
 		verdict_widget = QWidget()
 		verdict_widget.setLayout(verdict_layout)
-
-		
 
 		rejudge_button = QPushButton('Rejudge')
 		rejudge_button.setFixedSize(150, 40)
 		rejudge_button.clicked.connect(
 			lambda:manage_submission_ui.rejudge(self)
 			)
+		rejudge_button.setDefault(True)
 
 		view_output_source_button = QPushButton('Submission Source and Data')
 		view_output_source_button.setFixedSize(250, 40)
 		view_output_source_button.clicked.connect(
 			lambda:manage_submission_ui.load_submission_data(self)
 			)
+		view_output_source_button.setDefault(True)
 		
 		close_button = QPushButton('Close')
 		close_button.setFixedSize(150, 40)
@@ -215,6 +219,7 @@ class manage_submission_ui(QMainWindow):
 
 	def rejudge(self):
 		print('[ EVENT ][ REJUDGE ] Run ' + str(self.run_id) + ' by ADMIN')
+		self.log('[ EVENT ][ REJUDGE ] Run ' + str(self.run_id) + ' by ADMIN')
 		client_username = client_authentication.get_client_username(self.client_id)
 		file_name = submissions_management.get_source_file_name(self.run_id)
 		if file_name == 'NONE':
@@ -317,7 +322,7 @@ class manage_submission_ui(QMainWindow):
 		message = json.dumps(message)
 		self.task_queue.put(message)
 		print('[ VERDICT ][ SENT ] Manual Verdict:' + manual_verdict + 'Sent to Client ' + client_username)
-		# self.log('[ VERDICT ][ SENT ] Manual Verdict:' + manual_verdict + 'Sent to Client ' + client_username)
+		self.log('[ VERDICT ][ SENT ] Manual Verdict:' + manual_verdict + 'Sent to Client ' + client_username)
 
 		# Write data to file
 		filename = './Client_Submissions/' + str(self.run_id) + '.info'
@@ -416,7 +421,7 @@ class manage_submission_ui(QMainWindow):
 			return 'No Error data received!'
 
 	def load_submission_data(self):
-		self.submission_ui = submission_data_ui(self.data_changed_flags, self.run_id)
+		self.submission_ui = submission_data_ui(self.data_changed_flags, self.run_id, self.log_queue)
 		self.data_changed_flags[8] = 0
 		self.submission_ui.show()
 
@@ -429,12 +434,14 @@ class submission_data_ui(QMainWindow):
 			self, 
 			data_changed_flags, 
 			run_id, 
+			log_queue,
 			parent = None
 		):
 		super(submission_data_ui, self).__init__(parent)
 		
 		self.data_changed_flags = data_changed_flags
 		self.run_id = run_id
+		self.log_queue = log_queue
 		
 		self.setWindowTitle('Run ' + str(self.run_id))
 

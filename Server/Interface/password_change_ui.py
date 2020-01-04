@@ -12,6 +12,7 @@ class password_change_ui(QMainWindow):
 	def __init__(
 			self, 
 			data_changed_flags, 
+			log_queue,
 			username, 
 			password, 
 			ctype, 
@@ -22,6 +23,7 @@ class password_change_ui(QMainWindow):
 		print(password_change_ui.username, password_change_ui.ctype, password_change_ui.password)
 		
 		self.data_changed_flags = data_changed_flags
+		self.log_queue = log_queue
 		password_change_ui.username = str(username)
 		password_change_ui.password = str(password)
 		password_change_ui.ctype = str(ctype)
@@ -33,9 +35,13 @@ class password_change_ui(QMainWindow):
 			main = self.main_password_change_ui()
 		except Exception as error:
 			print("[ ERROR ] " + str(error))
+			self.log("[ ERROR ] " + str(error))
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		return
+
+	def log(self, text):
+		self.log_queue.put(text)
 
 	def main_password_change_ui(self):
 		heading = QLabel('Change Password')
@@ -68,6 +74,7 @@ class password_change_ui(QMainWindow):
 		confirm_button = QPushButton('Confirm')
 		confirm_button.setFixedSize(200, 50)
 		confirm_button.clicked.connect(lambda:password_change_ui.final_status(self, new_password_content.text()))
+		confirm_button.setDefault(True)
 		cancel_button = QPushButton('Cancel')
 		cancel_button.setFixedSize(200, 50)
 		cancel_button.clicked.connect(lambda:password_change_ui.exit(self))
@@ -108,6 +115,7 @@ class password_change_ui(QMainWindow):
 		if new_password != password_change_ui.password:
 			user_management.update_user_password(password_change_ui.username, new_password)
 			print('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
+			self.log('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
 			self.data_changed_flags[1] = 1
 			self.data_changed_flags[5] = 1
 			self.data_changed_flags[14] = 0

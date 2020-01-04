@@ -9,9 +9,10 @@ class new_accounts_ui(QMainWindow):
 	judge_no = 0
 	data_changed_flags = ''
 	
-	def __init__(self, data_changed_flags, parent=None):
+	def __init__(self, data_changed_flags, log_queue, parent=None):
 		super(new_accounts_ui, self).__init__(parent)
 		new_accounts_ui.data_changed_flags = data_changed_flags
+		self.log_queue = log_queue
 		self.setGeometry(700, 350, 300, 200)
 		self.setWindowTitle('Generate Accounts')
 		self.setFixedSize(500, 300)
@@ -19,6 +20,9 @@ class new_accounts_ui(QMainWindow):
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		return
+
+	def log(self, text):
+		self.log_queue.put(text)
 
 	def combo_box_data_changed(text):
 		new_accounts_ui.pwd_type = str(text)
@@ -59,6 +63,7 @@ class new_accounts_ui(QMainWindow):
 		confirm_button = QPushButton('Confirm')
 		confirm_button.setFixedSize(200, 50)
 		confirm_button.clicked.connect(lambda:new_accounts_ui.final_account_status(self))
+		confirm_button.setDefault(True)
 		
 		cancel_button = QPushButton('Cancel')
 		cancel_button.setFixedSize(200, 50)
@@ -108,7 +113,20 @@ class new_accounts_ui(QMainWindow):
 		return main
 		
 	def final_account_status(self):
-		print('[ ACCOUNT ] Create ' + str(new_accounts_ui.client_no) + ' Clients and ' + str(new_accounts_ui.judge_no) + ' Judge Accounts')
+		print(
+			'[ ACCOUNT ] Create ' + 
+			str(new_accounts_ui.client_no) + 
+			' Clients and ' + 
+			str(new_accounts_ui.judge_no) + 
+			' Judge Accounts'
+		)
+		self.log(
+			'[ ACCOUNT ] Create ' + 
+			str(new_accounts_ui.client_no) + 
+			' Clients and ' + 
+			str(new_accounts_ui.judge_no) + 
+			' Judge Accounts'
+		)
 		user_management.generate_n_users(
 			new_accounts_ui.client_no, new_accounts_ui.judge_no, 
 			new_accounts_ui.pwd_type

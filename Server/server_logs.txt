@@ -3034,3 +3034,157 @@
 2020-01-02 00:00:53.140823  :  #### SERVER EXIT ####
 
  ###
+2020-01-02 14:40:00.785371  :  #### SERVER START #### ###
+2020-01-02 14:40:00.785621  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-02 14:40:00.785721  :  [ SETUP ] Initialising server... ###
+2020-01-02 14:40:00.785838  :  [ SETUP ] Initialising database... ###
+2020-01-02 14:40:01.286601  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-02 14:40:01.286676  :    [ START ] Client Manager subprocess started. ###
+2020-01-02 14:40:01.286718  :  [ SETUP ] Subprocesses started ###
+2020-01-02 14:40:01.286756  :  [ SETUP ][ Process ] Client Manager: 9776 ###
+2020-01-02 14:40:01.286793  :  [ SETUP ][ Process ] Judge Manager: 9777 ###
+2020-01-02 14:40:01.286831  :  [ SETUP ][ Process ] Core: 9779 ###
+2020-01-02 14:40:01.286866  :  [ SETUP ][ Process ] Log Manager: 9774 ###
+2020-01-02 14:40:01.286902  :    [ START ] Judge Manager subprocess started. ###
+2020-01-02 14:40:01.286938  :    [ START ] Core subprocess started. ###
+2020-01-02 14:40:01.286973  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-02 14:40:01.287008  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-02 14:40:01.287043  :    [ START ] Interface subprocess started. ###
+2020-01-02 14:40:13.304440  :  [ EVENT ] SERVER RESET TRIGGERED ###
+2020-01-02 14:40:13.304531  :  [ RESET ] Disconnecting all clients... ###
+2020-01-02 14:40:13.804800  :  [ EVENT ] Disconnect all clients ###
+2020-01-02 14:40:13.804879  :  [ RESET ] Disconnecting all Judges... ###
+2020-01-02 14:40:13.804925  :  [ RESET ] Clearing scoreboard... ###
+2020-01-02 14:40:13.804967  :  [ RESET ] Resetting Accounts... ###
+2020-01-02 14:40:14.305655  :  [ RESET ] Resetting Submissions... ###
+2020-01-02 14:40:16.308426  :  [ RESET ] Resetting Queries... ###
+2020-01-02 14:40:16.809198  :  [ RESET ] Reset environment... ###
+2020-01-02 14:42:05.966440  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-02 14:42:05.966517  :  [ EXIT ] Signal passed ###
+2020-01-02 14:42:05.966564  :  [ EXIT ] Saving Server state to file. ###
+2020-01-02 14:42:05.966604  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-02 14:42:05.966642  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-02 14:42:05.966680  :  [ EXIT ] Saved Server state to file. ###
+2020-01-02 14:42:05.966718  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-02 14:42:05.966755  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-02 14:42:06.467532  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-02 14:42:06.968377  :  #### SERVER EXIT ####
+
+ ###
+2020-01-02 14:50:15.784866  :  #### SERVER START #### ###
+2020-01-02 14:50:15.784988  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-02 14:50:15.785048  :  [ SETUP ] Initialising server... ###
+2020-01-02 14:50:15.785073  :  [ SETUP ] Initialising database... ###
+2020-01-02 14:50:17.287114  :  [ SETUP ] Loading problems... ###
+2020-01-02 14:50:17.287194  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-02 14:50:17.287243  :    [ START ] Client Manager subprocess started. ###
+2020-01-02 14:50:17.287279  :  [ SETUP ] Subprocesses started ###
+2020-01-02 14:50:17.287313  :  [ SETUP ][ Process ] Client Manager: 11073 ###
+2020-01-02 14:50:17.287346  :  [ SETUP ][ Process ] Judge Manager: 11074 ###
+2020-01-02 14:50:17.287379  :  [ SETUP ][ Process ] Core: 11077 ###
+2020-01-02 14:50:17.287422  :  [ SETUP ][ Process ] Log Manager: 11071 ###
+2020-01-02 14:50:17.287455  :    [ START ] Judge Manager subprocess started. ###
+2020-01-02 14:50:17.287488  :    [ START ] Core subprocess started. ###
+2020-01-02 14:50:17.287521  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-02 14:50:17.287553  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-02 14:50:17.287585  :  [ ALERT ] Recieved a new client message. ###
+2020-01-02 14:50:17.287624  :  [ LOGIN REQUEST ] ::: 0 :::judge00001@bits1[ TYPE ] JUDGE ###
+2020-01-02 14:50:17.287656  :    [ START ] Interface subprocess started. ###
+2020-01-02 14:50:17.287689  :  [ LOGIN ][ judge00001 ][ JUDGE ][ VALID ] Sending response... ###
+2020-01-02 14:50:17.287729  :  [ PUBLISH ] new message TO judge00001 ###
+2020-01-02 14:50:17.788450  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:17.788527  :  [ VERDICT ] judge00001 :: RE ###
+2020-01-02 14:50:17.788574  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:17.788642  :  [ VERDICT ] judge00001 :: RE ###
+2020-01-02 14:50:17.788682  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:17.788720  :  [ VERDICT ] judge00001 :: RE ###
+2020-01-02 14:50:17.788758  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:17.788796  :  [ VERDICT ] judge00001 :: RE ###
+2020-01-02 14:50:19.791474  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:19.791568  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-02 14:50:19.791628  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:19.791684  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-02 14:50:20.292489  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:20.292623  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-02 14:50:20.292690  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:20.292767  :  [ VERDICT ] judge00001 :: RE ###
+2020-01-02 14:50:20.292820  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:20.292870  :  [ VERDICT ] judge00001 :: RE ###
+2020-01-02 14:50:20.292920  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:20.292969  :  [ VERDICT ] judge00001 :: RE ###
+2020-01-02 14:50:20.293018  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:20.293068  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-02 14:50:20.293116  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:20.293165  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-02 14:50:20.293213  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:20.293261  :  [ VERDICT ] judge00001 :: RE ###
+2020-01-02 14:50:20.293311  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:20.293360  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-02 14:50:20.293409  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:20.293457  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-02 14:50:20.293505  :  [ PING ] Recieved a new judge verdict. ###
+2020-01-02 14:50:20.293553  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-02 14:52:05.463083  :  [ ALERT ] Recieved a new client message. ###
+2020-01-02 14:52:05.463204  :  [ LOGIN REQUEST ] ::: 0 :::judge00001@bits1[ TYPE ] JUDGE ###
+2020-01-02 14:52:05.463281  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-02 14:52:05.463359  :  [ PUBLISH ] new message TO judge00001 ###
+2020-01-02 14:53:19.061578  :  [ ALERT ] Recieved a new client message. ###
+2020-01-02 14:53:19.061673  :  [ LOGIN REQUEST ] ::: 0 :::judge1@bits1[ TYPE ] JUDGE ###
+2020-01-02 14:53:19.061721  :  [ LOGIN ] Judge NOT verified. ###
+2020-01-02 14:53:19.061746  :  [ LOGIN ][ REJECT ] Sent  INVLD to judge1 ###
+2020-01-02 14:53:19.061786  :  [ PUBLISH ] new message TO judge1 ###
+2020-01-02 14:53:35.583618  :  [ ALERT ] Recieved a new client message. ###
+2020-01-02 14:53:35.583745  :  [ LOGIN REQUEST ] ::: 0 :::judge00001@bits1[ TYPE ] JUDGE ###
+2020-01-02 14:53:35.583839  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-02 14:53:35.583912  :  [ PUBLISH ] new message TO judge00001 ###
+2020-01-02 14:55:17.219607  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-02 14:55:17.720429  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-02 15:00:17.121570  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-02 15:00:17.622330  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-02 15:05:17.025488  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-02 15:05:17.526274  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-02 15:10:16.932795  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-02 15:10:17.433671  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-02 15:15:17.332900  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-02 15:15:17.333043  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-02 15:15:34.856290  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-02 15:15:34.856376  :  [ EXIT ] Signal passed ###
+2020-01-02 15:15:34.856425  :  [ EXIT ] Saving Server state to file. ###
+2020-01-02 15:15:34.856469  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-02 15:15:34.856511  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-02 15:15:34.856552  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-02 15:15:34.856615  :  [ EXIT ] Saved Server state to file. ###
+2020-01-02 15:15:34.856664  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-02 15:15:34.856706  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-02 15:15:35.858244  :  #### SERVER EXIT ####
+
+ ###
+2020-01-02 15:15:38.468367  :  #### SERVER START #### ###
+2020-01-02 15:15:38.468477  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-02 15:15:38.468506  :  [ SETUP ] Initialising server... ###
+2020-01-02 15:15:38.468529  :  [ SETUP ] Initialising database... ###
+2020-01-02 15:15:39.469904  :  [ SETUP ] Loading problems... ###
+2020-01-02 15:15:39.469984  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-02 15:15:39.970640  :    [ START ] Client Manager subprocess started. ###
+2020-01-02 15:15:39.970688  :  [ SETUP ] Subprocesses started ###
+2020-01-02 15:15:39.970720  :  [ SETUP ][ Process ] Client Manager: 13120 ###
+2020-01-02 15:15:39.970742  :  [ SETUP ][ Process ] Judge Manager: 13121 ###
+2020-01-02 15:15:39.970762  :  [ SETUP ][ Process ] Core: 13124 ###
+2020-01-02 15:15:39.970782  :  [ SETUP ][ Process ] Log Manager: 13118 ###
+2020-01-02 15:15:39.970801  :    [ START ] Judge Manager subprocess started. ###
+2020-01-02 15:15:39.970820  :    [ START ] Core subprocess started. ###
+2020-01-02 15:15:39.970840  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-02 15:15:39.970858  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-02 15:15:39.970877  :    [ START ] Interface subprocess started. ###
+2020-01-02 15:15:52.486745  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-02 15:15:52.486830  :  [ EXIT ] Signal passed ###
+2020-01-02 15:15:52.486882  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-02 15:15:52.486927  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-02 15:15:52.486970  :  [ EXIT ] Saving Server state to file. ###
+2020-01-02 15:15:52.487011  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-02 15:15:52.487052  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-02 15:15:52.487093  :  [ EXIT ] Saved Server state to file. ###
+2020-01-02 15:15:52.987832  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-02 15:15:53.488691  :  #### SERVER EXIT ####
+
+ ###
