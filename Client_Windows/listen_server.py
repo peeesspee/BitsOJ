@@ -7,10 +7,6 @@ from datetime import date,datetime
 from init_client import initialize_contest, handle_config
 from database_management import manage_database, manage_local_ids
 
-
-
-
-
 class start_listening():
 	channel = None
 	connection = None
@@ -23,6 +19,7 @@ class start_listening():
 	cursor = ''
 
 	def listen_server(rabbitmq_username, rabbitmq_password, host, data_changed_flags2, queue, scoreboard):
+		print('[ LISTEN ] Start listening...')
 		start_listening.authenticate_login = handle_config.read_config_json()
 		conn, cursor = manage_database.initialize_table()
 		manage_local_ids.initialize_local_id(cursor)

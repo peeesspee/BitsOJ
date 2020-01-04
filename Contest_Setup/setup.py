@@ -47,6 +47,7 @@ class contest_setup(QMainWindow):
 			"No_of_Problems" : None,
 			"Problem Key" : None,
 			"Problems" : {},
+			"Code" : {},
 			"Languages" : '',
 			"Contest" : 'START',
 			"Duration" : '00:00:00',
@@ -92,7 +93,7 @@ class contest_setup(QMainWindow):
 		self.judge_config = {
 			"rabbitmq_username" : "",
 			"rabbitmq_password" : "",
-			"rabbitmq_host" : "",
+			"host_ip" : "",
 			"key" : "000000000000000",
 			"processlimit" : "500",
 			"Number of Problems" : "5",
@@ -103,10 +104,12 @@ class contest_setup(QMainWindow):
                 "Time Limit" : "",
                 }
             },
-            "Problem Codes": "('TBE', 'PD', 'DC', 'TAM', 'ANS')",
+            "Problem Codes": "",
+            "Code Time Limit" : {}
 		}
-
+		self.problem_code = ()
 		self.language_tuple = ()
+		self.count = 0 
 		
 		self.data = {"Problems" : {}}
 		read_write.write_json(self.data)
@@ -193,10 +196,10 @@ class contest_setup(QMainWindow):
 		###################################################################
 
 		self.rabbitmq_creds = QVBoxLayout()
-		rabbitmq_heading = QLabel('RabbitMQ Client Details')
+		rabbitmq_heading = QLabel('RabbitMQ Details')
 		rabbitmq_heading.setObjectName('heading')
 		self.rabbitmq_username = QHBoxLayout()
-		self.rabbitmq_username_label = QLabel('RABBIT_MQ USERNAME    :   ')
+		self.rabbitmq_username_label = QLabel('CLIENT USERNAME             :   ')
 		self.rabbitmq_username_label.setObjectName('general')
 		self.rabbitmq_username_text = QLineEdit()
 		self.rabbitmq_username_text.setPlaceholderText('Example : Client')
@@ -210,9 +213,10 @@ class contest_setup(QMainWindow):
 		self.username_widget = QWidget()
 		self.username_widget.setLayout(self.rabbitmq_username)
 		self.rabbitmq_password = QHBoxLayout()
-		self.rabbitmq_password_label = QLabel('RABBIT_MQ PASSWORD   :   ')
+		self.rabbitmq_password_label = QLabel('CLIENT PASSWORD             :   ')
 		self.rabbitmq_password_label.setObjectName('general')
 		self.rabbitmq_password_text = QLineEdit()
+		self.rabbitmq_password_text.setEchoMode(QLineEdit.Password)
 		self.rabbitmq_password_text.setPlaceholderText('Example : Client')
 		self.rabbitmq_password_text.setObjectName('general_text')
 		self.rabbitmq_password_text.setFixedWidth(400)
@@ -259,14 +263,14 @@ class contest_setup(QMainWindow):
 		self.rabbitmq_button.addSpacing(0)
 		self.button_widget = QWidget()
 		self.button_widget.setLayout(self.rabbitmq_button)
-		self.rabbitmq_creds.addWidget(rabbitmq_heading)
-		self.rabbitmq_creds.addWidget(self.username_widget)
-		self.rabbitmq_creds.addWidget(self.password_widget)
-		self.rabbitmq_creds.addWidget(self.host_widget)
-		self.rabbitmq_creds.addWidget(self.button_widget, alignment=Qt.AlignBottom)
-		self.rabbitmq_creds.addStretch(1)
-		self.rabbitmq_creds.addSpacing(0)
-		self.rabbitmq_client_detail.setLayout(self.rabbitmq_creds)
+		
+		# self.rabbitmq_creds.addWidget(self.username_widget)
+		# self.rabbitmq_creds.addWidget(self.password_widget)
+		# self.rabbitmq_creds.addWidget(self.host_widget)
+		# self.rabbitmq_creds.addWidget(self.button_widget, alignment=Qt.AlignBottom)
+		# self.rabbitmq_creds.addStretch(1)
+		# self.rabbitmq_creds.addSpacing(0)
+		# self.rabbitmq_client_detail.setLayout(self.rabbitmq_creds)
 
 
 		###################################################################
@@ -278,7 +282,7 @@ class contest_setup(QMainWindow):
 		rabbitmq_server_heading = QLabel('RabbitMQ Server Details')
 		rabbitmq_server_heading.setObjectName('heading')
 		self.rabbitmq_server_username = QHBoxLayout()
-		self.rabbitmq_server_username_label = QLabel('RABBIT_MQ USERNAME    :   ')
+		self.rabbitmq_server_username_label = QLabel('SERVER USERNAME           :   ')
 		self.rabbitmq_server_username_label.setObjectName('general')
 		self.rabbitmq_server_username_text = QLineEdit()
 		self.rabbitmq_server_username_text.setPlaceholderText('Example : Server')
@@ -292,9 +296,10 @@ class contest_setup(QMainWindow):
 		self.username_server_widget = QWidget()
 		self.username_server_widget.setLayout(self.rabbitmq_server_username)
 		self.rabbitmq_server_password = QHBoxLayout()
-		self.rabbitmq_server_password_label = QLabel('RABBIT_MQ PASSWORD   :   ')
+		self.rabbitmq_server_password_label = QLabel('SERVER PASSWORD           :   ')
 		self.rabbitmq_server_password_label.setObjectName('general')
 		self.rabbitmq_server_password_text = QLineEdit()
+		self.rabbitmq_server_password_text.setEchoMode(QLineEdit.Password)
 		self.rabbitmq_server_password_text.setPlaceholderText('Example : Server')
 		self.rabbitmq_server_password_text.setObjectName('general_text')
 		self.rabbitmq_server_password_text.setFixedWidth(400)
@@ -361,7 +366,7 @@ class contest_setup(QMainWindow):
 		rabbitmq_judge_heading = QLabel('RabbitMQ Judge Details')
 		rabbitmq_judge_heading.setObjectName('heading')
 		self.rabbitmq_judge_username = QHBoxLayout()
-		self.rabbitmq_judge_username_label = QLabel('RABBIT_MQ USERNAME    :   ')
+		self.rabbitmq_judge_username_label = QLabel('JUDGE USERNAME             :   ')
 		self.rabbitmq_judge_username_label.setObjectName('general')
 		self.rabbitmq_judge_username_text = QLineEdit()
 		self.rabbitmq_judge_username_text.setPlaceholderText('Example : Judge')
@@ -375,9 +380,10 @@ class contest_setup(QMainWindow):
 		self.username_judge_widget = QWidget()
 		self.username_judge_widget.setLayout(self.rabbitmq_judge_username)
 		self.rabbitmq_judge_password = QHBoxLayout()
-		self.rabbitmq_judge_password_label = QLabel('RABBIT_MQ PASSWORD   :   ')
+		self.rabbitmq_judge_password_label = QLabel('JUDGE PASSWORD            :   ')
 		self.rabbitmq_judge_password_label.setObjectName('general')
 		self.rabbitmq_judge_password_text = QLineEdit()
+		self.rabbitmq_judge_password_text.setEchoMode(QLineEdit.Password)
 		self.rabbitmq_judge_password_text.setPlaceholderText('Example : Judge')
 		self.rabbitmq_judge_password_text.setObjectName('general_text')
 		self.rabbitmq_judge_password_text.setFixedWidth(400)
@@ -438,17 +444,40 @@ class contest_setup(QMainWindow):
 		######################################################################
 		######################## FINAL TAB ###################################
 		######################################################################
+		self.rabbitmq_creds.addWidget(rabbitmq_heading)
+		# self.rabbitmq_creds.addWidget(rabbitmq_heading)
+		self.rabbitmq_creds.addWidget(self.username_server_widget)
+		self.rabbitmq_creds.addWidget(self.password_server_widget)
+		self.rabbitmq_creds.addWidget(self.username_widget)
+		self.rabbitmq_creds.addWidget(self.password_widget)
+		self.rabbitmq_creds.addWidget(self.username_judge_widget)
+		self.rabbitmq_creds.addWidget(self.password_judge_widget)
+		# self.rabbitmq_creds.addWidget(self.host_widget)
+		# self.rabbitmq_creds.addWidget(self.button_widget, alignment=Qt.AlignBottom)
+		# self.rabbitmq_creds.addWidget(rabbitmq_server_heading)
+		# self.rabbitmq_creds.addWidget(self.username_server_widget)
+		# self.rabbitmq_creds.addWidget(self.password_server_widget)
+		# self.rabbitmq_creds.addWidget(self.host_server_widget)
+		# self.rabbitmq_creds.addWidget(self.button_server_widget, alignment=Qt.AlignBottom)
+		# self.rabbitmq_creds.addWidget(rabbitmq_judge_heading)
+		# self.rabbitmq_creds.addWidget(self.username_judge_widget)
+		# self.rabbitmq_creds.addWidget(self.password_judge_widget)
+		self.rabbitmq_creds.addWidget(self.host_judge_widget)
+		self.rabbitmq_creds.addWidget(self.button_judge_widget, alignment=Qt.AlignBottom)
+		self.rabbitmq_creds.addStretch(1)
+		self.rabbitmq_creds.addSpacing(0)
+		# self.rabbitmq_client_detail.setLayout(self.rabbitmq_creds)
 
 
 		
-		self.tabs.addTab(self.rabbitmq_server_detail, "Server Creds")
-		self.tabs.addTab(self.rabbitmq_judge_detail, "Judge Creds")
-		self.tabs.addTab(self.rabbitmq_client_detail, "Client Creds")
+		# self.tabs.addTab(self.rabbitmq_server_detail, "Server Creds")
+		# self.tabs.addTab(self.rabbitmq_judge_detail, "Judge Creds")
+		# self.tabs.addTab(self.rabbitmq_client_detail, "Client Creds")
 
 		
 
-		self.client_tab_layout.addWidget(self.tabs)
-		self.rabbitmq_tab.setLayout(self.client_tab_layout)
+		# self.client_tab_layout.addWidget(self.tabs)
+		self.rabbitmq_tab.setLayout(self.rabbitmq_creds)
 		self.rabbitmq_tab.setObjectName('client_tab')
 		return
 
@@ -947,6 +976,9 @@ class contest_setup(QMainWindow):
 
 
 	def create_file(self,i):
+		os.system("mkdir Server")
+		os.system('mkdir Client')
+		os.system('mkdir Judge')
 		os.system("mkdir Server/'Problem Data'")
 		os.system('mkdir Client/Problems')
 		os.system('mkdir Judge/problems')
@@ -1006,8 +1038,18 @@ class contest_setup(QMainWindow):
 		no = manage_local_ids.get_new_id()
 		self.client_config["No_of_Problems"] = int(no)
 		self.data = read_write.read_json()
-		self.window = add_problem_ui(no,self.table_model,self.client_config,self.data,self.server_config,self.judge_config)
+		print('problem_code', self.problem_code)
+		self.window = add_problem_ui(
+			no,
+			self.table_model,
+			self.client_config,
+			self.data,
+			self.server_config,
+			self.judge_config,
+			self
+			)
 		self.window.show()
+		print('problem_code', self.problem_code)
 
 	############################## EDIT PROBLEM ###############################
 	def edit_problem_client(self, selected_row):
@@ -1052,6 +1094,8 @@ class contest_setup(QMainWindow):
 			pass
 
 	def reset_problem_client(self):
+		self.problem_code = ()
+		self.count = 0 
 		read_write.write_json(self.data)
 		reset_database.reset_problem(self.table_model)
 		manage_local_ids.initialize_local_id()
@@ -1212,6 +1256,14 @@ class contest_setup(QMainWindow):
 			QMessageBox.warning(self,'Message','PASSWORD cannot be empty')
 		elif self.rabbitmq_judge_host_text.text() == '':
 			QMessageBox.warning(self,'Message','HOST cannot be empty')
+		elif self.rabbitmq_username_text.text() == '':
+			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
+		elif self.rabbitmq_password_text.text() == '':
+			QMessageBox.warning(self,'Message','PASSWORD cannot be empty')
+		elif self.rabbitmq_server_username_text.text() == '':
+			QMessageBox.warning(self,'Message','USERNAME cannot be empty')
+		elif self.rabbitmq_server_password_text.text() == '':
+			QMessageBox.warning(self,'Message','PASSWORD cannot be empty')
 		else:
 			self.rabbitmq_judge_username_text.setReadOnly(True)
 			self.rabbitmq_judge_password_text.setReadOnly(True)
@@ -1220,8 +1272,28 @@ class contest_setup(QMainWindow):
 			self.automatic_judge.setDisabled(True)
 			self.judge_config["rabbitmq_username"] = self.rabbitmq_judge_username_text.text()
 			self.judge_config["rabbitmq_password"] = self.rabbitmq_judge_password_text.text()
-			self.judge_config["rabbitmq_host"] = self.rabbitmq_judge_host_text.text()
+			self.judge_config["host_ip"] = self.rabbitmq_judge_host_text.text()
 			print(self.judge_config)
+			print("\n\n\n")
+			self.rabbitmq_username_text.setReadOnly(True)
+			self.rabbitmq_password_text.setReadOnly(True)
+			self.rabbitmq_host_text.setReadOnly(True)
+			self.manual.setDisabled(True)
+			self.automatic.setDisabled(True)
+			self.client_config["rabbitmq_username"] = self.rabbitmq_username_text.text()
+			self.client_config["rabbitmq_password"] = self.rabbitmq_password_text.text()
+			self.client_config["host"] = self.rabbitmq_judge_host_text.text()
+			print(self.client_config)
+			print("\n\n\n")
+			self.rabbitmq_server_username_text.setReadOnly(True)
+			self.rabbitmq_server_password_text.setReadOnly(True)
+			self.rabbitmq_server_host_text.setReadOnly(True)
+			self.manual_server.setDisabled(True)
+			self.automatic_server.setDisabled(True)
+			self.server_config["Server Username"] = self.rabbitmq_server_username_text.text()
+			self.server_config["Server Password"] = self.rabbitmq_server_password_text.text()
+			self.server_config["Server IP"] = self.rabbitmq_judge_host_text.text()
+			print(self.server_config)
 			print("\n\n\n")
 			QMessageBox.warning(self,'Message','RabbitMQ Details has been saved')
 

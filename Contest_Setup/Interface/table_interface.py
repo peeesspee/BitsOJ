@@ -42,19 +42,44 @@ class problem_table():
 class add_problem_ui(QMainWindow):
 	no = ''
 
-	def __init__(self,no, table_model,client_config, data,server_config,judge_config ,parent=None):
+	def __init__(
+		self,
+		no, 
+		table_model,
+		client_config, 
+		data,
+		server_config,
+		judge_config,
+		self2 ,
+		parent=None
+		):
 		super(add_problem_ui, self).__init__(parent)
 
 		self.setWindowTitle('Add Problem')
 		self.setFixedSize(1600,800)
 		add_problem_ui.no = no
 
-		main = self.add_problem_view_ui(table_model,client_config,data,server_config,judge_config)
+		main = self.add_problem_view_ui(
+			table_model,
+			client_config,
+			data,
+			server_config,
+			judge_config,
+			self2
+			)
 		self.setCentralWidget(main)
 
 		return
 
-	def add_problem_view_ui(self,table_model,client_config,data,server_config,judge_config):
+	def add_problem_view_ui(
+		self,
+		table_model,
+		client_config,
+		data,
+		server_config,
+		judge_config,
+		self2
+		):
 		try:
 			main = QVBoxLayout()
 			main2 = QScrollArea()
@@ -145,7 +170,15 @@ class add_problem_ui(QMainWindow):
 			self.save = QPushButton('Save')
 			self.save.setObjectName('general')
 			self.save.setFixedSize(200,50)
-			self.save.clicked.connect(lambda:self.save_data(table_model,client_config,data,server_config,judge_config))
+			self.save.clicked.connect(lambda:self.save_data(
+				table_model,
+				client_config,
+				data,
+				server_config,
+				judge_config,
+				self2
+				))
+
 
 			main.addWidget(problem_no, alignment = Qt.AlignCenter)
 			main.addWidget(problem_name_widget)
@@ -181,7 +214,15 @@ class add_problem_ui(QMainWindow):
 
 		return main_layout
 
-	def save_data(self,table_model,client_config,data,server_config,judge_config):
+	def save_data(
+		self,
+		table_model,
+		client_config,
+		data,
+		server_config,
+		judge_config,
+		self2
+		):
 		if self.problem_name_text.text() == '':
 			QMessageBox.warning(self, 'Message', 'Problem Name cannot be empty')
 		elif self.problem_code_text.text() == '':
@@ -189,7 +230,15 @@ class add_problem_ui(QMainWindow):
 		elif self.time_limit_text.text() == '':
 			QMessageBox.warning(self, 'Message', 'Time Limit cannot be empty')
 		else:
+			self2.count += 1
+			server_config["Number of Problems"] = self2.count
 			os.system('mkdir Problems/' + self.problem_code_text.text())
+			print(self2.problem_code)
+			self2.problem_code += (self.problem_code_text.text(),)
+			print(self2.problem_code)
+			server_config["Problem Codes"] = str(self2.problem_code) 
+			judge_config["Problem Codes"] = str(self2.problem_code)
+			judge_config["Code Time Limit"][self.problem_code_text.text()] = int(self.time_limit_text.text())
 			problem_tuple = ()
 			problem_tuple = (self.problem_name_text.text(), self.problem_code_text.text(),self.time_limit_text.text())
 			client_config["Problems"]["Problem " + str(add_problem_ui.no)] = problem_tuple
@@ -204,6 +253,7 @@ class add_problem_ui(QMainWindow):
 			read_write.write_json(data)
 			problem_management.insert_problem(str(add_problem_ui.no),self.problem_name_text.text(),self.problem_code_text.text(),self.time_limit_text.text())
 			try:
+				client_config["Code"][self.problem_code_text.text()] = 'Problem ' + str(add_problem_ui.no)
 				problem = {
 					"Problem Name" : self.problem_name_text.text(),
 					"Problem Code" : self.problem_code_text.text(),
@@ -237,10 +287,10 @@ class add_problem_ui(QMainWindow):
 				}
 				server_config["Problems"]["Problem " + str(add_problem_ui.no)] = server_problem
 				judge_config["Problems"]["Problem " + str(add_problem_ui.no)] = judge_problem
-				print(server_config)
-				print('\n')
-				print(judge_config)
-				print('\n')
+				# print(server_config)
+				# print('\n')
+				# print(judge_config)
+				# print('\n')
 				with open('./Problem_Statement/Problem_' + str(add_problem_ui.no) + '.json', 'w') as write:
 					json.dump(problem, write, indent = 4)
 			except Exception as Error:
@@ -296,6 +346,7 @@ class edit_problem_ui(QMainWindow):
 			self.problem_code_text.setObjectName('general_text')
 			self.problem_code_text.setFixedWidth(400)
 			self.problem_code_text.setFixedHeight(50)
+			self.problem_code_text.setReadOnly(True)
 			problem_code.addWidget(problem_code_label)
 			problem_code.addWidget(self.problem_code_text)
 			problem_code_widget = QWidget()
