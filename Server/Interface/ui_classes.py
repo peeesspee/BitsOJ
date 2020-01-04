@@ -1036,7 +1036,7 @@ class ui_widgets:
 		github_id_widget = QLabel(github_id)
 		github_id_widget.setObjectName('card_content')
 		github_hwidget = ui_widgets.get_horizontal_widget(github_id_heading, github_id_widget)
-		github_hwidget.setObjectName('banner_overlay')
+		# github_hwidget.setObjectName('banner_overlay')
 
 		linkedin_id_heading = QLabel('LinkedIn')
 		linkedin_pixmap = QPixmap('./Elements/linkedin.png')
@@ -1045,7 +1045,7 @@ class ui_widgets:
 		linkedin_id_widget = QLabel(linkedin_id)
 		linkedin_id_widget.setObjectName('card_content')
 		linkedin_hwidget = ui_widgets.get_horizontal_widget(linkedin_id_heading, linkedin_id_widget)
-		linkedin_hwidget.setObjectName('banner_overlay')
+		# linkedin_hwidget.setObjectName('banner_overlay')
 
 		top_layout.addWidget(title_widget)
 		top_layout.addWidget(banner_overlay_widget)
