@@ -30,6 +30,7 @@ class start_listening():
 			connection = pika.BlockingConnection(params)
 			channel = connection.channel()
 			start_listening.channel = channel
+			start_listening.connection = connection
 			start_listening.host = host
 			start_listening.data_changed_flags = data_changed_flags2
 			start_listening.queue = queue
@@ -44,13 +45,12 @@ class start_listening():
 		except (KeyboardInterrupt, SystemExit):
 			print('[ DELETE ] Queue ' + start_listening.authenticate_login["Username"] + ' deleted...')
 			print("[ STOP ] Keyboard interrupt")
-		finally:
 			start_listening.channel.stop_consuming()
 			start_listening.channel.queue_delete(start_listening.authenticate_login["Username"])
-			
-	
-			
+			connection.close()
 
+		except:
+			print('[ ERROR ] Something hugee')
 
 	def server_response_handler(ch,method,properties,body):
 		server_data = str(body.decode("utf-8"))
@@ -86,9 +86,12 @@ class start_listening():
 			start_listening.edit_problem(json_data)
 		elif code == 'BLOCK':
 			start_listening.user_blocked(json_data)
+		elif code == 'SHUTDOWN':
+			raise(KeyboardInterrupt)
 		else:
 			print(code)
 			print("WRONG INPUT")
+
 
 
 	def user_blocked(server_data):

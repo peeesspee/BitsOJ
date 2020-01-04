@@ -107,6 +107,9 @@ def main():
 				queue, 
 				scoreboard
 			)
+
+		listen_thread.start()
+
 	except Exception as error:
 		print('[ CRITICAL ] Could not initialize threads : ' + str(error))
 		# After successful login 
@@ -118,6 +121,8 @@ def main():
 		ex_type,ex_obj, ex_tb = sys.exc_info()
 		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
 		print(ex_type,f_name,ex_tb.tb_lineno)
+
+	connection.close()
 
 	sys.exit(0)
 	listen_thread.join()
@@ -148,7 +153,6 @@ def manage_process(
 		args = (rabbitmq_username,rabbitmq_password, host, data_changed_flags, queue, scoreboard, )
 		)
 
-	listen_from_server.start()
 	return listen_from_server
 	
 

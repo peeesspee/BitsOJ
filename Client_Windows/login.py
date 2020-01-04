@@ -35,15 +35,17 @@ class authenticate_login():
 			}
 		final_data = json.dumps(final_data)
 
-		authenticate_login.channel.basic_qos(prefetch_count = 1)
+		# authenticate_login.channel.basic_qos(prefetch_count = 1)
 		# Declaring queue for the new client
 		authenticate_login.channel.queue_declare(
 			queue = authenticate_login.username, 
+			# virtual_host = "Client",
 			durable = True,
 			)
 		# Binding the queue for listening from the server 
 		authenticate_login.channel.queue_bind(
 			exchange = 'connection_manager', 
+			# virtual_host = "Client",
 			queue = authenticate_login.username
 			)
 
@@ -58,7 +60,7 @@ class authenticate_login():
 		authenticate_login.channel.basic_consume(
 			queue = username,
 			on_message_callback = authenticate_login.server_response_handler,
-			# auto_ack = True
+			auto_ack = True
 			)
 		
 		print("[ Listening ] @ " + authenticate_login.host)
@@ -101,7 +103,9 @@ class authenticate_login():
 			authenticate_login.login_status = 'VALID'
 			authenticate_login.client_id = server_data["Client ID"]
 			authenticate_login.channel.stop_consuming()
-			authenticate_login.channel.basic_ack(True)
+			# print('[ ACK ]')
+			# authenticate_login.channel.basic_ack(True)
+
 
 		# If login is rejected by the server 
 		elif (status == 'LRJCT'):
@@ -116,19 +120,30 @@ class authenticate_login():
 					)
 			except Exception as Error:
 				print(str(Error))
+
+			# print('[ ACK ]')
+			# authenticate_login.channel.basic_ack(True)
+
 		# If login authentication is not valid 
-		else:
+		elif (status == 'INVLD'):
 			print("Invalid Login!!!!")
 			authenticate_login.login_status = 'INVLD'
-			print('step1')
 			# Deleting the queue on which the client is listening
 			try:
 				authenticate_login.channel.queue_delete(
 					queue = authenticate_login.username
 					)	
 			except Exception as Error:
-				print(str(Error))	
-			print('step2')
+				print(str(Error))
+
+			# print('[ ACK ]')
+			# authenticate_login.channel.basic_ack(True)
+		else:
+			pass
+			# print('[ A/CK ]')
+			# authenticate_login.channel.basic_ack(True)
+
+				
 
 	# Function to get user details
 	def get_user_details():
