@@ -48,7 +48,7 @@ class account_edit_ui(QMainWindow):
 		self.log_queue.put(text)
 
 	def main_account_edit_ui(self):
-		heading = QLabel('Edit user status')
+		heading = QLabel('Edit Client status')
 
 		username_label = QLabel('Username: ')
 		username_content = QLabel(account_edit_ui.username)
@@ -56,7 +56,7 @@ class account_edit_ui(QMainWindow):
 		password_label = QLabel('Password: ')
 		password_content = QLabel(account_edit_ui.password)
 
-		ip_label = QLabel('IP: ')
+		ip_label = QLabel('IP Address: ')
 		ip_content = QLabel(account_edit_ui.ip)
 
 		state_label = QLabel('Current State: ')
@@ -149,10 +149,17 @@ class account_edit_ui(QMainWindow):
 			user_management.update_user_state(account_edit_ui.username, account_edit_ui.state_type)
 			print('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
 			self.log('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
-			message = {
-				"Code" : "BLOCK",
-				"Receiver" : account_edit_ui.username
-			}
+			if account_edit_ui.state_type == 'Blocked':
+				message = {
+					"Code" : "BLOCK",
+					"Receiver" : account_edit_ui.username
+				}
+			elif account_edit_ui.state_type == 'Disconnected':
+				message = {
+					"Code" : "DSCNT",
+					"Mode" : 1,
+					"Client" : account_edit_ui.username
+				}
 			message = json.dumps(message)
 			self.task_queue.put(message)
 			self.data_changed_flags[1] = 1

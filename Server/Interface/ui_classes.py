@@ -231,6 +231,9 @@ class ui_widgets:
 		judge_model.setHeaderData(4, Qt.Horizontal, 'State')
 
 		judge_view = self.generate_view(judge_model)
+		judge_view.doubleClicked.connect(
+			lambda:self.view_judge(judge_view.selectionModel().currentIndex().row())
+		)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
@@ -929,24 +932,141 @@ class ui_widgets:
 		)
 
 	def about_us_ui(self):
-		head1 = QLabel('Made with <3 by team Bitwise')
+		head1 = QLabel('Made with <3 by Team Bitwise')
 		head1.setObjectName('about_screen_heading')
-		head1.setAlignment(Qt.AlignCenter)
+		
 		head2 = QLabel('Guess what! The BitsOJ project is open source!!! ')
 		head2.setObjectName('main_screen_content')
-		head2.setAlignment(Qt.AlignCenter)
+		
 		head3 = QLabel('Contribute at https://github.com/peeesspee/BitsOJ')
 		head3.setObjectName('main_screen_content')
-		head3.setAlignment(Qt.AlignCenter)
+		
+
+		sub_head1 = QLabel('Team BitsOJ')
+		sub_head1.setObjectName('about_screen_heading_2')
+
+		mentor_widget = ui_widgets.get_profile_widget(
+			'Mentor',
+			'@rast_7',
+			'Mr. Rajat Asthana',
+			'rast_7',
+			'rast_7'
+		)
+		server_dev_widget = ui_widgets.get_profile_widget(
+			'Server Dev',
+			'@valiant',
+			'Prakhar Pandey',
+			'valiant1011',
+			'prakhar.pandey'
+		)
+		client_dev_widget = ui_widgets.get_profile_widget(
+			'Client/Setup Dev',
+			'@sachinam_1397',
+			'Sachinam Srivastava',
+			'sachinam_1397',
+			'sachinam_1397'
+		)
+		judge_dev_widget = ui_widgets.get_profile_widget(
+			'Judge Dev',
+			'@ps',
+			'Prashant Singh',
+			'ps07',
+			'ps_08'
+		)
+
+		cards_widget = QWidget()
+		cards_layout = QHBoxLayout(cards_widget)
+		cards_layout.addWidget(mentor_widget)
+		cards_layout.addWidget(server_dev_widget)
+		cards_layout.addWidget(client_dev_widget)
+		cards_layout.addWidget(judge_dev_widget)
+		
 		main_layout = QVBoxLayout()
+		main_layout.addStretch(1)
+		
+		main_layout.addWidget(sub_head1)
+		main_layout.addWidget(cards_widget)
+		main_layout.addStretch(1)
+
 		main_layout.addWidget(head1)
 		main_layout.addWidget(head2)
 		main_layout.addWidget(head3)
-		main_layout.addStretch(5)
+
+		main_layout.addStretch(1)
+
+		main_layout.setAlignment(head1, Qt.AlignCenter)
+		main_layout.setAlignment(head2, Qt.AlignCenter)
+		main_layout.setAlignment(head3, Qt.AlignCenter)
+		main_layout.setAlignment(sub_head1, Qt.AlignCenter)
+
 		main = QWidget()
 		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
+		# main.setFixedWidth(1600)
+		main.setObjectName('content_box')
 		return main
+
+	def get_profile_widget(
+			title = 'None',
+			username = 'None',
+			name = 'None',
+			github_id = 'None', 
+			linkedin_id = 'None'
+		):
+		# Get cards for team members
+		top_layout = QVBoxLayout()
+
+		title_widget = QLabel(title)
+		title_widget.setObjectName('role_text')
+
+		banner_widget = QLabel(username)
+		banner_widget.setObjectName('banner_text')
+		banner_overlay_layout = QHBoxLayout()
+		banner_overlay_layout.addWidget(banner_widget)
+		banner_overlay_widget = QWidget()
+		banner_overlay_widget.setLayout(banner_overlay_layout)
+		banner_overlay_widget.setObjectName('banner_overlay')
+
+		name_widget = QLabel(name)
+		name_widget.setObjectName('card_content')
+		
+		github_id_heading = QLabel('Github')
+		github_pixmap = QPixmap('./Elements/github.png')
+		github_id_heading.setPixmap(github_pixmap)
+		github_id_heading.setFixedSize(64, 64)
+		github_id_widget = QLabel(github_id)
+		github_id_widget.setObjectName('card_content')
+		github_hwidget = ui_widgets.get_horizontal_widget(github_id_heading, github_id_widget)
+		github_hwidget.setObjectName('banner_overlay')
+
+		linkedin_id_heading = QLabel('LinkedIn')
+		linkedin_pixmap = QPixmap('./Elements/linkedin.png')
+		linkedin_id_heading.setPixmap(linkedin_pixmap)
+		linkedin_id_heading.setFixedSize(64, 64)
+		linkedin_id_widget = QLabel(linkedin_id)
+		linkedin_id_widget.setObjectName('card_content')
+		linkedin_hwidget = ui_widgets.get_horizontal_widget(linkedin_id_heading, linkedin_id_widget)
+		linkedin_hwidget.setObjectName('banner_overlay')
+
+		top_layout.addWidget(title_widget)
+		top_layout.addWidget(banner_overlay_widget)
+		top_layout.addWidget(name_widget)
+		top_layout.addWidget(github_hwidget)
+		top_layout.addWidget(linkedin_hwidget)
+		top_layout.addStretch(1)
+		top_widget = QWidget()
+		top_widget.setLayout(top_layout)
+		top_widget.setFixedSize(320, 350)
+		top_widget.setObjectName('card')
+		return top_widget
+
+	def get_horizontal_widget(widget_1, widget_2):
+		layout = QHBoxLayout()
+		layout.addWidget(widget_1)
+		layout.addWidget(widget_2)
+		layout.addStretch(1)
+		widget = QWidget()
+		widget.setLayout(layout)
+		return widget
 
 	def lock_ui(self):
 		head1 = QLabel('SERVER LOCKED')
@@ -965,6 +1085,7 @@ class ui_widgets:
 		submit_button.setFixedSize(100, 33)
 		submit_button.setObjectName('interior_button')
 		submit_button.clicked.connect(lambda: ui_widgets.unlock_ui(self, password_input.text()))
+		submit_button.setDefault(True)
 		password_layout = QHBoxLayout()
 		password_layout.addStretch(50)
 		password_layout.addWidget(password_input)
@@ -974,9 +1095,11 @@ class ui_widgets:
 		password_widget.setLayout(password_layout)
 		
 		main_layout = QVBoxLayout()
+		main_layout.addStretch(50)
 		main_layout.addWidget(head1)
 		main_layout.addWidget(head2)
 		main_layout.addWidget(password_widget)
+		main_layout.addStretch(50)
 		
 		main_layout.addStretch(5)
 		main = QWidget()

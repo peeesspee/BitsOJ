@@ -97,6 +97,7 @@ class password_change_ui(QMainWindow):
 		main = QWidget()
 		main.setLayout(main_layout)
 
+		# Apply custom stylesheet
 		main.setObjectName('account_window')
 		heading.setObjectName('main_screen_heading')
 		confirm_button.setObjectName('interior_button')
@@ -112,14 +113,35 @@ class password_change_ui(QMainWindow):
 		return main
 
 	def final_status(self, new_password):
-		if new_password != password_change_ui.password:
+		if new_password != password_change_ui.password and new_password != '':
 			user_management.update_user_password(password_change_ui.username, new_password)
 			print('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
 			self.log('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
+			# Update connected_clients view
 			self.data_changed_flags[1] = 1
+			# Update accounts view
 			self.data_changed_flags[5] = 1
+			# Release the window lock # BUGGY - Might remove later
 			self.data_changed_flags[14] = 0
 			self.close()
+		elif new_password == password_change_ui.password:
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Information)
+			info_box.setWindowTitle('Alert')
+			info_box.setText('Old and New passwords can not be the same!')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+		else:
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Information)
+			info_box.setWindowTitle('Alert')
+			info_box.setText('Please give a valid password.')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+
+
 
 	def exit(self):
 		self.data_changed_flags[14] = 0

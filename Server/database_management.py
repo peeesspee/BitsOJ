@@ -29,7 +29,7 @@ class manage_database():
 			cur.execute("create table if not exists problems(problem_name varchar2(30), problem_code varchar(10), test_files integer, time_limit integer)")
 			
 		except Exception as error:
-			print("[ CRITICAL ERROR ] Table creation error : " + str(error))
+			print("[ DB ][ CRITICAL ERROR ] Table creation error : " + str(error))
 
 		# try:
 		# 	cur.execute("INSERT INTO problems VALUES(?, ?, ?, ?)", ('The Fight for Survival', 'TFS', 1, 1, ))
@@ -50,7 +50,7 @@ class manage_database():
 			cur.execute("drop table if exists queries")
 			cur.execute("drop table if exists problems")
 		except:
-			print("[ CRITICAL ERROR ] Table drop error")
+			print("[ DB ][ CRITICAL ] Table drop error")
 
 	def get_cursor():
 		return manage_database.cur
@@ -64,13 +64,13 @@ class problem_management(manage_database):
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 		except Exception as error:
-			print('[ CRITICAL ] Could not load problems! '  + str(error))
+			print('[ DB ][ CRITICAL ] Could not load problems! '  + str(error))
 			return
 
 		try:
 			cur.execute('DELETE FROM problems')
 		except:
-			print('[ ERROR ] Could not refresh problems!')
+			print('[ DB ][ ERROR ] Could not refresh problems!')
 			return
 
 		try:
@@ -85,7 +85,7 @@ class problem_management(manage_database):
 				)
 				conn.commit()
 		except Exception as error:
-			print('[ ERROR ] Corrupted config file: ' + str(error))
+			print('[ DB ][ ERROR ] Corrupted config file: ' + str(error))
 			
 			cur.execute('rollback')
 		return
@@ -106,7 +106,7 @@ class problem_management(manage_database):
 				conn.commit()
 			return
 		except Exception as error:
-			print('[ ERROR ] Could not update database: ' + str(error))
+			print('[ DB ][ ERROR ] Could not update database: ' + str(error))
 
 class scoreboard_management():
 	def insert_new_user(client_id, user_name, score, problems_solved, total_time):
@@ -116,7 +116,7 @@ class scoreboard_management():
 			cur.execute("INSERT INTO scoreboard values(?, ?, ?, ?, ?, ?)", (client_id, user_name, score, problems_solved, total_time, 0))
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Could not add scoreboard entry : " + str(error))
+			print("[ DB ][ ERROR ] Could not add scoreboard entry : " + str(error))
 			conn.rollback()
 		return
 
@@ -127,7 +127,7 @@ class scoreboard_management():
 			data = cur.fetchall()
 			return data
 		except Exception as error:
-			print("[ CRITICAL ] Could not get scoreboard : " + str(error))
+			print("[ DB ][ CRITICAL ] Could not get scoreboard : " + str(error))
 		return	
 
 	def update_user_score(
@@ -155,7 +155,7 @@ class scoreboard_management():
 			except Exception as error:
 				exc_type, exc_obj, exc_tb = sys.exc_info()
 				fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-				print('[ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error) + 'On ', exc_type, fname, exc_tb.tb_lineno)
+				print('[ DB ][ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error) + 'On ', exc_type, fname, exc_tb.tb_lineno)
 			finally:
 				return
 		elif ranking_algorithm == 2 or ranking_algorithm == 3:
@@ -306,7 +306,7 @@ class scoreboard_management():
 			except Exception as error:
 				exc_type, exc_obj, exc_tb = sys.exc_info()
 				fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-				print('[ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error) + 'ON ', exc_type, fname, exc_tb.tb_lineno)
+				print('[ DB ][ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error) + 'ON ', exc_type, fname, exc_tb.tb_lineno)
 			finally:
 				return
 
@@ -322,7 +322,7 @@ class previous_data(manage_database):
 			else:
 				return int(data[0][0])
 		except:
-			print('[ INIT ] Run ID initialised to 0')
+			print('[ DB ][ INIT ] Run ID initialised to 0')
 			return 0
 
 	def get_last_client_id():
@@ -337,7 +337,7 @@ class previous_data(manage_database):
 				client_id_counter = 0
 
 		except:
-			print('[ INIT ] Client ID initialised to 0')
+			print('[ DB ][ INIT ] Client ID initialised to 0')
 			client_id_counter = 0
 
 	def get_last_query_id():
@@ -350,7 +350,7 @@ class previous_data(manage_database):
 			else:
 				return int(data[0][0])
 		except:
-			print('[ INIT ] Query ID initialised to 0')
+			print('[ DB ][ INIT ] Query ID initialised to 0')
 			return 0
 
 class client_authentication(manage_database):
@@ -405,7 +405,7 @@ class client_authentication(manage_database):
 			)
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Could not add client : " + str(error))
+			print("[ DB ][ ERROR ] Could not add client : " + str(error))
 			conn.rollback()
 		return	
 
@@ -421,7 +421,7 @@ class client_authentication(manage_database):
 			client_id = cur.fetchall()
 			return client_id[0][0]
 		except Exception as error:
-			print("[ ERROR ] : The user does not have a client id yet.")
+			print("[ DB ][ ERROR ] : The user does not have a client id yet.")
 			return -1
 
 	# Get user_name when client_id is known
@@ -433,7 +433,7 @@ class client_authentication(manage_database):
 			client_username = cur.fetchall()
 			return client_username[0][0]
 		except Exception as error:
-			print("[ ERROR ] : Could not fetch username.")
+			print("[ DB ][ ERROR ] : Could not fetch username.")
 			return 'Null'
 
 	# Check if a client with given client_id is connected in the system, and return its state
@@ -469,7 +469,7 @@ class client_authentication(manage_database):
 			for entry in data:
 				response.append(entry[0])
 		except Exception as error:
-			print("[ ERROR ] : Could not fetch client list.")
+			print("[ DB ][ ERROR ] : Could not fetch client list.")
 		return response
 
 	
@@ -484,7 +484,7 @@ class submissions_management(manage_database):
 			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, 'WAITING', '-', 0, ))
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Could not insert into submission : " + str(error))
+			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
 		return
 
 	def update_submission_status(run_id, verdict, sent_status, judge = '-'):
@@ -495,7 +495,7 @@ class submissions_management(manage_database):
 			cur.execute("UPDATE submissions SET verdict = ?, sent_status = ?, judge = ? WHERE run_id = ?", (verdict, sent_status, judge, run_id,))
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Could not update submission submission : " + str(error))
+			print("[ DB ][ ERROR ] Could not update submission submission : " + str(error))
 			conn.rollback()
 		return
 
@@ -508,7 +508,7 @@ class submissions_management(manage_database):
 			cur.execute("DELETE FROM scoreboard")
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Database deletion error : " + str(error))
+			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
 	def get_last_sub_time(client_id):
 		try:
@@ -571,7 +571,7 @@ class submissions_management(manage_database):
 				else:
 					return data
 			except Exception as error:
-				print('[ ERROR ] ' + str(error))
+				print('[ DB ][ ERROR ] ' + str(error))
 				return "NONE"
 
 		elif client == '*':
@@ -593,7 +593,7 @@ class submissions_management(manage_database):
 				else:
 					return data
 			except Exception as error:
-				print('[ ERROR ] ' + str(error))
+				print('[ DB ][ ERROR ] ' + str(error))
 				return "NONE"
 
 		elif code == '*':
@@ -615,7 +615,7 @@ class submissions_management(manage_database):
 				else:
 					return data
 			except Exception as error:
-				print('[ ERROR ] ' + str(error))
+				print('[ DB ][ ERROR ] ' + str(error))
 				return "NONE"
 		else:
 			try:
@@ -637,9 +637,43 @@ class submissions_management(manage_database):
 				else:
 					return data
 			except Exception as error:
-				print('[ ERROR ] ' + str(error))
+				print('[ DB ][ ERROR ] ' + str(error))
 				return "NONE"
 
+	def get_judge_data(judge_username):
+		try:
+			cur = manage_database.get_cursor()
+			query = (
+				"SELECT " + 
+				"run_id" + 
+				" FROM submissions " +
+				"WHERE judge = ?"
+			)
+			cur.execute(query, (judge_username, ))
+			data1 = cur.fetchall()
+
+			query = (
+				"SELECT MAX(" + 
+				"timestamp)" + 
+				" FROM submissions " +
+				"WHERE judge = ?"
+			)
+			cur.execute(query, (judge_username, ))
+			data2 = cur.fetchall()
+
+			if (
+				data1 == '' or 
+				len(data1) == 0 or
+				data2 == '' or
+				len(data2) == 0
+			):
+				return 'NONE', 'NONE'
+			else:
+				return str(len(data1)), data2[0][0]
+
+		except Exception as error:
+			print('[ DB ][ ERROR ] ' + str(error))
+			return 'NONE', 'NONE'
 
 
 class query_management(manage_database):
@@ -651,7 +685,7 @@ class query_management(manage_database):
 			cur.execute('commit')
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Could not insert into submission : " + str(error))
+			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
 		return
 
 	def update_query(query_id, query, response):
@@ -663,13 +697,13 @@ class query_management(manage_database):
 				cur.execute("UPDATE queries SET response = ? WHERE query_id = ?", (response, query_id,))
 				conn.commit()
 			except Exception as error:
-				print("[ ERROR ] Could not insert into submission : " + str(error))
+				print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
 		else:
 			try:
 				cur.execute("INSERT INTO queries values(?, ?, ?, ?)", (0, 0, query, response, ))
 				conn.commit()
 			except Exception as error:
-				print("[ ERROR ] Could not insert into submission : " + str(error))
+				print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
 		return
 
 	def delete_all():
@@ -679,7 +713,7 @@ class query_management(manage_database):
 			cur.execute("DELETE FROM queries")
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Database deletion error : " + str(error))
+			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
 
 class user_management(manage_database):
@@ -763,7 +797,7 @@ class user_management(manage_database):
 			cur.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Database deletion error : " + str(error))
+			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
 	def delete_all():
 		try:
@@ -775,7 +809,7 @@ class user_management(manage_database):
 			cur.execute("DELETE FROM scoreboard")
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Database deletion error : " + str(error))
+			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
 	def disconnect_all():
 		try:
@@ -784,7 +818,7 @@ class user_management(manage_database):
 			cur.execute("UPDATE connected_clients SET state = 'Disconnected'")
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Database updation error : " + str(error))
+			print("[ DB ][ ERROR ] Database updation error : " + str(error))
 			conn.rollback()
 		finally:
 			return
@@ -796,7 +830,7 @@ class user_management(manage_database):
 			cur.execute("UPDATE connected_clients SET state = ? where user_name = ? ", (state, username, ))
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Database updation error : " + str(error))
+			print("[ DB ][ ERROR ] Database updation error : " + str(error))
 			conn.rollback()
 		finally:
 			return
@@ -806,9 +840,10 @@ class user_management(manage_database):
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			cur.execute("UPDATE accounts SET password = ? where user_name = ? ", (password, username, ))
+			cur.execute("UPDATE connected_clients SET password = ? where user_name = ? ", (password, username, ))
 			conn.commit()
 		except Exception as error:
-			print("[ ERROR ] Database updation error : " + str(error))
+			print("[ DB ][ ERROR ] Database updation error : " + str(error))
 			conn.rollback()
 		finally:
 			return

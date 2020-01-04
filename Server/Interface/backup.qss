@@ -19,7 +19,7 @@ QPushButton#sidebar_button{
 	padding-left : 20; 	
 	border-radius : 0px;
 	margin-top: 2px;
-	background-color : #161a28 ; 
+	background-color : #131217 ; 
 	color : #838383;
 }
 
@@ -187,7 +187,7 @@ QPushButton#account_button
 	color : #AAAAAA;
 	text-align : center;
 	margin-left : 70px;
-	background-color : #13161e;
+	background-color : #171B1F;
 	border : 1px solid #ADFF2F;
 	border-radius : 25px;
 }
@@ -225,7 +225,7 @@ QCheckBox::indicator{
 
 /* Sidebar style */
 QWidget#sidebar{
-	background-color : #161a28;
+	background-color : #131217;
 	margin-left : 0px;
 }
 
@@ -233,7 +233,7 @@ QWidget#sidebar{
 
 /* right panes background color */
 QTabWidget#main_tabs{
-	background-color : #13161e;
+	background-color : #171B1F;
 }
 
 /* Text color in right panes */
@@ -247,7 +247,7 @@ QTabWidget::pane{
 QWidget#screen_widget
 {
 	color : #CCCCCC;
-	background-color : #161a28;
+	background-color : #131217;
 }
 
 /* Style of bar where bitwise logo sits */
@@ -337,7 +337,7 @@ QTabBar::tab
 /*Style of problem tab bar*/
 QTabBar#problem_tabs
 {
-	background : #161a28;
+	background : #131217;
 }
 
 QTabBar#problem_tabs::tab
@@ -345,7 +345,7 @@ QTabBar#problem_tabs::tab
 	width: 140px; 
 	height: 35px; 
 	margin: 0px; 
-	background : #161a28;
+	background : #131217;
 	color : #777777;
 }
 
@@ -365,7 +365,7 @@ QTabBar#problem_tabs::tab:selected
 
 /*--------------SUB LAYOUT STARTS---------*/
 QDialog{
-	background-color : #13161e;
+	background-color : #171B1F;
 }
 QDialog QLabel{
 	color : #AAAAAA;
@@ -379,7 +379,7 @@ QDialog QPushButton{
 QSpinBox{
 	background : #2D353D;
 	color : #AAAAAA;
-	border : 1px solid #13161e;
+	border : 1px solid #171B1F;
 	height : 30px;
 }
 QSpinBox::up-button 
@@ -387,7 +387,7 @@ QSpinBox::up-button
     subcontrol-origin: border;
     subcontrol-position: top right; 
     width: 16px; 
-    border : 1px solid #13161e;
+    border : 1px solid #171B1F;
     border-width: 1px;
 }
 QSpinBox::up-arrow 
@@ -401,7 +401,7 @@ QSpinBox::down-button
     subcontrol-origin: border;
     subcontrol-position: bottom right;
     width: 16px; 
-    border : 1px solid #13161e;
+    border : 1px solid #171B1F;
     border-width: 1px;
 }
 QSpinBox::down-arrow 
@@ -416,7 +416,7 @@ QComboBox#account_combobox
 	background : #2D353D;
 	color : #AAAAAA;
 	selection-background : #777777;
-	border: 1px solid #13161e;
+	border: 1px solid #171B1F;
     border-radius: 3px;
     height : 30px;
 }
@@ -436,7 +436,7 @@ QComboBox QAbstractItemView
     background-color : #1D2227;
 	color : #AAAAAA;
 	border : 1px solid #2D353D;
-	selection-background-color : #13161e;
+	selection-background-color : #171B1F;
 }
 QComboBox::down-arrow 
 {
@@ -452,7 +452,7 @@ QLabel#account_label
 
 QWidget#account_window
 {
-	background-color : #13161e;
+	background-color : #171B1F;
 }
 
 QTextEdit
@@ -466,11 +466,11 @@ QLineEdit
 	height : 30px;
 	background : #2D353D;
 	color : #AAAAAA;
-	border : 1px solid #13161e;
+	border : 1px solid #171B1F;
 }
 QScrollArea QWidget
 {
-	background-color : #13161e;
+	background-color : #171B1F;
 }
 QScrollArea QTextEdit
 {
@@ -482,7 +482,7 @@ QScrollArea QLineEdit
 	height : 30px;
 	background : #2D353D;
 	color : #AAAAAA;
-	border : 1px solid #13161e;
+	border : 1px solid #171B1F;
 }
 QToolTip
 {
@@ -509,7 +509,7 @@ QTableView
 	color : #AAAAAA;
 	border : 0px;
 	gridline-color : #transparent;
-	selection-background-color : #13161e;
+	selection-background-color : #171B1F;
 }
 
 QTableView::item:selected
@@ -519,14 +519,14 @@ QTableView::item:selected
 
 QHeaderView::section
 { 
-	background-color : #13161e;
+	background-color : #171B1F;
 	color: #E91E63;	
 }
 
 QTableWidget#inner_table
 {
 	background : #1D2227;
-	border : 1px solid #161a28;
+	border : 1px solid #131217;
 }
 
 /* Scroll bar styles */
@@ -538,12 +538,12 @@ QScrollBar:horizontal
 QScrollBar:vertical{
 	margin-left : 1px;
 	width : 25px;
-	background-color : #13161e;	
+	background-color : #171B1F;	
 	border: 1px solid #121212;
 }
 
 QScrollBar::handle:vertical{
-	background : qlineargradient( spread:Reflect, x1:0, y1:0, x2:0, y2:1 , stop:0 #13161e, stop:0.5 #38424C, stop:1 #13161e);
+	background : qlineargradient( spread:Reflect, x1:0, y1:0, x2:0, y2:1 , stop:0 #171B1F, stop:0.5 #38424C, stop:1 #171B1F);
 	width : 25px;
 	min-height : 70px;
 	margin-left : 0px;

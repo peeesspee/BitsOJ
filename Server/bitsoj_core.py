@@ -23,11 +23,12 @@ class core():
 		core.log('  [ START ] Core subprocess started.')
 
 		superuser_username = core.config['Server Username']
+		superuser_username = 'BitsOJcore'
 		superuser_password = core.config['Server Password']
 		host = core.config['Server IP']
 		core.file_password = core.config["File Password"]
 	
-		channel = core.init_connection(superuser_username, superuser_password, host)
+		connection, channel = core.init_connection(superuser_username, superuser_password, host)
 		core.channel = channel
 		core.ranking_algoritm = core.data_changed_flags[17]
 		# Infinite Loop to Poll the task_queue every second
@@ -39,8 +40,13 @@ class core():
 			time.sleep(0.5)
 
 		# If we reach this point, it means the Server Shutdown has been initiated.
+		
+		# Shut down connection
+		time.sleep(1)
 		print("[ STOP ] Core subprocess terminated successfully!")
 		core.log("[ STOP ] Core subprocess terminated successfully!")
+		channel.stop_consuming()
+		connection.close()
 		sys.exit(0)
 
 	def log(message):
@@ -55,13 +61,14 @@ class core():
 
 			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
 			channel.exchange_declare(exchange = 'broadcast_manager', exchange_type = 'fanout', durable = True)
-
-			return channel
+			return connection, channel
 		
 		except Exception as error:
 			print('[ CRITICAL ] Core could not connect to RabbitMQ server : ' + str(error))
 			core.log('[ CRITICAL ] Core could not connect to RabbitMQ server : ' + str(error))
-			core.data_changed_flags[7] = 1
+			core.data_changed_flags[26] = 1
+			while core.data_changed_flags[7] != 1:
+				time.sleep(0.5)
 			sys.exit()
 		return 
 
@@ -165,6 +172,17 @@ class core():
 					if status == 'AC' and core.data_changed_flags[15] == 1:
 						# Flag 18 signals interface to send scoreboard to all clients if allowed
 						core.data_changed_flags[18] = 1 
+				elif code == 'SHUTDOWN':
+					receiver = data['Receiver']
+					print('[ CORE ][ ' + receiver + ' ] Shutdown.')
+					core.log('[ CORE ][ ' + receiver + ' ] Shutdown.')
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = core.unicast_exchange,
+						routing_key = receiver, 
+						body = message, 
+						properties = pika.BasicProperties(delivery_mode = 2)
+					) 
 
 				elif code == "EDIT":
 					print('[ CORE ] Problem Edit in progress...')

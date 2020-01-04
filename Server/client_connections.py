@@ -3,6 +3,7 @@ import sys
 import time
 import json
 import threading
+import re # For RegEx : To check IP address validity
 from database_management import *
 from client_submissions import submission
 from init_server import initialize_server
@@ -12,6 +13,7 @@ class manage_clients():
 	data_changed_flags = ''
 	task_queue = ''
 	key = ''
+	judge_key = ''
 	config = ''
 	file_password = ''
 	already_read = 0
@@ -31,18 +33,39 @@ class manage_clients():
 		judge_password = manage_clients.config["Judge Password"]
 		host = manage_clients.config["Server IP"]
 		manage_clients.key = manage_clients.config["Client Key"]
+		manage_clients.judge_key = manage_clients.config["Judge Key"]
 		manage_clients.file_password = manage_clients.config["File Password"]
 		print('  [ START ] Client Manager subprocess started.')
 		manage_clients.log('  [ START ] Client Manager subprocess started.')
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
-			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+			params = pika.ConnectionParameters(
+				host = host, 
+				credentials = creds, 
+				heartbeat=0, 
+				blocked_connection_timeout=0
+			)
 			connection = pika.BlockingConnection(params)
 
 			channel = connection.channel()
 			manage_clients.channel = channel
-			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
-			channel.exchange_declare(exchange = 'broadcast_manager', exchange_type = 'fanout', durable = True)
+			channel.exchange_declare(
+				exchange = 'connection_manager', 
+				exchange_type = 'direct', 
+				durable = True
+			)
+			channel.exchange_declare(
+				exchange = 'broadcast_manager', 
+				exchange_type = 'fanout', 
+				durable = True
+			)
+			# channel.exchange_declare(
+			# 	exchange = 'connection_manager', 
+			# 	exchange_type = 'direct', 
+			# 	durable = True, 
+			# 	virtual_host = "Client"
+			# )
+
 
 			channel.queue_declare(queue = 'client_requests', durable = True)
 			channel.queue_declare(queue = 'judge_requests', durable = True)
@@ -54,7 +77,12 @@ class manage_clients():
 		except Exception as error:
 			print('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
 			manage_clients.log('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
-			sys.exit('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
+			# Wait until gui is closed!
+			# Inform GUI thread
+			manage_clients.data_changed_flags[26] = 1
+			while manage_clients.data_changed_flags[7] !=1:
+				time.sleep(0.5)
+			sys.exit()
 		try:
 			submission.init_run_id()
 		except:
@@ -94,6 +122,8 @@ class manage_clients():
 			print('[ STOP ] Client subprocess terminated successfully!')
 			manage_clients.log('[ STOP ] Client subprocess terminated successfully!')
 			return
+		except (pika.exceptions.ChannelWrongStateError):
+			print('[ ERROR ] : Channel in wrong state!')
 
 	# This function works on client messages and passes them on to their respective handler function
 	def client_message_handler(ch, method, properties, body):
@@ -106,7 +136,7 @@ class manage_clients():
 			json_data = json.loads(client_message)
 			# Validate Client Key( Make sure client is authentic! )
 			client_key = json_data["Client Key"]
-			if client_key != manage_clients.key:
+			if client_key != manage_clients.key and client_key != manage_clients.judge_key:
 				print('[ SECURITY ] Client Key did not match. Client ID: ' + str(json_data['ID']))
 				manage_clients.log('[ SECURITY ] Client Key did not match. Client ID: ' + str(json_data['ID']))
 				print('[ SECURITY ] Complete Message: ' + client_message)
@@ -188,14 +218,20 @@ class manage_clients():
 		try:
 			# Declare queue with same name as client_username
 			manage_clients.channel.queue_declare(queue = client_username, durable = True)
+		except Exception as error:
+			print('[ ERROR ][ CRITICAL ] Could not declare queues: ' + str(error))
+			manage_clients.log('[ ERROR ][ CRITICAL ] Could not declare queues: ' + str(error))
+			return
+
+		try:
 			#Bind the connection_manager exchange to client queue (queue name is same as username)
 			manage_clients.channel.queue_bind(exchange = 'connection_manager', queue = client_username)
 			manage_clients.channel.queue_bind(exchange = 'broadcast_manager', queue = client_username)
-		except:
-			print('[ ERROR ][ CRITICAL ] Could not declare queues!')
-			manage_clients.log('[ ERROR ][ CRITICAL ] Could not declare queues!')
+		except Exception as error:
+			print('[ ERROR ][ CRITICAL ] Could not bind queues: ' + str(error))
+			manage_clients.log('[ ERROR ][ CRITICAL ] Could not bind queues: '+ str(error))
 			return
-
+		
 		if client_type == 'CLIENT':
 			# If client logins have been halted by the Admin, Send a rejection message to the client
 			if(manage_clients.data_changed_flags[2] == 0):
@@ -275,7 +311,7 @@ class manage_clients():
 						}
 						message = json.dumps(message)
 						response.publish_message(manage_clients.channel, client_username, message)
-					
+
 				# If client has logged in for the first time
 				elif previously_connected_state == 'New':
 					# Fetch new client ID
@@ -293,7 +329,7 @@ class manage_clients():
 					manage_clients.data_changed_flags[16] = 1
 					
 					# Reply to be sent to client
-					server_message = 'Hello_buddy! Welocme to BitsOJ!'
+					server_message = 'BitsOJ v1.1: Validation Successful.'
 					
 					message = {
 						'Code' : 'VALID', 
@@ -439,7 +475,18 @@ class manage_clients():
 
 
 	def validate_ip(ip):
-		return True
+		try:
+			regex = '''^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.( 
+			25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.( 
+			25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.( 
+			25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)'''
+			if re.search(regex, ip):
+				# valid IP address
+				return True
+			return False
+		except:
+			return False
+		
 
 
 	def client_submission_handler(client_id, client_ip, client_username, local_run_id, problem_code, language, time_stamp, source_code):
@@ -473,12 +520,20 @@ class manage_clients():
 		# Validate client submisssion datatypes:
 		flag = 0
 		if len(str(client_id)) > 10 or len(client_username) > 20 or len(str(local_run_id)) > 5 or len(problem_code) > 10 or len(language) > 10:
+			print('[ SUBMISSION ][ EXCESSIVE DATA ] Validation failed!')
+			manage_clients.log('[ SUBMISSION ][ EXCESSIVE DATA ] Validation failed!')
 			flag = 1
 		if len(time_stamp) != len('HH:MM:SS'):
+			print('[ SUBMISSION ][ EXCESSIVE DATA ] Validation failed!')
+			manage_clients.log('[ SUBMISSION ][ EXCESSIVE DATA ] Validation failed!')
 			flag = 1
 		if initialize_server.convert_to_seconds(time_stamp) == -1:
+			print('[ SUBMISSION ][ TIMESTAMP ] Validation failed!')
+			manage_clients.log('[ SUBMISSION ][ TIMESTAMP ] Validation failed!')
 			flag = 1
 		if manage_clients.validate_ip(client_ip) == False:
+			print('[ SUBMISSION ][ IP ] Validation failed!')
+			manage_clients.log('[ SUBMISSION ][ IP ] Validation failed!')
 			flag = 1
 		
 
@@ -675,6 +730,12 @@ class manage_clients():
 				manage_clients.data_changed_flags[1] = 1
 				print('[ DISCONNECT ] Client: ' + client_username)
 				manage_clients.log('[ DISCONNECT ] Client: ' + client_username)
+				message = {
+					"Code" : "SHUTDOWN",
+					"Receiver" : client_username
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
 		return
 
 class response():
