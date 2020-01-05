@@ -301,7 +301,7 @@ QLabel#role_text{
 	font-size : 28px;
 }
 QLabel#banner_text{
-	font-size : 34px;
+	font-size : 30px;
 	color : #AAAAAA;
 }
 QLabel#card_sub_heading{
@@ -312,8 +312,6 @@ QLabel#card_content{
 	color : #999999;
 	font-size : 24px;
 }
-
-
 
 QLCDNumber{
 	color: #AAAAAA;
