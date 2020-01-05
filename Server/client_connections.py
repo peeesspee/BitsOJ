@@ -109,18 +109,34 @@ class manage_clients():
 			channel.start_consuming()
 		# Handle keyboard interrupt ctrl+c and terminate successfully
 		except (KeyboardInterrupt, SystemExit):
-			manage_clients.data_changed_flags[7] = 1
-			channel.stop_consuming()
+			
 			print('[ LISTEN ] STOPPED listening to client channel')
 			manage_clients.log('[ LISTEN ] STOPPED listening to client channel')
+			
+		except (pika.exceptions.ChannelWrongStateError):
+			print('[ ERROR ] : Channel closed by Broker. Please restart')
+			manage_clients.log('[ ERROR ] : Channel closed by Broker')
+
+		except (pika.exceptions.ChannelClosedByBroker):
+			print(
+				'[ ERROR ] : Could not get a lock on client_requests.' +
+				' Please check management portal and remove any consumers from the queue'
+			)
+			manage_clients.log(
+				'[ ERROR ] : Could not get a lock on client_requests.' +
+				'Please check management portal and remove any consumers from the queue'
+			)
+		except Exception as error: 
+			print('[ UI ][ CRITICAL ]: ' + str(error))
+			manage_clients.log('[ UI ][ CRITICAL ]: ' + str(error))
+
+		finally:
+			manage_clients.data_changed_flags[7] = 1
+			channel.stop_consuming()
 			connection.close()
 			print('[ STOP ] Client subprocess terminated successfully!')
 			manage_clients.log('[ STOP ] Client subprocess terminated successfully!')
 			return
-
-		except (pika.exceptions.ChannelWrongStateError):
-			print('[ ERROR ] : Channel in wrong state!')
-			manage_clients.log('[ ERROR ] : Channel in wrong state!')
 		
 	# This function works on client messages and passes them on to their respective handler function
 	def client_message_handler(ch, method, properties, body):
