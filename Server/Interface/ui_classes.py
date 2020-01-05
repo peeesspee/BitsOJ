@@ -1041,8 +1041,6 @@ class ui_widgets:
 
 		main = QWidget()
 		main.setLayout(main_layout)
-		# main.setFixedWidth(1600)
-		main.setObjectName('content_box')
 		return main
 
 	def get_profile_widget(

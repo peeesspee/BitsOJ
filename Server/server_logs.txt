@@ -9690,3 +9690,61 @@
 
  ###
 2020-01-05 18:41:58.198275  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-05 18:45:32.396468  :  #### SERVER START #### ###
+2020-01-05 18:45:32.396597  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-05 18:45:32.396627  :  [ SETUP ] Initialising server... ###
+2020-01-05 18:45:32.396651  :  [ SETUP ] Initialising database... ###
+2020-01-05 18:45:32.897341  :  [ SETUP ] Loading problems... ###
+2020-01-05 18:45:32.897417  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-05 18:45:32.897469  :    [ START ] Client Manager subprocess started. ###
+2020-01-05 18:45:32.897509  :  [ SETUP ] Subprocesses started ###
+2020-01-05 18:45:32.897546  :  [ SETUP ][ Process ] Client Manager: 30687 ###
+2020-01-05 18:45:32.897581  :  [ SETUP ][ Process ] Judge Manager: 30688 ###
+2020-01-05 18:45:32.897619  :  [ SETUP ][ Process ] Core: 30691 ###
+2020-01-05 18:45:32.897654  :  [ SETUP ][ Process ] Log Manager: 30685 ###
+2020-01-05 18:45:32.897692  :    [ START ] Judge Manager subprocess started. ###
+2020-01-05 18:45:32.897729  :    [ START ] Core subprocess started. ###
+2020-01-05 18:45:32.897768  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-05 18:45:32.897804  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-05 18:45:32.897840  :    [ START ] Interface subprocess started. ###
+2020-01-05 18:45:40.408126  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-05 18:45:40.408224  :  [ EXIT ] Signal passed ###
+2020-01-05 18:45:40.408282  :  [ EXIT ] Saving Server state to file. ###
+2020-01-05 18:45:40.408335  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-05 18:45:40.408384  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-05 18:45:40.408433  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-05 18:45:40.408481  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-05 18:45:40.408529  :  [ EXIT ] Saved Server state to file. ###
+2020-01-05 18:45:41.409955  :  #### SERVER EXIT ####
+
+ ###
+2020-01-05 18:45:41.410100  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-05 18:46:03.872988  :  #### SERVER START #### ###
+2020-01-05 18:46:03.873092  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-05 18:46:03.873123  :  [ SETUP ] Initialising server... ###
+2020-01-05 18:46:03.873147  :  [ SETUP ] Initialising database... ###
+2020-01-05 18:46:04.373837  :  [ SETUP ] Loading problems... ###
+2020-01-05 18:46:04.373884  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-05 18:46:04.373918  :    [ START ] Client Manager subprocess started. ###
+2020-01-05 18:46:04.373941  :    [ START ] Judge Manager subprocess started. ###
+2020-01-05 18:46:04.373962  :  [ SETUP ] Subprocesses started ###
+2020-01-05 18:46:04.373983  :  [ SETUP ][ Process ] Client Manager: 30745 ###
+2020-01-05 18:46:04.374003  :  [ SETUP ][ Process ] Judge Manager: 30746 ###
+2020-01-05 18:46:04.374023  :  [ SETUP ][ Process ] Core: 30749 ###
+2020-01-05 18:46:04.374042  :  [ SETUP ][ Process ] Log Manager: 30743 ###
+2020-01-05 18:46:04.374062  :    [ START ] Core subprocess started. ###
+2020-01-05 18:46:04.374082  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-05 18:46:04.374101  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-05 18:46:04.374120  :    [ START ] Interface subprocess started. ###
+2020-01-05 18:46:15.393213  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-05 18:46:15.393284  :  [ EXIT ] Signal passed ###
+2020-01-05 18:46:15.393326  :  [ EXIT ] Saving Server state to file. ###
+2020-01-05 18:46:15.393377  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-05 18:46:15.393410  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-05 18:46:15.393444  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-05 18:46:15.393480  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-05 18:46:15.393515  :  [ EXIT ] Saved Server state to file. ###
+2020-01-05 18:46:16.395000  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-05 18:46:16.395189  :  #### SERVER EXIT ####
+
+ ###
