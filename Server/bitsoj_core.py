@@ -23,7 +23,7 @@ class core():
 		core.log('  [ START ] Core subprocess started.')
 
 		superuser_username = core.config['Server Username']
-		superuser_username = 'BitsOJcore'
+		# superuser_username = 'BitsOJcore'
 		superuser_password = core.config['Server Password']
 		host = core.config['Server IP']
 		core.file_password = core.config["File Password"]

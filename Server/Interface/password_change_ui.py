@@ -143,9 +143,6 @@ class password_change_ui(QMainWindow):
 			info_box.exec_()
 			return
 
-
-
 	def exit(self):
 		self.data_changed_flags[14] = 0
 		self.close()
-
