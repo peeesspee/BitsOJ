@@ -503,7 +503,7 @@ QTableView
 	color : #AAAAAA;
 	border : 0px;
 	gridline-color : #transparent;
-	selection-background-color : #181B25;
+	selection-background-color : #121520;
 }
 
 QTableView::item:selected

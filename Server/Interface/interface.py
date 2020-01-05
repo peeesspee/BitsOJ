@@ -202,8 +202,8 @@ class server_window(QMainWindow):
 		#Define top bar
 		logo = QLabel(self)
 		logo_image = QPixmap('Elements/bitwise_header.png')
-		logo_image2 = logo_image.scaledToWidth(104)
-		logo.setPixmap(logo_image2)
+		logo_image = logo_image.scaledToWidth(104)
+		logo.setPixmap(logo_image)
 		self.timer_widget = QLCDNumber()
 		self.timer_widget.setSegmentStyle(QLCDNumber.Flat)
 		self.timer_widget.setDigitCount(8)

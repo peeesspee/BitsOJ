@@ -986,35 +986,35 @@ class ui_widgets:
 		)
 		server_dev_widget = ui_widgets.get_profile_widget(
 			'Server Dev',
-			'@valiant',
+			'@valiant1',
 			'Prakhar Pandey',
 			'valiant1011',
 			'valiant1011'
 		)
 		client_dev_widget = ui_widgets.get_profile_widget(
 			'Client/Setup Dev',
-			'@sachinam_1397',
+			'@sachinam',
 			'Sachinam Srivastava',
 			'sachinam1397',
-			'sachinam_1397'
+			'sachinam1397'
 		)
 		judge_dev_widget = ui_widgets.get_profile_widget(
 			'Judge Dev',
 			'@ps',
 			'Prashant Singh',
 			'ps0798',
-			'ps_08'
+			'ps0798'
 		)
 
 		cards_widget = QWidget()
 		cards_layout = QHBoxLayout(cards_widget)
 		cards_layout.addStretch(5)
 		cards_layout.addWidget(mentor_widget)
-		cards_layout.addStretch(3)
+		cards_layout.addStretch(2)
 		cards_layout.addWidget(server_dev_widget)
-		cards_layout.addStretch(3)
+		cards_layout.addStretch(2)
 		cards_layout.addWidget(client_dev_widget)
-		cards_layout.addStretch(3)
+		cards_layout.addStretch(2)
 		cards_layout.addWidget(judge_dev_widget)
 		cards_layout.addStretch(5)
 
@@ -1079,8 +1079,9 @@ class ui_widgets:
 		
 		github_id_heading = QLabel('Github')
 		github_pixmap = QPixmap('./Elements/github.png')
+		# github_pixmap = github_pixmap.scaledToWidth(32)
 		github_id_heading.setPixmap(github_pixmap)
-		github_id_heading.setFixedSize(64, 64)
+		github_id_heading.setFixedSize(48, 48)
 		github_id_widget = QLabel(
 			"<a href='" + github_link + "' style = 'color: #23B2EE'>" + github_id + "</a>"
 		)
@@ -1092,7 +1093,7 @@ class ui_widgets:
 		linkedin_id_heading = QLabel('LinkedIn')
 		linkedin_pixmap = QPixmap('./Elements/linkedin.png')
 		linkedin_id_heading.setPixmap(linkedin_pixmap)
-		linkedin_id_heading.setFixedSize(64, 64)
+		linkedin_id_heading.setFixedSize(48, 48)
 		linkedin_id_widget = QLabel(
 			"<a href='" + linkedin_link + "' style = 'color: #23B2EE'>" + linkedin_id + "</a>"
 		)
@@ -1110,7 +1111,7 @@ class ui_widgets:
 		top_layout.setAlignment(title_widget, Qt.AlignCenter)
 		top_widget = QWidget()
 		top_widget.setLayout(top_layout)
-		top_widget.setFixedWidth(280)
+		top_widget.setFixedWidth(270)
 		top_widget.setObjectName('card')
 		top_widget.setGraphicsEffect(shadow_effect)
 		# top_widget.setMinimumSize(320, 300)
