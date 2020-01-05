@@ -120,7 +120,6 @@ class authenticate_login():
 		else:
 			print("Invalid Login!!!!")
 			authenticate_login.login_status = 'INVLD'
-			print('step1')
 			# Deleting the queue on which the client is listening
 			try:
 				authenticate_login.channel.queue_delete(
@@ -128,7 +127,6 @@ class authenticate_login():
 					)	
 			except Exception as Error:
 				print(str(Error))	
-			print('step2')
 
 
 

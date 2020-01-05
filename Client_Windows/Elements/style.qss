@@ -1,3 +1,6 @@
+QDialog{
+	background-color : #171B1F;
+}
 QStatusBar
 { 
 	color : #BB86FC ;

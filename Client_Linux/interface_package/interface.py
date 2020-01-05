@@ -401,7 +401,7 @@ class client_window(QMainWindow):
 
 			if(self.data_changed_flag[7] == 1):
 				message = self.queue.get()
-				QMessageBox.warning(self, 'Update', message + 'has been updated.\nPlease reload the problem.')
+				QMessageBox.warning(self, 'Update', message + ' has been updated.\nPlease reload the problem.')
 				self.data_changed_flag[7] = 0
 
 			return
