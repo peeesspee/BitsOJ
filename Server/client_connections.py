@@ -59,13 +59,6 @@ class manage_clients():
 				exchange_type = 'fanout', 
 				durable = True
 			)
-			# channel.exchange_declare(
-			# 	exchange = 'connection_manager', 
-			# 	exchange_type = 'direct', 
-			# 	durable = True, 
-			# 	virtual_host = "Client"
-			# )
-
 
 			channel.queue_declare(queue = 'client_requests', durable = True)
 			channel.queue_declare(queue = 'judge_requests', durable = True)
@@ -83,6 +76,7 @@ class manage_clients():
 			while manage_clients.data_changed_flags[7] !=1:
 				time.sleep(0.5)
 			sys.exit()
+
 		try:
 			submission.init_run_id()
 		except:
@@ -109,7 +103,8 @@ class manage_clients():
 			manage_clients.log('[ LISTEN ] Started listening on client_requests')
 			channel.basic_consume(
 				queue = 'client_requests', 
-				on_message_callback = manage_clients.client_message_handler
+				on_message_callback = manage_clients.client_message_handler,
+				exclusive = True 		# Only server can listen to this queue
 			)
 			channel.start_consuming()
 		# Handle keyboard interrupt ctrl+c and terminate successfully
@@ -122,9 +117,11 @@ class manage_clients():
 			print('[ STOP ] Client subprocess terminated successfully!')
 			manage_clients.log('[ STOP ] Client subprocess terminated successfully!')
 			return
+
 		except (pika.exceptions.ChannelWrongStateError):
 			print('[ ERROR ] : Channel in wrong state!')
-
+			manage_clients.log('[ ERROR ] : Channel in wrong state!')
+		
 	# This function works on client messages and passes them on to their respective handler function
 	def client_message_handler(ch, method, properties, body):
 		print('[ ALERT ] Recieved a new client message.')

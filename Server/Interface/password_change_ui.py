@@ -29,8 +29,8 @@ class password_change_ui(QMainWindow):
 		password_change_ui.ctype = str(ctype)
 		
 		self.setWindowTitle('Edit Account')
-		self.setGeometry(750, 350, 500, 400)
-		self.setFixedSize(500,400)
+		self.setGeometry(750, 350, 450, 500)
+		self.setFixedSize(450,500)
 		try:
 			main = self.main_password_change_ui()
 		except Exception as error:
@@ -91,7 +91,9 @@ class password_change_ui(QMainWindow):
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
+		main_layout.addStretch(1)
 		main_layout.addWidget(inner_widget)
+		main_layout.addStretch(2)
 		main_layout.addWidget(button_widget)
 		main_layout.addStretch(1)
 		main = QWidget()

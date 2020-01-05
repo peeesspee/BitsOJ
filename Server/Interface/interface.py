@@ -168,6 +168,12 @@ class server_window(QMainWindow):
 		# Define Layout for sidebar
 		side_bar_layout = QVBoxLayout()
 
+		# Shadow effect initialisation
+		shadow_effect = QGraphicsDropShadowEffect()
+		shadow_effect.setBlurRadius(5)
+		shadow_effect.setOffset(0)
+		shadow_effect.setColor(QColor(255, 255, 255, 255 * 0.3))
+
 		# Add buttons to our layout
 		side_bar_layout.addWidget(self.button_0)
 		side_bar_layout.addWidget(self.button_1)
@@ -183,48 +189,46 @@ class server_window(QMainWindow):
 		side_bar_layout.addStretch(33)
 		side_bar_layout.addWidget(self.button_10)
 
-
 		# Set stretch and spacing
 		side_bar_layout.addStretch(1)
 		side_bar_layout.setSpacing(0)
 
-		# Define our sidebar widget and set side_bar_layout to it.
+		# Define sidebar widget and set side_bar_layout to it.
 		side_bar_widget = QWidget()
 		side_bar_widget.setLayout(side_bar_layout)
 		side_bar_widget.setFixedWidth(215)
 		side_bar_widget.setObjectName("sidebar")
 
-		#Define our top bar
+		#Define top bar
 		logo = QLabel(self)
 		logo_image = QPixmap('Elements/bitwise_header.png')
 		logo_image2 = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image2)
-
 		self.timer_widget = QLCDNumber()
 		self.timer_widget.setSegmentStyle(QLCDNumber.Flat)
 		self.timer_widget.setDigitCount(8)
 		self.timer_widget.display('00:00:00')
-		self.timer_widget.setFixedSize(150,40)
-		
-
+		self.timer_widget.setFixedSize(150,50)
 		top_bar_layout = QHBoxLayout()
 		top_bar_layout.setContentsMargins(15, 5, 20, 0);
 		top_bar_layout.addWidget(logo)
 		top_bar_layout.addWidget(self.timer_widget)
 		top_bar_layout.setStretch(0, 70)
-		
+		top_bar_layout.setStretch(1, 30)
 
 		top_bar_widget = QWidget()
 		top_bar_widget.setLayout(top_bar_layout)
 		top_bar_widget.setObjectName('top_bar')
+		top_bar_widget.setGraphicsEffect(shadow_effect)
 
 		# Define our right side screens corresponding to buttons on the sidebar
 		# Basically right screens are tab widgets whose tabs are hidden, 
 		# and we map sidebar buttons to each tab switch :)
 		# Since sidebars are not natively supported by pyqt5
+		# tab names are '' because we don't want them to show up in our screen
 		self.right_widget = QTabWidget()
 		self.right_widget.addTab(self.tab0, '')
-		self.right_widget.addTab(self.tab1, '')    # tab names are '' because we don't want them to show up in our screen
+		self.right_widget.addTab(self.tab1, '')    
 		self.right_widget.addTab(self.tab2, '')
 		self.right_widget.addTab(self.tab3, '')
 		self.right_widget.addTab(self.tab4, '')
@@ -235,7 +239,8 @@ class server_window(QMainWindow):
 		self.right_widget.addTab(self.tab9, '')
 		self.right_widget.addTab(self.tab10, '')
 		self.right_widget.setObjectName("main_tabs")
-	
+		self.right_widget.setContentsMargins(0, 0, 0, 0)
+
 		# Screen 1 will be our initial screen 
 		self.right_widget.setCurrentIndex(0)
 
@@ -243,8 +248,7 @@ class server_window(QMainWindow):
 		main_layout = QHBoxLayout()
 		main_layout.addWidget(side_bar_widget)
 		main_layout.addWidget(self.right_widget)
-
-		# setstretch( index, stretch_value )
+		main_layout.setContentsMargins(0, 0, 22, 10)
 		main_layout.setStretch(0, 0)
 		main_layout.setStretch(1, 90)
 		# Define our main wideget = sidebar + windows
@@ -252,18 +256,17 @@ class server_window(QMainWindow):
 		main_widget.setObjectName("screen_widget")
 		main_widget.setLayout(main_layout)
 
-
-		#Define top_layout = logo_bar + main_layout
+		#Define top_layout = top_bar + main_widget
 		top_layout = QVBoxLayout()
 		top_layout.addWidget(top_bar_widget)
 		top_layout.addWidget(main_widget)
-		top_layout.setContentsMargins(1, 0, 1, 1)
-		top_layout.setStretch(0, 8)
-		top_layout.setStretch(1, 100)
-
+		top_layout.setContentsMargins(0, 0, 0, 0)
+		top_layout.setStretch(0, 10)
+		top_layout.setStretch(1, 90)
 		top_widget = QWidget()
 		top_widget.setLayout(top_layout)
 		top_widget.setObjectName("main_widget")
+		# top_widget.setGraphicsEffect(shadow_effect)
 
 		# Set top_widget as our central widget
 		self.setCentralWidget(top_widget)

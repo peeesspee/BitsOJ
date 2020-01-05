@@ -26,14 +26,14 @@ QPushButton#sidebar_button{
 QPushButton#sidebar_button::focus
 {
 	color : #23B2EE;
-	border-right : 7px solid #B2FF59;
+	border-right : 10px solid #B2FF59;
 	background-color : #2B2C39 ;
 }
 
 QPushButton#sidebar_button::hover::focus
 {
 	color : #23B2EE;
-	border-right : 7px solid #B2FF59;
+	border-right : 10px solid #B2FF59;
 	background-color : #2B2C39 ;
 }
 
@@ -187,7 +187,7 @@ QPushButton#account_button
 	color : #AAAAAA;
 	text-align : center;
 	margin-left : 70px;
-	background-color : #13161e;
+	background-color : #181B25;
 	border : 1px solid #ADFF2F;
 	border-radius : 25px;
 }
@@ -223,37 +223,35 @@ QCheckBox::indicator{
 
 /*--------------MAIN LAYOUT STARTS----------------*/
 
-/* Sidebar style */
+/* Style of top_bar */
+QWidget#main_widget{
+	background-color: #0D101B ;
+	color: #AAAAAA;
+}
+
 QWidget#sidebar{
 	background-color : #161a28;
 	margin-left : 0px;
 }
 
-/* Right panes style START */
 
-/* right panes background color */
 QTabWidget#main_tabs{
-	background-color : #13161e;
+	border : none;
 }
-
 /* Text color in right panes */
 QTabWidget::pane{
 	color : #AAAAAA;
+	border : 1px solid #121212;
+	margin-top : 0px;
+	background-color : #121520;
 }
-/* Right panes style END */
 
-
-/* Style of background */
+/* Style of main_widget */
 QWidget#screen_widget
 {
 	color : #CCCCCC;
 	background-color : #161a28;
-}
-
-/* Style of bar where bitwise logo sits */
-QWidget#main_widget{
-	background-color: #0E0F12;
-	color: #AAAAAA;
+	margin-top : -10px;
 }
 
 /* Style of content boxes*/
@@ -261,48 +259,46 @@ QWidget#content_box{
 	border: 1px solid #888888;
 }
 QWidget#card{
-	border: 1px solid #888888;
+	border: 0px;
 	background : #181b26
 }
 QWidget#banner_overlay{
-	background-color : #1E222F;
+	background : #121520;
 }
 
 
 /* Style of content */
-QLabel#main_screen_content{
-	color : #999999;
-	font-size : 16px;
-}
-QLabel#main_screen_green_content{
-	color : #00AA00;
-	font-size : 16px;
-}
-QLabel#main_screen_red_content{
-	color : #AA0000;
-	font-size : 16px;
-}
 QLabel#main_screen_heading{
 	color : #ADFF2F;
-	font-size : 28px;
-}
-QLabel#main_screen_sub_heading{
-	color : #23B2EE;
-	font-size : 18px;
+	font-size : 36px;
 }
 QLabel#about_screen_heading{
 	color : #E91E63;
-	font-size : 30px;
+	font-size : 40px;
 }
 QLabel#about_screen_heading_2{
 	color : #E91E63;
-	font-size : 30px;
+	font-size : 48px;
 }
-
+QLabel#main_screen_sub_heading{
+	color : #23B2EE;
+	font-size : 28px;
+}
+QLabel#main_screen_content{
+	color : #DDDDDD;
+	font-size : 20px;
+}
+QLabel#main_screen_green_content{
+	color : #00AA00;
+	font-size : 20px;
+}
+QLabel#main_screen_red_content{
+	color : #AA0000;
+	font-size : 20px;
+}
 QLabel#role_text{
 	color : #ADFF2F;
 	font-size : 28px;
-	border-bottom : 1px solid #AAAAAA;
 }
 QLabel#banner_text{
 	font-size : 34px;
@@ -365,7 +361,7 @@ QTabBar#problem_tabs::tab:selected
 
 /*--------------SUB LAYOUT STARTS---------*/
 QDialog{
-	background-color : #13161e;
+	background-color : #181B25;
 }
 QDialog QLabel{
 	color : #AAAAAA;
@@ -379,7 +375,7 @@ QDialog QPushButton{
 QSpinBox{
 	background : #2D353D;
 	color : #AAAAAA;
-	border : 1px solid #13161e;
+	border : 1px solid #181B25;
 	height : 30px;
 }
 QSpinBox::up-button 
@@ -387,7 +383,7 @@ QSpinBox::up-button
     subcontrol-origin: border;
     subcontrol-position: top right; 
     width: 16px; 
-    border : 1px solid #13161e;
+    border : 1px solid #181B25;
     border-width: 1px;
 }
 QSpinBox::up-arrow 
@@ -401,7 +397,7 @@ QSpinBox::down-button
     subcontrol-origin: border;
     subcontrol-position: bottom right;
     width: 16px; 
-    border : 1px solid #13161e;
+    border : 1px solid #181B25;
     border-width: 1px;
 }
 QSpinBox::down-arrow 
@@ -416,7 +412,7 @@ QComboBox#account_combobox
 	background : #2D353D;
 	color : #AAAAAA;
 	selection-background : #777777;
-	border: 1px solid #13161e;
+	border: 1px solid #181B25;
     border-radius: 3px;
     height : 30px;
 }
@@ -433,10 +429,10 @@ QComboBox#account_combobox::drop-down
 }
 QComboBox QAbstractItemView 
 {		/* This is the style of dropdown menu*/
-    background-color : #1D2227;
+    background-color : #181B25;
 	color : #AAAAAA;
 	border : 1px solid #2D353D;
-	selection-background-color : #13161e;
+	selection-background-color : #181B25;
 }
 QComboBox::down-arrow 
 {
@@ -452,7 +448,7 @@ QLabel#account_label
 
 QWidget#account_window
 {
-	background-color : #13161e;
+	background-color : #181B25;
 }
 
 QTextEdit
@@ -466,11 +462,11 @@ QLineEdit
 	height : 30px;
 	background : #2D353D;
 	color : #AAAAAA;
-	border : 1px solid #13161e;
+	border : 1px solid #181B25;
 }
 QScrollArea QWidget
 {
-	background-color : #13161e;
+	background-color : #181B25;
 }
 QScrollArea QTextEdit
 {
@@ -482,7 +478,7 @@ QScrollArea QLineEdit
 	height : 30px;
 	background : #2D353D;
 	color : #AAAAAA;
-	border : 1px solid #13161e;
+	border : 1px solid #181B25;
 }
 QToolTip
 {
@@ -504,12 +500,12 @@ QToolTip
 /* Table styles */
 QTableView
 {
-	background-color : #1D2227;
-	alternate-background-color : #242A31;
+	background-color : #181B25;
+	alternate-background-color : #1E222E;
 	color : #AAAAAA;
 	border : 0px;
 	gridline-color : #transparent;
-	selection-background-color : #13161e;
+	selection-background-color : #181B25;
 }
 
 QTableView::item:selected
@@ -519,13 +515,13 @@ QTableView::item:selected
 
 QHeaderView::section
 { 
-	background-color : #13161e;
+	background-color : #181B25;
 	color: #E91E63;	
 }
 
 QTableWidget#inner_table
 {
-	background : #1D2227;
+	background : #181B25;
 	border : 1px solid #161a28;
 }
 
@@ -538,12 +534,12 @@ QScrollBar:horizontal
 QScrollBar:vertical{
 	margin-left : 1px;
 	width : 25px;
-	background-color : #13161e;	
+	background-color : #181B25;	
 	border: 1px solid #121212;
 }
 
 QScrollBar::handle:vertical{
-	background : qlineargradient( spread:Reflect, x1:0, y1:0, x2:0, y2:1 , stop:0 #13161e, stop:0.5 #38424C, stop:1 #13161e);
+	background : qlineargradient( spread:Reflect, x1:0, y1:0, x2:0, y2:1 , stop:0 #181B25, stop:0.5 #38424C, stop:1 #181B25);
 	width : 25px;
 	min-height : 70px;
 	margin-left : 0px;

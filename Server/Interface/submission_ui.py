@@ -264,7 +264,7 @@ class manage_submission_ui(QMainWindow):
 		self.close()
 
 	def manual_verdict(self, manual_verdict):
-		if self.verdict == 'Running':
+		if self.verdict == 'RUNNING':
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)
 			info_box.setWindowTitle('Alert')
@@ -366,7 +366,7 @@ class manage_submission_ui(QMainWindow):
 		self.close()
 
 	def accept_verdict(self):
-		if self.verdict == 'Running':
+		if self.verdict == 'RUNNING':
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)
 			info_box.setWindowTitle('Alert')

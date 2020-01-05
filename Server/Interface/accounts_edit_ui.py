@@ -37,8 +37,8 @@ class account_edit_ui(QMainWindow):
 		account_edit_ui.ip = ip
 		
 		self.setWindowTitle('Manage Client')
-		self.setGeometry(750, 350, 500, 400)
-		self.setFixedSize(500,400)
+		self.setGeometry(750, 350, 450, 450)
+		self.setFixedSize(450,450)
 		main = self.main_account_edit_ui()
 		self.setCentralWidget(main)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
@@ -114,7 +114,9 @@ class account_edit_ui(QMainWindow):
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
+		main_layout.addStretch(1)
 		main_layout.addWidget(inner_widget)
+		main_layout.addStretch(2)
 		main_layout.addWidget(button_widget)
 		main_layout.addStretch(1)
 		main = QWidget()
