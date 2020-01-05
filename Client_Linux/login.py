@@ -116,6 +116,7 @@ class authenticate_login():
 					)
 			except Exception as Error:
 				print(str(Error))
+			authenticate_login.channel.basic_ack(True)
 		# If login authentication is not valid 
 		else:
 			print("Invalid Login!!!!")
@@ -127,6 +128,7 @@ class authenticate_login():
 					)	
 			except Exception as Error:
 				print(str(Error))	
+			authenticate_login.channel.basic_ack(True)
 
 
 
