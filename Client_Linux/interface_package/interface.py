@@ -285,7 +285,9 @@ class client_window(QMainWindow):
 
 	##################################################################################
 
+
 	def update_scoreboard(self):
+		score_data = handle_config.read_score_json()
 		try:
 			if(self.data_changed_flag[6] == 1):
 				self.data_changed_flag[6] = 0
@@ -319,6 +321,7 @@ class client_window(QMainWindow):
 
 	def update_data(self):
 		try:
+			
 			if self.data_changed_flag[0] == 1:
 				self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ RUNNING ]')
 				self.start_contest()
@@ -326,6 +329,7 @@ class client_window(QMainWindow):
 				self.data_changed_flag[0] = 2
 			# If data has changed in submission table
 
+			
 			if self.data_changed_flag[0] == 3 or self.data_changed_flag[0] == 5:
 				self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ STOPPED ]')
 				if self.data_changed_flag[0] != 5:
@@ -335,18 +339,21 @@ class client_window(QMainWindow):
 				self.set_status()
 				self.data_changed_flag[0] = 4
 
+			
 			if self.data_changed_flag[1] ==1:
 				self.sub_model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions")
 				# self.notify()
 				# reset data_changed_flag
 				self.data_changed_flag[1] = 0
 
+			
 			if self.data_changed_flag[1] == 2:
 				self.sub_model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions")
 				self.notify()
 				# reset data_changed_flag
 				self.data_changed_flag[1] = 0
 
+			
 			# If data has changed in query table
 			if(self.data_changed_flag[2] == 1):
 				self.query_model.select()
@@ -354,22 +361,25 @@ class client_window(QMainWindow):
 				# reset data_changed_flag
 				self.data_changed_flag[2] =0
 
+			
 			if(self.data_changed_flag[2] == 2):
 				self.query_model.select()
 				self.notify()
 				# reset data_changed_flag
 				self.data_changed_flag[2] =0
 
+			
 			if(self.data_changed_flag[3] == 1):
 				message = self.queue.get()
 				QMessageBox.warning(self, 'Error', message)
 				self.data_changed_flag[3] = 0
 
+			
 			if(self.data_changed_flag[4] == 3):
 				QMessageBox.warning(self, 'Alert', 'Contest has been extended by the admin.\n')
 				self.data_changed_flag[4] = 2
 
-
+			
 			if(self.data_changed_flag[4] == 2):
 				try:
 					initialize_contest.contest_end_time()
@@ -377,6 +387,7 @@ class client_window(QMainWindow):
 				except Exception as Error:
 					print(str(Error))
 
+			
 			if(self.data_changed_flag[4] == 1):
 				try:
 					total_time = initialize_contest.return_contest_end_time()
@@ -391,6 +402,7 @@ class client_window(QMainWindow):
 						self.set_status()
 				except Exception as Error:
 					print(str(Error))
+
 
 			if(self.data_changed_flag[5] == 1):
 				QMessageBox.warning(self, 'Alert', 'You are disconnected by the admin.\nPlease contact Administrator.')
@@ -535,7 +547,8 @@ class client_window(QMainWindow):
 				self.window.show()
 			except Exception as Error:
 				print(str(Error))
-		
+
+
 
 	def show_problem(self, i, data_changed_flags):
 		if data_changed_flags[0] == 0:
@@ -544,6 +557,8 @@ class client_window(QMainWindow):
 			try:
 				with open('./Problems/Problem_'+str(i)+'.json') as read:
 					problem = json.load(read)
+				problem = handle_config.encryptDecrypt(problem)
+				problem = eval(problem)
 			except Exception as Error:
 				print(str(Error))
 			try:

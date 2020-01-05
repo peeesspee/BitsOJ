@@ -92,6 +92,9 @@ def main():
 		# Starting Main GUI
 		init_gui(channel,data_changed_flags, queue,scoreboard)
 	except Exception as error:
+		ex_type,ex_obj, ex_tb = sys.exc_info()
+		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
+		print(ex_type,f_name,ex_tb.tb_lineno)
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 
 	print("[EXIT] Signal Passed")

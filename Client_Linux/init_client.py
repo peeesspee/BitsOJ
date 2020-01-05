@@ -22,6 +22,8 @@ class initialize_contest():
 	def contest_end_time():
 		with open('config.json', 'r') as contest:
 			config = json.load(contest)
+		config = handle_config.encryptDecrypt(config)
+		config = eval(config)
 		initialize_contest.contest_set_time = config["End Time"]
 
 	def return_contest_end_time():
@@ -34,10 +36,21 @@ class initialize_contest():
 #############################################################################
 
 class handle_config():
+
+	def encryptDecrypt(inpString): 
+		xorKey = '/'; 
+		length = len(inpString);  
+		for i in range(length): 
+			inpString = (inpString[:i] + chr(ord(inpString[i]) ^ ord(xorKey)) + inpString[i + 1:]); 
+		return inpString; 
+
+
 	def read_config_json():
 		try:
 			with open('config.json', 'r') as read_config:
 				data = json.load(read_config)
+			data = handle_config.encryptDecrypt(data)
+			data = eval(data)
 			return data
 		except Exception as Error:
 			print(str(Error))
@@ -49,6 +62,8 @@ class handle_config():
 		return data
 
 	def write_config_json(data):
+		data = str(data)
+		data = handle_config.encryptDecrypt(data)
 		with open('config.json', 'w') as write_config:
 			json.dump(data, write_config, indent=4)
 

@@ -285,6 +285,7 @@ class client_window(QMainWindow):
 
 	##################################################################################
 
+
 	def update_scoreboard(self):
 		score_data = handle_config.read_score_json()
 		try:
@@ -551,6 +552,8 @@ class client_window(QMainWindow):
 			try:
 				with open('.\\Problems\\Problem_'+str(i)+'.json') as read:
 					problem = json.load(read)
+				problem = handle_config.encryptDecrypt(problem)
+				problem = eval(problem)
 			except Exception as Error:
 					print(str(Error))
 			try:
