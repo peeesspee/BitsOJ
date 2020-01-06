@@ -1,18 +1,4 @@
-QStatusBar
-{ 
-	color : #E91E63;
-	border-top : 1px solid #1F2C65;
-	background-color : #202020;
-	font : 20px;
-}
-
-QMessageBox{
-	background-color : #808080;
-	color: #FF0000;
-}
-
-/*################################################### BUTTONS #########################################################*/
-/* Style of buttons in the sidebar  START  */
+/* Style of buttons START  */
 
 QPushButton#sidebar_button{
 	text-align : left; 
@@ -22,38 +8,29 @@ QPushButton#sidebar_button{
 	background-color : #161a28 ; 
 	color : #838383;
 }
-
 QPushButton#sidebar_button::focus
 {
 	color : #23B2EE;
 	border-right : 10px solid #B2FF59;
 	background-color : #2B2C39 ;
 }
-
 QPushButton#sidebar_button::hover::focus
 {
 	color : #23B2EE;
 	border-right : 10px solid #B2FF59;
 	background-color : #2B2C39 ;
 }
-
 QPushButton#sidebar_button::pressed
 {
 	color : #23B2EE;
 	border-right : 4px solid #B2FF59;
 }
-
 QPushButton#sidebar_button::hover
 {
 	color : #0892D0;
 	border-right : 1px solid #AED581;
 	background-color : #22232E ;
 }
-
-/* Style of buttons in the sidebar  END  */
-
-
-/* Style of buttons in the topbar  START  */
 
 QPushButton#topbar_button{
 	font-size : 18px;
@@ -63,25 +40,21 @@ QPushButton#topbar_button{
 	background-color : #202428 ;
 	color : #838383;
 }
-
 QPushButton#topbar_button::focus
 {
 	color : #23B2EE;
 	background-color : #2B2C39 ;
 }
-
 QPushButton#topbar_button::hover::focus
 {
 	color : #23B2EE;
 	background-color : #2B2C39 ;
 }
-
 QPushButton#topbar_button::pressed
 {
 	color : #23B2EE;
 	background-color : #202428;
 }
-
 QPushButton#topbar_button::hover
 {
 	color : #0892D0;
@@ -94,13 +67,6 @@ QPushButton#topbar_button::!enabled{
 	color: #E91E63;
 }
 
-/* Style of buttons in the topbar  END  */
-
-
-
-
-/* Style of interior buttons  START  */
-
 QPushButton#interior_button{
 	border-top-right-radius: 10px;
 	border-bottom-right-radius: 0px; 
@@ -110,54 +76,44 @@ QPushButton#interior_button{
 	background-color : #202428 ;
 	color : #62C9F3;
 }
-
 QPushButton#interior_button::focus
 {
 	color : #23B2EE;
 	background-color : #2B2C39 ;
 }
-
 QPushButton#interior_button::hover::focus
 {
 	color : #23B2EE;
 	background-color : #2B2C39 ;
 }
-
 QPushButton#interior_button::pressed
 {
 	color : #23B2EE;
 	background-color : #202428;
 }
-
 QPushButton#interior_button::hover
 {
 	color : #0892D0;
 	background-color : #202428 ;
 }
-
 QPushButton#interior_button::disabled{
 	color: #E91E63;
 }
 QPushButton#interior_button::!enabled{
 	color: #E91E63;
 }
-/* Style of interior buttons END  */
 
-/* Style of buttons in the close dialog box  START  */
 QPushButton#close_button_yes{
 	text-align : center;
 	background-color : #090909 ; 
 	color : #990000;
 }
-
 QPushButton#close_button_yes::focus{
 	color: #AA0000;
 }
-
 QPushButton#close_button_yes::focus::hover{
 	color: #FF0000;
 }
-
 QPushButton#close_button_yes::hover{
 	color: #FF0000;
 }
@@ -167,20 +123,15 @@ QPushButton#close_button_no{
 	background-color : #090909 ;
 	color : #009900;
 }
-
 QPushButton#close_button_no::focus{
 	color: #00AA00;
 }
-
 QPushButton#close_button_no::focus::hover{
 	color: #00FF00;
 }
-
 QPushButton#close_button_no::hover{
 	color: #FF0000;
 }
-/* Style of buttons in the close dialog box  END  */
-
 
 QPushButton#account_button
 {
@@ -199,13 +150,10 @@ QRadioButton#interior_rbutton::indicator{
 	width :16px;
 	height: 16px;
 	border-radius : 8px;
-
-
 }
 QRadioButton#interior_rbutton::indicator::unchecked{
 	image: url(./Elements/radio_unchecked.png);
 }
-
 QRadioButton#interior_rbutton::indicator::checked{
 	image: url(./Elements/radio_checked.png);
 }
@@ -214,9 +162,35 @@ QCheckBox::indicator{
 	width : 20px;
 	height : 20px;
 }
+QCheckBox{
+	color : #CCCCCC;
+}
+QCheckBox#top_level_checkbox{
+	color : #23B2EE;
+}
+QCheckBox#sub_level_checkbox{
+	color : #23B2EE;
+	margin-left : 30px;
+}
 
-/*################################################### /BUTTONS #########################################################*/
+QStatusBar
+{ 
+	color : #E91E63;
+	border-top : 1px solid #1F2C65;
+	background-color : #202020;
+	font : 20px;
+}
 
+QMessageBox{
+	background-color : #808080;
+	color: #FFFFFF;
+}
+
+QProgressBar{
+	color : #FF0000;
+	background : #2B2C39;
+}
+/* Style of Buttons END */
 
 /*################################################ LAYOUT OBJECTS ######################################################*/
 
@@ -229,28 +203,55 @@ QWidget#main_widget{
 	color: #AAAAAA;
 }
 
+/* Style of sidebar */
 QWidget#sidebar{
-	background-color : #161a28;
+	background-color : #161A28;
 	margin-left : 0px;
 }
 
-
+/* Style of right_widget */
 QTabWidget#main_tabs{
 	border : none;
 }
-/* Text color in right panes */
 QTabWidget::pane{
 	color : #AAAAAA;
 	border : 1px solid #121212;
 	margin-top : 0px;
 	background-color : #121520;
 }
+/* Style of tabs in main tab-bar START (Tabs are replaced by sidebar buttons)  */
+QTabBar::tab
+{
+	width: 0; 
+	height: 0; 
+	margin: 0; 
+	padding-top: 10; 
+}
+
+/*Style of problem tab bar*/
+QTabBar#problem_tabs
+{
+	background : #161a28;
+}
+QTabBar#problem_tabs::tab
+{
+	width: 140px; 
+	height: 35px; 
+	margin: 0px; 
+	background : #161a28;
+	color : #777777;
+}
+QTabBar#problem_tabs::tab:selected
+{ 
+	color : #E91E63;
+	border-top : 1px solid #B2FF59;
+}
 
 /* Style of main_widget */
 QWidget#screen_widget
 {
 	color : #CCCCCC;
-	background-color : #161a28;
+	background-color : #161A28;
 	margin-top : -10px;
 }
 
@@ -258,6 +259,8 @@ QWidget#screen_widget
 QWidget#content_box{
 	border: 1px solid #888888;
 }
+
+/* Style of About Us Cards */
 QWidget#card{
 	border: 0px;
 	background : #181b26
@@ -266,8 +269,7 @@ QWidget#banner_overlay{
 	background : #121520;
 }
 
-
-/* Style of content */
+/* style of Labels START */
 QLabel#main_screen_heading{
 	color : #ADFF2F;
 	font-size : 36px;
@@ -317,45 +319,7 @@ QLCDNumber{
 	color: #AAAAAA;
 	border : 0px;
 }
-
-/* Style of tabs in tab-bar (basically invisible)  START  */
-QTabBar::tab
-{
-	width: 0; 
-	height: 0; 
-	margin: 0; 
-	padding-top: 10; 
-}
-/* Style of tabs in tab-bar (basically invisible)  END  */
-
-/*Style of problem tab bar*/
-QTabBar#problem_tabs
-{
-	background : #161a28;
-}
-
-QTabBar#problem_tabs::tab
-{
-	width: 140px; 
-	height: 35px; 
-	margin: 0px; 
-	background : #161a28;
-	color : #777777;
-}
-
-QTabBar#problem_tabs::tab:selected
-{ 
-	color : #E91E63;
-	border-top : 1px solid #B2FF59;
-}
-
-
-
 /*--------------MAIN LAYOUT ENDS----------------*/
-
-
-
-
 
 /*--------------SUB LAYOUT STARTS---------*/
 QDialog{
@@ -483,18 +447,11 @@ QToolTip
 	color : #AAAAAA;
 	background : #2D353D;
 }
-
-
-
-
 /*--------------SUB LAYOUT ENDS---------*/
 
 /*################################################ /LAYOUT OBJECTS ######################################################*/
 
-
-
 /*################################################ TABLE OBJECTS ######################################################*/
-
 /* Table styles */
 QTableView
 {
@@ -505,12 +462,10 @@ QTableView
 	gridline-color : #transparent;
 	selection-background-color : #121520;
 }
-
 QTableView::item:selected
 {
 	border : 2px solid #0891D4;
 }
-
 QHeaderView::section
 { 
 	background-color : #181B25;
@@ -528,14 +483,12 @@ QScrollBar:horizontal
 {
 	height : 0px;
 }
-
 QScrollBar:vertical{
 	margin-left : 1px;
 	width : 25px;
 	background-color : #181B25;	
 	border: 1px solid #121212;
 }
-
 QScrollBar::handle:vertical{
 	background : qlineargradient( spread:Reflect, x1:0, y1:0, x2:0, y2:1 , stop:0 #181B25, stop:0.5 #38424C, stop:1 #181B25);
 	width : 25px;
@@ -545,11 +498,8 @@ QScrollBar::handle:vertical{
 	margin-bottom : 1px;
 	margin-right : 0px;
 }
-
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 	width : 0px;
 	height : 0px;
 }
-
 /*################################################ /TABLE OBJECTS ######################################################*/
-

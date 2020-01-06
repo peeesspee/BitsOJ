@@ -823,11 +823,12 @@ class user_management(manage_database):
 		finally:
 			return
 
-	def update_user_state(username, state):
+	def update_user_state(username, state, ip):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("UPDATE connected_clients SET state = ? where user_name = ? ", (state, username, ))
+			cur.execute("UPDATE connected_clients SET state = ?, ip = ? where user_name = ? ", (state, ip, username, ))
+			
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database updation error : " + str(error))

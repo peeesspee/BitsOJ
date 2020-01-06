@@ -109,7 +109,7 @@ class manage_clients():
 			channel.start_consuming()
 		# Handle keyboard interrupt ctrl+c and terminate successfully
 		except (KeyboardInterrupt, SystemExit):
-			
+			channel.stop_consuming()
 			print('[ LISTEN ] STOPPED listening to client channel')
 			manage_clients.log('[ LISTEN ] STOPPED listening to client channel')
 			
@@ -132,7 +132,6 @@ class manage_clients():
 
 		finally:
 			manage_clients.data_changed_flags[7] = 1
-			channel.stop_consuming()
 			connection.close()
 			print('[ STOP ] Client subprocess terminated successfully!')
 			manage_clients.log('[ STOP ] Client subprocess terminated successfully!')
@@ -154,6 +153,7 @@ class manage_clients():
 				manage_clients.log('[ SECURITY ] Client Key did not match. Client ID: ' + str(json_data['ID']))
 				print('[ SECURITY ] Complete Message: ' + client_message)
 				manage_clients.log('[ SECURITY ] Complete Message: ' + client_message)
+				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
 
 			client_code = json_data["Code"]
@@ -294,7 +294,10 @@ class manage_clients():
 
 					# Raise a security event?
 				elif previously_connected_state == 'Disconnected':
-					state = client_authentication.check_client_ip(client_id, client_ip)
+					if manage_clients.data_changed_flags[27] == 0:
+						state = client_authentication.check_client_ip(client_id, client_ip)
+					else:
+						state  = 1
 					if state == 1:
 						print('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
 						manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
@@ -309,10 +312,12 @@ class manage_clients():
 						response.publish_message(manage_clients.channel, client_username, message)
 
 						# Update client state from Disconnected to Connected 
-						user_management.update_user_state(client_username, 'Connected')
+						user_management.update_user_state(client_username, 'Connected', client_ip)
 
 						# Update GUI
 						manage_clients.data_changed_flags[1] = 1
+						manage_clients.data_changed_flags[5] = 1
+						
 					else:
 						print('[ RE-LOGIN ][ ' + client_username + ' ][ REJECT ] IP validation failed')
 						manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ REJECT ] IP validation failed')
@@ -738,7 +743,7 @@ class manage_clients():
 			previously_connected_state = client_authentication.check_connected_client(client_username, 'connected_clients')
 			if previously_connected_state == 'Connected':
 				# Disconnect client
-				user_management.update_user_state(client_username, 'Disconnected')
+				user_management.update_user_state(client_username, 'Disconnected', client_ip)
 				# Update connected clients to indicate new data
 				manage_clients.data_changed_flags[1] = 1
 				print('[ DISCONNECT ] Client: ' + client_username)
