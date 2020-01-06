@@ -514,6 +514,7 @@ class ui_widgets():
 					client_id,
 					client_key,
 					query,
+					config["Username"],
 					config["IP"]
 					)
 				QMessageBox.warning(self, 'Message', 'Your Query has been successfully send')

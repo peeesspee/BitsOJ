@@ -14,19 +14,19 @@ class send_code():
 	def solution_request(problem_Code,selected_language,time_stamp,code,local_run_id,client_key,username,ip):
 		if(selected_language == 'C'):
 			send_code.extention = '.c'
-			language_code = 'GCC'
+			language_code = 'C'
 		elif(selected_language == 'C++'):
 			send_code.extention = '.cpp'
-			language_code = 'CPP'
+			language_code = 'C++'
 		elif(selected_language == 'JAVA'):
 			send_code.extention = '.java'
-			language_code = 'JVA'
+			language_code = 'JAVA'
 		elif(selected_language == 'PYTHON-3'):
 			send_code.extention = '.py'
-			language_code = 'PY3'
+			language_code = 'PYTHON-3'
 		else:
 			send_code.extention = '.py'
-			language_code = 'PY2'
+			language_code = 'PYTHON-2'
 		final_data = {
 			'Code' : 'SUBMT',
 			'IP' : ip,
@@ -55,10 +55,11 @@ class send_code():
 
 
 
-	def query_request(client_id,client_key,query,ip):
+	def query_request(client_id,client_key,query,username,ip):
 		final_data ={
 			'Code' : 'QUERY',
 			"IP" : ip,
+			"Username" : username,
 			'ID' : client_id,
 			'Client Key': client_key,
 			'Query' : query,
