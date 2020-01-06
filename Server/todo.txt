@@ -1,5 +1,0 @@
-				TASK					
-		1 ACM style ranklist ( Low Priority )					
-		2. Rabbitmq queue security	( High Priority )																	
-6. Generate Report	( High Priority )											
-Broadcast Disconnect message to all judges

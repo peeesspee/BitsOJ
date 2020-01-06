@@ -167,10 +167,11 @@ QCheckBox{
 }
 QCheckBox#top_level_checkbox{
 	color : #23B2EE;
+	margin-left : 15px;
 }
 QCheckBox#sub_level_checkbox{
-	color : #23B2EE;
-	margin-left : 30px;
+	color : #BBBBBB;
+	margin-left : 60px;
 }
 
 QStatusBar
@@ -187,7 +188,7 @@ QMessageBox{
 }
 
 QProgressBar{
-	color : #FF0000;
+	color : #AAAAAA;
 	background : #2B2C39;
 }
 /* Style of Buttons END */

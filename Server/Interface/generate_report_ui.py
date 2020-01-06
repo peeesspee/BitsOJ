@@ -18,7 +18,7 @@ class generate_report_ui(QMainWindow):
 		self.task_queue = task_queue
 		self.log_queue = log_queue
 
-		self.all_checked = True
+		self.all_checked = False
 		self.account_checked = False
 		self.submission_checked = False
 		self.client_checked = False
@@ -42,46 +42,55 @@ class generate_report_ui(QMainWindow):
 		heading = QLabel('Select Reports')
 		heading.setObjectName('main_screen_heading')
 
-		all_reports_checkbox = QCheckBox('All Reports')
-		all_reports_checkbox.setObjectName('top_level_checkbox')
-		all_reports_checkbox.stateChanged.connect(self.all_state_changed)
-		all_reports_checkbox.setChecked(self.all_checked)
+		self.all_reports_checkbox = QCheckBox('All Reports')
+		self.all_reports_checkbox.setObjectName('top_level_checkbox')
+		self.all_reports_checkbox.stateChanged.connect(self.all_state_changed)
+		self.all_reports_checkbox.setChecked(self.all_checked)
 
-		account_report_checkbox = QCheckBox('Accounts Report')
-		account_report_checkbox.setObjectName('sub_level_checkbox')
-		account_report_checkbox.setChecked(self.account_checked)
+		self.account_report_checkbox = QCheckBox('Accounts Report')
+		self.account_report_checkbox.setObjectName('sub_level_checkbox')
+		self.account_report_checkbox.setChecked(self.account_checked)
+		self.account_report_checkbox.stateChanged.connect(self.account_state_changed)
 
-		submission_report_checkbox = QCheckBox('Submissions Report')
-		submission_report_checkbox.setObjectName('sub_level_checkbox')
-		submission_report_checkbox.setChecked(self.submission_checked)
+		self.submission_report_checkbox = QCheckBox('Submissions Report')
+		self.submission_report_checkbox.setObjectName('sub_level_checkbox')
+		self.submission_report_checkbox.setChecked(self.submission_checked)
+		self.submission_report_checkbox.stateChanged.connect(self.submission_state_changed)
 
-		client_report_checkbox = QCheckBox('Clients Report')
-		client_report_checkbox.setObjectName('sub_level_checkbox')
-		client_report_checkbox.setChecked(self.client_checked)
+		self.client_report_checkbox = QCheckBox('Clients Report')
+		self.client_report_checkbox.setObjectName('sub_level_checkbox')
+		self.client_report_checkbox.setChecked(self.client_checked)
+		self.client_report_checkbox.stateChanged.connect(self.client_state_changed)
 
-		judge_report_checkbox = QCheckBox('Judge Report')
-		judge_report_checkbox.setObjectName('sub_level_checkbox')
-		judge_report_checkbox.setChecked(self.judge_checked)
+		self.judge_report_checkbox = QCheckBox('Judge Report')
+		self.judge_report_checkbox.setObjectName('sub_level_checkbox')
+		self.judge_report_checkbox.setChecked(self.judge_checked)
+		self.judge_report_checkbox.stateChanged.connect(self.judge_state_changed)
 
-		scoreboard_report_checkbox = QCheckBox('Leaderboard Report')
-		scoreboard_report_checkbox.setObjectName('sub_level_checkbox')
-		scoreboard_report_checkbox.setChecked(self.scoreboard_checked)
+		self.scoreboard_report_checkbox = QCheckBox('Leaderboard Report')
+		self.scoreboard_report_checkbox.setObjectName('sub_level_checkbox')
+		self.scoreboard_report_checkbox.setChecked(self.scoreboard_checked)
+		self.scoreboard_report_checkbox.stateChanged.connect(self.scoreboard_state_changed)
 
-		stats_report_checkbox = QCheckBox('Statistics Report')
-		stats_report_checkbox.setObjectName('sub_level_checkbox')
-		stats_report_checkbox.setChecked(self.stats_checked)
+		self.stats_report_checkbox = QCheckBox('Statistics Report')
+		self.stats_report_checkbox.setObjectName('sub_level_checkbox')
+		self.stats_report_checkbox.setChecked(self.stats_checked)
+		self.stats_report_checkbox.stateChanged.connect(self.stats_state_changed)
 
-		query_report_checkbox = QCheckBox('Query Report')
-		query_report_checkbox.setObjectName('sub_level_checkbox')
-		query_report_checkbox.setChecked(self.query_checked)
+		self.query_report_checkbox = QCheckBox('Query Report')
+		self.query_report_checkbox.setObjectName('sub_level_checkbox')
+		self.query_report_checkbox.setChecked(self.query_checked)
+		self.query_report_checkbox.stateChanged.connect(self.query_state_changed)
 
-		settings_report_checkbox = QCheckBox('Settings Report')
-		settings_report_checkbox.setObjectName('sub_level_checkbox')
-		settings_report_checkbox.setChecked(self.settings_checked)
+		self.settings_report_checkbox = QCheckBox('Settings Report')
+		self.settings_report_checkbox.setObjectName('sub_level_checkbox')
+		self.settings_report_checkbox.setChecked(self.settings_checked)
+		self.settings_report_checkbox.stateChanged.connect(self.settings_state_changed)
 
-		problems_report_checkbox = QCheckBox('Problems Report')
-		problems_report_checkbox.setObjectName('sub_level_checkbox')		
-		problems_report_checkbox.setChecked(self.problems_checked)
+		self.problems_report_checkbox = QCheckBox('Problems Report')
+		self.problems_report_checkbox.setObjectName('sub_level_checkbox')		
+		self.problems_report_checkbox.setChecked(self.problems_checked)
+		self.problems_report_checkbox.stateChanged.connect(self.problems_state_changed)
 
 		confirm_button = QPushButton('Confirm')
 		confirm_button.setFixedSize(150, 30)
@@ -107,16 +116,16 @@ class generate_report_ui(QMainWindow):
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
 		main_layout.addStretch(1)
-		main_layout.addWidget(all_reports_checkbox)
-		main_layout.addWidget(account_report_checkbox)
-		main_layout.addWidget(submission_report_checkbox)
-		main_layout.addWidget(client_report_checkbox)
-		main_layout.addWidget(judge_report_checkbox)
-		main_layout.addWidget(scoreboard_report_checkbox)
-		main_layout.addWidget(stats_report_checkbox)
-		main_layout.addWidget(query_report_checkbox)
-		main_layout.addWidget(settings_report_checkbox)
-		main_layout.addWidget(problems_report_checkbox)
+		main_layout.addWidget(self.all_reports_checkbox)
+		main_layout.addWidget(self.account_report_checkbox)
+		main_layout.addWidget(self.submission_report_checkbox)
+		main_layout.addWidget(self.client_report_checkbox)
+		main_layout.addWidget(self.judge_report_checkbox)
+		main_layout.addWidget(self.scoreboard_report_checkbox)
+		main_layout.addWidget(self.stats_report_checkbox)
+		main_layout.addWidget(self.query_report_checkbox)
+		main_layout.addWidget(self.settings_report_checkbox)
+		main_layout.addWidget(self.problems_report_checkbox)
 		main_layout.addStretch(1)
 		main_layout.addWidget(self.progress)
 		main_layout.addStretch(1)
@@ -129,15 +138,106 @@ class generate_report_ui(QMainWindow):
 
 	def all_state_changed(self, state):
 		if(state == Qt.Checked):
-			print('set')
+			self.account_report_checkbox.setChecked(True)
+			self.submission_report_checkbox.setChecked(True)
+			self.client_report_checkbox.setChecked(True)
+			self.judge_report_checkbox.setChecked(True)
+			self.scoreboard_report_checkbox.setChecked(True)
+			self.stats_report_checkbox.setChecked(True)
+			self.query_report_checkbox.setChecked(True)
+			self.settings_report_checkbox.setChecked(True)	
+			self.problems_report_checkbox.setChecked(True)
+			self.all_checked = True
+			self.account_checked = True
+			self.submission_checked = True
+			self.client_checked = True
+			self.judge_checked = True
+			self.scoreboard_checked = True
+			self.query_checked = True
+			self.settings_checked = True
+			self.stats_checked = True
+			self.problems_checked = True
 		return
+
+	def account_state_changed(self, state):
+		if state == Qt.Checked:
+			self.account_checked = True
+		else:
+			self.all_checked = False
+			self.account_checked = False
+			self.all_reports_checkbox.setChecked(False)
+
+	def submission_state_changed(self, state):
+		if state == Qt.Checked:
+			self.submission_checked = True
+		else:
+			self.all_checked = False
+			self.submission_checked = False
+			self.all_reports_checkbox.setChecked(False)
+
+	def client_state_changed(self, state):
+		if state == Qt.Checked:
+			self.client_checked = True
+		else:
+			self.all_checked = False
+			self.client_checked = False
+			self.all_reports_checkbox.setChecked(False)
+
+	def judge_state_changed(self, state):
+		if state == Qt.Checked:
+			self.judge_checked = True
+		else:
+			self.all_checked = False
+			self.judge_checked = False
+			self.all_reports_checkbox.setChecked(False)
+
+	def scoreboard_state_changed(self, state):
+		if state == Qt.Checked:
+			self.scoreboard_checked = True
+		else:
+			self.all_checked = False
+			self.scoreboard_checked = False
+			self.all_reports_checkbox.setChecked(False)
+
+	def stats_state_changed(self, state):
+		if state == Qt.Checked:
+			self.stats_checked = True
+		else:
+			self.all_checked = False
+			self.stats_checked = False
+			self.all_reports_checkbox.setChecked(False)
+
+	def query_state_changed(self, state):
+		if state == Qt.Checked:
+			self.query_checked = True
+		else:
+			self.all_checked = False
+			self.query_checked = False
+			self.all_reports_checkbox.setChecked(False)
+
+	def settings_state_changed(self, state):
+		if state == Qt.Checked:
+			self.settings_checked = True
+		else:
+			self.all_checked = False
+			self.settings_checked = False
+			self.all_reports_checkbox.setChecked(False)
+
+	def problems_state_changed(self, state):
+		if state == Qt.Checked:
+			self.problems_checked = True
+		else:
+			self.all_checked = False
+			self.problems_checked = False
+			self.all_reports_checkbox.setChecked(False)
+
 
 	def log(self, text):
 		self.log_queue.put(text)
 
 	def final_status(self):
-		# Ask for confirmation TODO
 		try:
+			
 			self.completed = 0
 			while self.completed < 100:
 				self.completed += 0.00001
