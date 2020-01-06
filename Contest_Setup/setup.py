@@ -973,6 +973,13 @@ class contest_setup(QMainWindow):
 
 		self.final_tab.setLayout(main)
 
+	def encryptDecrypt(inpString): 
+		xorKey = '/'; 
+		length = len(inpString);  
+		for i in range(length): 
+			inpString = (inpString[:i] + chr(ord(inpString[i]) ^ ord(xorKey)) + inpString[i + 1:]); 
+		return inpString;
+
 
 
 	def create_file(self,i):
@@ -983,6 +990,7 @@ class contest_setup(QMainWindow):
 		os.system('mkdir Client/Problems')
 		os.system('mkdir Judge/problems')
 		if i == 0:
+			self.client_config = self.encryptDecrypt(self.client_config)
 			with open('./Client/config.json', 'w') as write:
 				json.dump(self.client_config, write, indent = 4)
 			for i in os.listdir('./Problem_Statement'):

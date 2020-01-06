@@ -11,9 +11,10 @@ class decrypt():
 	def decrypting():
 		# read config file
 		data = handle_config.read_config_json()
+		psswd = handle_config.read_config_json()
 		# read contest config file
-		with open('config.json', 'r') as contest:
-			psswd = json.load(contest) 
+		# with open('config.json', 'r') as contest:
+		# 	psswd = json.load(contest) 
 
 		# loop to traverse every problem 
 		for i in range(data["No_of_Problems"]):

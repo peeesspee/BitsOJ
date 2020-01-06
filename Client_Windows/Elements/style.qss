@@ -1,5 +1,6 @@
-QDialog{
+QMessageBox{
 	background-color : #171B1F;
+	color : #FFFFFF;
 }
 QStatusBar
 { 
@@ -22,7 +23,7 @@ QMessageBox{
 QPushButton#sidebar_button{
 	text-align : left; 
 	padding-left : 20; 	
-	background-color : #131217 ; 
+	background-color : #161A28 ; 
 	color : #838383;
 	border : 0 px;
 	border-radius : 0px;
@@ -226,7 +227,7 @@ QLCDNumber{
 /* Sidebar style */
 
 QWidget#sidebar{
-	background-color : #131217;
+	background-color : #161A28;
 	margin-left : 0px;
 }
 
@@ -242,6 +243,9 @@ QTabWidget#main_tabs{
 /* Text color in right panes */
 QTabWidget::pane{
 	color : #AAAAAA;
+	border : 1px solid #121212;
+	margin-top : 0px;
+	background-color : #121520;
 }
 
 /* Right panes style END */
@@ -251,7 +255,7 @@ QTabWidget::pane{
 QWidget#screen_widget
 {
 	color : #CCCCCC;
-	background-color : #131217;
+	background-color : #161A28;
 }
 
 QWidget#query_submission_widget
@@ -262,15 +266,19 @@ QWidget#query_submission_widget
 
 QWidget#main_widget{
 	
-	background-color: #050505;
+	background-color: #0D101B;
 	color: #AAAAAA;
 }
 QWidget#top_widget{
-	background-color : #101010;
+	background-color : #0D101B;
 	color: #AAAAAA;
 }
 
 QLabel#main_screen_content{
+	color : #AAAAAA;
+}
+QWidget#top_bar{
+	background-color : #0D101B;
 	color : #AAAAAA;
 }
 
@@ -333,12 +341,12 @@ QLabel#top{
 /* Table styles */
 
 QTableView{
-	background-color : #1D2227;
-	alternate-background-color : #242A31;
+	background-color : #181B25;
+	alternate-background-color : #1E222E;
 	color : #AAAAAA;
 	border : 0px;
 	gridline-color : #transparent;
-	selection-background-color : #171B1F;
+	selection-background-color : #121520;
 }
 
 QTableView::item:selected{
@@ -393,7 +401,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 
 QPlainTextEdit#text_area_content
 {
-	background-color : #121212;
+	background-color : #2D353D;
 	/*color : #2FA15C;*/
 	color : #3DC774;
 	font-size : 20px;
@@ -411,30 +419,31 @@ QPlainTextEdit#text
 /* Drop Down Menu */
 QComboBox#language_box_content
 {
-	background-color : #121212;
-	color : #3DC774;
+	background : #2D353D;
+	color : #AAAAAA;
+	selection-background : #777777;
+	border: 1px solid #181B25;
+    border-radius: 3px;
+    height : 30px;
 }
-
-
-QComboBox:item:selected
+QComboBox#language_box_content::drop-down 
 {
-	background-color : #121212;
-	color : #3DC774;
-
+	background : #777777;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid; 
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
-
-QComboBox:item
-{
-	background-color : #121212;
-	color : #3DC774;
+QComboBox QAbstractItemView 
+{		/* This is the style of dropdown menu*/
+    background-color : #181B25;
+	color : #AAAAAA;
+	border : 1px solid #2D353D;
+	selection-background-color : #181B25;
 }
-
-QComboBox:item:hover
-{
-	background-color : #A9A9A9;
-	color : #000000;
-}
-
 
 /* Scroll Area */
 QWidget#myobject
@@ -543,3 +552,35 @@ QScrollArea QLabel#problem_text{
 QScrollArea QLabel#problem_text_2{
 	color : #FFFFFF;
 }
+
+
+QLabel#role_text{
+	color : #ADFF2F;
+	font-size : 28px;
+}
+QLabel#banner_text{
+	font-size : 30px;
+	color : #AAAAAA;
+}
+QLabel#card_sub_heading{
+	color : #23B2EE;
+	font-size : 28px;
+}
+QLabel#card_content{
+	color : #999999;
+	font-size : 24px;
+}
+
+QWidget#card{
+	border: 0px;
+	background : #181b26
+}
+QWidget#banner_overlay{
+	background : #121520;
+}
+
+QLabel#about_screen_heading_2{
+	color : #E91E63;
+	font-size : 48px;
+}
+

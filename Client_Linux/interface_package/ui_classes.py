@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QPixmap, QTextCursor, QCursor, QFont
+from PyQt5.QtGui import QIcon, QPixmap, QTextCursor, QCursor, QFont, QColor
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase 
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QSize, QRect
 import os
@@ -246,29 +246,176 @@ class ui_widgets():
 		return main
 
 	def about_ui(self):
-		head1 = QLabel('Made with <3 by team Bitwise')
+		head1 = QLabel('Made with <3 by Team Bitwise')
 		head1.setObjectName('about_screen_heading')
-		head1.setAlignment(Qt.AlignCenter)
-
-		head2 = QLabel('Guess what! The BitsOJ project is open source!!! ')
+		
+		head2 = QLabel('Guess what? The BitsOJ project is open source!')
 		head2.setObjectName('main_screen_content')
-		head2.setAlignment(Qt.AlignCenter)
-
-		head3 = QLabel('Contribute at https://github.com/peeesspee/BitsOJ')
+		
+		head3 = QLabel('Contribute ')
 		head3.setObjectName('main_screen_content')
-		head3.setAlignment(Qt.AlignCenter)
 
+		link = QLabel("<a href='https://github.com/peeesspee/BitsOJ' style = 'color: #23B2EE'>Here</a>")
+		link.setObjectName('main_screen_content')
+		link.setToolTip(
+			'Opens github repository link in web browser.'
+		)
+		link.setTextInteractionFlags(Qt.TextBrowserInteraction)
+		link.setOpenExternalLinks(True)
 
+		link_widget = ui_widgets.get_horizontal_widget(head3, link)
+		
+		sub_head1 = QLabel('Team BitsOJ')
+		sub_head1.setObjectName('about_screen_heading_2')
 
+		mentor_widget = ui_widgets.get_profile_widget(
+			'Mentor',
+			'@rast_7',
+			'Rajat Asthana',
+			'rast-7',
+			'rast7'
+		)
+		server_dev_widget = ui_widgets.get_profile_widget(
+			'Server Dev',
+			'@valiant1',
+			'Prakhar Pandey',
+			'valiant1011',
+			'valiant1011'
+		)
+		client_dev_widget = ui_widgets.get_profile_widget(
+			'Client/Setup Dev',
+			'@sachinam',
+			'Sachinam Srivastava',
+			'sachinam1397',
+			'sachinam1397'
+		)
+		judge_dev_widget = ui_widgets.get_profile_widget(
+			'Judge Dev',
+			'@ps',
+			'Prashant Singh',
+			'ps0798',
+			'ps0798'
+		)
+
+		cards_widget = QWidget()
+		cards_layout = QHBoxLayout(cards_widget)
+		cards_layout.addStretch(5)
+		cards_layout.addWidget(mentor_widget)
+		cards_layout.addStretch(2)
+		cards_layout.addWidget(server_dev_widget)
+		cards_layout.addStretch(2)
+		cards_layout.addWidget(client_dev_widget)
+		cards_layout.addStretch(2)
+		cards_layout.addWidget(judge_dev_widget)
+		cards_layout.addStretch(5)
+
+		cards_layout.setContentsMargins(0, 10, 0, 10)
+		
 		main_layout = QVBoxLayout()
+		main_layout.addStretch(5)
+		
+		main_layout.addWidget(sub_head1)
+		main_layout.addStretch(1)
+		main_layout.addWidget(cards_widget)
+		main_layout.addStretch(5)
+
 		main_layout.addWidget(head1)
 		main_layout.addWidget(head2)
-		main_layout.addWidget(head3)
+		main_layout.addWidget(link_widget)
+
 		main_layout.addStretch(5)
+
+		main_layout.setAlignment(head1, Qt.AlignCenter)
+		main_layout.setAlignment(head2, Qt.AlignCenter)
+		main_layout.setAlignment(link_widget, Qt.AlignCenter)
+		main_layout.setAlignment(sub_head1, Qt.AlignCenter)
+
 		main = QWidget()
 		main.setLayout(main_layout)
-		main.setObjectName("main_screen");
 		return main
+
+	def get_profile_widget(
+			title = 'None',
+			username = 'None',
+			name = 'None',
+			github_id = 'None', 
+			linkedin_id = 'None'
+		):
+		# Shadow effect initialisation
+		shadow_effect = QGraphicsDropShadowEffect()
+		shadow_effect.setBlurRadius(15)
+		shadow_effect.setOffset(0)
+		shadow_effect.setColor(QColor(0, 0, 0, 255))
+
+		# Get cards for team members
+		top_layout = QVBoxLayout()
+
+		title_widget = QLabel(title)
+		title_widget.setObjectName('role_text')
+
+		banner_widget = QLabel(username)
+		banner_widget.setObjectName('banner_text')
+		banner_overlay_layout = QHBoxLayout()
+		banner_overlay_layout.addWidget(banner_widget)
+		banner_overlay_widget = QWidget()
+		banner_overlay_widget.setLayout(banner_overlay_layout)
+		banner_overlay_widget.setObjectName('banner_overlay')
+		# banner_widget.setGraphicsEffect(shadow_effect)
+
+		name_widget = QLabel(name)
+		name_widget.setObjectName('card_content')
+
+		github_link = "https://www.github.com/" + github_id
+		linkedin_link = "https://www.linkedin.com/in/" + linkedin_id
+		
+		github_id_heading = QLabel('Github')
+		github_pixmap = QPixmap('./Elements/github.png')
+		# github_pixmap = github_pixmap.scaledToWidth(32)
+		github_id_heading.setPixmap(github_pixmap)
+		github_id_heading.setFixedSize(48, 48)
+		github_id_widget = QLabel(
+			"<a href='" + github_link + "' style = 'color: #23B2EE'>" + github_id + "</a>"
+		)
+		github_id_widget.setTextInteractionFlags(Qt.TextBrowserInteraction)
+		github_id_widget.setOpenExternalLinks(True)
+		github_id_widget.setObjectName('card_content')
+		github_hwidget = ui_widgets.get_horizontal_widget(github_id_heading, github_id_widget)
+	
+		linkedin_id_heading = QLabel('LinkedIn')
+		linkedin_pixmap = QPixmap('./Elements/linkedin.png')
+		linkedin_id_heading.setPixmap(linkedin_pixmap)
+		linkedin_id_heading.setFixedSize(48, 48)
+		linkedin_id_widget = QLabel(
+			"<a href='" + linkedin_link + "' style = 'color: #23B2EE'>" + linkedin_id + "</a>"
+		)
+		linkedin_id_widget.setTextInteractionFlags(Qt.TextBrowserInteraction)
+		linkedin_id_widget.setOpenExternalLinks(True)
+		linkedin_id_widget.setObjectName('card_content')
+		linkedin_hwidget = ui_widgets.get_horizontal_widget(linkedin_id_heading, linkedin_id_widget)
+		
+		top_layout.addWidget(title_widget)
+		top_layout.addWidget(banner_overlay_widget)
+		top_layout.addWidget(name_widget)
+		top_layout.addWidget(github_hwidget)
+		top_layout.addWidget(linkedin_hwidget)
+		top_layout.addStretch(1)
+		top_layout.setAlignment(title_widget, Qt.AlignCenter)
+		top_widget = QWidget()
+		top_widget.setLayout(top_layout)
+		top_widget.setFixedWidth(270)
+		top_widget.setObjectName('card')
+		top_widget.setGraphicsEffect(shadow_effect)
+		# top_widget.setMinimumSize(320, 300)
+		return top_widget
+
+	def get_horizontal_widget(widget_1, widget_2):
+		layout = QHBoxLayout()
+		layout.addWidget(widget_1)
+		layout.addWidget(widget_2)
+		layout.addStretch(1)
+		widget = QWidget()
+		widget.setLayout(layout)
+		return widget
 
 
 
@@ -367,6 +514,7 @@ class ui_widgets():
 					client_id,
 					client_key,
 					query,
+					config["Username"],
 					config["IP"]
 					)
 				QMessageBox.warning(self, 'Message', 'Your Query has been successfully send')

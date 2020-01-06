@@ -107,11 +107,14 @@ class start_listening():
 		try:
 			with open('./Problems/Problem_' + problem_no[-1:-2:-1] + '.json','r') as write:
 				problem_file = json.load(write)
-				print('step3')
+			problem_file = handle_config.encryptDecrypt(problem_file)
+			problem_file = eval(problem_file)
 		except Exception as Error:
 			print(str(Error))
 		problem_file[server_data["Type"]] = server_data["Data"]
 		try:
+			problem_file = str(problem_file)
+			problem_file = handle_config.encryptDecrypt(problem_file)
 			with open('./Problems/Problem_' + problem_no[-1:-2:-1] + '.json','w') as write:
 				json.dump(problem_file, write, indent = 4)
 		except Exception as Error:

@@ -3,6 +3,8 @@ import os
 global local_run_id 
 import json
 
+from init_client import handle_config
+
 
 #############################################################
 #############################################################
@@ -157,8 +159,9 @@ class query_management(manage_database):
 
 	# Update a new query function
 	def update_query(client_id,query,response,Type):
-		with open('config.json', 'r') as read_file:
-			config = json.load(read_file)
+		# with open('config.json', 'r') as read_file:
+		# 	config = json.load(read_file)
+		config = handle_config.read_config_json()
 		# if type will be broadcast the query wil be updated in every client's table 
 		if Type == 'Broadcast':
 			# Query to check whether that query exist in the table or not
