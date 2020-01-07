@@ -71,14 +71,31 @@ class manage_judges():
 			manage_judges.log('[ LISTEN ] Started listening on judge_verdict')
 			channel.basic_consume(
 				queue = 'judge_verdicts', 
-				on_message_callback = manage_judges.judge_message_handler
+				on_message_callback = manage_judges.judge_message_handler,
+				exclusive = True 
 			)
 			channel.start_consuming()
 		except (KeyboardInterrupt, SystemExit):
-			manage_judges.data_changed_flags[7] = 1
 			channel.stop_consuming()
 			print('[ LISTEN ] STOPPED listening to judge channel')
 			manage_judges.log('[ LISTEN ] STOPPED listening to judge channel')
+
+		except (pika.exceptions.ChannelClosedByBroker):
+			print(
+				'[ ERROR ] : Could not get a lock on judge_verdicts' +
+				' Please check management portal and remove any consumers from the queue'
+			)
+			manage_judges.log(
+				'[ ERROR ] : Could not get a lock on judge_verdicts' +
+				'Please check management portal and remove any consumers from the queue'
+			)
+			
+		except Exception as error:
+			print('[ CRITICAL ]: ' + error)
+			manage_judges.log('[ CRITICAL ]: ' + error)
+
+		finally:
+			manage_judges.data_changed_flags[7] = 1
 			connection.close()
 			print('[ STOP ] Judge subprocess terminated successfully!')
 			manage_judges.log('[ STOP ] Judge subprocess terminated successfully!')
