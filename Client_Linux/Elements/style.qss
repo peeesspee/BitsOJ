@@ -9,12 +9,7 @@ QStatusBar
 	background-color : #202020;
 
 }
-
-
-QMessageBox{
-	background-color : #808080;
-	color: #FF0000;
-}
+ 
 
 
 /* Style of buttons in the sidebar  START  */
