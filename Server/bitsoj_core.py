@@ -119,12 +119,27 @@ class core():
 
 				# Contest EXTeND signal
 				elif code == 'EXTND':
+					print('[ CORE ] Contest time extended by ' + str(time) + ' minutes.')
+					core.log('[ CORE ] Contest time extended by ' + str(time) + ' minutes.')
+					time = data['Time']
 					message = json.dumps(data)
 					core.channel.basic_publish(
 						exchange = core.broadcast_exchange, 
 						routing_key = '', 
 						body = message
 					)
+					
+
+				elif code == 'RESPONSE':
+					receiver = data['Receiver']
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = core.unicast_exchange, 
+						routing_key = receiver, 
+						body = message
+					)
+					print('[ CORE ][ ' + receiver + ' ] Run ID sent.')
+					core.log('[ CORE ][ ' + receiver + ' ] Run ID sent.')
 
 				elif code == 'VRDCT':
 					receiver = data['Receiver']
@@ -172,6 +187,7 @@ class core():
 					if status == 'AC' and core.data_changed_flags[15] == 1:
 						# Flag 18 signals interface to send scoreboard to all clients if allowed
 						core.data_changed_flags[18] = 1 
+
 				elif code == 'SHUTDOWN':
 					receiver = data['Receiver']
 					print('[ CORE ][ ' + receiver + ' ] Shutdown.')

@@ -57,7 +57,7 @@ class server_window(QMainWindow):
 		self.db = self.init_qt_database()
 		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status, judge FROM submissions ORDER BY run_id DESC"
 			# Default leaderboard query
-		self.leaderboard_query = "SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC"
+		self.leaderboard_query = "SELECT * FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC"
 
 		###########################################################
 		self.config = initialize_server.read_config()
@@ -416,6 +416,7 @@ class server_window(QMainWindow):
 				message = json.dumps(message)
 				self.task_queue.put(message)
 
+			# Broadcast scoreboard now
 			if self.data_changed_flags[18] == 1:
 				print('[ SCOREBOARD ][ BROADCAST ]')
 				self.data_changed_flags[18] = 0
@@ -465,7 +466,7 @@ class server_window(QMainWindow):
 		elif self.data_changed_flags[17] == 3:
 			# Long style ranklist
 			self.leaderboard_query = (
-				"SELECT user_name, problems_solved, score FROM scoreboard ORDER BY score DESC, total_time ASC"
+				"SELECT user_name, problems_solved, score FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC"
 			)
 			self.score_model.setQuery(self.leaderboard_query)
 			self.score_model.setHeaderData(0, Qt.Horizontal, 'Team Name')
@@ -474,7 +475,7 @@ class server_window(QMainWindow):
 		else:
 			# IOI style ranklist DEFAULT
 			self.leaderboard_query = (
-				"SELECT user_name, problems_solved, score, total_time  FROM scoreboard ORDER BY score DESC, total_time ASC"
+				"SELECT user_name, problems_solved, score, total_time FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC"
 			)
 			self.score_model.setQuery(self.leaderboard_query)
 			self.score_model.setHeaderData(0, Qt.Horizontal, 'Team Name')
@@ -825,6 +826,18 @@ class server_window(QMainWindow):
 		return table
 
 	@pyqtSlot()
+	def manual_broadcast_scoreboard(self):
+		# Set broadcast scoreboard flag
+		self.data_changed_flags[18] = 1
+		info_box = QMessageBox()
+		info_box.setIcon(QMessageBox.Information)
+		info_box.setWindowTitle('Alert')
+		info_box.setText('Scoreboard broadcasted!')
+		info_box.setStandardButtons(QMessageBox.Ok)
+		info_box.exec_()
+		return
+
+	@pyqtSlot()
 	def manage_submission(self, selected_row):
 		try:
 			# Close any previous sub-window
@@ -1086,6 +1099,16 @@ class server_window(QMainWindow):
 			self.window.close()
 		except:
 			pass
+
+		if self.data_changed_flags[10] != 2:
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Information)
+			info_box.setWindowTitle('Alert')
+			info_box.setText('Reports can only be generated when contest has Stopped.')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+
 		try:
 			self.window = generate_report_ui(self.data_changed_flags, self.task_queue, self.log_queue)
 			self.window.show()
@@ -1363,12 +1386,12 @@ class server_window(QMainWindow):
 				user_management.disconnect_all()
 				self.data_changed_flags[1] = 1
 
-				# Disconnect all judges
-				print('[ RESET ] Disconnecting all Judges...')
-				self.log('[ RESET ] Disconnecting all Judges...')
-				# Update judges view
-				self.data_changed_flags[13] = 1
-				# TODO 														Broadcast this to all judges
+				# # Disconnect all judges
+				# print('[ RESET ] Disconnecting all Judges...')
+				# self.log('[ RESET ] Disconnecting all Judges...')
+				# # Update judges view
+				# self.data_changed_flags[13] = 1
+				# # TODO 														Broadcast this to all judges
 
 				# Reset Scoreboard
 				print('[ RESET ] Clearing scoreboard...')

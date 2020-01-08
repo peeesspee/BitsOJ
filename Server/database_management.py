@@ -25,7 +25,7 @@ class manage_database():
 			cur.execute("create table if not exists connected_judges(judge_id varchar2(10), user_name varchar2(10), password varchar2(10), ip varchar2(16) DEFAULT '0.0.0.0', state varchar2(15))")
 			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'WAITING', judge varchar2(15) DEFAULT '-', score integer DEFAULT 0)")
 			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
-			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text, penalty integer)")
+			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text, penalty integer, is_hidden text DEFAULT 'False')")
 			cur.execute("create table if not exists problems(problem_name varchar2(30), problem_code varchar(10), test_files integer, time_limit integer)")
 			
 		except Exception as error:
@@ -113,7 +113,8 @@ class scoreboard_management():
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("INSERT INTO scoreboard values(?, ?, ?, ?, ?, ?)", (client_id, user_name, score, problems_solved, total_time, 0))
+			cur.execute("INSERT INTO scoreboard values(?, ?, ?, ?, ?, ?, ?)", 
+				(client_id, user_name, score, problems_solved, total_time, 0, 'False'))
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not add scoreboard entry : " + str(error))
@@ -824,10 +825,18 @@ class user_management(manage_database):
 			return
 
 	def update_user_state(username, state, ip):
+		if state == 'Blocked':
+			hidden = 'True'
+		else:
+			hidden = 'False'
+
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("UPDATE connected_clients SET state = ?, ip = ? where user_name = ? ", (state, ip, username, ))
+			cur.execute(
+				"UPDATE connected_clients SET state = ?, ip = ?, is_hidden = ? where user_name = ? ", 
+				(state, ip, hidden, username, )
+			)
 			
 			conn.commit()
 		except Exception as error:

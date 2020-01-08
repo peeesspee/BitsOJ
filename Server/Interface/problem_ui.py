@@ -69,19 +69,20 @@ class problem_edit_ui(QMainWindow):
 		confirm_button.setFixedSize(150, 30)
 		confirm_button.clicked.connect(lambda:problem_edit_ui.final_status(self))
 		confirm_button.setDefault(True)
-		confirm_button.setObjectName('account_button')
+		confirm_button.setObjectName('interior_button')
 		
 		cancel_button = QPushButton('Cancel')
 		cancel_button.setFixedSize(150, 30)
 		cancel_button.clicked.connect(lambda:problem_edit_ui.exit(self))
-		cancel_button.setObjectName('account_button')
+		cancel_button.setObjectName('interior_button')
 		cancel_button.setDefault(True)
 
 		button_layout = QHBoxLayout()
-		button_layout.addStretch(20)
+		button_layout.addStretch(5)
 		button_layout.addWidget(confirm_button)
+		button_layout.addStretch(1)
 		button_layout.addWidget(cancel_button)
-		button_layout.addStretch(23)
+		button_layout.addStretch(5)
 		button_widget = QWidget()
 		button_widget.setLayout(button_layout)
 		button_widget.setContentsMargins(0, 20, 0, 0)
@@ -110,8 +111,6 @@ class problem_edit_ui(QMainWindow):
 			self.example_input_syntax= problem['Example Input'] 
 			self.example_output_syntax= problem['Example Output'] 
 
-
-		heading = QLabel('Edit Problem')
 		problem_label = QLabel('Name: ')
 		self.problem_content = QLineEdit()
 		self.problem_content.setText(self.problem)
@@ -205,7 +204,6 @@ class problem_edit_ui(QMainWindow):
 		example_widget.setLayout(example_layout)
 
 		source_layout = QVBoxLayout()
-		# source_layout.addWidget(heading)
 		source_layout.addWidget(level1_widget)
 		source_layout.addWidget(statement_label)
 		source_layout.addWidget(self.statement_content)
@@ -239,7 +237,6 @@ class problem_edit_ui(QMainWindow):
 		example_output_syntax_label.setObjectName('main_screen_sub_heading')
 		time_limit_label.setObjectName('main_screen_sub_heading')
 		author_label.setObjectName('main_screen_sub_heading')
-		heading.setObjectName('main_screen_heading')
 		return scroll_area
 
 	def get_files_ui(self, cases):
@@ -288,7 +285,7 @@ class problem_edit_ui(QMainWindow):
 	def manage_io_file(self, problem_code, row, column):
 		if column == 0:
 			# Input file is selected
-			file_path = "Problem Data/" + problem_code +"/input" + str(row) + ".in"
+			file_path = "Problem Data/" + problem_code +"/input0" + str(row) + ".in"
 			self.ui = view_case_ui(
 				self.data_changed_flags,
 				self.log_queue,
@@ -297,7 +294,7 @@ class problem_edit_ui(QMainWindow):
 			self.ui.show()
 		elif column == 1:
 			# Output file is selected
-			file_path = "Problem Data/" + problem_code +"/output" + str(row) + ".ans"
+			file_path = "Problem Data/" + problem_code +"/output0" + str(row) + ".ans"
 			self.ui = view_case_ui(
 				self.data_changed_flags,
 				self.log_queue,
