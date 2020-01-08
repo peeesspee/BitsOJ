@@ -88,12 +88,13 @@ class core():
 				if code == 'START':
 					print('[ EVENT ][ BROADCAST ] START Contest')
 					core.log('[ EVENT ][ BROADCAST ] START Contest')
+					receiver = data['Receiver']
 					message = {
-					'Code' : 'START',
-					'Duration' : data['Duration'],
-					'Start Time' : data['Start Time'],
-					'End Time' : data['End Time'],
-					'Problem Key' : core.file_password
+						'Code' : 'START',
+						'Duration' : data['Duration'],
+						'Start Time' : data['Start Time'],
+						'End Time' : data['End Time'],
+						'Problem Key' : core.file_password
 					}
 					message = json.dumps(message)
 					core.channel.basic_publish(

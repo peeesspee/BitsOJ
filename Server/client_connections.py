@@ -259,7 +259,7 @@ class manage_clients():
 					'Message' : 'Logins are not allowed right now.\nPlease wait for announcement.'
 				}
 				message = json.dumps(message)
-				manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 				return
 			
 
@@ -293,7 +293,7 @@ class manage_clients():
 						'Message' : 'Maximum Login limit is 1 per user.'
 					}
 					message = json.dumps(message)
-					manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+					manage_clients.task_queue.put(message)
 
 					# Raise a security event?
 				elif previously_connected_state == 'Disconnected':
@@ -312,7 +312,7 @@ class manage_clients():
 							'Message' : 'Welcome back!.'
 						}
 						message = json.dumps(message)
-						manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+						manage_clients.task_queue.put(message)
 
 						# Update client state from Disconnected to Connected 
 						user_management.update_user_state(client_username, 'Connected', client_ip)
@@ -331,7 +331,7 @@ class manage_clients():
 							'Message' : 'Preliminary Validation Failed. Contact site Admin for more information.'
 						}
 						message = json.dumps(message)
-						manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+						manage_clients.task_queue.put(message)
 
 				# If client has logged in for the first time
 				elif previously_connected_state == 'New':
@@ -359,7 +359,7 @@ class manage_clients():
 						'Message' : server_message
 					}
 					message = json.dumps(message)
-					manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+					manage_clients.task_queue.put(message)
 					print('[ LOGIN ][ RESPONSE ] VALID to ' + client_username)
 					manage_clients.log('[ LOGIN ][ RESPONSE ] VALID to ' + client_username)
 
@@ -381,7 +381,7 @@ class manage_clients():
 							'Problem Key' : manage_clients.file_password
 						}
 						message = json.dumps(message)
-						manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+						manage_clients.task_queue.put(message)
 						print('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
 						manage_clients.log('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
 						
@@ -395,7 +395,7 @@ class manage_clients():
 						'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
 					}
 					message = json.dumps(message)
-					manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+					manage_clients.task_queue.put(message)
 
 			# If login is not successful:
 			elif status == False:
@@ -408,7 +408,7 @@ class manage_clients():
 				}
 				message = json.dumps(message)
 				# Send response to client
-				manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 
 
 		# Judge login is handled as a client to avoid redundancy in code
@@ -422,7 +422,7 @@ class manage_clients():
 					'Message' : 'Judge Logins are not allowed right now.'
 				}
 				message = json.dumps(message)
-				manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 				return
 			# IN ALL REGARDS, CLIENT HERE MEANS A judge_manager
 			status = client_authentication.validate_client(client_username, client_password)
@@ -491,7 +491,7 @@ class manage_clients():
 				print('[ LOGIN ][ REJECT ] Sent  INVLD to ' + client_username)
 				manage_clients.log('[ LOGIN ][ REJECT ] Sent  INVLD to ' + client_username)
 			
-			manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+			manage_clients.task_queue.put(message)
 		return
 
 
@@ -575,7 +575,7 @@ class manage_clients():
 			}
 			message = json.dumps(message)
 			try:
-				manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 			except Exception as error:
 				print('[ ERROR ][ SECURITY ] Could not send message to client: ', str(error))
 				manage_clients.log('[ ERROR ][ SECURITY ] Could not send message to client: ' + str(error))
@@ -612,7 +612,7 @@ class manage_clients():
 			}
 			message = json.dumps(message)
 			try:
-				manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 			except Exception as error:
 				print('[ ERROR ][ SECURITY ] Client has no username so could not send error code.')
 				manage_clients.log('[ ERROR ][ SECURITY ] Client has no username so could not send error code.')
@@ -631,7 +631,7 @@ class manage_clients():
 			}
 			message = json.dumps(message)
 			try:
-				manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 			except Exception as error:
 				print('[ ERROR ][ SECURITY ] Client has no username so could not send error code.' )
 				manage_clients.log('[ ERROR ][ SECURITY ] Client has no username so could not send error code.' )
@@ -649,7 +649,7 @@ class manage_clients():
 			}
 			message = json.dumps(message)
 			try:
-				manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 			except Exception as error:
 				print('[ ERROR ][ SECURITY ] Client attempted to send submission without being logged in.' )
 				manage_clients.log('[ ERROR ][ SECURITY ] Client attempted to send submission without being logged in.' )
@@ -680,7 +680,7 @@ class manage_clients():
 				}
 				message = json.dumps(message)
 				try:
-					manage_clients.task_queue.put(manage_clients.channel, client_username, message)
+					manage_clients.task_queue.put(message)
 				except Exception as error:
 					print('[ ERROR ]Could not publish message to client.' )
 					manage_clients.log('[ ERROR ]Could not publish message to client.' )

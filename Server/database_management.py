@@ -834,8 +834,12 @@ class user_management(manage_database):
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			cur.execute(
-				"UPDATE connected_clients SET state = ?, ip = ?, is_hidden = ? where user_name = ? ", 
-				(state, ip, hidden, username, )
+				"UPDATE connected_clients SET state = ?, ip = ? where user_name = ? ", 
+				(state, ip, username, )
+			)
+			cur.execute(
+				"UPDATE scoreboard SET is_hidden = ? where user_name = ? ", 
+				(hidden, username, )
 			)
 			
 			conn.commit()
