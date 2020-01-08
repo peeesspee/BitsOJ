@@ -13,7 +13,7 @@ class authenticate_login():
 
  
 	# function to authenticate login from the server 
-	def login(username, password,queue):
+	def login(username, password,queue,connection):
 		authenticate_login.channel = manage_connection.channel
 		authenticate_login.host = manage_connection.host
 		authenticate_login.username = username
@@ -34,6 +34,13 @@ class authenticate_login():
 			'Type' : 'CLIENT'
 			}
 		final_data = json.dumps(final_data)
+		try:
+			authenticate_login.channel.queue_delete(
+				queue = authenticate_login.username
+				)
+		except:
+			channel = connection.channel()
+			authenticate_login.channel = channel
 
 		authenticate_login.channel.basic_qos(prefetch_count = 1)
 		# Declaring queue for the new client
@@ -100,8 +107,9 @@ class authenticate_login():
 			# Changing login status to valid
 			authenticate_login.login_status = 'VALID'
 			authenticate_login.client_id = server_data["Client ID"]
+			# authenticate_login.channel.basic_ack(True)
 			authenticate_login.channel.stop_consuming()
-			authenticate_login.channel.basic_ack(True)
+			# authenticate_login.channel.basic_ack(True)
 
 		# If login is rejected by the server 
 		elif (status == 'LRJCT'):

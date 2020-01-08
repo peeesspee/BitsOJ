@@ -64,6 +64,8 @@ def main():
 	# 5        0/1/2         Proper Connection/Single Client Disconnected/All Clients Disconnected
 	# 6        1             Leader Board Update
 	# 7        1             Problem Edited
+	# 8        1             Blockd user
+	# 9        1             run id received 
 
 	##################################
 	# Makes connection with RabbitMQ

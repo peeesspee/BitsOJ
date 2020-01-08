@@ -34,6 +34,13 @@ class authenticate_login():
 			'Type' : 'CLIENT'
 			}
 		final_data = json.dumps(final_data)
+		try:
+			authenticate_login.channel.queue_delete(
+				queue = authenticate_login.username
+				)
+		except:
+			channel = connection.channel()
+			authenticate_login.channel = channel
 
 		# authenticate_login.channel.basic_qos(prefetch_count = 1)
 		# Declaring queue for the new client

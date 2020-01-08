@@ -239,7 +239,7 @@ class add_problem_ui(QMainWindow):
 			QMessageBox.warning(self, 'Message', 'Time Limit cannot be empty')
 		else:
 			self2.count += 1
-			server_config["Number of Problems"] = self2.count
+			server_config["Number Of Problems"] = str(self2.count)
 			os.system('mkdir Problems/' + self.problem_code_text.text())
 			print(self2.problem_code)
 			self2.problem_code += (self.problem_code_text.text(),)

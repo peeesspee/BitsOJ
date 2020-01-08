@@ -1032,9 +1032,9 @@ class contest_setup(QMainWindow):
 		self.IOI.setDisabled(True)
 		self.ACM.setDisabled(True)
 		self.LONG.setDisabled(True)
-		self.server_config["AC Points"] = self.ac_text.text()
-		self.server_config["Penalty Score"] = self.penalty_points_text.text()
-		self.server_config["Penalty Time"] = self.penalty_time_text.text()
+		self.server_config["AC Points"] = int(self.ac_text.text())
+		self.server_config["Penalty Score"] = int(self.penalty_points_text.text())
+		self.server_config["Penalty Time"] = int(self.penalty_time_text.text())
 		print(self.server_config)
 		print('\n')
 

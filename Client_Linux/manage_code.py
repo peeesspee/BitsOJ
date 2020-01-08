@@ -48,8 +48,8 @@ class send_code():
 				routing_key = 'client_requests',
 				body = final_data,
 				)
-		except:
-			print("Error in sending code ")
+		except Exception as error:
+			print('[ Error ] ' + str(error))
 
 		print("Your code is running \nWait for the judgement")
 
@@ -67,10 +67,13 @@ class send_code():
 		}
 		final_data = json.dumps(final_data)
 		print('[QUERY] Sending.....')
-		authenticate_login.channel.basic_publish(
-			exchange = 'connection_manager',
-			routing_key = 'client_requests',
-			body = final_data,
-			)
+		try:
+			authenticate_login.channel.basic_publish(
+				exchange = 'connection_manager',
+				routing_key = 'client_requests',
+				body = final_data,
+				)
+		except Exception as error:
+			print('[ Error ] ' + str(error))
 		print('[QUERY] Successfully Send')
 		print('[QUERY] Waiting for response .....')

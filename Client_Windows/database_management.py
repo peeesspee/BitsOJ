@@ -102,6 +102,7 @@ class manage_local_ids():
 ####################################################################
 ####################################################################
 
+
 # Submission Managemnt class to update ad insert query in my submission table
 class submission_management(manage_database):
 	# Query to insert a new submission 
@@ -134,6 +135,25 @@ class submission_management(manage_database):
 		try:
 			# Query to update the table
 			manage_database.cur.execute("UPDATE my_submissions SET verdict = ?, run_id = ? WHERE local_run_id = ?", (verdict, int(run_id), int(local_run_id),))
+			manage_database.conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Could not update submission submission : " + str(error))
+		return
+
+
+	def update_run_id(local_run_id,run_id):
+		try:
+			# Query to update the table
+			manage_database.cur.execute("UPDATE my_submissions SET run_id = ? WHERE local_run_id = ?", (int(run_id), int(local_run_id),))
+			manage_database.conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Could not update submission submission : " + str(error))
+		return
+
+	def update_verdict_reject(local_run_id):
+		try:
+			# Query to update the table
+			manage_database.cur.execute("UPDATE my_submissions SET verdict = ? WHERE local_run_id = ?", ('REJECTED', int(local_run_id),))
 			manage_database.conn.commit()
 		except Exception as error:
 			print("[ ERROR ] Could not update submission submission : " + str(error))

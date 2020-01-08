@@ -341,14 +341,14 @@ class client_window(QMainWindow):
 
 			
 			if self.data_changed_flag[1] ==1:
-				self.sub_model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions")
+				self.sub_model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions ORDER BY local_run_id DESC")
 				# self.notify()
 				# reset data_changed_flag
 				self.data_changed_flag[1] = 0
 
 			
 			if self.data_changed_flag[1] == 2:
-				self.sub_model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions")
+				self.sub_model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions ORDER BY local_run_id DESC")
 				self.notify()
 				# reset data_changed_flag
 				self.data_changed_flag[1] = 0
@@ -415,6 +415,15 @@ class client_window(QMainWindow):
 				message = self.queue.get()
 				QMessageBox.warning(self, 'Update', message + ' has been updated.\nPlease reload the problem.')
 				self.data_changed_flag[7] = 0
+
+			if(self.data_changed_flag[8] == 1):
+				QMessageBox.warning(self, 'You have been blocked by the Admin.')
+				QApplication.quit()
+
+
+			if(self.data_changed_flag[9] == 1):
+				self.sub_model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions ORDER BY local_run_id DESC")
+				self.data_changed_flag[9] = 0
 
 			return
 		except Exception as Error:
@@ -501,7 +510,7 @@ class client_window(QMainWindow):
 	def submission_models(self,db, table_name):
 		if db.open():
 			model = QSqlQueryModel()
-			model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions")
+			model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions ORDER BY local_run_id DESC")
 		return model
 
 	def generate_view(self, model):
@@ -596,7 +605,7 @@ class client_window(QMainWindow):
 		data = handle_config.read_config_json()
 		current_status = 'RUNNING'
 		Timer = data["Duration"]
-		decrypt.decrypting()
+		# decrypt.decrypting()
 		QMessageBox.warning(self, 'Info', 'Contest has been STARTED.\nNow you can view problems.')
 
 	def stop_contest(self):
