@@ -332,36 +332,41 @@ class ui_widgets:
 
 		scoring_label = QLabel('Scoring Type: ' + scoring_type)
 
-		update_scoreboard_label = QLabel('Broadcast Scoreboard : ')
+		update_scoreboard_label = QLabel('Allow Scoreboard Broadcast: ')
 		update_scoreboard_label.setObjectName('main_screen_content')
-
 		update_scoreboard_flag = self.check_scoreboard_update_allowed()
-		
 		update_scoreboard_button = QCheckBox('')
 		update_scoreboard_button.setFixedSize(30, 30)
 		update_scoreboard_button.setChecked(update_scoreboard_flag)
 		update_scoreboard_button.stateChanged.connect(self.allow_scoreboard_update_handler)
 
 		score_model = self.manage_leaderboard_model(self.db, 'scoreboard')
-
-		# score_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
-		# score_model.setHeaderData(1, Qt.Horizontal, 'Team')
-		# score_model.setHeaderData(2, Qt.Horizontal, 'Score')
-		# score_model.setHeaderData(3, Qt.Horizontal, 'Problems Solved')
-		# score_model.setHeaderData(4, Qt.Horizontal, 'Total Time')
-		
 		score_table = self.generate_view(score_model)
 		score_table.setSortingEnabled(False)
+
+		update_button = QPushButton('Broadcast Scoreboard')
+		update_button.setToolTip('Manually send scoreboard to all clients.')
+		update_button.setFixedSize(200, 50)
+		update_button.clicked.connect(
+			lambda: self.manual_broadcast_scoreboard()
+		)
+		update_button.setObjectName("topbar_button")
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
 		head_layout.addWidget(scoring_label)
 		head_layout.addWidget(update_scoreboard_label)
 		head_layout.addWidget(update_scoreboard_button)
-		head_layout.setStretch(0, 40)
+		head_layout.addWidget(update_button)
+
+		head_layout.setStretch(0, 30)
 		head_layout.setStretch(1, 40)
 		head_layout.setStretch(2, 10)
 		head_layout.setStretch(3, 10)
+		head_layout.setStretch(4, 10)
+
+		head_layout.setAlignment(scoring_label, Qt.AlignCenter)
+
 		
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)

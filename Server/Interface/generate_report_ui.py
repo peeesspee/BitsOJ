@@ -34,11 +34,9 @@ class generate_report_ui(QMainWindow):
 		self.height = 600
 		self.setGeometry(500, 300, self.width, self.height)
 		self.setFixedSize(self.width, self.height)
-		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
-
+		
 		self.progress = QProgressBar()
-		self.progress.setGeometry(200, 80, 250, 10)
-
+		
 		heading = QLabel('Select Reports')
 		heading.setObjectName('main_screen_heading')
 
@@ -92,26 +90,16 @@ class generate_report_ui(QMainWindow):
 		self.problems_report_checkbox.setChecked(self.problems_checked)
 		self.problems_report_checkbox.stateChanged.connect(self.problems_state_changed)
 
-		confirm_button = QPushButton('Confirm')
+		confirm_button = QPushButton('Generate')
 		confirm_button.setFixedSize(150, 30)
 		confirm_button.clicked.connect(lambda:generate_report_ui.final_status(self))
 		confirm_button.setDefault(True)
-		confirm_button.setObjectName('account_button')
+		confirm_button.setObjectName('interior_button')
 		
-		cancel_button = QPushButton('Cancel')
-		cancel_button.setFixedSize(150, 30)
-		cancel_button.clicked.connect(lambda:generate_report_ui.exit(self))
-		cancel_button.setObjectName('account_button')
-		cancel_button.setDefault(True)
-
-		button_layout = QHBoxLayout()
-		button_layout.addStretch(20)
-		button_layout.addWidget(confirm_button)
-		button_layout.addWidget(cancel_button)
-		button_layout.addStretch(23)
 		button_widget = QWidget()
-		button_widget.setLayout(button_layout)
-		button_widget.setContentsMargins(0, 20, 0, 0)
+		button_layout = QHBoxLayout(button_widget)
+		button_layout.addWidget(confirm_button)
+		button_layout.setAlignment(Qt.AlignCenter)
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
@@ -237,11 +225,35 @@ class generate_report_ui(QMainWindow):
 
 	def final_status(self):
 		try:
-			
 			self.completed = 0
 			while self.completed < 100:
 				self.completed += 0.00001
 				self.progress.setValue(self.completed)
+			if self.all_checked == True:
+				# Generate all reports
+				# Also generate final report
+				pass
+			else:
+				if self.account_checked == True:
+					pass
+				if self.submission_checked == True:
+					pass
+				if self.client_checked == True:
+					pass
+				if self.judge_checked == True:
+					pass
+				if self.scoreboard_checked == True:
+					pass
+				if self.stats_checked == True:
+					pass
+				if self.problems_checked == True:
+					pass
+				if self.settings_checked == True:
+					pass
+				if self.query_checked == True:
+					pass
+
+
 		except Exception as error:
 			print('[ ERROR ] Could not generate reports: ' + str(error))
 			self.log('[ ERROR ] Could not generate reports: ' + str(error))

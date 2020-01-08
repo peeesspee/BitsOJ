@@ -148,7 +148,7 @@ class account_edit_ui(QMainWindow):
 	def final_status(self):
 		# If something is changed in combo box, run query 
 		if account_edit_ui.changed == 1:
-			user_management.update_user_state(account_edit_ui.username, account_edit_ui.state_type)
+			user_management.update_user_state(account_edit_ui.username, account_edit_ui.state_type, account_edit_ui.ip)
 			print('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
 			self.log('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
 			if account_edit_ui.state_type == 'Blocked':
@@ -165,10 +165,9 @@ class account_edit_ui(QMainWindow):
 			message = json.dumps(message)
 			self.task_queue.put(message)
 			self.data_changed_flags[1] = 1
-		self.data_changed_flags[14] = 0
+			self.data_changed_flags[16] = 1
 		self.close()
 
 	def exit(self):
-		self.data_changed_flags[14] = 0
 		self.close()
 
