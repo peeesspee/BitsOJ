@@ -29,7 +29,7 @@ class manage_connection():
 
 
 		except Exception as error:
-			print(str(error))
+			print('[CRITICAL ERROR] Error while establishing connection :', str(error))
 
 	def terminate_connection(connection):
 		connection.close()
