@@ -6,7 +6,6 @@ import multiprocessing
 import time
 import signal
 import resource
-from submission_files.java.javarunner import *
 
 class verdict():
 
@@ -40,7 +39,7 @@ class verdict():
 			# classfile = 'javac ' + PATH + file_with_ext
 			# runfile = 'java' + PATH + file_name
 			
-			classfile = 'javac ' + PATH + 'java/' + 'bitsoj.java'
+			classfile = 'javac ' + 'bitsoj.java'
 			runfile = 'java ' + 'bitsoj'
 
 
