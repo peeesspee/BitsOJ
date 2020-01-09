@@ -90,7 +90,6 @@ class verdict():
 			if language == 'JAVA':
 				list_of_inputfiles = os.listdir(INPUT_PATH)
 				for file in list_of_inputfiles:
-					asd
 					try:
 						pos = file.index('.')
 						ext = file[pos+1:]
