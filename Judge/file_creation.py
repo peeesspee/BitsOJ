@@ -17,7 +17,7 @@ class file_manager():
 
 	    #if code is in Java
 	    if language == 'JAVA':
-	    	with open("./submission_files/java/bitsoj.java", 'w') as f:
+	    	with open("bitsoj.java", 'w') as f:
 	    		f.write(source_code)
 
 	    	with open("./submission_files/"+file_name, 'w') as file:
