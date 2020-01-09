@@ -64,6 +64,8 @@ def main():
 	# 5        0/1/2         Proper Connection/Single Client Disconnected/All Clients Disconnected
 	# 6        1             Leader Board Update
 	# 7        1             Problem Edited
+	# 8        1             Blockd user
+	# 9        1             run id received 
 
 	##################################
 	# Makes connection with RabbitMQ
@@ -92,6 +94,9 @@ def main():
 		# Starting Main GUI
 		init_gui(channel,data_changed_flags, queue,scoreboard)
 	except Exception as error:
+		ex_type,ex_obj, ex_tb = sys.exc_info()
+		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
+		print(ex_type,f_name,ex_tb.tb_lineno)
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 
 	print("[EXIT] Signal Passed")

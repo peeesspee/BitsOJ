@@ -285,6 +285,7 @@ class client_window(QMainWindow):
 
 	##################################################################################
 
+
 	def update_scoreboard(self):
 		score_data = handle_config.read_score_json()
 		try:
@@ -408,6 +409,10 @@ class client_window(QMainWindow):
 				message = self.queue.get()
 				QMessageBox.warning(self, 'Update', message + ' has been updated.\nPlease reload the problem.')
 				self.data_changed_flag[7] = 0
+
+			if(self.data_changed_flag[9] == 1):
+				self.sub_model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions ORDER BY local_run_id DESC")
+				self.data_changed_flag[9] = 0
 		
 			return
 		except Exception as error:
@@ -551,6 +556,8 @@ class client_window(QMainWindow):
 			try:
 				with open('.\\Problems\\Problem_'+str(i)+'.json') as read:
 					problem = json.load(read)
+				problem = handle_config.encryptDecrypt(problem)
+				problem = eval(problem)
 			except Exception as Error:
 					print(str(Error))
 			try:

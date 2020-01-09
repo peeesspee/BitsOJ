@@ -16,6 +16,7 @@ from init_setup import read_write
 
 
 
+
 class contest_setup(QMainWindow):
 	def __init__(self):
 		super().__init__()
@@ -366,7 +367,7 @@ class contest_setup(QMainWindow):
 		rabbitmq_judge_heading = QLabel('RabbitMQ Judge Details')
 		rabbitmq_judge_heading.setObjectName('heading')
 		self.rabbitmq_judge_username = QHBoxLayout()
-		self.rabbitmq_judge_username_label = QLabel('JUDGE USERNAME             :   ')
+		self.rabbitmq_judge_username_label = QLabel('JUDGE USERNAME              :   ')
 		self.rabbitmq_judge_username_label.setObjectName('general')
 		self.rabbitmq_judge_username_text = QLineEdit()
 		self.rabbitmq_judge_username_text.setPlaceholderText('Example : Judge')
@@ -380,7 +381,7 @@ class contest_setup(QMainWindow):
 		self.username_judge_widget = QWidget()
 		self.username_judge_widget.setLayout(self.rabbitmq_judge_username)
 		self.rabbitmq_judge_password = QHBoxLayout()
-		self.rabbitmq_judge_password_label = QLabel('JUDGE PASSWORD            :   ')
+		self.rabbitmq_judge_password_label = QLabel('JUDGE PASSWORD              :   ')
 		self.rabbitmq_judge_password_label.setObjectName('general')
 		self.rabbitmq_judge_password_text = QLineEdit()
 		self.rabbitmq_judge_password_text.setEchoMode(QLineEdit.Password)
@@ -400,7 +401,7 @@ class contest_setup(QMainWindow):
 		self.automatic_judge = QRadioButton('Automatic IP')
 		self.automatic_judge.toggled.connect(lambda:self.button_state_judge(self.automatic_judge))
 		self.rabbitmq_judge_host = QHBoxLayout()
-		self.rabbitmq_judge_host_label = QLabel('RABBIT_MQ HOST              :   ')
+		self.rabbitmq_judge_host_label = QLabel('RABBIT_MQ HOST                :   ')
 		self.rabbitmq_judge_host_label.setObjectName('general')
 		self.rabbitmq_judge_host_text = QLineEdit()
 		self.rabbitmq_judge_host_text.setPlaceholderText('Example : 127.0.0.1')
@@ -728,7 +729,7 @@ class contest_setup(QMainWindow):
 
 
 		admin_password_key = QHBoxLayout()
-		admin_password_key_label = QLabel('ADMIN KEY                  :   ')
+		admin_password_key_label = QLabel('ADMIN KEY                     :   ')
 		admin_password_key_label.setObjectName('general')
 		self.admin_password_key_text = QLineEdit()
 		self.admin_password_key_text.setPlaceholderText('')
@@ -950,18 +951,18 @@ class contest_setup(QMainWindow):
 		heading.setObjectName('heading')
 
 		client_config = QPushButton('Client Config')
-		client_config.setObjectName('general')
-		client_config.setFixedSize(200,50)
+		client_config.setObjectName('general_4')
+		client_config.setFixedSize(300,70)
 		client_config.clicked.connect(lambda:self.create_file(0))
 
 		server_config = QPushButton('Server Config')
-		server_config.setObjectName('general')
-		server_config.setFixedSize(200,50)
+		server_config.setObjectName('general_4')
+		server_config.setFixedSize(300,70)
 		server_config.clicked.connect(lambda:self.create_file(1))
 
 		judge_config = QPushButton('Judge Config')
-		judge_config.setObjectName('general')
-		judge_config.setFixedSize(200,50)
+		judge_config.setObjectName('general_4')
+		judge_config.setFixedSize(300,70)
 		judge_config.clicked.connect(lambda:self.create_file(2))
 
 		main.addWidget(heading, alignment = Qt.AlignCenter)
@@ -973,6 +974,13 @@ class contest_setup(QMainWindow):
 
 		self.final_tab.setLayout(main)
 
+	def encryptDecrypt(self,inpString): 
+		xorKey = '/'; 
+		length = len(inpString);  
+		for i in range(length): 
+			inpString = (inpString[:i] + chr(ord(inpString[i]) ^ ord(xorKey)) + inpString[i + 1:]); 
+		return inpString;
+
 
 
 	def create_file(self,i):
@@ -983,6 +991,8 @@ class contest_setup(QMainWindow):
 		os.system('mkdir Client/Problems')
 		os.system('mkdir Judge/problems')
 		if i == 0:
+			self.client_config = str(self.client_config)
+			self.client_config = self.encryptDecrypt(self.client_config)
 			with open('./Client/config.json', 'w') as write:
 				json.dump(self.client_config, write, indent = 4)
 			for i in os.listdir('./Problem_Statement'):
@@ -1022,9 +1032,9 @@ class contest_setup(QMainWindow):
 		self.IOI.setDisabled(True)
 		self.ACM.setDisabled(True)
 		self.LONG.setDisabled(True)
-		self.server_config["AC Points"] = self.ac_text.text()
-		self.server_config["Penalty Score"] = self.penalty_points_text.text()
-		self.server_config["Penalty Time"] = self.penalty_time_text.text()
+		self.server_config["AC Points"] = int(self.ac_text.text())
+		self.server_config["Penalty Score"] = int(self.penalty_points_text.text())
+		self.server_config["Penalty Time"] = int(self.penalty_time_text.text())
 		print(self.server_config)
 		print('\n')
 
@@ -1492,7 +1502,7 @@ class contest_setup(QMainWindow):
 
 	################################### CLOSE BUTTON CLICKED ####################################
 	def closeEvent(self, event):
-		message = "Pressing 'Yes' will SHUT the Client.\nAre you sure you want to exit?"
+		message = "Pressing 'Yes' will SHUT the Setup.\nAre you sure you want to exit?"
 		detail_message = "Any active contest might end prematurely. "
 
 		custom_close_box = QMessageBox()

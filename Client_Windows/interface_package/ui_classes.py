@@ -317,13 +317,13 @@ class ui_widgets():
 		main_layout.addWidget(sub_head1)
 		main_layout.addStretch(1)
 		main_layout.addWidget(cards_widget)
-		main_layout.addStretch(5)
+		main_layout.addStretch(3)
 
 		main_layout.addWidget(head1)
 		main_layout.addWidget(head2)
 		main_layout.addWidget(link_widget)
 
-		main_layout.addStretch(5)
+		main_layout.addStretch(2)
 
 		main_layout.setAlignment(head1, Qt.AlignCenter)
 		main_layout.setAlignment(head2, Qt.AlignCenter)

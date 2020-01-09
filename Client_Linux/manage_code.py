@@ -14,22 +14,22 @@ class send_code():
 	def solution_request(problem_Code,selected_language,time_stamp,code,local_run_id,client_key,username,ip):
 		if(selected_language == 'C'):
 			send_code.extention = '.c'
-			language_code = 'GCC'
+			language_code = 'C'
 		elif(selected_language == 'C++'):
 			send_code.extention = '.cpp'
-			language_code = 'CPP'
+			language_code = 'C++'
 		elif(selected_language == 'JAVA'):
 			send_code.extention = '.java'
-			language_code = 'JVA'
+			language_code = 'JAVA'
 		elif(selected_language == 'PYTHON-3'):
 			send_code.extention = '.py'
-			language_code = 'PY3'
+			language_code = 'PYTHON-3'
 		else:
 			send_code.extention = '.py'
-			language_code = 'PY2'
+			language_code = 'PYTHON-2'
 		final_data = {
 			'Code' : 'SUBMT',
-			"IP" : ip,
+			'IP' : ip,
 			'Username' : username,
 			'Client Key': client_key,
 			'Local Run ID' : local_run_id,
@@ -48,17 +48,18 @@ class send_code():
 				routing_key = 'client_requests',
 				body = final_data,
 				)
-		except:
-			print("Error in sending code ")
+		except Exception as error:
+			print('[ Error ] ' + str(error))
 
 		print("Your code is running \nWait for the judgement")
 
 
 
-	def query_request(client_id,client_key,query,ip):
+	def query_request(client_id,client_key,query,username,ip):
 		final_data ={
 			'Code' : 'QUERY',
 			"IP" : ip,
+			"Username" : username,
 			'ID' : client_id,
 			'Client Key': client_key,
 			'Query' : query,
@@ -66,10 +67,13 @@ class send_code():
 		}
 		final_data = json.dumps(final_data)
 		print('[QUERY] Sending.....')
-		authenticate_login.channel.basic_publish(
-			exchange = 'connection_manager',
-			routing_key = 'client_requests',
-			body = final_data,
-			)
+		try:
+			authenticate_login.channel.basic_publish(
+				exchange = 'connection_manager',
+				routing_key = 'client_requests',
+				body = final_data,
+				)
+		except Exception as error:
+			print('[ Error ] ' + str(error))
 		print('[QUERY] Successfully Send')
 		print('[QUERY] Waiting for response .....')

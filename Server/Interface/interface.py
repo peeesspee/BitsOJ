@@ -1,6 +1,4 @@
-import time 
-import sys
-import json
+import sys, time, json
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
@@ -15,6 +13,7 @@ from Interface.new_accounts_ui import *
 from Interface.ie_accounts_ui import *
 from Interface.rejudge_problem_ui import *
 from Interface.judge_view_ui import *
+from Interface.generate_report_ui import *
 from init_server import initialize_server, save_status
 from database_management import user_management, submissions_management, query_management, scoreboard_management, client_authentication
 
@@ -25,7 +24,7 @@ def handler(msg_type, msg_log_context, msg_string):
 	pass
 qInstallMessageHandler(handler)
 
-# This class handles the main window of server
+# This class handles the main interface window of server
 class server_window(QMainWindow):
 	def __init__(self, data_changed_flags2, task_queue, log_queue):
 		super().__init__()
@@ -58,7 +57,7 @@ class server_window(QMainWindow):
 		self.db = self.init_qt_database()
 		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status, judge FROM submissions ORDER BY run_id DESC"
 			# Default leaderboard query
-		self.leaderboard_query = "SELECT * FROM scoreboard ORDER BY score DESC, total_time ASC"
+		self.leaderboard_query = "SELECT * FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC"
 
 		###########################################################
 		self.config = initialize_server.read_config()
@@ -417,6 +416,7 @@ class server_window(QMainWindow):
 				message = json.dumps(message)
 				self.task_queue.put(message)
 
+			# Broadcast scoreboard now
 			if self.data_changed_flags[18] == 1:
 				print('[ SCOREBOARD ][ BROADCAST ]')
 				self.data_changed_flags[18] = 0
@@ -466,7 +466,7 @@ class server_window(QMainWindow):
 		elif self.data_changed_flags[17] == 3:
 			# Long style ranklist
 			self.leaderboard_query = (
-				"SELECT user_name, problems_solved, score FROM scoreboard ORDER BY score DESC, total_time ASC"
+				"SELECT user_name, problems_solved, score FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC"
 			)
 			self.score_model.setQuery(self.leaderboard_query)
 			self.score_model.setHeaderData(0, Qt.Horizontal, 'Team Name')
@@ -475,7 +475,7 @@ class server_window(QMainWindow):
 		else:
 			# IOI style ranklist DEFAULT
 			self.leaderboard_query = (
-				"SELECT user_name, problems_solved, score, total_time  FROM scoreboard ORDER BY score DESC, total_time ASC"
+				"SELECT user_name, problems_solved, score, total_time FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC"
 			)
 			self.score_model.setQuery(self.leaderboard_query)
 			self.score_model.setHeaderData(0, Qt.Horizontal, 'Team Name')
@@ -681,6 +681,15 @@ class server_window(QMainWindow):
 			self.set_flags(2, 0)
 		return
 
+	def allow_ip_change_handler(self, state):
+		if(state == Qt.Checked):
+			# Allow logins
+			self.set_flags(27, 1)
+		else:
+			# Stop logins
+			self.set_flags(27, 0)
+		return
+
 	def allow_judge_login_handler(self, state):
 		if(state == Qt.Checked):
 			# Allow logins
@@ -817,131 +826,158 @@ class server_window(QMainWindow):
 		return table
 
 	@pyqtSlot()
-	def manage_submission(self, selected_row):
-		if self.data_changed_flags[8] == 0:
-			# CRITICAL section flag set
-			self.data_changed_flags[8] = 1
-			try:
-				# Get data from selected row
-				#  run_id, client_id, problem_code, language, timestamp, verdict, sent_status
-
-				run_id = self.sub_model.index(selected_row, 0).data()
-				client_id = self.sub_model.index(selected_row, 1).data()
-				problem_code = self.sub_model.index(selected_row, 2).data()
-				language = self.sub_model.index(selected_row, 3).data()
-				timestamp = self.sub_model.index(selected_row, 4).data()
-				verdict = self.sub_model.index(selected_row, 5).data()
-				sent_status = self.sub_model.index(selected_row, 6).data()
-
-				if client_id == None:
-					pass
-				else:
-					self.window = manage_submission_ui(
-						self.data_changed_flags,
-						self.task_queue,
-						self.log_queue,
-						run_id,
-						client_id,
-						problem_code,
-						language,
-						timestamp,
-						verdict,
-						sent_status
-					)
-					self.window.show()
-
-			except Exception as error: 
-				print('[ ERROR ] : ' + str(error))
-				self.log('[ ERROR ] : ' + str(error))
-			finally:
-				return
-		else:
-			return
-
-	@pyqtSlot()
-	def query_reply(self, selected_row):
-		if self.data_changed_flags[8] == 0:
-			# CRITICAL section flag set
-			self.data_changed_flags[8] = 1
-			try:
-				# Get data from selected row
-				query = self.query_model.index(selected_row, 2).data()
-				client_id = self.query_model.index(selected_row, 1).data()
-				query_id = self.query_model.index(selected_row, 0).data()
-				
-				if client_id == None or query_id == None or query_id == 0:
-					self.data_changed_flags[8] = 0
-					return
-				
-				self.window = query_reply_ui(self.data_changed_flags,self.task_queue, query, client_id, query_id, self.log_queue )
-				self.window.show()
-
-			except Exception as error: 
-				print('[ ERROR ] : ' + str(error))
-				self.log('[ ERROR ] : ' + str(error))
-				exc_type, exc_obj, exc_tb = sys.exc_info()
-				fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-				print(exc_type, fname, exc_tb.tb_lineno)
-			finally:
-				return
-		else:
-			return
-
-	@pyqtSlot()
-	def announcement(self):
-		if self.data_changed_flags[8] == 0:
-			# CRITICAL section flag set
-			self.data_changed_flags[8] = 1
-			try:
-				query = 'Announcement'
-				client_id = -1
-				query_id = -1
-				self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query,client_id, query_id, self.log_queue)
-				self.window.show()
-
-			except Exception as error: 
-				print('[ ERROR ] : ' + str(error))
-				self.log('[ ERROR ] : ' + str(error))
-			finally:
-				return
-		else:
-			return
-
-	@pyqtSlot()
-	def create_accounts(self):
-		if self.data_changed_flags[4] == 0:
-			# CRITICAL section flag set
-			self.data_changed_flags[4] = 1
-			self.window = new_accounts_ui(self.data_changed_flags, self.log_queue)
-			self.window.show()			
-		else:
-			pass
+	def manual_broadcast_scoreboard(self):
+		# Set broadcast scoreboard flag
+		self.data_changed_flags[18] = 1
+		info_box = QMessageBox()
+		info_box.setIcon(QMessageBox.Information)
+		info_box.setWindowTitle('Alert')
+		info_box.setText('Scoreboard broadcasted!')
+		info_box.setStandardButtons(QMessageBox.Ok)
+		info_box.exec_()
 		return
 
 	@pyqtSlot()
+	def manage_submission(self, selected_row):
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+
+		try:
+			# Get data from selected row
+			#  run_id, client_id, problem_code, language, timestamp, verdict, sent_status
+
+			run_id = self.sub_model.index(selected_row, 0).data()
+			client_id = self.sub_model.index(selected_row, 1).data()
+			problem_code = self.sub_model.index(selected_row, 2).data()
+			language = self.sub_model.index(selected_row, 3).data()
+			timestamp = self.sub_model.index(selected_row, 4).data()
+			verdict = self.sub_model.index(selected_row, 5).data()
+			sent_status = self.sub_model.index(selected_row, 6).data()
+
+			if client_id == None:
+				pass
+			else:
+				self.window = manage_submission_ui(
+					self.data_changed_flags,
+					self.task_queue,
+					self.log_queue,
+					run_id,
+					client_id,
+					problem_code,
+					language,
+					timestamp,
+					verdict,
+					sent_status
+				)
+				self.window.show()
+
+		except Exception as error: 
+			print('[ ERROR ] : ' + str(error))
+			self.log('[ ERROR ] : ' + str(error))
+		finally:
+			return
+		
+	@pyqtSlot()
+	def query_reply(self, selected_row):
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+	
+		try:
+			# Get data from selected row
+			query = self.query_model.index(selected_row, 2).data()
+			client_id = self.query_model.index(selected_row, 1).data()
+			query_id = self.query_model.index(selected_row, 0).data()
+			if client_id == None or query_id == None or query_id == 0:
+				return
+			self.window = query_reply_ui(self.data_changed_flags,self.task_queue, query, client_id, query_id, self.log_queue )
+			self.window.show()
+
+		except Exception as error: 
+			print('[ ERROR ] : ' + str(error))
+			self.log('[ ERROR ] : ' + str(error))
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print(exc_type, fname, exc_tb.tb_lineno)
+		finally:
+			return
+		
+	@pyqtSlot()
+	def announcement(self):
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+		try:
+			query = 'Announcement'
+			client_id = -1
+			query_id = -1
+			self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query,client_id, query_id, self.log_queue)
+			self.window.show()
+
+		except Exception as error: 
+			print('[ UI ][ ERROR ] : ' + str(error))
+			self.log('[ UI ][ ERROR ] : ' + str(error))
+		finally:
+			return
+		
+	@pyqtSlot()
+	def create_accounts(self):
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+		try:
+			self.window = new_accounts_ui(self.data_changed_flags, self.log_queue)
+			self.window.show()		
+		except Exception as error:
+			print('[ UI ][ ERROR ] : ' + str(error))
+			self.log('[ UI ][ ERROR ] : ' + str(error))	
+		finally:
+			return
+
+	@pyqtSlot()
 	def rejudge_problem(self):
-		if self.data_changed_flags[25] == 0:
-			# CRITICAL section flag set
-			self.data_changed_flags[25] = 1
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+		try:
 			codes = self.config['Problem Codes']
 			client_list = []
 			client_list = client_authentication.get_connected_clients()
 			self.window = rejudge_problem_ui(self.data_changed_flags, self.task_queue, self.log_queue, codes, client_list)
 			self.window.show()			
-		else:
-			pass
-		return
+		except Exception as error:
+			print('[ UI ][ ERROR ] : ' + str(error))
+			self.log('[ UI ][ ERROR ] : ' + str(error))	
+		finally:
+			return
 
 	@pyqtSlot()
 	def import_export_accounts(self):
-		if self.data_changed_flags[4] == 0:
-			# CRITICAL section flag set
-			self.data_changed_flags[4] = 1
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+
+		try:
 			self.window = ie_accounts_ui(self.data_changed_flags, self.log_queue)
 			self.window.show()			
-		else:
-			pass
-		return
+		except Exception as error:
+			print('[ UI ][ ERROR ] : ' + str(error))
+			self.log('[ UI ][ ERROR ] : ' + str(error))	
+		finally:
+			return
 
 	@pyqtSlot()
 	def password_verification(self):
@@ -965,6 +1001,148 @@ class server_window(QMainWindow):
 			return 1
 		return 0
 
+	@pyqtSlot()
+	def edit_client(self, selected_row):
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+		# If no row is selected, return
+		try:
+			client_id = self.client_model.index(selected_row, 0).data()
+			username = self.client_model.index(selected_row, 1).data()
+			password = self.client_model.index(selected_row, 2).data()
+			ip = self.client_model.index(selected_row, 3).data()
+			state = self.client_model.index(selected_row, 4).data()
+
+			if username == None or client_id == None or password == None or state == None:
+				pass
+			else:
+				self.window = account_edit_ui(self.data_changed_flags, self.task_queue, self.log_queue, client_id, username, password, state, ip)
+				self.window.show()
+			
+		except Exception as error: 
+			print('[ ERROR ]' + str(error))
+			self.log('[ ERROR ]' + str(error))
+		finally:
+			return
+
+	@pyqtSlot()
+	def view_judge(self, selected_row):
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+
+		# If no row is selected, return
+		try:
+			judge_id = self.judge_model.index(selected_row, 0).data()
+			username = self.judge_model.index(selected_row, 1).data()
+			password = self.judge_model.index(selected_row, 2).data()
+			ip = self.judge_model.index(selected_row, 3).data()
+			state = self.judge_model.index(selected_row, 4).data()
+
+			if username == None or judge_id == None or password == None or state == None:
+				pass
+			else:
+				self.window = judge_view_ui(
+					self.data_changed_flags, 
+					self.task_queue, 
+					self.log_queue, 
+					judge_id, 
+					username, 
+					password, 
+					state, 
+					ip
+				)
+				self.window.show()
+			
+		except Exception as error: 
+			print('[ UI ][ ERROR ]' + str(error))
+			self.log('[ UI ][ ERROR ]' + str(error))
+		finally:
+			return
+
+	@pyqtSlot()
+	def edit_account(self, selected_row):
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+
+		# If no row is selected, return
+		try:
+			username = self.account_model.index(selected_row, 0).data()
+			password = self.account_model.index(selected_row, 1).data()
+			ctype = self.account_model.index(selected_row, 2).data()
+
+			if username == None or password == None or ctype == None:
+				pass
+			else:
+				# print("Sending ", username, password, ctype)
+				self.window = password_change_ui(self.data_changed_flags, self.log_queue, username, password, ctype)
+				self.window.show()
+			
+		except Exception as error: 
+			print('[ UI ][ ERROR ][ EDIT ] ' + str(error))
+			self.log('[ UI ][ ERROR ][ EDIT ] ' + str(error))
+		finally:
+			return
+
+	@pyqtSlot()
+	def generate_report(self):
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+
+		if self.data_changed_flags[10] != 2:
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Information)
+			info_box.setWindowTitle('Alert')
+			info_box.setText('Reports can only be generated when contest has Stopped.')
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			return
+
+		try:
+			self.window = generate_report_ui(self.data_changed_flags, self.task_queue, self.log_queue)
+			self.window.show()
+		except Exception as error: 
+			print('[ UI ][ ERROR ][ REPORT ] ' + str(error))
+			self.log('[ UI ][ ERROR ][ REPORT ] ' + str(error))
+		finally:
+			return
+
+	@pyqtSlot()
+	def view_problem(self, selected_row):
+		try:
+			# Close any previous sub-window
+			self.window.close()
+		except:
+			pass
+		# If no row is selected, return
+		try:
+			problem = self.problem_model.index(selected_row, 0).data()
+			code = self.problem_model.index(selected_row, 1).data()
+			test_files = self.problem_model.index(selected_row, 2).data()
+			time_limit = self.problem_model.index(selected_row, 3).data()
+
+			if problem == None:
+				pass
+			else:
+				self.window = problem_edit_ui(self.data_changed_flags, self.task_queue, self.log_queue, problem, code, test_files, time_limit)
+				self.window.show()
+			
+		except Exception as error: 
+			print('[ UI ][ ERROR ]' + str(error))
+			self.log('[ UI ][ ERROR ]' + str(error))
+		finally:
+			return
 
 	@pyqtSlot()
 	def delete_account(self, selected_rows):
@@ -1019,143 +1197,14 @@ class server_window(QMainWindow):
 			self.data_changed_flags[1] = 1
 		elif custom_box.clickedButton() == button_no : 
 			pass
-
 		# Reset critical flag
 		self.data_changed_flags[6] = 0
-
 		return
 
-	@pyqtSlot()
-	def edit_client(self, selected_row):
-		if self.data_changed_flags[14] == 0:
-			# Set critical flag
-			self.data_changed_flags[14] = 1
-		else:
-			# If one client edit window is already opened, process it first.
-			return
-		# If no row is selected, return
-		try:
-			client_id = self.client_model.index(selected_row, 0).data()
-			username = self.client_model.index(selected_row, 1).data()
-			password = self.client_model.index(selected_row, 2).data()
-			ip = self.client_model.index(selected_row, 3).data()
-			state = self.client_model.index(selected_row, 4).data()
-
-			if username == None or client_id == None or password == None or state == None:
-				self.data_changed_flags[14] = 0
-				pass
-			else:
-				self.edit_window = account_edit_ui(self.data_changed_flags, self.task_queue, self.log_queue, client_id, username, password, state, ip)
-				self.edit_window.show()
-			
-		except Exception as error: 
-			print('[ ERROR ]' + str(error))
-			self.log('[ ERROR ]' + str(error))
-			self.data_changed_flags[14] = 0
-		finally:
-			return
-
-	@pyqtSlot()
-	def view_judge(self, selected_row):
-		if self.data_changed_flags[14] == 0:
-			# Set critical flag
-			self.data_changed_flags[14] = 1
-		else:
-			# If one client edit window is already opened, process it first.
-			return
-		# If no row is selected, return
-		try:
-			judge_id = self.judge_model.index(selected_row, 0).data()
-			username = self.judge_model.index(selected_row, 1).data()
-			password = self.judge_model.index(selected_row, 2).data()
-			ip = self.judge_model.index(selected_row, 3).data()
-			state = self.judge_model.index(selected_row, 4).data()
-
-			if username == None or judge_id == None or password == None or state == None:
-				self.data_changed_flags[14] = 0
-				pass
-			else:
-				self.view_window = judge_view_ui(
-					self.data_changed_flags, 
-					self.task_queue, 
-					self.log_queue, 
-					judge_id, 
-					username, 
-					password, 
-					state, 
-					ip
-				)
-				self.view_window.show()
-			
-		except Exception as error: 
-			print('[ UI ][ ERROR ]' + str(error))
-			self.log('[ UI ][ ERROR ]' + str(error))
-			self.data_changed_flags[14] = 0
-		finally:
-			return
-
-	@pyqtSlot()
-	def edit_account(self, selected_row):
-		if self.data_changed_flags[14] == 0:
-			# Set critical flag
-			self.data_changed_flags[14] = 1
-		else:
-			# If one client edit window is already opened, process it first.
-			return
-		# If no row is selected, return
-		try:
-			username = self.account_model.index(selected_row, 0).data()
-			password = self.account_model.index(selected_row, 1).data()
-			ctype = self.account_model.index(selected_row, 2).data()
-
-			if username == None or password == None or ctype == None:
-				self.data_changed_flags[14] = 0
-				pass
-			else:
-				# print("Sending ", username, password, ctype)
-				self.edit_window = password_change_ui(self.data_changed_flags, self.log_queue, username, password, ctype)
-				self.edit_window.show()
-			
-		except Exception as error: 
-			print('[ UI ][ ERROR ][ EDIT ] ' + str(error))
-			self.log('[ UI ][ ERROR ][ EDIT ] ' + str(error))
-			self.data_changed_flags[14] = 0
-		finally:
-			return
-
-	@pyqtSlot()
-	def view_problem(self, selected_row):
-		if self.data_changed_flags[14] == 0:
-			# Set critical flag
-			self.data_changed_flags[14] = 1
-		else:
-			# If one client edit window is already opened, process it first.
-			return
-		# If no row is selected, return
-		try:
-			problem = self.problem_model.index(selected_row, 0).data()
-			code = self.problem_model.index(selected_row, 1).data()
-			test_files = self.problem_model.index(selected_row, 2).data()
-			time_limit = self.problem_model.index(selected_row, 3).data()
-
-			if problem == None:
-				self.data_changed_flags[14] = 0
-				pass
-			else:
-				self.edit_window = problem_edit_ui(self.data_changed_flags, self.task_queue, self.log_queue, problem, code, test_files, time_limit)
-				self.edit_window.show()
-			
-		except Exception as error: 
-			print('[ UI ][ ERROR ]' + str(error))
-			self.log('[ UI ][ ERROR ]' + str(error))
-			self.data_changed_flags[14] = 0
-		finally:
-			return
-
 	def reset_accounts(self):
-		if self.data_changed_flags[11] == 0:
+		if self.data_changed_flags[6] == 0:
 			# Set critical flag
-			self.data_changed_flags[11] = 1
+			self.data_changed_flags[6] = 1
 		else:
 			# If one data deletion window is already opened, process it first.
 			return
@@ -1196,14 +1245,14 @@ class server_window(QMainWindow):
 
 		finally:
 			# Reset critical flag
-			self.data_changed_flags[11] = 0
+			self.data_changed_flags[6] = 0
 			return
 
 	
 	def reset_submissions(self):
-		if self.data_changed_flags[11] == 0:
+		if self.data_changed_flags[6] == 0:
 			# Set critical flag
-			self.data_changed_flags[11] = 1
+			self.data_changed_flags[6] = 1
 		else:
 			# If one data deletion window is already opened, process it first.
 			return
@@ -1244,13 +1293,13 @@ class server_window(QMainWindow):
 
 		finally:
 			# Reset critical flag
-			self.data_changed_flags[11] = 0
+			self.data_changed_flags[6] = 0
 		return
 
 	def reset_queries(self):
-		if self.data_changed_flags[11] == 0:
+		if self.data_changed_flags[6] == 0:
 			# Set critical flag
-			self.data_changed_flags[11] = 1
+			self.data_changed_flags[6] = 1
 		else:
 			# If one data deletion window is already opened, process it first.
 			return
@@ -1291,13 +1340,13 @@ class server_window(QMainWindow):
 
 		finally:
 			# Reset critical flag
-			self.data_changed_flags[11] = 0
+			self.data_changed_flags[6] = 0
 		return
 
 	def reset_server(self):
-		if self.data_changed_flags[11] == 0:
+		if self.data_changed_flags[6] == 0:
 			# Set critical flag
-			self.data_changed_flags[11] = 1
+			self.data_changed_flags[6] = 1
 		else:
 			# If one data deletion window is already opened, process it first.
 			return
@@ -1305,34 +1354,28 @@ class server_window(QMainWindow):
 		try:
 			message = "Are you sure to RESET the server?\nContest Information will be lost"
 			extra_data = "You should create the contest report first!"
-		
 			custom_close_box = QMessageBox()
 			custom_close_box.setIcon(QMessageBox.Critical)
 			custom_close_box.setWindowTitle('SERVER RESET')
 			custom_close_box.setText(message)
-
 			custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
 			custom_close_box.setDefaultButton(QMessageBox.No)
-
 			button_yes = custom_close_box.button(QMessageBox.Yes)
 			button_yes.setText('Yes')
 			button_no = custom_close_box.button(QMessageBox.No)
 			button_no.setText('No')
-
 			button_yes.setObjectName("close_button_yes")
 			button_no.setObjectName("close_button_no")
-
 			button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
 			button_no.setStyleSheet(open('Interface/style.qss', "r").read())
-
 			custom_close_box.exec_()
-
 			if custom_close_box.clickedButton() == button_yes:
 				print('[ EVENT ] SERVER RESET TRIGGERED')
 				self.log('[ EVENT ] SERVER RESET TRIGGERED')
 				print('[ RESET ] Disconnecting all clients...')
 				self.log('[ RESET ] Disconnecting all clients...')
-				# TODO : Broadcast this to all clients...
+
+				# Send disconnect message to all clients
 				message = {
 				'Code' : 'DSCNT',
 				'Mode' : 2
@@ -1343,41 +1386,46 @@ class server_window(QMainWindow):
 				user_management.disconnect_all()
 				self.data_changed_flags[1] = 1
 
-				print('[ RESET ] Disconnecting all Judges...')
-				self.log('[ RESET ] Disconnecting all Judges...')
-				# Update judges view
-				self.data_changed_flags[13] = 1
-				# TODO Broadcast this to all judges
+				# # Disconnect all judges
+				# print('[ RESET ] Disconnecting all Judges...')
+				# self.log('[ RESET ] Disconnecting all Judges...')
+				# # Update judges view
+				# self.data_changed_flags[13] = 1
+				# # TODO 														Broadcast this to all judges
 
+				# Reset Scoreboard
 				print('[ RESET ] Clearing scoreboard...')
 				self.log('[ RESET ] Clearing scoreboard...')
 				self.data_changed_flags[16] = 1
 
+				# Reset accounts
+				# Update Accounts View
 				print('[ RESET ] Resetting Accounts...')
 				self.log('[ RESET ] Resetting Accounts...')
 				user_management.delete_all()
-				# Update Accounts View
+
+				# Update Submissions View
 				self.data_changed_flags[5] = 1
 				print('[ RESET ] Resetting Submissions...')
 				self.log('[ RESET ] Resetting Submissions...')
 				submissions_management.delete_all()
-				# Update Submissions View
+				
+				# Update Queries View
 				self.data_changed_flags[0] = 1
 				print('[ RESET ] Resetting Queries...')
 				self.log('[ RESET ] Resetting Queries...')
 				query_management.delete_all()
-				# Update Queriess View
+		
 				self.data_changed_flags[9] = 1
 				print('[ RESET ] Reset environment...')
 				self.log('[ RESET ] Reset environment...')
+
 				server_window.set_button_behavior(self, 'SETUP')
 				save_status.update_entry('Contest Duration', '00:00:00')
 				save_status.update_entry('Contest Status', 'SETUP')
 				save_status.update_entry('Contest Start Time', '00:00:00')
 				save_status.update_entry('Contest End Time', '00:00:00')
 				save_status.update_entry('Contest Set Time', 0)
-
-			
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
@@ -1386,13 +1434,13 @@ class server_window(QMainWindow):
 
 		finally:
 			# Reset critical flag
-			self.data_changed_flags[11] = 0
+			self.data_changed_flags[6] = 0
 		return
 
 	def reset_timer(self):
-		if self.data_changed_flags[11] == 0:
+		if self.data_changed_flags[6] == 0:
 			# Set critical flag
-			self.data_changed_flags[11] = 1
+			self.data_changed_flags[6] = 1
 		else:
 			# If one data deletion window is already opened, process it first.
 			return
@@ -1441,13 +1489,13 @@ class server_window(QMainWindow):
 
 		finally:
 			# Reset critical flag
-			self.data_changed_flags[11] = 0
+			self.data_changed_flags[6] = 0
 		return
 
 	def disconnect_all(self):
-		if self.data_changed_flags[11] == 0:
+		if self.data_changed_flags[6] == 0:
 			# Set critical flag
-			self.data_changed_flags[11] = 1
+			self.data_changed_flags[6] = 1
 		else:
 			# If one data deletion window is already opened, process it first.
 			return
@@ -1456,10 +1504,10 @@ class server_window(QMainWindow):
 		if status == 1:
 			pass
 		elif status == 2:
-			self.data_changed_flags[11] = 0 
+			self.data_changed_flags[6] = 0 
 			return
 		else:
-			self.data_changed_flags[11] = 0
+			self.data_changed_flags[6] = 0
 			QMessageBox.about(self, "Access Denied!", "Authentication failed!")
 			return
 
@@ -1491,18 +1539,17 @@ class server_window(QMainWindow):
 			if custom_close_box.clickedButton() == button_yes:
 				print('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
 				self.log('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
-				print('[ EVENT ][ RESET ] Disconnecting all clients...')
-				self.log('[ EVENT ][ RESET ] Disconnecting all clients...')
 				message = {
 				'Code' : 'DSCNT',
 				'Mode' : 2
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
+				print('[ EVENT ][ RESET ] Disconnecting all clients...')
+				self.log('[ EVENT ][ RESET ] Disconnecting all clients...')
 				# Set DISCONNECTED to all connected clients
 				user_management.disconnect_all()
 				self.data_changed_flags[1] = 1
-			
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
@@ -1510,31 +1557,28 @@ class server_window(QMainWindow):
 			self.log('Could not reset database : ' + str(error))
 		finally:
 			# Reset critical flag
-			self.data_changed_flags[11] = 0
+			self.data_changed_flags[6] = 0
 		return
-
-
-		
 
 	###################################################
 	
 	###################################################
 	def set_status(self, message = 'SETUP'):
-		self.status.showMessage('BitsOJ > ' + message)
+		self.status.showMessage('	BitsOJ Server > ' + message)
 	###################################################
 	def closeEvent(self, event):
 		# If server exit is called, accept
 		if self.data_changed_flags[23] == 1:
 			event.accept()
 			sys.exit()
-		# if lock is set, ignore
+		# If lock is set, ignore
 		if self.data_changed_flags[24] == 1:
 			QMessageBox.about(self, "Access Denied", "Server is locked!")
 			self.log('[ SECURITY ] Server Close attempt -> Denied: Server was locked.')
 			event.ignore()
 			return
 
-		# if contest is running,
+		# If contest is running,
 		if self.data_changed_flags[10] == 1:
 			status = self.password_verification()
 			if status == 1:
@@ -1547,20 +1591,22 @@ class server_window(QMainWindow):
 				self.log('[ SECURITY ] Server Close attempt -> Denied: Password mismatch.')
 				event.ignore()
 				return
-
-
 		message = "Pressing 'Yes' will SHUT the Server."
-		detail_message = "Server will not process any request while it is closed. You should not do this when any contest is running.\n\nAre you sure you want to exit?"
-		
+		info_message = (
+			"No requests will be processed while it is closed.\n" +
+			"Are you sure you want to exit?"
+		)
+		detail_message =(
+			"Server will resume the contest when restarted.\n" 
+		)
 		custom_close_box = QMessageBox()
 		custom_close_box.setIcon(QMessageBox.Critical)
 		custom_close_box.setWindowTitle('Warning!')
 		custom_close_box.setText(message)
-		custom_close_box.setInformativeText(detail_message)
-
+		custom_close_box.setInformativeText(info_message)
+		custom_close_box.setDetailedText(detail_message)
 		custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
 		custom_close_box.setDefaultButton(QMessageBox.No)
-
 		button_yes = custom_close_box.button(QMessageBox.Yes)
 		button_yes.setText('Yes')
 		button_no = custom_close_box.button(QMessageBox.No)
@@ -1580,7 +1626,6 @@ class server_window(QMainWindow):
 			event.accept()
 		elif custom_close_box.clickedButton() == button_no : 
 			event.ignore()
-
 
 class init_gui(server_window):
 	def __init__(self, data_changed_flags, task_queue, log_queue):

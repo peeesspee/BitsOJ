@@ -71,6 +71,13 @@ class add_problem_ui(QMainWindow):
 
 		return
 
+	def encryptDecrypt(self,inpString): 
+		xorKey = '/'; 
+		length = len(inpString);  
+		for i in range(length): 
+			inpString = (inpString[:i] + chr(ord(inpString[i]) ^ ord(xorKey)) + inpString[i + 1:]); 
+		return inpString;
+
 	def add_problem_view_ui(
 		self,
 		table_model,
@@ -208,6 +215,7 @@ class add_problem_ui(QMainWindow):
 			layout = QVBoxLayout()
 			layout.addWidget(main2)
 			main_layout = QWidget()
+			main_layout.setObjectName('main_layout')
 			main_layout.setLayout(layout)
 		except Exception as Error:
 			print(str(Error))
@@ -231,7 +239,7 @@ class add_problem_ui(QMainWindow):
 			QMessageBox.warning(self, 'Message', 'Time Limit cannot be empty')
 		else:
 			self2.count += 1
-			server_config["Number of Problems"] = self2.count
+			server_config["Number Of Problems"] = str(self2.count)
 			os.system('mkdir Problems/' + self.problem_code_text.text())
 			print(self2.problem_code)
 			self2.problem_code += (self.problem_code_text.text(),)
@@ -291,6 +299,8 @@ class add_problem_ui(QMainWindow):
 				# print('\n')
 				# print(judge_config)
 				# print('\n')
+				problem = str(problem)
+				problem = self.encryptDecrypt(problem)
 				with open('./Problem_Statement/Problem_' + str(add_problem_ui.no) + '.json', 'w') as write:
 					json.dump(problem, write, indent = 4)
 			except Exception as Error:

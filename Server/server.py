@@ -84,17 +84,17 @@ def main():
 	#	1		0/1			0/1: New login : Refresh connected clients view
 	#	2		0/1 		0/1: Disallow/Allow logins
 	#	3		0/1			0/1: Disallow/Allow submissions
-	#	4		0/1			1: A create accounts window is open
+	#	4		0/1			1: A create accounts window is open --------------------
 	#	5		0/1			1: Update accounts view
-	#   6		0/1			1: Account deletion under progress
+	#   6		0/1			1: Database data deletion under progress  --------------------
 	#	7		0/1			1: Server shutdown
-	#   8		0/1			1: Query reply GUI open
+	#   8		0/1			 ------------------------------- FREE
 	#	9		0/1			1: Refresh query gui
 	# 	10		0/1/2		0: SETUP 1: START 2: STOPPED	Contest Status
-	#	11		0/1			1: Delete all accounts open
+	#	11		0/1				----------------------------FREE
 	#	12		0/1			1: JUDGE logins allowed
 	#   13		0/1			1: Refresh Judge GUI
-	#	14		0/1			1: Client Edit under progress
+	#	14		0/1				------------------------ FREE
 	#	15		0/1			1: Scoreboard update allowed
 	# 	16		0/1			1: Update Scoreboard GUI
 	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
@@ -105,14 +105,16 @@ def main():
 	#	22		0/1			1: Problem table changed
 	#	23		0/1			1: Stop logger
 	#	24		0/1			1: Server locked
-	#	25		0/1			1: Rejudge problem ui open
+	#	25		0/1				-----------------------------FREE
 	#	26		0/1			1: Connection error : Restart server
+	#	27		0/1			1: Allow multiple IP 
 	#####################################################################################
 	
 	# Set submission time limit
 	data_changed_flags[21] = submission_time_limit
 	data_changed_flags[23] = 0
 	data_changed_flags[26] = 0
+	data_changed_flags[27] = 0
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	if login_status == 'True' or login_status == 'true':
 		data_changed_flags[2] = 1

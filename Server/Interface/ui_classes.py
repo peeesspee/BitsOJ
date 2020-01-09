@@ -169,13 +169,18 @@ class ui_widgets:
 
 		allow_login_label = QLabel('Allow Logins : ')
 		allow_login_label.setObjectName('main_screen_content')
-
 		login_allowed_flag = self.check_login_allowed()
-		
 		allow_login_button = QCheckBox('')
 		allow_login_button.setFixedSize(30, 30)
 		allow_login_button.setChecked(login_allowed_flag)
 		allow_login_button.stateChanged.connect(self.allow_login_handler)
+
+		multiple_ip_label = QLabel('Allow IP Change : ')
+		multiple_ip_label.setObjectName('main_screen_content')
+		ip_checker_button = QCheckBox('')
+		ip_checker_button.setFixedSize(30, 30)
+		ip_checker_button.setChecked(False)
+		ip_checker_button.stateChanged.connect(self.allow_ip_change_handler)
 
 		edit_client_button = QPushButton('Edit State', self)
 		edit_client_button.setFixedSize(200, 50)
@@ -187,13 +192,17 @@ class ui_widgets:
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
+		head_layout.addWidget(multiple_ip_label)
+		head_layout.addWidget(ip_checker_button)
 		head_layout.addWidget(allow_login_label)
 		head_layout.addWidget(allow_login_button)
 		head_layout.addWidget(edit_client_button)
-		head_layout.setStretch(0, 70)
+		head_layout.setStretch(0, 60)
 		head_layout.setStretch(1, 5)
 		head_layout.setStretch(2, 5)
-		head_layout.setStretch(3, 20)
+		head_layout.setStretch(3, 5)
+		head_layout.setStretch(4, 5)
+		head_layout.setStretch(5, 20)
 		
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
@@ -323,36 +332,41 @@ class ui_widgets:
 
 		scoring_label = QLabel('Scoring Type: ' + scoring_type)
 
-		update_scoreboard_label = QLabel('Broadcast Scoreboard : ')
+		update_scoreboard_label = QLabel('Allow Scoreboard Broadcast: ')
 		update_scoreboard_label.setObjectName('main_screen_content')
-
 		update_scoreboard_flag = self.check_scoreboard_update_allowed()
-		
 		update_scoreboard_button = QCheckBox('')
 		update_scoreboard_button.setFixedSize(30, 30)
 		update_scoreboard_button.setChecked(update_scoreboard_flag)
 		update_scoreboard_button.stateChanged.connect(self.allow_scoreboard_update_handler)
 
 		score_model = self.manage_leaderboard_model(self.db, 'scoreboard')
-
-		# score_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
-		# score_model.setHeaderData(1, Qt.Horizontal, 'Team')
-		# score_model.setHeaderData(2, Qt.Horizontal, 'Score')
-		# score_model.setHeaderData(3, Qt.Horizontal, 'Problems Solved')
-		# score_model.setHeaderData(4, Qt.Horizontal, 'Total Time')
-		
 		score_table = self.generate_view(score_model)
 		score_table.setSortingEnabled(False)
+
+		update_button = QPushButton('Broadcast Scoreboard')
+		update_button.setToolTip('Manually send scoreboard to all clients.')
+		update_button.setFixedSize(200, 50)
+		update_button.clicked.connect(
+			lambda: self.manual_broadcast_scoreboard()
+		)
+		update_button.setObjectName("topbar_button")
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
 		head_layout.addWidget(scoring_label)
 		head_layout.addWidget(update_scoreboard_label)
 		head_layout.addWidget(update_scoreboard_button)
-		head_layout.setStretch(0, 40)
+		head_layout.addWidget(update_button)
+
+		head_layout.setStretch(0, 30)
 		head_layout.setStretch(1, 40)
 		head_layout.setStretch(2, 10)
 		head_layout.setStretch(3, 10)
+		head_layout.setStretch(4, 10)
+
+		head_layout.setAlignment(scoring_label, Qt.AlignCenter)
+
 		
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
@@ -890,9 +904,9 @@ class ui_widgets:
 
 		generate_report_button = QPushButton('Reports', self)
 		generate_report_button.setFixedSize(200, 50)
-		# generate_report_button.clicked.connect(
-		# 	self.generate_report
-		# )
+		generate_report_button.clicked.connect(
+			self.generate_report
+		) 
 		generate_report_button.setObjectName("topbar_button")
 		generate_report_button.setToolTip('Generate contest reports')
 

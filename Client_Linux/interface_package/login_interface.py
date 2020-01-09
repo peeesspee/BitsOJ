@@ -44,7 +44,7 @@ class Login(QWidget):
 			self.button_login = QPushButton('Login', self)
 			self.button_login.setFixedWidth(300)
 			self.button_login.setFixedHeight(80)
-			self.button_login.clicked.connect(lambda:self.handle_login(queue))
+			self.button_login.clicked.connect(lambda:self.handle_login(queue,connection))
 			self.button_login.setDefault(True)
 			self.button_login.setObjectName('login')
 
@@ -69,13 +69,13 @@ class Login(QWidget):
 		return 
 
 	# Function for handling the login of the user  
-	def handle_login(self,queue):
+	def handle_login(self,queue,connection):
 		# QApplication.quit()
 		# Username and Password are not empty the check credentials
 		if (self.username.text() != '' and self.password.text() != ''):
 
 			# login function to send the username and password to the server for authentication
-			authenticate_login.login(self.username.text(),self.password.text(),queue)
+			authenticate_login.login(self.username.text(),self.password.text(),queue,connection)
 			
 
 			# If authentication is successful then close login window and open main window 

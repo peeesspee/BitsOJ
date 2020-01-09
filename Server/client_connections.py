@@ -109,7 +109,7 @@ class manage_clients():
 			channel.start_consuming()
 		# Handle keyboard interrupt ctrl+c and terminate successfully
 		except (KeyboardInterrupt, SystemExit):
-			
+			channel.stop_consuming()
 			print('[ LISTEN ] STOPPED listening to client channel')
 			manage_clients.log('[ LISTEN ] STOPPED listening to client channel')
 			
@@ -129,10 +129,8 @@ class manage_clients():
 		except Exception as error: 
 			print('[ UI ][ CRITICAL ]: ' + str(error))
 			manage_clients.log('[ UI ][ CRITICAL ]: ' + str(error))
-
 		finally:
 			manage_clients.data_changed_flags[7] = 1
-			channel.stop_consuming()
 			connection.close()
 			print('[ STOP ] Client subprocess terminated successfully!')
 			manage_clients.log('[ STOP ] Client subprocess terminated successfully!')
@@ -144,6 +142,7 @@ class manage_clients():
 		manage_clients.log('[ ALERT ] Recieved a new client message.')
 		# Decode the message sent by client
 		client_message = str(body.decode('utf-8'))
+		print(client_message)
 		# JSON Parsing here 
 		try:
 			json_data = json.loads(client_message)
@@ -154,6 +153,7 @@ class manage_clients():
 				manage_clients.log('[ SECURITY ] Client Key did not match. Client ID: ' + str(json_data['ID']))
 				print('[ SECURITY ] Complete Message: ' + client_message)
 				manage_clients.log('[ SECURITY ] Complete Message: ' + client_message)
+				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
 
 			client_code = json_data["Code"]
@@ -218,12 +218,15 @@ class manage_clients():
 		except Exception as error:
 			print("[ ERROR ] Client json data could not be parsed : "  + str(error))
 			manage_clients.log("[ ERROR ] Client json data could not be parsed : "  + str(error))
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print('ERROR: ', exc_type, fname, exc_tb.tb_lineno)
 		# Acknowledge the message
 		ch.basic_ack(delivery_tag = method.delivery_tag)
 		return
 	
 	# This function handles all client login requests
-	def client_login_handler(client_username, client_password, client_id, client_type, client_ip):
+	def client_login_handler(client_username, client_password, client_id, client_type, client_ip = '0.0.0.0'):
 		message = ''
 		print('[ LOGIN REQUEST ] ::: ' + str(client_id) + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
 		manage_clients.log('[ LOGIN REQUEST ] ::: ' + str(client_id) + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
@@ -256,7 +259,7 @@ class manage_clients():
 					'Message' : 'Logins are not allowed right now.\nPlease wait for announcement.'
 				}
 				message = json.dumps(message)
-				response.publish_message(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 				return
 			
 
@@ -290,11 +293,14 @@ class manage_clients():
 						'Message' : 'Maximum Login limit is 1 per user.'
 					}
 					message = json.dumps(message)
-					response.publish_message(manage_clients.channel, client_username, message)
+					manage_clients.task_queue.put(message)
 
 					# Raise a security event?
 				elif previously_connected_state == 'Disconnected':
-					state = client_authentication.check_client_ip(client_id, client_ip)
+					if manage_clients.data_changed_flags[27] == 0:
+						state = client_authentication.check_client_ip(client_id, client_ip)
+					else:
+						state  = 1
 					if state == 1:
 						print('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
 						manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
@@ -306,13 +312,15 @@ class manage_clients():
 							'Message' : 'Welcome back!.'
 						}
 						message = json.dumps(message)
-						response.publish_message(manage_clients.channel, client_username, message)
+						manage_clients.task_queue.put(message)
 
 						# Update client state from Disconnected to Connected 
-						user_management.update_user_state(client_username, 'Connected')
+						user_management.update_user_state(client_username, 'Connected', client_ip)
 
 						# Update GUI
 						manage_clients.data_changed_flags[1] = 1
+						manage_clients.data_changed_flags[5] = 1
+						
 					else:
 						print('[ RE-LOGIN ][ ' + client_username + ' ][ REJECT ] IP validation failed')
 						manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ REJECT ] IP validation failed')
@@ -323,7 +331,7 @@ class manage_clients():
 							'Message' : 'Preliminary Validation Failed. Contact site Admin for more information.'
 						}
 						message = json.dumps(message)
-						response.publish_message(manage_clients.channel, client_username, message)
+						manage_clients.task_queue.put(message)
 
 				# If client has logged in for the first time
 				elif previously_connected_state == 'New':
@@ -351,7 +359,7 @@ class manage_clients():
 						'Message' : server_message
 					}
 					message = json.dumps(message)
-					response.publish_message(manage_clients.channel, client_username, message)
+					manage_clients.task_queue.put(message)
 					print('[ LOGIN ][ RESPONSE ] VALID to ' + client_username)
 					manage_clients.log('[ LOGIN ][ RESPONSE ] VALID to ' + client_username)
 
@@ -373,7 +381,7 @@ class manage_clients():
 							'Problem Key' : manage_clients.file_password
 						}
 						message = json.dumps(message)
-						response.publish_message(manage_clients.channel, client_username, message)
+						manage_clients.task_queue.put(message)
 						print('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
 						manage_clients.log('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
 						
@@ -387,7 +395,7 @@ class manage_clients():
 						'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
 					}
 					message = json.dumps(message)
-					response.publish_message(manage_clients.channel, client_username, message)
+					manage_clients.task_queue.put(message)
 
 			# If login is not successful:
 			elif status == False:
@@ -400,7 +408,7 @@ class manage_clients():
 				}
 				message = json.dumps(message)
 				# Send response to client
-				response.publish_message(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 
 
 		# Judge login is handled as a client to avoid redundancy in code
@@ -414,7 +422,7 @@ class manage_clients():
 					'Message' : 'Judge Logins are not allowed right now.'
 				}
 				message = json.dumps(message)
-				response.publish_message(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 				return
 			# IN ALL REGARDS, CLIENT HERE MEANS A judge_manager
 			status = client_authentication.validate_client(client_username, client_password)
@@ -483,7 +491,7 @@ class manage_clients():
 				print('[ LOGIN ][ REJECT ] Sent  INVLD to ' + client_username)
 				manage_clients.log('[ LOGIN ][ REJECT ] Sent  INVLD to ' + client_username)
 			
-			response.publish_message(manage_clients.channel, client_username, message)
+			manage_clients.task_queue.put(message)
 		return
 
 
@@ -562,11 +570,12 @@ class manage_clients():
 			message = {
 				'Code' : 'SRJCT',
 				'Receiver' : client_username,
-				'Message' : 'Your submission could not be processed! Please contact Admin with your problem.'
+				'Message' : 'Your submission could not be processed! Please contact Admin with your problem.',
+				'Local Run ID' : local_run_id
 			}
 			message = json.dumps(message)
 			try:
-				response.publish_message(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 			except Exception as error:
 				print('[ ERROR ][ SECURITY ] Could not send message to client: ', str(error))
 				manage_clients.log('[ ERROR ][ SECURITY ] Could not send message to client: ' + str(error))
@@ -598,11 +607,12 @@ class manage_clients():
 			message = {
 				'Code' : 'SRJCT',
 				'Receiver' : client_username,
-				'Message' : 'Your submission could not be processed! Contest status: NOT RUNNING.'
+				'Message' : 'Your submission could not be processed! Contest status: NOT RUNNING.',
+				'Local Run ID' : local_run_id
 			}
 			message = json.dumps(message)
 			try:
-				response.publish_message(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 			except Exception as error:
 				print('[ ERROR ][ SECURITY ] Client has no username so could not send error code.')
 				manage_clients.log('[ ERROR ][ SECURITY ] Client has no username so could not send error code.')
@@ -616,11 +626,12 @@ class manage_clients():
 			message = {
 				'Code' : 'SRJCT',
 				'Receiver' : client_username,
-				'Message' : 'Your submission could not be processed! Wait for contest start.'
+				'Message' : 'Your submission could not be processed! Wait for contest start.',
+				'Local Run ID' : local_run_id
 			}
 			message = json.dumps(message)
 			try:
-				response.publish_message(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 			except Exception as error:
 				print('[ ERROR ][ SECURITY ] Client has no username so could not send error code.' )
 				manage_clients.log('[ ERROR ][ SECURITY ] Client has no username so could not send error code.' )
@@ -633,11 +644,12 @@ class manage_clients():
 			message = {
 				'Code' : 'SRJCT',
 				'Receiver' : client_username,
-				'Message' : 'Your submission could not be processed. Please Login to send submissions.'
+				'Message' : 'Your submission could not be processed. Please Login to send submissions.',
+				'Local Run ID' : local_run_id
 			}
 			message = json.dumps(message)
 			try:
-				response.publish_message(manage_clients.channel, client_username, message)
+				manage_clients.task_queue.put(message)
 			except Exception as error:
 				print('[ ERROR ][ SECURITY ] Client attempted to send submission without being logged in.' )
 				manage_clients.log('[ ERROR ][ SECURITY ] Client attempted to send submission without being logged in.' )
@@ -663,11 +675,12 @@ class manage_clients():
 				message = {
 					'Code' : 'SRJCT',
 					'Receiver' : client_username,
-					'Message' : 'Your submission could not be processed. Resend after ' + str(time_seconds_limit - difference_seconds) + ' Seconds'
+					'Message' : 'Your submission could not be processed. Resend after ' + str(time_seconds_limit - difference_seconds) + ' Seconds',
+					'Local Run ID' : local_run_id
 				}
 				message = json.dumps(message)
 				try:
-					response.publish_message(manage_clients.channel, client_username, message)
+					manage_clients.task_queue.put(message)
 				except Exception as error:
 					print('[ ERROR ]Could not publish message to client.' )
 					manage_clients.log('[ ERROR ]Could not publish message to client.' )
@@ -688,6 +701,16 @@ class manage_clients():
 				time_stamp
 			)
 			manage_clients.data_changed_flags[0] = 1
+
+			# Send this run id to the client
+			message = {
+				'Code' : 'RESPONSE',
+				'Receiver' : client_username,
+				'Run ID' : run_id,
+				'Local Run ID' : local_run_id
+			}
+			message = json.dumps(message)
+			manage_clients.task_queue.put(message)
 			
 			# Push the submission in judging queue
 			print('[ JUDGE ] Requesting a new judgement')
@@ -738,7 +761,7 @@ class manage_clients():
 			previously_connected_state = client_authentication.check_connected_client(client_username, 'connected_clients')
 			if previously_connected_state == 'Connected':
 				# Disconnect client
-				user_management.update_user_state(client_username, 'Disconnected')
+				user_management.update_user_state(client_username, 'Disconnected', client_ip)
 				# Update connected clients to indicate new data
 				manage_clients.data_changed_flags[1] = 1
 				print('[ DISCONNECT ] Client: ' + client_username)
@@ -751,14 +774,3 @@ class manage_clients():
 				manage_clients.task_queue.put(message)
 		return
 
-class response():
-	def publish_message(channel, queue_name, message):
-		# Message is in json format
-		print('[ PUBLISH ] new message TO ' + queue_name)
-		manage_clients.log('[ PUBLISH ] new message TO ' + queue_name)
-		try:
-			manage_clients.task_queue.put(message)
-		except Exception as error:
-			print('[ CRITICAL ] Could not publish message : ' + str(error))
-			manage_clients.log('[ CRITICAL ] Could not publish message : ' + str(error))
-		return

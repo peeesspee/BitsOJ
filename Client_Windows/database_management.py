@@ -3,6 +3,8 @@ import os
 global local_run_id 
 import json
 
+from init_client import handle_config
+
 
 #############################################################
 #############################################################
@@ -100,6 +102,7 @@ class manage_local_ids():
 ####################################################################
 ####################################################################
 
+
 # Submission Managemnt class to update ad insert query in my submission table
 class submission_management(manage_database):
 	# Query to insert a new submission 
@@ -136,6 +139,25 @@ class submission_management(manage_database):
 		except Exception as error:
 			print("[ ERROR ] Could not update submission submission : " + str(error))
 		return
+
+
+	def update_run_id(local_run_id,run_id):
+		try:
+			# Query to update the table
+			manage_database.cur.execute("UPDATE my_submissions SET run_id = ? WHERE local_run_id = ?", (int(run_id), int(local_run_id),))
+			manage_database.conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Could not update submission submission : " + str(error))
+		return
+
+	def update_verdict_reject(local_run_id):
+		try:
+			# Query to update the table
+			manage_database.cur.execute("UPDATE my_submissions SET verdict = ? WHERE local_run_id = ?", ('REJECTED', int(local_run_id),))
+			manage_database.conn.commit()
+		except Exception as error:
+			print("[ ERROR ] Could not update submission submission : " + str(error))
+		return
 ####################################################################
 ####################################################################
 
@@ -157,8 +179,9 @@ class query_management(manage_database):
 
 	# Update a new query function
 	def update_query(client_id,query,response,Type):
-		with open('config.json', 'r') as read_file:
-			config = json.load(read_file)
+		# with open('config.json', 'r') as read_file:
+		# 	config = json.load(read_file)
+		config = handle_config.read_config_json()
 		# if type will be broadcast the query wil be updated in every client's table 
 		if Type == 'Broadcast':
 			# Query to check whether that query exist in the table or not
