@@ -6,6 +6,7 @@ import multiprocessing
 import time
 import signal
 import resource
+from submission_files.java.javarunner import *
 
 class verdict():
 
@@ -36,8 +37,12 @@ class verdict():
 			runfile = PATH + file_name
 
 		if lang == 'JAVA':
-			classfile = 'javac ' + PATH + file_with_ext
-			runfile = 'java' + PATH + file_name
+			# classfile = 'javac ' + PATH + file_with_ext
+			# runfile = 'java' + PATH + file_name
+			
+			classfile = 'javac ' + PATH + 'java/' + 'bitsoj.java'
+			runfile = 'java ' + 'bitsoj'
+
 
 		if lang == 'PYTHON-2':
 			classfile = 'python'
@@ -75,12 +80,61 @@ class verdict():
 			verdict.ERROR
 			
 
-	def run_file(runfile, problem_code, run_id, time_limit):
+	def run_file(runfile, problem_code, run_id, time_limit, language):
 
 		INPUT_PATH = './problems/' + problem_code + '/'
 		SUBM_PATH = './submission_files/' 
 
 		if verdict.ERROR == False:
+################################################################################
+			if language == 'JAVA':
+				list_of_inputfiles = os.listdir(INPUT_PATH)
+
+							for file in list_of_inputfiles:
+
+								asd
+								try:
+									pos = file.index('.')
+									ext = file[pos+1:]
+									if ext == 'in':
+										print("STARTED RUNNING SUBMITTED FILE")
+										command = 'ulimit -p ' + initialize_judge.processlimit + ' && '
+										command = command + 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
+										print("command is ->", command)
+										process = subprocess.run(command, capture_output=True, text=True, shell=True)
+										print(process)
+
+
+										# if process.returncode != 0 and process.stderr == '':
+										if process.returncode == 124:
+											print("there is no stderr in run time therefore it is tle")
+											verdict.ERROR = True
+											verdict.VERDICT = 'TLE'
+											verdict.result = 'Time Limit Exceeded !!!'
+											os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
+											return verdict.ERROR
+
+
+										if process.returncode != 0:
+											print("there is some Runtime error as returncode is not 0")
+											verdict.ERROR = True
+											verdict.VERDICT = 'RE'
+											verdict.result = process.stderr
+											os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
+											return verdict.ERROR
+
+										if process.returncode == 0:
+											print("NO RUN TIME ERROR")
+											pass
+
+								except:
+									pass
+
+							return verdict.ERROR
+
+				
+################################################################################
+
 			list_of_inputfiles = os.listdir(INPUT_PATH)
 
 			for file in list_of_inputfiles:
@@ -96,7 +150,8 @@ class verdict():
 						print(process)
 
 
-						if process.returncode != 0 and process.stderr == '':
+						# if process.returncode != 0 and process.stderr == '':
+						if process.returncode == 124:
 							print("there is no stderr in run time therefore it is tle")
 							verdict.ERROR = True
 							verdict.VERDICT = 'TLE'
@@ -184,7 +239,7 @@ class verdict():
 
 		if lang == 'PYTHON-2' or lang == 'PYTHON-3':
 			time_limit = timelimit + 's '
-			e = verdict.run_file(runfile, problem_code, run_id, time_limit)
+			e = verdict.run_file(runfile, problem_code, run_id, time_limit, lang)
 			if e == True:
 				result = verdict.result
 				verd = verdict.VERDICT
@@ -218,7 +273,7 @@ class verdict():
 
 		if e == False:
 			time_limit = timelimit + 's '
-			e = verdict.run_file(runfile, problem_code, run_id, time_limit)
+			e = verdict.run_file(runfile, problem_code, run_id, time_limit, lang)
 
 			print(verdict.ERROR)
 			print(verdict.VERDICT)

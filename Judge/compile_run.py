@@ -50,7 +50,6 @@ class verdict():
 				classfile = 'python'
 				runfile = 'python3 ' + file_with_ext
 
-		# print(classfile,runfile)
 		return(classfile, runfile)
 
 	def compile_file(classfile,lang):

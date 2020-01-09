@@ -15,11 +15,14 @@ class file_manager():
 	            file.write(source_code)
 	            return file_name
 
-		# if code is in Java
+	    #if code is in Java
 	    if language == 'JAVA':
-	        with open("./submission_files/"+file_name, 'w') as file:
-	            file.write(source_code)
-	            return file_name
+	    	with open("./submission_files/java/bitsoj.java", 'w') as f:
+	    		f.write(source_code)
+
+	    	with open("./submission_files/"+file_name, 'w') as file:
+	    		file.write(source_code)
+	    		return file_name
 
 		# if code is in Python2
 	    if language == 'PYTHON-2':

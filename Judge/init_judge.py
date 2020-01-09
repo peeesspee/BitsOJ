@@ -29,6 +29,14 @@ class initialize_judge():
 		return IPAddr
 
 
+	def show_config():
+		with open("./config.json",'r') as read_json:
+			config = json.load(read_json)
+			print(eval(config["Problem Codes"])[3])
+			for i in eval(config["Problem Codes"]):
+				print(i)
+			print("config is ->\n",type(config))
+
 
 # if __name__=='__main__':
-# 	initialize_judge.my_ip()
+# 	initialize_judge.show_config()

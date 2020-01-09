@@ -64,7 +64,7 @@ class communicate_server():
 		# main(file_name, file_with_ext, lang, problem_code, run_id, timelimit):
 		print(language)
 		print(file_name, file_with_ext, language, problem_code, run_id)
-		result,error = verdict.main(file_name, file_with_ext, language, problem_code, run_id, '2')
+		result,error = verdict.main(file_name, file_with_ext, language, problem_code, run_id, '1')
 		# result,error = verdict.main(run_id, problem_code, language, source_code, file_name, file_with_ext, '2')
 
 
@@ -79,8 +79,7 @@ class communicate_server():
 		#						 	}
 		#						 	message = json.dumps(message)
 
-		username = authenticate_judge.get_judge_details()
-		print("username and password of judge is ->",username)
+		judge_cred = authenticate_judge.get_judge_details()
 
 		message = {
 			'Judge Key' : communicate_server.key,
@@ -93,19 +92,11 @@ class communicate_server():
 			'Local Run ID' : local_run_id,
 			'PCode': problem_code,
 			'Time Stamp' : time_stamp,
-			'Judge' : "judge00001",
+			'Judge' : judge_cred[1],
 			'IP': communicate_server.my_ip
 			}
 		
-		message = json.dumps(message)
-		
-
-		# print(message)
-		# x = message[6:11]
-		# print(x)
-		# communicate_server.message = verdict
-		# time.sleep(1)
-
+		message = json.dumps(message)		
 
 		ch.basic_publish(
 			exchange = 'judge_manager',
