@@ -4,15 +4,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QIcon, QPixmap
-# from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
-# from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
-# from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-# from interface_packages.ui_classes import *
-# from init_server import initialize_server
+
+from login_request import authenticate_judge
+
 
 class App(QWidget):
 
-    def __init__(self):
+    def __init__(self,channel,host):
         super().__init__()
         try:
             self.title = 'BitsOJ Judge'
@@ -53,7 +51,7 @@ class App(QWidget):
             self.login_button = QPushButton('Login', self)
             self.login_button.setFixedWidth(300)
             self.login_button.setFixedHeight(80)
-            self.login_button.clicked.connect(self.login_handler)
+            self.login_button.clicked.connect(self.login_handler(channel,host))
             self.login_button.setDefault(True)
             self.login_button.setObjectName('login')
 
@@ -66,7 +64,7 @@ class App(QWidget):
             layout.addWidget(self.password)
             layout.addWidget(self.login_button)
 
-            layout.setContentsMargins(100, 0, 0, 150)
+            layout.setContentsMargins(150, 0, 0, 50)
 
 
             self.setLayout(layout)
@@ -81,10 +79,32 @@ class App(QWidget):
     #     print("button clicked")
 
 
-    def login_handler(self):
+    def login_handler(self,channel,host):
 
         if self.judge_id.text() == '' or self.password.text() == '':
-            QMessageBox.warning(self,'Error','kya hai be')
+            authenticate_judge.login(channel,host)
+            status = authenticate_judge.login_status
+
+            if( status == 'VALID'):
+                try:
+                    QApplication.quit()
+                except Exception as error:
+                    print('[ ERROR ] Could not exit properly : ' + str(error) )
+
+            # If server is not accepting login request then show an alert
+            elif( status == 'LRJCT' ):
+                # QMessageBox.warning(self, 'Error', 'Login Rejected by admin.')
+                QMessageBox.warning(self, 'Error', 'Login Rejected.\n Please wait.')
+            else:
+                QMessageBox.warning(self, 'Error', 'Wrong credentials')
+
+
+        elif (self.judge_id.text() == ''):
+            QMessageBox.warning(self, 'Error', 'Username cannot be empty')
+
+        # If password is empty then show an alert
+        elif (self.password.text() == ''):
+            QMessageBox.warning(self, 'Error', 'Password cannot be empty')
 
         
 
