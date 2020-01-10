@@ -12,10 +12,12 @@ class authenticate_judge():
 	my_ip = initialize_judge.my_ip()
 
 
-	def login(channel, host):
+	def login(channel, host,username,password):
 		authenticate_judge.channel = channel
-		authenticate_judge.username = input("Enter Judge's Username:") or "judge00001"
-		authenticate_judge.password = input("Enter Judge's Password:") or "bits1"
+		# authenticate_judge.username = input("Enter Judge's Username:") or "judge00001"
+		# authenticate_judge.password = input("Enter Judge's Password:") or "bits1"
+		authenticate_judge.username = username
+		authenticate_judge.password = password
 		client_id = 'Nul'
 
 		print("\n[Validating] : " + authenticate_judge.username + "@" + authenticate_judge.password )

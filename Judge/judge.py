@@ -3,6 +3,7 @@ from connection import manage_connection
 from login_request import authenticate_judge 
 from communicate_server import communicate_server
 from init_judge import initialize_judge
+from gui import start_interface
 
 
 initialize_judge.read_config()
@@ -16,13 +17,16 @@ key = initialize_judge.key
 channel,connection = manage_connection.initialize_connection(rabbitmq_username,rabbitmq_password,host)
 print(type (channel))
 print("................ BitsOJ Judge .................\n")
+try:
+	start_interface(channel,host)
+except Exception as Error:
+	print(str(Error))
+# status = ''
+# while (status != 'VALID'):
+# 	authenticate_judge.login(channel, host)
+# 	status = authenticate_judge.login_status
 
-status = ''
-while (status != 'VALID'):
-	authenticate_judge.login(channel, host)
-	status = authenticate_judge.login_status
-
-while (status == 'VALID'):
+while (authenticate_judge.login_status == 'VALID'):
 	communicate_server.listen_server()
 
 

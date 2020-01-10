@@ -9,7 +9,6 @@ from login_request import authenticate_judge
 
 
 class App(QWidget):
-
     def __init__(self,channel,host):
         super().__init__()
         try:
@@ -51,7 +50,7 @@ class App(QWidget):
             self.login_button = QPushButton('Login', self)
             self.login_button.setFixedWidth(300)
             self.login_button.setFixedHeight(80)
-            self.login_button.clicked.connect(self.login_handler(channel,host))
+            self.login_button.clicked.connect(lambda:self.login_handler(channel,host))
             self.login_button.setDefault(True)
             self.login_button.setObjectName('login')
 
@@ -69,10 +68,12 @@ class App(QWidget):
 
             self.setLayout(layout)
             self.setObjectName('loginwindow')
+            print('show')
             self.show()
+            print('show done')
 
         except Exception as e:
-            print(e)
+            print(str(e))
         return 
 
     # def onClick(self):
@@ -81,8 +82,8 @@ class App(QWidget):
 
     def login_handler(self,channel,host):
 
-        if self.judge_id.text() == '' or self.password.text() == '':
-            authenticate_judge.login(channel,host)
+        if self.judge_id.text() != '' or self.password.text() != '':
+            authenticate_judge.login(channel,host,self.judge_id.text(),self.password.text())
             status = authenticate_judge.login_status
 
             if( status == 'VALID'):
@@ -106,11 +107,20 @@ class App(QWidget):
         elif (self.password.text() == ''):
             QMessageBox.warning(self, 'Error', 'Password cannot be empty')
 
-        
+    def closeEvent(self, event):
+        # If user clicks on close button on login form, exit the whole application
+        # self.connection_object.close()
+        sys.exit()
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    app.setStyleSheet(open('Assets/login.qss', "r").read())
-    ex = App()
-    ex.show()
-    sys.exit(app.exec_())
+
+class start_interface(App):
+    def __init__(self, channel,host):
+        app = QApplication(sys.argv)
+        # app.setStyle("Fusion")
+        app.setStyleSheet(open('Assets/login.qss', "r").read())
+        app.aboutToQuit.connect(self.closeEvent)
+        # make a reference of App class
+        login_app = App(channel,host)
+        
+        # Close the server as soon as close button is clicked
+        app.exec_()
