@@ -1,0 +1,6 @@
+openpyxl==3.0.2
+pika==1.1.0
+pyAesCrypt==0.4.3
+PyPDF2==1.26.0
+PyQt5==5.13.0
+PyQt5-sip==4.19.18

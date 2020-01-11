@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*$py.class
+*~
+*.swp
+*.db
+server_database.db
+Client_Submissions/
+Problems/
+Solution/
+problems/
+submission_files/
+diary
+config.json
+todo.txt
+server_logs.txt
