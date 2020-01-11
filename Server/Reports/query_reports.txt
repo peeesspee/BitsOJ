@@ -1,0 +1,7 @@
+2020-01-12 01:51:49.909384
+################ BitsOJ  ################
+Contest: Kodeathon A7 - Testing
+Queries and Announcements:
+	ClientID					Query					Response
+
+################################################

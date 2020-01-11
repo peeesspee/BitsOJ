@@ -1,0 +1,25 @@
+2020-01-12 01:51:49.904827
+################ BitsOJ  ################
+Contest: Kodeathon A7 - Testing
+
+All Judges:
+	Judge ID		Team Name		  IP Address
+	__JUDGE__		judge00001		  000.000.000.000
+	__ADMIN__		ADMIN		  localhost
+
+####################################################################################################
+
+Submission data grouped by judgess:
+
+> Judge: judge00001 :::: Number of verdicts: 0
+	Run ID			Client ID 			 Problem Code 		 Language 			 Timestamp 			 Verdict
+	No Verdicts by this judge.
+
+> Judge: ADMIN :::: Number of verdicts: 4
+	Run ID			Client ID 			 Problem Code 		 Language 			 Timestamp 			 Verdict
+		1				  1				  TRI					C++				  23:13:28				WA
+		2				  1				  TRI					C++				  23:14:02				AC
+		3				  1				  TRI					C++				  23:14:22				WA
+		4				  1				  TFT					C++				  16:42:41				AC
+
+####################################################################################################
