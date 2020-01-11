@@ -1115,7 +1115,19 @@ class server_window(QMainWindow):
 			return
 
 		try:
-			self.window = generate_report_ui(self.data_changed_flags, self.task_queue, self.log_queue)
+			contest_name = self.config['Contest Name']
+			theme = self.config['Contest Theme']
+		except:
+			contest_name = 'BitsOJ Contest'
+			contest_theme = ' '
+
+		try:
+			self.window = generate_report_ui(
+				self.data_changed_flags, 
+				self.task_queue, 
+				self.log_queue,
+				self.config
+			)
 			self.window.show()
 		except Exception as error: 
 			print('[ UI ][ ERROR ][ REPORT ] ' + str(error))

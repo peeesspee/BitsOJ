@@ -1047,7 +1047,208 @@ class user_management(manage_database):
 			conn.rollback()
 		finally:
 			return
+
+	def add_sheet_accounts(user_list, password_list, type_list):
+		u_len = len(user_list)
+		p_len = len(password_list)
+		t_len = len(type_list)
+		if u_len != p_len or u_len != t_len:
+			print('[ CRITICAL ] Database insertion error: Incorrect datatype or amount')
+			return
+
+		cur = manage_database.get_cursor()
+		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
+
+		cur.execute("begin")
+		try:
+			for i in range(0, u_len):
+				cur.execute("INSERT into accounts values (?, ?, ? )" , (user_list[i], password_list[i], type_list[i], ))
+			cur.execute("commit")
+
+		except Exception as error:
+			print('[ CRITICAL ] Database insertion error: ' + str(error))
+			cur.execute('rollback')
+			return 0
 			
+		# INSERTION FINISHED
+		return 1
+
+	def get_sheet_accounts():
+		cur = manage_database.get_cursor()
+		u_list = []
+		p_list = []
+		t_list = []
+		try:
+			cur.execute("SELECT * FROM accounts ORDER BY user_name ASC")
+			data = cur.fetchall()
+			if data != '' and len(data) != 0:
+				for entry in data:
+					u_list.append(entry[0])
+					p_list.append(entry[1])
+					t_list.append(entry[2])
+
+		except Exception as error:
+			print('[ CRITICAL ] Database fetch error: ' + str(error))
+
+		return u_list, p_list, t_list
+
+class report_management(manage_database):
+	def get_account_data():
+		try:
+			cur = manage_database.get_cursor()
+			query = 'SELECT * FROM accounts ORDER BY user_name ASC'
+			cur.execute(query)
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return 'NULL'
+			return data
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching account reports : ', error)
+			return 'NULL'
+
+	def get_all_submission_data():
+		try:
+			cur = manage_database.get_cursor()
+			query = 'SELECT run_id, client_id, problem_code, language, timestamp, verdict, judge FROM submissions ORDER BY run_id ASC'
+			cur.execute(query)
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return 'NULL'
+			return data
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching submission reports : ', error)
+			return 'NULL'
+
+	def get_grouped_problem_sub_data(problem):
+		try:
+			cur = manage_database.get_cursor()
+			query = 'SELECT run_id, client_id, language, timestamp, verdict FROM submissions where problem_code = ? ORDER BY run_id ASC'
+			cur.execute(query, (problem, ))
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return []
+			return data
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching submission reports : ', error)
+			return 'NULL'
+
+	def get_all_client_data():
+		try:
+			cur = manage_database.get_cursor()
+			query = 'SELECT client_id, user_name, ip FROM connected_clients ORDER BY client_id ASC'
+			cur.execute(query)
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return []
+			return data
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching submission reports : ', error)
+			return 'NULL'
+
+	def get_grouped_client_sub_data(client_id):
+		try:
+			cur = manage_database.get_cursor()
+			query = 'SELECT run_id, problem_code, language, timestamp, verdict FROM submissions where client_id = ? ORDER BY run_id ASC'
+			cur.execute(query, (client_id, ))
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return []
+			return data
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching submission reports : ', error)
+			return 'NULL'
+
+	def get_all_judge_data():
+		try:
+			cur = manage_database.get_cursor()
+			query = 'SELECT judge_id, user_name, ip FROM connected_judges'
+			cur.execute(query)
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return []
+			return data
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching submission reports : ', error)
+			return []
+
+	def get_grouped_judge_sub_data(judge):
+		try:
+			cur = manage_database.get_cursor()
+			query = 'SELECT run_id, client_id, problem_code, language, timestamp, verdict FROM submissions where judge = ? ORDER BY run_id ASC'
+			cur.execute(query, (judge, ))
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return []
+			return data
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching submission reports : ', error)
+			return 'NULL'
+
+	def get_judgement_count(judge):
+		try:
+			cur = manage_database.get_cursor()
+			query = 'SELECT count(run_id) FROM submissions where judge = ?'
+			cur.execute(query, (judge, ))
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return 0
+			return data[0][0]
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching submission reports : ', error)
+			return 0
+
+	def get_winner():
+		try:
+			cur = manage_database.get_cursor()
+			query = "select max(scoreboard.score), connected_clients.user_name from scoreboard, connected_clients where connected_clients.client_id = scoreboard.client_id"
+			cur.execute(query)
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return []
+			return data[0]
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching scoreboard reports : ', error)
+			return "NULL"
+
+	def get_scoreboard_data():
+		try:
+			cur = manage_database.get_cursor()
+			query = "SELECT user_name, score, problems_solved, total_time FROM scoreboard where is_hidden = 'False' ORDER BY score DESC"
+			cur.execute(query)
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return []
+			return data
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching scoreboard reports : ', error)
+			return "NULL"
+
+	def get_query_data():
+		try:
+			cur = manage_database.get_cursor()
+			query = "SELECT client_id, query, response FROM queries"
+			cur.execute(query)
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return []
+			return data
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching query reports : ', error)
+			return "NULL"
+
+	def get_problem_data():
+		try:
+			cur = manage_database.get_cursor()
+			query = "SELECT * FROM problems"
+			cur.execute(query)
+			data = cur.fetchall()
+			if data == '' or len(data) == 0:
+				return []
+			return data
+		except Exception as error:
+			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching problem reports : ', error)
+			return "NULL"
+
 	def get_ac_count(problem_code):
 		try:
 			cur = manage_database.get_cursor()
@@ -1065,6 +1266,7 @@ class user_management(manage_database):
 			return 0
 
 			return
+
 	def get_submission_count(problem_code):
 		try:
 			cur = manage_database.get_cursor()
@@ -1110,46 +1312,9 @@ class user_management(manage_database):
 			print(str(error))
 			return 0
 
-	def add_sheet_accounts(user_list, password_list, type_list):
-		u_len = len(user_list)
-		p_len = len(password_list)
-		t_len = len(type_list)
-		if u_len != p_len or u_len != t_len:
-			print('[ CRITICAL ] Database insertion error: Incorrect datatype or amount')
-			return
 
-		cur = manage_database.get_cursor()
-		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
 
-		cur.execute("begin")
-		try:
-			for i in range(0, u_len):
-				cur.execute("INSERT into accounts values (?, ?, ? )" , (user_list[i], password_list[i], type_list[i], ))
-			cur.execute("commit")
 
-		except Exception as error:
-			print('[ CRITICAL ] Database insertion error: ' + str(error))
-			cur.execute('rollback')
-			return 0
-			
-		# INSERTION FINISHED
-		return 1
 
-	def get_sheet_accounts():
-		cur = manage_database.get_cursor()
-		u_list = []
-		p_list = []
-		t_list = []
-		try:
-			cur.execute("SELECT * FROM accounts")
-			data = cur.fetchall()
-			if data != '' and len(data) != 0:
-				for entry in data:
-					u_list.append(entry[0])
-					p_list.append(entry[1])
-					t_list.append(entry[2])
 
-		except Exception as error:
-			print('[ CRITICAL ] Database fetch error: ' + str(error))
 
-		return u_list, p_list, t_list
