@@ -1,5 +1,6 @@
 # BitsOJ
 Offline Judge for competitive programming contests.  
+<<<<<<< HEAD
 
 ## Setup
 ### Setting up backend services:
@@ -49,14 +50,14 @@ Visit : http://localhost:15672/ and login using user_name and user_password
 #### And you're done!!!!
 
 ## Goals:
+=======
+>>>>>>> master
 ### Requirements  
 1.Python3.x  
 2.Subprocess Module  
 3.~Socket Programming~  
 4.Pika + RabbitMQ  
-5.PyQt Module  
-6.~Kivy~  
-
+5.PyQt Module(Might change)  
 
 ### Check List
 #### Admins
@@ -68,6 +69,7 @@ Visit : http://localhost:15672/ and login using user_name and user_password
 6.Can broadcast messages and respond to queries.[DONE]  
 
 #### Users  
+<<<<<<< HEAD
 0.Can Login[DONE]
 1.Can view problems.[DONE]  
 2.Can submit solution, and view result.[DONE]   
@@ -75,6 +77,14 @@ Visit : http://localhost:15672/ and login using user_name and user_password
 4.Can send queries.[DONE]   
 5.Can request a rejudge and get NO as a reply.[DONE]  
 6.Can view ranklist locally.[NOT YET STARTED]  
+=======
+1.Can view problems.  
+2.Can submit solution, and view result.   
+3.Can view their submission results.   
+4.Can send queries.   
+5.Can request a rejudge and get NO as a reply.  
+6.Can view ranklist locally.  
+>>>>>>> master
   
 #### OJ:Interface  
 1.Assign a run ID to each code.[DONE]  
@@ -88,11 +98,19 @@ Visit : http://localhost:15672/ and login using user_name and user_password
 9.As soon as contest time is over, it must not accept any new solutions.[IN PROGRESS]  
 
 #### OJ:Innards
+<<<<<<< HEAD
 0.Manage connections.[DONE]    
 1.Verify user details.[DONE]  
 2.Implement client data queue.[DONE]  
 3.Manage Judge queue.[DONE]  
 4.Database manager[DONE]  
+=======
+0.Manage connections.  (Work in progress : 30%)    
+1.Verify user details.  (Work in progress : Enqueued)  
+2.Implement client data queue.  (Work in progress : Enqueued)  
+3.Manage Judge queue.  (Scheduled for later)  
+4.Database manager  (Scheduled for later)  
+>>>>>>> master
 
 #### Error Interface
 0.If no judges are active (Critical)  

@@ -131,6 +131,15 @@ class scoreboard_management():
 			print("[ DB ][ CRITICAL ] Could not get scoreboard : " + str(error))
 		return	
 
+	def delete_all():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("DELETE FROM scoreboard")
+			cur.execute('commit')
+		except:
+			print("[ DB ][ CRITICAL ] Could not reset scoreboard : " + str(error))
+
+
 	def update_user_score(
 			client_id,
 			run_id, 
@@ -160,6 +169,7 @@ class scoreboard_management():
 			finally:
 				return
 		elif ranking_algorithm == 2 or ranking_algorithm == 3:
+			print('\n[ SCOREBOARD ] Checking new submission...')
 			# IOI style ranklist
 			# For every unsolved problem, if there is a wrong answer, no penalty is issued
 			# If there is an AC submission, then problem_max_score is issued to the problem.
@@ -189,6 +199,8 @@ class scoreboard_management():
 				else:
 					problems_solved = len(data)
 
+				print('[ SCOREBOARD ] Client: ', client_id, ' Problems Solved: ', problems_solved)
+
 				# Get Previous total score of the client
 				cur.execute("SELECT score FROM scoreboard WHERE client_id = ?", (client_id, ))
 				data = cur.fetchall()
@@ -196,6 +208,8 @@ class scoreboard_management():
 					previous_total_score = 0
 				else:
 					previous_total_score = int(data[0][0])
+
+				print('[ SCOREBOARD ] Run: ', run_id, ' Previous Score: ', previous_total_score)
 
 				# Get Previous problem score of the run_id
 				cur.execute("SELECT score FROM submissions WHERE run_id = ?", (run_id, ))
@@ -206,23 +220,35 @@ class scoreboard_management():
 				else:
 					previous_score = int(data[0][0])
 
+				print('[ SCOREBOARD ] Run: ', run_id, ' Previous RunID Score: ', previous_score)
 
-				# Check if this is the first AC of this problem
+
+				# Check if this is an AC submission, and if it is the first AC of this problem
 				if status == 'AC':
+					print('[ SCOREBOARD ] Run: ', run_id, ' This is an AC submission.')
 					cur.execute(
-						"SELECT * FROM submissions WHERE client_id = ? and problem_code = ? and verdict = 'AC' and score = 0", 
+						"SELECT run_id FROM submissions WHERE client_id = ? and problem_code = ? and verdict = 'AC' and score = ?",
 						(
-							client_id, 
-							problem_code, 
+							client_id,
+							problem_code,
+							problem_max_score,
 						)
 					)
 					data = cur.fetchall()
-					# print(data)
-					# If there is only one such entry, it means this is a new AC (The same AC that the entry was for)
-					if data == None or len(data) == 1:
-						print('[ SCOREBOARD ][ RUN ' + str(run_id) + ' ][ PASS ] New AC')
-						# We are here, which means this is a new AC submission
-						# We don't care about wrong answers in IOI stle, so, Meh
+					number_of_submissions = len(data)
+					if number_of_submissions > 0:
+						previous_scored_run_id = int(data[0][0])
+
+					print(
+						'[ SCOREBOARD ] Client: ', 
+						client_id, 
+						' Number of Scored AC Submissions for this problem ( 0 or 1 ): ', 
+						number_of_submissions
+					)
+					# If the problem has not been solved yet, ie, number_of_submissions = 0
+					if number_of_submissions == 0:
+						print('[ SCOREBOARD ][ RUN ', run_id, ' ][ PASS ] New AC')
+						
 						new_total_score = previous_total_score + problem_max_score
 
 						print(
@@ -233,6 +259,16 @@ class scoreboard_management():
 							+ " New Score:" 
 							+ str(new_total_score)
 						)
+						# Set this submission as SCORED
+						cur.execute(
+							"UPDATE submissions SET score = ? WHERE run_id = ? ", 
+							(
+								problem_max_score,
+								run_id,
+							)
+						)
+						conn.commit()
+						# Update scoreboard score
 						cur.execute(
 							"UPDATE scoreboard SET score = ?, problems_solved = ?, total_time = ? WHERE client_id = ? ", 
 							(
@@ -243,6 +279,15 @@ class scoreboard_management():
 							)
 						)
 						conn.commit()
+						
+					elif number_of_submissions > 0 and run_id < previous_scored_run_id:
+						# If this AC is for a submission with lower RunID for the same problem,
+						# If so, then time is updated but score is not
+				
+						# Update Scoreboard timestamp
+						print('[ SCOREBOARD ][ RUN ' + str(run_id) + ' ][ PASS ] This AC has a lower Timestamp than the previous one.')
+						# Set this runid score to max
+						print('[ SCOREBOARD ][ RUN ' + str(run_id) + ' ] Score: ', problem_max_score)
 						cur.execute(
 							"UPDATE submissions SET score = ? WHERE run_id = ? ", 
 							(
@@ -251,31 +296,191 @@ class scoreboard_management():
 							)
 						)
 						conn.commit()
+						# Set previous runid score to 0
+						print('[ SCOREBOARD ][ RUN ' + str(previous_scored_run_id) + ' ] Score: ', 0)
+						cur.execute(
+							"UPDATE submissions SET score = ? WHERE run_id = ? ", 
+							(
+								0,
+								previous_scored_run_id,
+							)
+						)
+						conn.commit()
+						# Get last timestamp
+						cur.execute(
+							"SELECT timestamp FROM submissions WHERE client_id = ? and verdict = 'AC' and score > 0 ORDER BY run_id DESC", 
+							(
+								client_id, 
+							)
+						)
+						data = cur.fetchall()
+						previous_timestamp = data[0][0]
+						# Update leaderboard timestamp
+						cur.execute(
+							"UPDATE scoreboard SET total_time = ? WHERE client_id = ? ", 
+							(
+								previous_timestamp,
+								client_id,
+							)
+						)
+						conn.commit()
+
 
 					else:
-						print('[ SCOREBOARD ][ RUN ' + str(run_id) + ' ][ SKIP ] Already received AC Verdict on this problem.')
+						print('[ SCOREBOARD ][ RUN ' + str(run_id) + ' ][ FAIL ] Already received AC Verdict on this problem.')
+						# Set this problem score to 0 ( not SCORED )
+						cur.execute(
+							"UPDATE submissions SET score = ? WHERE run_id = ? ", 
+							(
+								0,
+								run_id,
+							)
+						)
+						conn.commit()
 						return
 
-				else:
+				elif status != 'AC':
+					print('[ SCOREBOARD ] Run: ', run_id, ' This is NOT an AC submission.')
+					# If status is not AC
 					# Check if the client had recieved AC verdict earlier?
 					# If verdict is not AC but RUN SCORE is non zero, then this score
 					# must be removed
-					
-					if previous_score == problem_max_score:
-						new_total_score = previous_total_score - problem_max_score
-						# print('prev score:' , previous_total_score)
-						# print('problem max score = ' , problem_max_score)
-						# print('New score = ' , new_total_score)
-						# Get previous total_time : Last AC time
-						cur.execute("SELECT timestamp FROM submissions WHERE client_id = ? and verdict = 'AC' ORDER BY run_id DESC", (client_id, ))
-						data = cur.fetchall()
-						# Data can not be NONE (Guarenteed)
-						if data == None or len(data) == 0: # Meh, Anyways 
-							previous_timestamp = '00:00:00'
-						else:
-							previous_timestamp = data[0][0]
 
-						# Update submissions table first, then find out the new problems_solved count
+					# Also check if client has already solved this problem based on another run id?
+					# If so, then we do not decrease his score					
+					if previous_score == problem_max_score:
+						print('[ SCOREBOARD ] Run: ', run_id, ' This RunID was an AC submission earlier.')
+						# Check if there is any other submission which can take its place?
+						cur.execute(
+							"SELECT run_id FROM submissions WHERE client_id = ? and problem_code = ? and verdict = 'AC' and score = ? ORDER BY timestamp ASC",
+							(
+								client_id,
+								problem_code,
+								0,
+							)
+						)
+						data = cur.fetchall()
+						previous_ac_submission_count = len(data)
+						# We can make the oldest submission AC now.
+
+						# If there is any such submission,
+						if previous_ac_submission_count > 0:
+							# Submissions are sorted by increasing timestamp. 
+							# So the oldest submission is scored
+							oldest_ac_runid = int(data[0][0])
+							print(
+								'[ SCOREBOARD ] Run: ', run_id, ' Another RunID has an AC verdict for this problem: ',
+								oldest_ac_runid
+							)
+							# Set that RunID score to problem_max_score
+							cur.execute(
+								"UPDATE submissions SET score = ? WHERE run_id = ? ", 
+								(
+									problem_max_score,
+									oldest_ac_runid,
+								)
+							)
+							conn.commit()
+							# Set this RunID score to 0
+							cur.execute(
+								"UPDATE submissions SET score = ? WHERE run_id = ? ", 
+								(
+									0,
+									run_id,
+								)
+							)
+							conn.commit()
+
+							print(
+								'[ SCOREBOARD ] Run: ', oldest_ac_runid, ' Score set to ', problem_max_score
+							)
+							
+							# Now find the new timestamp for the leaderboard : The score does not change
+							# This timestamp includes every submission
+							cur.execute(
+								"SELECT max(timestamp) FROM submissions WHERE client_id = ? and verdict = 'AC' and score > 0",
+								(
+									client_id,
+								)
+							)
+							data = cur.fetchall()
+							max_problem_ac_timestamp  = data[0][0]
+
+							print(
+								'[ SCOREBOARD ] CLient: ', client_id, ' New Total Time: ', max_problem_ac_timestamp, ' UPDATE SCOREBOARD' 
+							)
+
+							# Update the time on leaderboard
+							cur.execute(
+								"UPDATE scoreboard SET total_time = ? WHERE client_id = ? ", 
+								(
+									max_problem_ac_timestamp,
+									client_id,
+								)
+							)
+							conn.commit()
+
+						elif previous_ac_submission_count == 0:
+							# If no submission can take its place, we make the score equal to 0
+							# We also decrease the total score by problem_max_score
+							# Also change total time for that client
+							print('[ SCOREBOARD ] Client: ', client_id, ' No RunID has AC for this problem now')
+							print('[ SCOREBOARD ] Client: ', client_id, ' This problem is unsolved by the client.')
+							new_total_score = previous_total_score - problem_max_score
+							# Also, problems_solved count is now decreased
+							# problems_solved -= 1
+							# Problems_solved is automatically correct ( Calculated earlier on the basis of AC count )
+
+							print('[ SCOREBOARD ] Client: ', client_id, ' New Total Score: ', new_total_score)
+							# Get previous total_time : Last AC time
+							cur.execute(
+								"SELECT timestamp FROM submissions WHERE client_id = ? and verdict = 'AC'  and score > 0 ORDER BY run_id DESC", 
+								(
+									client_id, 
+								)
+							)
+							data = cur.fetchall()
+							# Data can not be NONE (Guarenteed)
+							if data == None or len(data) == 0: # Meh, Anyways 
+								previous_timestamp = '00:00:00'
+							else:
+								previous_timestamp = data[0][0]
+
+							print('[ SCOREBOARD ] Client: ', client_id, ' New Total Time: ', previous_timestamp)
+
+							# Update this submission score to 0
+							cur.execute(
+								"UPDATE submissions SET score = ? WHERE run_id = ? ", 
+								(
+									0,
+									run_id,
+								)
+							)
+							conn.commit()
+
+							# The problem_solved count automatically takes this into account
+							cur.execute(
+								"UPDATE scoreboard SET score = ?, problems_solved = ?, total_time = ? WHERE client_id = ? ", 
+								(
+									new_total_score,
+									problems_solved,
+									previous_timestamp,
+									client_id,
+								)
+							)
+							conn.commit()
+							print(
+								'[ SCOREBOARD ][ UPDATE ][ REJUDGE ] Client: ' 
+								+ str(client_id) 
+								+ " Prev Score :" 
+								+ str(previous_total_score) 
+								+ " New Score:" 
+								+ str(new_total_score)
+							)
+
+					elif previous_score == 0:
+						print('[ SCOREBOARD ] Client: ', client_id, ' This RunID is a new verdict, with no score.')
+						# This is a wrong submission, and was not AC earlier, so set its score to 0 and be done
 						cur.execute(
 							"UPDATE submissions SET score = 0 WHERE run_id = ? ", 
 							(
@@ -284,30 +489,10 @@ class scoreboard_management():
 						)
 						conn.commit()
 
-						# The problem_solved count automatically takes this into account
-						cur.execute(
-							"UPDATE scoreboard SET score = ?, problems_solved = ?, total_time = ? WHERE client_id = ? ", 
-							(
-								new_total_score,
-								problems_solved,
-								previous_timestamp,
-								client_id,
-							)
-						)
-						conn.commit()
-						print(
-							'[ SCOREBOARD ][ UPDATE ][ REJUDGE ] Client: ' 
-							+ str(client_id) 
-							+ " Prev Score :" 
-							+ str(previous_total_score) 
-							+ " New Score:" 
-							+ str(new_total_score)
-						)
-
 			except Exception as error:
 				exc_type, exc_obj, exc_tb = sys.exc_info()
 				fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-				print('[ DB ][ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error) + 'ON ', exc_type, fname, exc_tb.tb_lineno)
+				print('[ DB ][ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error) + 'in File ', fname, ' Line No. ', exc_tb.tb_lineno)
 			finally:
 				return
 
@@ -506,8 +691,7 @@ class submissions_management(manage_database):
 			conn = manage_database.get_connection_object()
 			cur.execute("DELETE FROM submissions")
 			conn.commit()
-			cur.execute("DELETE FROM scoreboard")
-			conn.commit()
+			
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
@@ -817,6 +1001,8 @@ class user_management(manage_database):
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			cur.execute("UPDATE connected_clients SET state = 'Disconnected'")
+			conn.commit()
+			cur.execute("UPDATE connected_judges SET state = 'Disconnected'")
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database updation error : " + str(error))

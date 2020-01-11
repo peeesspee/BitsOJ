@@ -86,22 +86,40 @@ class core():
 				code = data['Code']
 				# Contest START signal
 				if code == 'START':
-					print('[ EVENT ][ BROADCAST ] START Contest')
-					core.log('[ EVENT ][ BROADCAST ] START Contest')
 					receiver = data['Receiver']
-					message = {
-						'Code' : 'START',
-						'Duration' : data['Duration'],
-						'Start Time' : data['Start Time'],
-						'End Time' : data['End Time'],
-						'Problem Key' : core.file_password
-					}
-					message = json.dumps(message)
-					core.channel.basic_publish(
-						exchange = core.broadcast_exchange, 
-						routing_key = '', 
-						body = message
-					)
+					if receiver == 'All':
+						print('[ EVENT ][ BROADCAST ] START Contest')
+						core.log('[ EVENT ][ BROADCAST ] START Contest')
+						message = {
+							'Code' : 'START',
+							'Duration' : data['Duration'],
+							'Start Time' : data['Start Time'],
+							'End Time' : data['End Time'],
+							'Problem Key' : core.file_password
+						}
+						message = json.dumps(message)
+						core.channel.basic_publish(
+							exchange = core.broadcast_exchange, 
+							routing_key = '', 
+							body = message
+						)
+					else:
+						print('[ EVENT ][ ' + receiver + ' ] START Contest')
+						core.log('[ EVENT ][ ' + receiver + ' ] START Contest')
+						message = {
+							'Code' : 'START',
+							'Duration' : data['Duration'],
+							'Start Time' : data['Start Time'],
+							'End Time' : data['End Time'],
+							'Problem Key' : core.file_password
+						}
+						message = json.dumps(message)
+						core.channel.basic_publish(
+							exchange = core.unicast_exchange, 
+							routing_key = receiver, 
+							body = message
+						)
+
 				
 				# Contest STOP signal
 				elif code == 'STOP':
@@ -120,9 +138,9 @@ class core():
 
 				# Contest EXTeND signal
 				elif code == 'EXTND':
+					time = data['Time']
 					print('[ CORE ] Contest time extended by ' + str(time) + ' minutes.')
 					core.log('[ CORE ] Contest time extended by ' + str(time) + ' minutes.')
-					time = data['Time']
 					message = json.dumps(data)
 					core.channel.basic_publish(
 						exchange = core.broadcast_exchange, 
@@ -130,7 +148,6 @@ class core():
 						body = message
 					)
 					
-
 				elif code == 'RESPONSE':
 					receiver = data['Receiver']
 					message = json.dumps(data)
@@ -152,35 +169,37 @@ class core():
 					try:
 						judge = data['Judge']
 					except:
-						print('No judge')
-						judge = 'OOPS'
+						judge = 'SECURITY ERROR'
 					message = json.dumps(data)
 					core.channel.basic_publish(
 						exchange = core.unicast_exchange, 
 						routing_key = receiver, 
 						body = message
 					)
-					# Update Database
-					submissions_management.update_submission_status(run_id, status, 'SENT', judge)
-					# Update Submissions GUI
-					core.data_changed_flags[0] = 1
-
+					
 					# Update scoreboard
 					problem_max_score = core.config['AC Points']
 					penalty_score = core.config['Penalty Score']
 					penalty_time = core.config['Penalty Time']
-					# call scoreboard updation function		TODO MOVE TO CORE
+					
+					# Update submission Database
+					submissions_management.update_submission_status(run_id, status, 'SENT', judge)
+
+					# Call scoreboard updation function
 					scoreboard_management.update_user_score(
-						client_id, 
+						client_id,
 						run_id,
-						problem_max_score, 
+						problem_max_score,
 						penalty_score,
 						penalty_time,
 						status, 
 						p_code,
 						time_stamp,
-						core.ranking_algoritm # Ranking Algorithm
-					)
+						core.ranking_algoritm
+					) 
+
+					# Update Submissions GUI
+					core.data_changed_flags[0] = 1
 					# Update scoreboard view in server
 					core.data_changed_flags[16] = 1
 					# Broadcast new scoreboard to clients whenever a new AC is recieved 
@@ -305,6 +324,36 @@ class core():
 						
 				# Client has been DiSCoNnecTed
 				elif code == 'DSCNT':
+					if data['Mode'] == 1:
+						client = data['Client']
+						print('[ EVENT ] Disconnect client : ' + str(client))
+						core.log('[ EVENT ] Disconnect client : ' + str(client))
+						message = {
+						'Code' : 'DSCNT',
+						'Client' : client
+						}
+						message = json.dumps(message)
+						# UNICAST THIS
+						core.channel.basic_publish(
+							exchange = core.unicast_exchange, 
+							routing_key = client, 
+							body = message
+						)
+					elif data['Mode'] == 2:
+						print('[ EVENT ] Disconnect all clients')
+						core.log('[ EVENT ] Disconnect all clients')
+						message = {
+						'Code' : 'DSCNT',
+						'Client' : 'All'
+						}
+						message = json.dumps(message)
+						core.channel.basic_publish(
+							exchange = core.broadcast_exchange, 
+							routing_key = '', 
+							body = message
+						)
+
+				elif code == 'JDSCNT':
 					if data['Mode'] == 1:
 						client = data['Client']
 						print('[ EVENT ] Disconnect client : ' + str(client))

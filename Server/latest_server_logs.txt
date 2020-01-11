@@ -1,0 +1,38 @@
+2020-01-11 17:25:24.014189  :  #### SERVER START #### ###
+2020-01-11 17:25:24.014294  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-11 17:25:24.014323  :  [ SETUP ] Initialising server... ###
+2020-01-11 17:25:24.014347  :  [ SETUP ] Initialising database... ###
+2020-01-11 17:25:24.515197  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-11 17:25:24.515423  :    [ START ] Client Manager subprocess started. ###
+2020-01-11 17:25:24.515590  :    [ START ] Judge Manager subprocess started. ###
+2020-01-11 17:25:24.515739  :  [ SETUP ] Subprocesses started ###
+2020-01-11 17:25:24.515881  :  [ SETUP ][ Process ] Client Manager: 28802 ###
+2020-01-11 17:25:24.516023  :  [ SETUP ][ Process ] Judge Manager: 28803 ###
+2020-01-11 17:25:24.516162  :  [ SETUP ][ Process ] Core: 28806 ###
+2020-01-11 17:25:24.516298  :  [ SETUP ][ Process ] Log Manager: 28800 ###
+2020-01-11 17:25:24.516432  :    [ START ] Core subprocess started. ###
+2020-01-11 17:25:24.516570  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-11 17:25:24.516707  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-11 17:25:24.516844  :    [ START ] Interface subprocess started. ###
+2020-01-11 17:25:37.033934  :  [ ALERT ] Recieved a new client message. ###
+2020-01-11 17:25:37.034026  :  [ LOGIN REQUEST ] ::: 1 :::team00001@bits1[ TYPE ] CLIENT IP: 192.168.0.0 ###
+2020-01-11 17:25:37.034079  :  [ LOGIN ][ VALIDATION ] Checking client IP Address... ###
+2020-01-11 17:25:37.034127  :  [ RE-LOGIN ][ team00001 ][ ACCEPT ] Previous Client ID : 1 ###
+2020-01-11 17:25:46.546572  :  [ USER ][ team00001 ][ UPDATE ] State changed to Disconnected ###
+2020-01-11 17:25:47.047330  :  [ EVENT ] Disconnect client : team00001 ###
+2020-01-11 17:27:30.698674  :  [ USER ][ team00001 ][ UPDATE ] Password changed to bitsahsa ###
+2020-01-11 17:30:23.955345  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-11 17:30:24.956960  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-11 17:35:23.945315  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-11 17:35:24.946988  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-11 17:38:15.182921  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-11 17:38:15.183010  :  [ EXIT ] Signal passed ###
+2020-01-11 17:38:15.183042  :  [ EXIT ] Saving Server state to file. ###
+2020-01-11 17:38:15.183069  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-11 17:38:15.183093  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-11 17:38:15.183116  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-11 17:38:15.183143  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-11 17:38:15.183167  :  [ EXIT ] Saved Server state to file. ###
+2020-01-11 17:38:16.184722  :  #### SERVER EXIT ####
+
+ ###
