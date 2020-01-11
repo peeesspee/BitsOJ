@@ -1657,9 +1657,9 @@ class init_gui(server_window):
 		server_app = server_window(data_changed_flags, task_queue, log_queue)
 
 		# Splash screen
-		# splash = QSplashScreen(QPixmap("Elements/bitwise.png"))
-		# splash.show()
-		# splash.finish(server_app)
+		splash = QSplashScreen(QPixmap("./Elements/banner.png"))
+		splash.show()
+		splash.finish(server_app)
 		# Splash ends
 
 		server_app.showMaximized()
