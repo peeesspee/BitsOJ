@@ -120,6 +120,10 @@ class start_interface(Login):
 		# make a reference of App class
 		login_app = Login(connection,queue)
 		
+		splash = QSplashScreen(QPixmap("../Elements/banner.png"))
+		splash.show()
+		splash.finish(login_app)
+		
 		# Close the server as soon as close button is clicked
 		app.exec_()
 
