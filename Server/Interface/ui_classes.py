@@ -467,7 +467,6 @@ class ui_widgets:
 		problem_solved_table.resizeColumnsToContents()
 		problem_solved_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 		problem_solved_table.setAlternatingRowColors(True)
-		problem_solved_table.setFixedSize(800, 180)
 		vertical_header = problem_solved_table.verticalHeader()
 		vertical_header.setVisible(False)
 		horizontal_header = problem_solved_table.horizontalHeader()
@@ -479,11 +478,11 @@ class ui_widgets:
 		main_layout.addWidget(participants_number_widget)
 		main_layout.addWidget(participants_pro_number_widget)
 		main_layout.addWidget(problem_solved_table)
-		main_layout.addStretch(1)
+		main_layout.setStretch(4, 50)
+		
 
 		main = QWidget()
 		main.setLayout(main_layout)
-		main.setObjectName('content_box')
 		contest_problems_subheading.setObjectName('main_screen_sub_heading')
 		contest_problems_number.setObjectName('main_screen_content')
 		contest_problems_number_answer.setObjectName('main_screen_content')

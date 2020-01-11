@@ -35,7 +35,7 @@ class rejudge_problem_ui(QMainWindow):
 			rejudge_problem_ui.client_list = client_list
 
 		self.setGeometry(700, 350, 300, 200)
-		self.setWindowTitle('Generate Accounts')
+		self.setWindowTitle('Rejudge Problems')
 		self.setFixedSize(500, 300)
 		main = self.add_rejudge_problem_ui()
 		self.setCentralWidget(main)

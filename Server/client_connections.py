@@ -142,7 +142,6 @@ class manage_clients():
 		manage_clients.log('[ ALERT ] Recieved a new client message.')
 		# Decode the message sent by client
 		client_message = str(body.decode('utf-8'))
-		print(client_message)
 		# JSON Parsing here 
 		try:
 			json_data = json.loads(client_message)
@@ -228,8 +227,29 @@ class manage_clients():
 	# This function handles all client login requests
 	def client_login_handler(client_username, client_password, client_id, client_type, client_ip = '0.0.0.0'):
 		message = ''
-		print('[ LOGIN REQUEST ] ::: ' + str(client_id) + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
-		manage_clients.log('[ LOGIN REQUEST ] ::: ' + str(client_id) + ' :::' + client_username + '@' + client_password + '[ TYPE ] ' + client_type)
+		print(
+			'[ LOGIN REQUEST ] ::: ' + 
+			str(client_id) + 
+			' :::' + 
+			client_username + 
+			'@' + client_password + 
+			'[ TYPE ] ' + 
+			client_type + 
+			' IP: ' + 
+			client_ip
+		)
+		manage_clients.log(
+			'[ LOGIN REQUEST ] ::: ' + 
+			str(client_id) + 
+			' :::' + 
+			client_username + 
+			'@' + 
+			client_password + 
+			'[ TYPE ] ' + 
+			client_type + 
+			' IP: ' + 
+			client_ip
+		)
 
 		try:
 			# Declare queue with same name as client_username
@@ -273,132 +293,7 @@ class manage_clients():
 			# Validate the client from the database
 			status = client_authentication.validate_client(client_username, client_password)
 			# If login is successful:
-			if status == True:
-				# Check if client has logged in for the first time or is already connected:
-				previously_connected_state = client_authentication.check_connected_client(client_username, 'connected_clients')
-				# If client has NOT logged in for the first time
-				# MAYBE A SECURITY EVENT?
-				# Raise a confirmation box to ADMIN maybe?
-				client_id = client_authentication.get_client_id(client_username)
-				if client_id == -1:
-					# New client
-					pass
-				if previously_connected_state == 'Connected':
-					print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Previous Client ID : ' + str(client_id) )
-					manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Previous Client ID : ' + str(client_id) )
-					# Reject client login
-					message = {
-						'Code' : 'LRJCT',
-						'Receiver' : client_username,
-						'Message' : 'Maximum Login limit is 1 per user.'
-					}
-					message = json.dumps(message)
-					manage_clients.task_queue.put(message)
-
-					# Raise a security event?
-				elif previously_connected_state == 'Disconnected':
-					if manage_clients.data_changed_flags[27] == 0:
-						state = client_authentication.check_client_ip(client_id, client_ip)
-					else:
-						state  = 1
-					if state == 1:
-						print('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
-						manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
-					
-						message = {
-							'Code' : 'VALID',
-							'Receiver' : client_username,
-							'Client ID' : client_id, 
-							'Message' : 'Welcome back!.'
-						}
-						message = json.dumps(message)
-						manage_clients.task_queue.put(message)
-
-						# Update client state from Disconnected to Connected 
-						user_management.update_user_state(client_username, 'Connected', client_ip)
-
-						# Update GUI
-						manage_clients.data_changed_flags[1] = 1
-						manage_clients.data_changed_flags[5] = 1
-						
-					else:
-						print('[ RE-LOGIN ][ ' + client_username + ' ][ REJECT ] IP validation failed')
-						manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ REJECT ] IP validation failed')
-						message = {
-							'Code' : 'LRJCT',
-							'Receiver' : client_username,
-							'Client ID' : client_id, 
-							'Message' : 'Preliminary Validation Failed. Contact site Admin for more information.'
-						}
-						message = json.dumps(message)
-						manage_clients.task_queue.put(message)
-
-				# If client has logged in for the first time
-				elif previously_connected_state == 'New':
-					# Fetch new client ID
-					client_id = client_authentication.generate_new_client_id()
-					# Add client to connected users database
-					client_authentication.add_client(client_id, client_username, client_password, client_ip, 'Connected', 'connected_clients')
-					scoreboard_management.insert_new_user(client_id, client_username, 0, 0, '00:00:00')
-
-					print('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
-					manage_clients.log('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
-
-					# Update connected clients GUI to indicate new client
-					manage_clients.data_changed_flags[1] = 1
-					# Update Scoreboard 
-					manage_clients.data_changed_flags[16] = 1
-					
-					# Reply to be sent to client
-					server_message = 'BitsOJ v1.1: Validation Successful.'
-					
-					message = {
-						'Code' : 'VALID', 
-						'Receiver' : client_username,
-						'Client ID' : client_id, 
-						'Message' : server_message
-					}
-					message = json.dumps(message)
-					manage_clients.task_queue.put(message)
-					print('[ LOGIN ][ RESPONSE ] VALID to ' + client_username)
-					manage_clients.log('[ LOGIN ][ RESPONSE ] VALID to ' + client_username)
-
-					# Check if contest has started, also send client the 
-					# START signal for contest
-					if manage_clients.data_changed_flags[10] == 1:
-						# Update self config
-						manage_clients.config = initialize_server.read_config()
-						duration = initialize_server.get_duration()
-						start_time = initialize_server.get_start_time()
-						end_time = initialize_server.get_end_time()
-
-						message = {
-							'Code' : 'START', 
-							'Receiver' : client_username,
-							'Duration' : duration,
-							'Start Time' : start_time,
-							'End Time' : end_time,
-							'Problem Key' : manage_clients.file_password
-						}
-						message = json.dumps(message)
-						manage_clients.task_queue.put(message)
-						print('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
-						manage_clients.log('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
-						
-				elif previously_connected_state == 'Blocked':
-					print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
-					manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
-					# Reject client login
-					message = {
-						'Code' : 'LRJCT',
-						'Receiver' : client_username,
-						'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
-					}
-					message = json.dumps(message)
-					manage_clients.task_queue.put(message)
-
-			# If login is not successful:
-			elif status == False:
+			if status != True:
 				# Reply 'Invalid credentials' to client
 				print('[ ' + client_username + ' ][ REJECT ] NOT verified.')
 				manage_clients.log('[ ' + client_username + ' ][ REJECT ] NOT verified.')
@@ -409,7 +304,169 @@ class manage_clients():
 				message = json.dumps(message)
 				# Send response to client
 				manage_clients.task_queue.put(message)
+				return
 
+			# Check if client has logged in for the first time or is already connected:
+			previously_connected_state = client_authentication.check_connected_client(
+				client_username, 
+				'connected_clients'
+			)
+			# If client has NOT logged in for the first time
+			# MAYBE A SECURITY EVENT?
+			# Raise a confirmation box to ADMIN maybe?
+			
+			if previously_connected_state == 'Connected':
+				print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Multiple Logins' )
+				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Multiple Logins' )
+				# Reject client login
+				message = {
+					'Code' : 'LRJCT',
+					'Receiver' : client_username,
+					'Message' : 'Maximum Login limit is 1 per user.'
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+				return
+
+				# Raise a security event?
+			elif previously_connected_state == 'Disconnected':
+				if client_id == 'Null':
+					# If the client has disconnected, it must have remembered its client id
+					# REJECT login
+					message = {
+						'Code' : 'LRJCT',
+						'Receiver' : client_username,
+						'Message' : 'System has detected an unusual Login behavior. Please contact ADMIN.'
+					}
+					message = json.dumps(message)
+					manage_clients.task_queue.put(message)
+					return
+
+				if manage_clients.data_changed_flags[27] == 0: 
+					print('[ LOGIN ][ VALIDATION ] Checking client IP Address...')
+					manage_clients.log('[ LOGIN ][ VALIDATION ] Checking client IP Address...')
+					state = client_authentication.check_client_ip(client_id, client_ip)
+				else:
+					state  = 1
+
+				if state == 1:
+					print('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
+					manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ ACCEPT ] Previous Client ID : ' + str(client_id) )
+				
+					message = {
+						'Code' : 'VALID',
+						'Receiver' : client_username,
+						'Client ID' : client_id, 
+						'Message' : 'Welcome back!.'
+					}
+					message = json.dumps(message)
+					manage_clients.task_queue.put(message)
+
+					# Update client state from Disconnected to Connected 
+					user_management.update_user_state(client_username, 'Connected', client_ip)
+
+					# Update Connected_clients GUI
+					manage_clients.data_changed_flags[1] = 1
+					# Update scoreboard view
+					manage_clients.data_changed_flags[16] = 1
+					return
+	
+				else:
+					print('[ RE-LOGIN ][ ' + client_username + ' ][ REJECT ] IP validation failed')
+					manage_clients.log('[ RE-LOGIN ][ ' + client_username + ' ][ REJECT ] IP validation failed')
+					message = {
+						'Code' : 'LRJCT',
+						'Receiver' : client_username,
+						'Client ID' : client_id, 
+						'Message' : 'Preliminary Validation Failed. Contact site Admin for more information.'
+					}
+					message = json.dumps(message)
+					manage_clients.task_queue.put(message)
+					return
+
+			# If client has logged in for the first time
+			elif previously_connected_state == 'New':
+				# Fetch new client ID
+				client_id = client_authentication.generate_new_client_id()
+				# Add client to connected users database
+				client_authentication.add_client(
+					client_id, 
+					client_username, 
+					client_password, 
+					client_ip, 
+					'Connected', 
+					'connected_clients'
+				)
+				scoreboard_management.insert_new_user(
+					client_id, 
+					client_username, 
+					0, 
+					0, 
+					'00:00:00'
+				)
+
+				print('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
+				manage_clients.log('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
+
+				# Update connected clients GUI to indicate new client
+				manage_clients.data_changed_flags[1] = 1
+				# Update Scoreboard 
+				manage_clients.data_changed_flags[16] = 1
+				
+				# Reply to be sent to client
+				server_message = 'BitsOJ v1.1: Validation Successful.'
+				
+				message = {
+					'Code' : 'VALID', 
+					'Receiver' : client_username,
+					'Client ID' : client_id, 
+					'Message' : server_message
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+				print('[ LOGIN ][ RESPONSE ] VALID to ' + client_username)
+				manage_clients.log('[ LOGIN ][ RESPONSE ] VALID to ' + client_username)
+
+				# Check if contest has started, also send client the 
+				# START signal for contest
+				if manage_clients.data_changed_flags[10] == 1:
+					# Update self config
+					manage_clients.config = initialize_server.read_config()
+					total_time = manage_clients.config['Contest Set Time']
+					start_time = initialize_server.get_start_time()
+					end_time = initialize_server.get_end_time()
+
+					current_time = time.time()
+					time_difference = total_time - current_time
+					remaining_time = time.strftime('%H:%M:%S', time.gmtime(time_difference))
+
+					message = {
+						'Code' : 'START', 
+						'Receiver' : client_username,
+						'Duration' : remaining_time,
+						'Start Time' : start_time,
+						'End Time' : end_time,
+						'Problem Key' : manage_clients.file_password
+					}
+					message = json.dumps(message)
+					manage_clients.task_queue.put(message)
+					print('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
+					manage_clients.log('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
+
+				return
+					
+			elif previously_connected_state == 'Blocked':
+				print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
+				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
+				# Reject client login
+				message = {
+					'Code' : 'LRJCT',
+					'Receiver' : client_username,
+					'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+				return
 
 		# Judge login is handled as a client to avoid redundancy in code
 		elif client_type == 'JUDGE':
@@ -424,63 +481,13 @@ class manage_clients():
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
 				return
-			# IN ALL REGARDS, CLIENT HERE MEANS A judge_manager
+
+			# IN ALL REGARDS, CLIENT HERE MEANS A JUDGE
 			status = client_authentication.validate_client(client_username, client_password)
 
-			#Bind the connection_manager exchange to client queue (queue name is same as username)
-			manage_clients.channel.queue_bind(exchange = 'judge_manager', queue = client_username)
-			# If login is successful:
-			if status == True:
-				# Check if client has logged in for the first time or is already connected:
-				previously_connected_state = client_authentication.check_connected_client(client_username, 'connected_judges')
-				if previously_connected_state == 'Connected':
-					print('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
-					manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
-					server_message = 'Gotta work harder, Judge :)'
-					
-					message = {
-						'Code' : 'VALID', 
-						'Receiver' : client_username,
-						'Client ID' : 0, 
-						'Message' : server_message
-					}
-					message = json.dumps(message)
-					# Raise a security notification?		// YES TODO
-
-				# If client has logged in for the first time
-				elif previously_connected_state == 'New':
-					# Add client to connected users database
-					client_authentication.add_client('__JUDGE__', client_username, client_password, client_ip, 'Connected', 'connected_judges')
-					print('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
-					manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
-
-					# Reply to be sent to judge
-					server_message = 'Hello Judge!'
-					
-					message = {
-						'Code' : 'VALID', 
-						'Receiver' : client_username,
-						'Client ID' : '__JUDGE__', 
-						'Message' : server_message
-					}
-					message = json.dumps(message)
-					
-				elif previously_connected_state == 'Deleted':
-					print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
-					manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
-					# Reject client login
-					message = {
-						'Code' : 'LRJCT',
-						'Receiver' : client_username,
-						'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
-					}
-					message = json.dumps(message)
-
-				# Update JUDGE view
-				manage_clients.data_changed_flags[13] = 1
-				
+			
 			# If login is not successful:
-			elif status == False:
+			if status != True:
 				print('[ LOGIN ] Judge NOT verified.')
 				manage_clients.log('[ LOGIN ] Judge NOT verified.')
 				message = {
@@ -488,11 +495,85 @@ class manage_clients():
 					'Receiver' : client_username,
 				}
 				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
 				print('[ LOGIN ][ REJECT ] Sent  INVLD to ' + client_username)
 				manage_clients.log('[ LOGIN ][ REJECT ] Sent  INVLD to ' + client_username)
-			
-			manage_clients.task_queue.put(message)
-		return
+				return
+
+			# Check if client has logged in for the first time or is already connected:
+			previously_connected_state = client_authentication.check_connected_client(client_username, 'connected_judges')
+
+			if previously_connected_state == 'Disonnected':
+				print('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
+				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
+				server_message = 'Gotta work harder, Judge :)'
+				
+				message = {
+					'Code' : 'VALID', 
+					'Receiver' : client_username,
+					'Client ID' : 0, 
+					'Message' : server_message
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+				return
+
+			elif previously_connected_state == 'Connected':
+				print('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ] Rejected')
+				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ] Rejected')
+				server_message = 'Rejected - Multiple logins are not allowed.'
+				
+				message = {
+					'Code' : 'LRJCT', 
+					'Receiver' : client_username, 
+					'Message' : server_message
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+				return
+
+			# If client has logged in for the first time
+			elif previously_connected_state == 'New':
+				# Add client to connected users database
+				client_authentication.add_client(
+					'__JUDGE__', 
+					client_username, 
+					client_password, 
+					client_ip, 
+					'Connected', 
+					'connected_judges'
+				)
+				print('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
+				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
+
+				# Reply to be sent to judge
+				server_message = 'Hello Judge!'
+				
+				message = {
+					'Code' : 'VALID', 
+					'Receiver' : client_username,
+					'Client ID' : '__JUDGE__', 
+					'Message' : server_message
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+				return
+
+				
+			elif previously_connected_state == 'Blocked':
+				print('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
+				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ REJECT ] Blocked LOGIN attempt')
+				# Reject client login
+				message = {
+					'Code' : 'LRJCT',
+					'Receiver' : client_username,
+					'Message' : 'You are blocked from the contest!\nPlease contact ADMIN.'
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+				# Update JUDGE view
+				manage_clients.data_changed_flags[13] = 1
+				return
 
 
 	def validate_ip(ip):
@@ -556,21 +637,47 @@ class manage_clients():
 			print('[ SUBMISSION ][ IP ] Validation failed!')
 			manage_clients.log('[ SUBMISSION ][ IP ] Validation failed!')
 			flag = 1
+		if problem_code not in manage_clients.codes:
+			print('[ SUBMISSION ][ Problem Code ] Validation failed!')
+			manage_clients.log('[ SUBMISSION ][ Problem Code ] Validation failed!')
+			flag = 1
+		if language not in manage_clients.languages:
+			print('[ SUBMISSION ][ Language ] Validation failed!')
+			manage_clients.log('[ SUBMISSION ][ Language ] Validation failed!')
+			flag = 1
 		
 
 		# Validate client submission data
 		if flag == 1:
 			status = False
 		else:
-			status = client_authentication.validate_connected_client(client_username, client_id, client_ip)
-
-		if status == False or problem_code not in manage_clients.codes or language not in manage_clients.languages:
+			status = True
+			
+		if status == False:
 			print('[ SUBMISSION ][ FAIL ] Preliminary validation Failed.')
 			manage_clients.log('[ SUBMISSION ][ FAIL ] Preliminary validation Failed.')
 			message = {
 				'Code' : 'SRJCT',
 				'Receiver' : client_username,
 				'Message' : 'Your submission could not be processed! Please contact Admin with your problem.',
+				'Local Run ID' : local_run_id
+			}
+			message = json.dumps(message)
+			try:
+				manage_clients.task_queue.put(message)
+			except Exception as error:
+				print('[ ERROR ][ SECURITY ] Could not send message to client: ', str(error))
+				manage_clients.log('[ ERROR ][ SECURITY ] Could not send message to client: ' + str(error))
+			return
+
+		status = client_authentication.validate_connected_client(client_username, client_id, client_ip)
+		if status == False:
+			print('[ SUBMISSION ][ FAIL ] Client could not be Validated.')
+			manage_clients.log('[ SUBMISSION ][ FAIL ] Client could not be Validated.')
+			message = {
+				'Code' : 'SRJCT',
+				'Receiver' : client_username,
+				'Message' : 'Your submission could not be processed! Validation failed.',
 				'Local Run ID' : local_run_id
 			}
 			message = json.dumps(message)
@@ -587,15 +694,18 @@ class manage_clients():
 		current_time = time.strftime("%H:%M:%S", time.localtime())	
 		# current_time = initialize_server.get_time_difference(contest_start_time, current_time)
 		time_difference = initialize_server.get_abs_time_difference(current_time, time_stamp)
-		if time_difference > 20:
-			print('[ SUBMISSION ][ CONFLICT ] Time difference: ', time_difference, ' Seconds ', )
-			print('Current Time: ' + current_time)
-			manage_clients.log('[ SUBMISSION ][ CONFLICT ] Time difference: ' + str( time_difference) + ' Seconds ')
-			time_stamp = initialize_server.get_time_difference(contest_start_time, current_time)
-		else:
-			print('[ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: ', time_difference, ' Seconds ')
-			manage_clients.log('[ SUBMISSION ][ VALIDATION ][ PASS ] Time difference: ' + str(time_difference) + ' Seconds ')
-			time_stamp = initialize_server.get_time_difference(contest_start_time, time_stamp)
+
+		# UNCOMMENT THE FOLLOWING LINES IF YOU WISH TO GIVE A 20 SECONDS GRACE TIME TO CLIENTS
+		# AND BELIEVE THEIR TIMESTAMP
+
+		# if time_difference > 20:
+		# 	print('[ SUBMISSION ][ CONFLICT ] Time difference: ', time_difference, ' Seconds ', )
+		# 	print('Current Time: ' + current_time)
+		# 	manage_clients.log('[ SUBMISSION ][ CONFLICT ] Time difference: ' + str( time_difference) + ' Seconds ')
+
+		# We don't believe in clients, so timestamp is server time.
+		time_stamp = initialize_server.get_time_difference(contest_start_time, current_time)
+		
 		# Validation Finished
 
 		# If contest is not in running state, reject all submissions.
@@ -626,7 +736,7 @@ class manage_clients():
 			message = {
 				'Code' : 'SRJCT',
 				'Receiver' : client_username,
-				'Message' : 'Your submission could not be processed! Wait for contest start.',
+				'Message' : 'Your submission could not be processed!\nSubmissions are not allowed right now.',
 				'Local Run ID' : local_run_id
 			}
 			message = json.dumps(message)
@@ -754,18 +864,21 @@ class manage_clients():
 		status = client_authentication.check_client_ip(client_id, client_ip)
 		# If IP does not match
 		if status == 0:
+			print('[ LOG OUT ][ ' + client_username + ' ][ REJECT ]')
+			manage_clients.log_queue.put('[ LOG OUT ][ ' + client_username + ' ][ REJECT ]')
 			return
+
 		if database_client_username == client_username:
 			# ie, client_username and client_id pair matches, 
 			# check if client is connected
 			previously_connected_state = client_authentication.check_connected_client(client_username, 'connected_clients')
 			if previously_connected_state == 'Connected':
+				print('[ LOG OUT ][ ' + client_username + ' ][ ACCEPT ]')
+				manage_clients.log_queue.put('[ LOG OUT ][ ' + client_username + ' ][ ACCEPT ]')
 				# Disconnect client
 				user_management.update_user_state(client_username, 'Disconnected', client_ip)
 				# Update connected clients to indicate new data
 				manage_clients.data_changed_flags[1] = 1
-				print('[ DISCONNECT ] Client: ' + client_username)
-				manage_clients.log('[ DISCONNECT ] Client: ' + client_username)
 				message = {
 					"Code" : "SHUTDOWN",
 					"Receiver" : client_username

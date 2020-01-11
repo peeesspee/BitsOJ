@@ -597,10 +597,11 @@ class server_window(QMainWindow):
 			contest_end_time = time.strftime("%H:%M:%S", time.localtime(self.contest_set_time))
 			contest_start_time = time.strftime("%H:%M:%S", time.localtime(self.contest_start_time))
 			message = {
-			'Code' : 'START',
-			'Duration' : extra_data,
-			'Start Time' : contest_start_time,
-			'End Time' : contest_end_time
+				'Code' : 'START',
+				'Duration' : extra_data,
+				'Start Time' : contest_start_time,
+				'End Time' : contest_end_time,
+				'Receiver' : 'All'
 			}
 			message = json.dumps(message)
 			# Put START message in task_queue so that it is broadcasted to all the clients.
@@ -685,9 +686,13 @@ class server_window(QMainWindow):
 		if(state == Qt.Checked):
 			# Allow logins
 			self.set_flags(27, 1)
+			print('[ SET ] IP address change allowed.')
+			self.log_queue.put('[ SET ] IP address change allowed.')
 		else:
 			# Stop logins
 			self.set_flags(27, 0)
+			print('[ SET ] IP address change not allowed.')
+			self.log_queue.put('[ SET ] IP address change not allowed.')
 		return
 
 	def allow_judge_login_handler(self, state):
@@ -1372,9 +1377,7 @@ class server_window(QMainWindow):
 			if custom_close_box.clickedButton() == button_yes:
 				print('[ EVENT ] SERVER RESET TRIGGERED')
 				self.log('[ EVENT ] SERVER RESET TRIGGERED')
-				print('[ RESET ] Disconnecting all clients...')
-				self.log('[ RESET ] Disconnecting all clients...')
-
+				
 				# Send disconnect message to all clients
 				message = {
 				'Code' : 'DSCNT',
@@ -1382,21 +1385,24 @@ class server_window(QMainWindow):
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
-				# Set DISCONNECTED to all connected clients
+				# Set DISCONNECTED to all connected clients and judges
+				print('[ RESET ] Disconnecting all clients...')
+				self.log('[ RESET ] Disconnecting all clients...')
+				print('[ RESET ] Disconnecting all Judges...')
+				self.log('[ RESET ] Disconnecting all Judges...')
 				user_management.disconnect_all()
+				# Refresh Client UI
 				self.data_changed_flags[1] = 1
+				# Refresh Judge UI
+				self.data_changed_flags[13] = 1
 
-				# # Disconnect all judges
-				# print('[ RESET ] Disconnecting all Judges...')
-				# self.log('[ RESET ] Disconnecting all Judges...')
-				# # Update judges view
-				# self.data_changed_flags[13] = 1
 				# # TODO 														Broadcast this to all judges
 
 				# Reset Scoreboard
 				print('[ RESET ] Clearing scoreboard...')
 				self.log('[ RESET ] Clearing scoreboard...')
 				self.data_changed_flags[16] = 1
+				scoreboard_management.delete_all()
 
 				# Reset accounts
 				# Update Accounts View
