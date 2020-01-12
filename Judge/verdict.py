@@ -86,6 +86,9 @@ class verdict():
 
 		if verdict.ERROR == False:
 ################################################################################
+
+			# code for java 
+			
 			if language == 'JAVA':
 				list_of_inputfiles = os.listdir(INPUT_PATH)
 				for file in list_of_inputfiles:
