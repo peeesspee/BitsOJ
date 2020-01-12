@@ -68,12 +68,11 @@ class App(QWidget):
 
             self.setLayout(layout)
             self.setObjectName('loginwindow')
-            print('show')
             self.show()
-            print('show done')
+            
 
         except Exception as e:
-            print(str(e))
+            print('[ ERROR ] ' + str(e))
         return 
 
     # def onClick(self):
@@ -83,9 +82,8 @@ class App(QWidget):
     def login_handler(self,channel,host):
 
         if self.judge_id.text() != '' or self.password.text() != '':
-            authenticate_judge.login(channel,host,self.judge_id.text(),self.password.text())
-            status = authenticate_judge.login_status
-
+            status = authenticate_judge.login(channel,host,self.judge_id.text(),self.password.text())
+            
             if( status == 'VALID'):
                 try:
                     QApplication.quit()
@@ -113,7 +111,7 @@ class App(QWidget):
         sys.exit()
 
 
-class start_interface(App):
+class login_interface(App):
     def __init__(self, channel,host):
         app = QApplication(sys.argv)
         # app.setStyle("Fusion")

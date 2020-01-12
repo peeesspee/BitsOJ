@@ -3,9 +3,8 @@ import sys
 import random
 import string
 import os
-
+ 
 global client_id_counter
-global query_id_counter
 
 class manage_database():
 	cur = None
@@ -27,7 +26,7 @@ class manage_database():
 			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
 			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text, penalty integer, is_hidden text DEFAULT 'False')")
 			cur.execute("create table if not exists problems(problem_name varchar2(30), problem_code varchar(10), test_files integer, time_limit integer)")
-			
+
 		except Exception as error:
 			print("[ DB ][ CRITICAL ERROR ] Table creation error : " + str(error))
 
@@ -242,7 +241,7 @@ class scoreboard_management():
 					print(
 						'[ SCOREBOARD ] Client: ', 
 						client_id, 
-						' Number of Scored AC Submissions for this problem ( 0 or 1 ): ', 
+						' Number of Scored AC Submissions: ', 
 						number_of_submissions
 					)
 					# If the problem has not been solved yet, ie, number_of_submissions = 0
@@ -497,20 +496,6 @@ class scoreboard_management():
 				return
 
 class previous_data(manage_database):
-	def get_last_run_id():
-		try:
-			cur = manage_database.get_cursor()
-			cur.execute("SELECT max(run_id) FROM submissions")
-			data =  cur.fetchall()
-
-			if(data[0][0] == ''):
-				return 0
-			else:
-				return int(data[0][0])
-		except:
-			print('[ DB ][ INIT ] Run ID initialised to 0')
-			return 0
-
 	def get_last_client_id():
 		global client_id_counter
 		try:
@@ -525,19 +510,6 @@ class previous_data(manage_database):
 		except:
 			print('[ DB ][ INIT ] Client ID initialised to 0')
 			client_id_counter = 0
-
-	def get_last_query_id():
-		try:
-			cur = manage_database.get_cursor()
-			cur.execute("SELECT max(query_id) FROM queries")
-			data =  cur.fetchall()
-			if(data[0][0] == ''):
-				return 0
-			else:
-				return int(data[0][0])
-		except:
-			print('[ DB ][ INIT ] Query ID initialised to 0')
-			return 0
 
 class client_authentication(manage_database):
 	#This function validates the (user_name, password, client_id) in the database.
@@ -581,6 +553,15 @@ class client_authentication(manage_database):
 		client_id = int(client_id_counter)
 		return client_id
 
+	def generate_judge_key():
+		try:
+			chars = string.ascii_uppercase + string.digits + string.ascii_lowercase
+			for i in range(0, number):
+				password = ''.join(random.choice(chars) for _ in range(6))
+			return password
+		except:
+			return '__JUDGE__'
+
 	def add_client(client_id, user_name, password, ip, state, table_name):
 		try:
 			cur = manage_database.get_cursor()
@@ -605,7 +586,10 @@ class client_authentication(manage_database):
 				(user_name, )
 			)
 			client_id = cur.fetchall()
-			return client_id[0][0]
+			if len(client_id) == 0:
+				return -1
+			else:
+				return client_id[0][0]
 		except Exception as error:
 			print("[ DB ][ ERROR ] : The user does not have a client id yet.")
 			return -1
@@ -672,6 +656,30 @@ class submissions_management(manage_database):
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
 		return
+
+	def generate_new_run_id():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT max(run_id) FROM submissions")
+			data = cur.fetchall()
+			if len(data) == 0 or data[0][0] == None:
+				return 1
+			else:
+				return int(data[0][0]) + 1
+		except Exception as error:
+			return 1
+
+	def get_held_submissions():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT run_id, client_id, client_run_id, source_file, problem_code, verdict, judge, timestamp FROM submissions WHERE sent_status = 'REVIEW' ORDER BY run_id ASC")
+			data = cur.fetchall()
+			if len(data) == 0 or data == '':
+				return []
+			else:
+				return data
+		except Exception as error:
+			return []
 
 	def update_submission_status(run_id, verdict, sent_status, judge = '-'):
 		cur = manage_database.get_cursor()
@@ -873,6 +881,18 @@ class query_management(manage_database):
 			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
 		return
 
+	def generate_new_query_id():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT max(query_id) FROM queries")
+			data = cur.fetchall()
+			if len(data) == 0 or data[0][0] == None:
+				return 1
+			else:
+				return int(data[0][0]) + 1
+		except Exception as error:
+			return 1
+
 	def update_query(query_id, query, response):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
@@ -970,15 +990,6 @@ class user_management(manage_database):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			# Check if client is logged in : 
-			# if client_authentication.check_connected_client(user_name) == 'Connected':
-			# 	cur.execute("SELECT * FROM accounts WHERE user_name = ?", (user_name,))
-			# 	data = cur.fetchall()
-			# 	client_type = data[0][2]
-			# 	if client_type == 'CLIENT':
-			# 		print("[ DISCONNECT ] " + user_name)
-			# 		cur.execute("UPDATE connected_clients SET state = 'Blocked' WHERE user_name = ?", (user_name, ))
-
 			cur.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
 			conn.commit()
 		except Exception as error:
@@ -1031,7 +1042,25 @@ class user_management(manage_database):
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database updation error : " + str(error))
-			conn.rollback()
+		finally:
+			return
+
+	def update_judge_state(username, state, ip):
+		if state == 'Blocked':
+			hidden = 'True'
+		else:
+			hidden = 'False'
+
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute(
+				"UPDATE connected_judges SET state = ?, ip = ? where user_name = ? ", 
+				(state, ip, username, )
+			)
+			conn.commit()
+		except Exception as error:
+			print("[ DB ][ ERROR ] Database updation error : " + str(error))
 		finally:
 			return
 

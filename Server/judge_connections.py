@@ -37,6 +37,11 @@ class manage_judges():
 				exchange_type = 'direct', 
 				durable = True
 			)
+			channel.exchange_declare(
+				exchange = 'judge_broadcast_manager', 
+				exchange_type = 'fanout', 
+				durable = True
+			)
 			channel.queue_declare(
 				queue = 'judge_verdicts', 
 				durable = True
@@ -203,9 +208,9 @@ class manage_judges():
 				message = json.dumps(message)
 
 				# Publish message to client if allowed
-				# Update scoreboard also when manual review is ON
+				
 				if manage_judges.data_changed_flags[20] == 0:
-					
+					# Manual Review is OFF
 					try:
 						# Put response to task queue, to further connect to the client
 						manage_judges.task_queue.put(message)
@@ -216,8 +221,8 @@ class manage_judges():
 						print('[ ERROR ] Could not publish result to client : ' + str(error))
 						manage_judges.log('[ ERROR ] Could not publish result to client : ' + str(error))
 						return
-
 				else:
+					# Manual Review is ON
 					submissions_management.update_submission_status(run_id, status, 'REVIEW', judge)
 					# Update submission GUI
 					manage_judges.data_changed_flags[0] = 1

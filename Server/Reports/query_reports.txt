@@ -1,7 +1,8 @@
-2020-01-12 01:51:49.909384
+2020-01-12 22:39:45.891314
 ################ BitsOJ  ################
 Contest: Kodeathon A7 - Testing
 Queries and Announcements:
 	ClientID					Query					Response
+	1		Hello server! How are you?		good
 
 ################################################

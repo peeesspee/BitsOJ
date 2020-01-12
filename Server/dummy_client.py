@@ -8,7 +8,7 @@ rabbitmq_password = 'client'
 host = 'localhost'
 
 global client_id
-client_id = 1
+client_id = 'Null'
 
 username = 'team00001'
 password = 'bits1'

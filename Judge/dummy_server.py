@@ -49,6 +49,12 @@ class server():
 		print(result)
 		print(error)
 
+		try:
+			if language == "JAVA":
+				os.remove('bitsoj.java')
+		except Exception as error:
+			print("[JAVA FILE DELETION ERROR] :",error)
+
 	def read():
 		with open("./submission_files/java/temporary", "r") as f:
 			read = f.read()

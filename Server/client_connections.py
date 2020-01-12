@@ -78,11 +78,6 @@ class manage_clients():
 			sys.exit()
 
 		try:
-			submission.init_run_id()
-		except:
-			print('[ ERROR ] Could not fetch previous run_id')
-			manage_clients.log('[ ERROR ] Could not fetch previous run_id')
-		try:
 			previous_data.get_last_client_id()
 		except:
 			print('[ ERROR ] Could not fetch previous client_id')
@@ -163,6 +158,7 @@ class manage_clients():
 				client_id = json_data["ID"]
 				client_type = json_data["Type"]
 				manage_clients.client_login_handler(
+					client_key,
 					client_username, 
 					client_password, 
 					client_id, 
@@ -225,7 +221,30 @@ class manage_clients():
 		return
 	
 	# This function handles all client login requests
-	def client_login_handler(client_username, client_password, client_id, client_type, client_ip = '0.0.0.0'):
+	def client_login_handler(
+			client_key, 
+			client_username, 
+			client_password, 
+			client_id, 
+			client_type, 
+			client_ip = '0.0.0.0'
+		):
+		if (
+				client_type == 'CLIENT' and 
+				client_key != manage_clients.key or 
+				client_type == 'JUDGE' and 
+				client_key != manage_clients.judge_key
+			):
+			# REJECT
+			message = {
+					'Code' : 'LRJCT',
+					'Receiver' : client_username,
+					'Message' : 'You are using an incompatible client.\nPlease contact ADMIN. '
+				}
+			message = json.dumps(message)
+			manage_clients.task_queue.put(message)
+			return
+			
 		message = ''
 		print(
 			'[ LOGIN REQUEST ] ::: ' + 
@@ -292,6 +311,13 @@ class manage_clients():
 
 			# Validate the client from the database
 			status = client_authentication.validate_client(client_username, client_password)
+			stored_client_id = str(client_authentication.get_client_id(client_username))
+			print('[ LOGIN ] Stored client ID: ', stored_client_id)
+			if stored_client_id != client_id and stored_client_id != str(-1):
+				print('[ ' + client_username + ' ] Client ID does not match.')
+				manage_clients.log('[ ' + client_username + ' ] Client ID does not match.')
+				status = False
+
 			# If login is successful:
 			if status != True:
 				# Reply 'Invalid credentials' to client
@@ -467,7 +493,7 @@ class manage_clients():
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
 				return
-
+		########################################################################################################################
 		# Judge login is handled as a client to avoid redundancy in code
 		elif client_type == 'JUDGE':
 			if(manage_clients.data_changed_flags[12] == 0):
@@ -503,7 +529,7 @@ class manage_clients():
 			# Check if client has logged in for the first time or is already connected:
 			previously_connected_state = client_authentication.check_connected_client(client_username, 'connected_judges')
 
-			if previously_connected_state == 'Disonnected':
+			if previously_connected_state == 'Disconnected':
 				print('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
 				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
 				server_message = 'Gotta work harder, Judge :)'
@@ -534,10 +560,11 @@ class manage_clients():
 
 			# If client has logged in for the first time
 			elif previously_connected_state == 'New':
+				judge_session_key = client_authentication.generate_judge_key()
 				# Add client to connected users database
 				client_authentication.add_client(
-					'__JUDGE__', 
-					client_username, 
+					judge_session_key, 
+					client_username,
 					client_password, 
 					client_ip, 
 					'Connected', 
@@ -577,6 +604,8 @@ class manage_clients():
 
 
 	def validate_ip(ip):
+		# This function validates wherther an ip address matches coorect pattern or not.
+		# Credits: GeeksForGeeks 
 		try:
 			regex = '''^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.( 
 			25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.( 
@@ -771,6 +800,7 @@ class manage_clients():
 		start_time = manage_clients.config["Contest Start Time"]
 
 		if prev_time == "NONE":
+			# This is the first submission of the client
 			pass
 		else:
 			time_minutes_limit = manage_clients.data_changed_flags[21]
@@ -859,6 +889,7 @@ class manage_clients():
 
 	# This function handles client logout requests
 	def client_logout_handler(client_username, client_id, client_ip):
+		print('[ LOGOUT ][ ', client_username, ' ] Initiated')
 		# Get client username from database and validate
 		database_client_username = client_authentication.get_client_username(client_id) 
 		status = client_authentication.check_client_ip(client_id, client_ip)
@@ -885,5 +916,9 @@ class manage_clients():
 				}
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
+		else:
+			print('[ LOG OUT ][ ' + client_username + ' ][ REJECT ] ClientID does not match.')
+			manage_clients.log_queue.put('[ LOG OUT ][ ' + client_username + ' ][ REJECT ] ClientID does not match.')
+
 		return
 

@@ -1,4 +1,4 @@
-2020-01-12 01:51:49.903532
+2020-01-12 22:39:44.180300
 ################ BitsOJ  ################
 Contest: Kodeathon A7 - Testing
 All Clients:
@@ -6,21 +6,26 @@ All Clients:
 	1				team00001		  192.168.0.0
 	2				team00003		  192.168.0.0
 	3				team00004		  192.168.0.0
+	4				team00005		  192.168.0.0
+	5				team00007		  192.168.0.0
 
 ####################################################################################################
 
 Submission data grouped by clients:
 > Client: team00001
 	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
-		1				  TRI					C++				  23:13:28				WA
-		2				  TRI					C++				  23:14:02				AC
-		3				  TRI					C++				  23:14:22				WA
-		4				  TFT					C++				  16:42:41				AC
+	No Submissions by this client.
 > Client: team00003
 	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
 	No Submissions by this client.
 > Client: team00004
 	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
 	No Submissions by this client.
+> Client: team00005
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00007
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		1				  TFT					C++				  00:00:19				AC
 
 ####################################################################################################

@@ -61,7 +61,7 @@ class ui_widgets:
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		return main, accounts_model, delete_account_button
-
+ 
 	def submissions_ui(self):
 		heading = QLabel('All Runs')
 		heading.setObjectName('main_screen_heading')
