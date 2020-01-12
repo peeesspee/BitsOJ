@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap, QTextCursor, QCursor, QFont, QColor 
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QSize, QRect
+from database import manage_database
 
 
 class App(QMainWindow):
@@ -15,6 +16,7 @@ class App(QMainWindow):
 		self.width = 1200
 		self.height = 800
 		self.db = self.init_qt_database()
+		manage_database.initialize_database()
 		
 
 		self.setWindowTitle(self.title)
@@ -76,7 +78,16 @@ class App(QMainWindow):
 
 
 	def view_judgements(self,selected_row):
-		print('hello', self.table.index(selected_row, 0).data())
+		run_id = self.table.index(selected_row, 0).data()
+		verdict = self.table.index(selected_row, 0).data()
+		language = self.table.index(selected_row, 0).data()
+		# source = manage_database.get_source(run_id)
+		source = './check/4_14.c'
+		try:
+			self.window = view_source_ui(run_id, verdict, language, source)
+			self.window.show()
+		except Exception as Error:
+			print(str(Error))
 
 	def init_qt_database(self):
 		try:
@@ -118,6 +129,68 @@ class App(QMainWindow):
 		vertical_header.setVisible(False)
 		return table
 
+
+class view_source_ui(QMainWindow):
+
+	def __init__(self, run_id, verdict, language, source, parent=None):
+		super(view_source_ui,self).__init__(parent)
+		self.setWindowTitle('Run ID : '+ str(run_id))
+		self.setFixedSize(800,600)
+
+		main = self.main_view_source_ui(verdict, language, source)
+		self.setCentralWidget(main)
+
+		return
+
+	def main_view_source_ui(self, verdict_show, language_show, source):
+		with open(source, 'r') as sol:
+			data = sol.read()
+
+		heading = QLabel('Source Code : ')
+		heading.setObjectName('source_heading')
+
+		cursor = QTextCursor()
+		cursor.setPosition(0)
+
+		submission_text = QPlainTextEdit()
+		submission_text.appendPlainText(data)
+		submission_text.setReadOnly(True)
+		submission_text.setTextCursor(cursor)
+		# submission_text.cursorForPosition(0)
+		# submission_text.QCursor.pos(0)
+		print(verdict_show)
+
+		bottom_layout = QHBoxLayout()
+		verdict = QLabel("Judge's Verdict :")
+		verdict_layout = QLabel(verdict_show)
+		language = QLabel('Language : ')
+		language_layout = QLabel(language_show)
+		bottom_layout.addWidget(verdict)
+		bottom_layout.addWidget(verdict_layout)
+		bottom_layout.addWidget(language)
+		bottom_layout.addWidget(language_layout)
+		bottom_widget = QWidget()
+		bottom_widget.setLayout(bottom_layout)
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(heading)
+		main_layout.addWidget(submission_text)
+		main_layout.addWidget(bottom_widget)
+		main = QWidget()
+		main.setLayout(main_layout)
+
+
+		submission_text.setObjectName('text')
+		verdict.setObjectName('view')
+		if verdict == 'AC':
+			verdict_layout.setObjectName('view1')
+		else:
+			verdict_layout.setObjectName('view2')
+		language.setObjectName('view')
+		language_layout.setObjectName('view3')
+		main.setObjectName('query_submission_widget')
+
+		return main
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)
