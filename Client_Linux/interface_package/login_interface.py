@@ -1,4 +1,4 @@
-import sys
+import sys, time
 from PyQt5.QtWidgets import * 
 from login import authenticate_login
 from PyQt5.QtCore import Qt
@@ -62,7 +62,7 @@ class Login(QWidget):
 
 			self.setLayout(layout)
 			self.setObjectName('main') 
-			self.show()
+	
 			self.connection_object = connection 
 		except Exception as Error:
 			print(str(Error))
@@ -118,11 +118,20 @@ class start_interface(Login):
 		app.setStyleSheet(open('Elements/login.qss', "r").read())
 		app.aboutToQuit.connect(self.closeEvent)
 		# make a reference of App class
-		login_app = Login(connection,queue)
+		# login_app = Login(connection,queue)
 		
-		splash = QSplashScreen(QPixmap("../Elements/banner.png"))
+		splash = QSplashScreen(QPixmap("./Elements/banner.png"), Qt.WindowStaysOnTopHint)
+		login_app = Login(connection,queue)
+
 		splash.show()
+		splash.showMessage("Loading modules...")
+		t = 0
+		while(t < 10000):
+			t += 0.01
+			app.processEvents()
+
 		splash.finish(login_app)
+		login_app.show()
 		
 		# Close the server as soon as close button is clicked
 		app.exec_()
