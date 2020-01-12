@@ -4,8 +4,7 @@ from init_judge import initialize_judge
 from login_request import authenticate_judge
 from verdict import verdict
 from file_creation import file_manager
-import time
-import json
+import time, json, os
 
 class communicate_server():
 	message = ''
@@ -65,6 +64,15 @@ class communicate_server():
 		print(language)
 		print(file_name, file_with_ext, language, problem_code, run_id)
 		result,error = verdict.main(file_name, file_with_ext, language, problem_code, run_id, '1')
+		
+
+		try:
+			if language == "JAVA":
+				os.remove('bitsoj.java')
+		except Exception as error:
+			print("[JAVA FILE DELETION ERROR] :",error)
+
+
 		# result,error = verdict.main(run_id, problem_code, language, source_code, file_name, file_with_ext, '2')
 
 

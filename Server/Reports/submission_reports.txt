@@ -1,12 +1,9 @@
-2020-01-12 01:51:49.901996
+2020-01-12 22:39:43.777698
 ################ BitsOJ  ################
 Contest: Kodeathon A7 - Testing
 All Submissions:
 	Run ID		Client ID		Problem Code		Language		Timestamp		Verdict		Judge
-	1				1				TRI				C++				23:13:28			WA		ADMIN
-	2				1				TRI				C++				23:14:02			AC		ADMIN
-	3				1				TRI				C++				23:14:22			WA		ADMIN
-	4				1				TFT				C++				16:42:41			AC		ADMIN
+	1				5				TFT				C++				00:00:19			AC		judge00002
 
 ####################################################################################################
 
@@ -19,15 +16,13 @@ Submission data grouped by problems:
 	No Submissions for this problem.
 > Problem: TFT
 	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
-		4					1				C++				  16:42:41			  AC
+		1					5				C++				  00:00:19			  AC
 > Problem: LGN
 	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
 	No Submissions for this problem.
 > Problem: TRI
 	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
-		1					1				C++				  23:13:28			  WA
-		2					1				C++				  23:14:02			  AC
-		3					1				C++				  23:14:22			  WA
+	No Submissions for this problem.
 > Problem: IRY
 	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
 	No Submissions for this problem.

@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from init_server import initialize_server, save_status
 from database_management import report_management
-import json, datetime, sys, os
+import json, datetime, sys, os, time
 
 class generate_report_ui(QMainWindow):
 	def __init__(
@@ -32,7 +32,7 @@ class generate_report_ui(QMainWindow):
 		self.setWindowTitle('Generate Report')
 		self.width = 800
 		self.height = 600
-		self.setGeometry(500, 300, self.width, self.height)
+		self.setGeometry(600, 300, self.width, self.height)
 		self.setFixedSize(self.width, self.height)
 		
 		self.progress = QProgressBar()
@@ -220,6 +220,7 @@ class generate_report_ui(QMainWindow):
 							file.write('\t' + username + '\t\t' + password + '\t\t' + account_type + '\n')
 						file.write('\n################################################' )
 			self.progress.setValue(10)
+			time.sleep(0.2)
 
 			if self.submission_checked == True:
 				submission_data = report_management.get_all_submission_data()
@@ -309,6 +310,7 @@ class generate_report_ui(QMainWindow):
 						)
 
 			self.progress.setValue(30)
+			time.sleep(0.4)
 
 			if self.client_checked == True:
 				client_data = report_management.get_all_client_data()
@@ -385,6 +387,7 @@ class generate_report_ui(QMainWindow):
 							'####################################################' 
 						)
 			self.progress.setValue(50)
+			time.sleep(0.6)
 
 			if self.judge_checked == True:
 				judge_data = report_management.get_all_judge_data()
@@ -465,6 +468,7 @@ class generate_report_ui(QMainWindow):
 					)
 
 			self.progress.setValue(70)
+			time.sleep(0.1)
 
 			if self.scoreboard_checked == True:
 				winner = report_management.get_winner()
@@ -522,6 +526,7 @@ class generate_report_ui(QMainWindow):
 								'####################################################' 
 							)
 			self.progress.setValue(80)
+			time.sleep(0.6)
 
 			if self.problems_checked == True:
 				problem_data = report_management.get_problem_data()
@@ -563,6 +568,7 @@ class generate_report_ui(QMainWindow):
 							file.write('\t AC Submissions on this problem: ' + str(ac_count) + '\n')
 						file.write('\n################################################' )
 			self.progress.setValue(90)
+			time.sleep(0.4)
 
 			if self.query_checked == True:
 				query_data = report_management.get_query_data()
@@ -592,7 +598,15 @@ class generate_report_ui(QMainWindow):
 						file.write('\n################################################' )
 
 			self.progress.setValue(100)
-
+			info_box = QMessageBox()
+			info_box.setIcon(QMessageBox.Critical)
+			info_box.setWindowTitle('Done!')
+			info_box.setText(
+				'Reports generated in ./Reports/'
+			)
+			info_box.setStandardButtons(QMessageBox.Ok)
+			info_box.exec_()
+			
 		except Exception as error:
 			print('[ ERROR ] Could not generate reports: ' + str(error))
 			self.log('[ ERROR ] Could not generate reports: ' + str(error))
