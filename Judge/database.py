@@ -23,6 +23,15 @@ class manage_database():
 		except Exception as error:
 			print("[ Table CREATION error ]"+str(error))
 
+	def get_source(run_id):
+		try:
+			manage_database.cur.execute("SELECT source FROM verdit WHERE run_id =? ",(int(run_id),))
+			x = manage_database.cur.fetchall()
+			x = x[0][0]
+			return x
+		except Exception as Error:
+			print(str(Error))
+
 
 
 	def reset_database():
