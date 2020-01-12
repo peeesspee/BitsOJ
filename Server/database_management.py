@@ -5,7 +5,6 @@ import string
 import os
 
 global client_id_counter
-global query_id_counter
 
 class manage_database():
 	cur = None
@@ -497,20 +496,6 @@ class scoreboard_management():
 				return
 
 class previous_data(manage_database):
-	def get_last_run_id():
-		try:
-			cur = manage_database.get_cursor()
-			cur.execute("SELECT max(run_id) FROM submissions")
-			data =  cur.fetchall()
-
-			if(data[0][0] == ''):
-				return 0
-			else:
-				return int(data[0][0])
-		except:
-			print('[ DB ][ INIT ] Run ID initialised to 0')
-			return 0
-
 	def get_last_client_id():
 		global client_id_counter
 		try:
@@ -525,19 +510,6 @@ class previous_data(manage_database):
 		except:
 			print('[ DB ][ INIT ] Client ID initialised to 0')
 			client_id_counter = 0
-
-	def get_last_query_id():
-		try:
-			cur = manage_database.get_cursor()
-			cur.execute("SELECT max(query_id) FROM queries")
-			data =  cur.fetchall()
-			if(data[0][0] == ''):
-				return 0
-			else:
-				return int(data[0][0])
-		except:
-			print('[ DB ][ INIT ] Query ID initialised to 0')
-			return 0
 
 class client_authentication(manage_database):
 	#This function validates the (user_name, password, client_id) in the database.
@@ -605,7 +577,10 @@ class client_authentication(manage_database):
 				(user_name, )
 			)
 			client_id = cur.fetchall()
-			return client_id[0][0]
+			if len(client_id) == 0:
+				return -1
+			else:
+				return client_id[0][0]
 		except Exception as error:
 			print("[ DB ][ ERROR ] : The user does not have a client id yet.")
 			return -1
@@ -672,6 +647,19 @@ class submissions_management(manage_database):
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
 		return
+
+	def generate_new_run_id():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT max(run_id) FROM submissions")
+			data = cur.fetchall()
+			if len(data) == 0 or data[0][0] == None:
+				return 1
+			else:
+				return int(data[0][0]) + 1
+		except Exception as error:
+			return 1
+
 
 	def update_submission_status(run_id, verdict, sent_status, judge = '-'):
 		cur = manage_database.get_cursor()
@@ -872,6 +860,18 @@ class query_management(manage_database):
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
 		return
+
+	def generate_new_query_id():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT max(query_id) FROM queries")
+			data = cur.fetchall()
+			if len(data) == 0 or data[0][0] == None:
+				return 1
+			else:
+				return int(data[0][0]) + 1
+		except Exception as error:
+			return 1
 
 	def update_query(query_id, query, response):
 		cur = manage_database.get_cursor()

@@ -78,11 +78,6 @@ class manage_clients():
 			sys.exit()
 
 		try:
-			submission.init_run_id()
-		except:
-			print('[ ERROR ] Could not fetch previous run_id')
-			manage_clients.log('[ ERROR ] Could not fetch previous run_id')
-		try:
 			previous_data.get_last_client_id()
 		except:
 			print('[ ERROR ] Could not fetch previous client_id')
@@ -292,6 +287,13 @@ class manage_clients():
 
 			# Validate the client from the database
 			status = client_authentication.validate_client(client_username, client_password)
+			stored_client_id = client_authentication.get_client_id(client_username)
+			print('[ LOGIN ] Stored client ID: ', stored_client_id)
+			if stored_client_id != client_id and stored_client_id != -1:
+				print('[ ' + client_username + ' ] Client ID does not match.')
+				manage_clients.log('[ ' + client_username + ' ] Client ID does not match.')
+				status = False
+
 			# If login is successful:
 			if status != True:
 				# Reply 'Invalid credentials' to client
@@ -577,6 +579,8 @@ class manage_clients():
 
 
 	def validate_ip(ip):
+		# This function validates wherther an ip address matches coorect pattern or not.
+		# Credits: GeeksForGeeks 
 		try:
 			regex = '''^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.( 
 			25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.( 
@@ -771,6 +775,7 @@ class manage_clients():
 		start_time = manage_clients.config["Contest Start Time"]
 
 		if prev_time == "NONE":
+			# This is the first submission of the client
 			pass
 		else:
 			time_minutes_limit = manage_clients.data_changed_flags[21]
@@ -885,5 +890,9 @@ class manage_clients():
 				}
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
+		else:
+			print('[ LOG OUT ][ ' + client_username + ' ][ REJECT ] ClientID does not match.')
+			manage_clients.log_queue.put('[ LOG OUT ][ ' + client_username + ' ][ REJECT ] ClientID does not match.')
+
 		return
 

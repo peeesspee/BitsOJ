@@ -203,8 +203,9 @@ class server_window(QMainWindow):
 		logo_image = QPixmap('Elements/bitwise_header.png')
 		logo_image = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image)
-		contest_name = QLabel(self.config['Contest Name'])
-		
+		contest_theme = self.config['Contest Theme']
+		contest_name = QLabel(self.config['Contest Name'] + ' : ' + contest_theme)
+		contest_name.setObjectName('main_screen_sub_heading')
 		self.timer_widget = QLCDNumber()
 		self.timer_widget.setSegmentStyle(QLCDNumber.Flat)
 		self.timer_widget.setDigitCount(8)
@@ -213,10 +214,10 @@ class server_window(QMainWindow):
 		top_bar_layout = QHBoxLayout()
 		top_bar_layout.setContentsMargins(15, 5, 20, 0);
 		top_bar_layout.addWidget(logo)
+		top_bar_layout.addStretch(10)
+		top_bar_layout.addWidget(contest_name)
+		top_bar_layout.addStretch(9)
 		top_bar_layout.addWidget(self.timer_widget)
-		top_bar_layout.setStretch(0, 70)
-		top_bar_layout.setStretch(1, 30)
-
 		top_bar_widget = QWidget()
 		top_bar_widget.setLayout(top_bar_layout)
 		top_bar_widget.setObjectName('top_bar')

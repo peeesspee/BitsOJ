@@ -1,5 +1,4 @@
-from database_management import previous_data
-global run_id_counter
+from database_management import submissions_management, query_management
 global query_id_counter
 
 class submission():
@@ -15,7 +14,6 @@ class submission():
 
 	# Make a local backup file for the client run id
 	def make_local_source_file(file_name, source_code, language):
-
 		if language == "CPP":
 			file_extension = ".cpp"
 		elif language == "GCC":
@@ -38,21 +36,9 @@ class submission():
 		return new_file_name
 
 	def generate_run_id():
-		global run_id_counter
-		run_id = run_id_counter
-		run_id_counter = run_id_counter + 1
+		run_id = submissions_management.generate_new_run_id()
 		return run_id
 
 	def generate_query_id():
-		global query_id_counter
-		query_id = query_id_counter
-		query_id_counter = query_id_counter + 1
-		print('[ QUERY ] Generating Query ID: ' + str(query_id))
+		query_id = query_management.generate_new_query_id()
 		return query_id
-
-	def init_run_id():
-		global run_id_counter
-		global query_id_counter
-		# Get max run_id from submissions and add 1 to it, to initialize run_id counter
-		run_id_counter = int(previous_data.get_last_run_id()) + 1
-		query_id_counter = int(previous_data.get_last_query_id()) + 1
