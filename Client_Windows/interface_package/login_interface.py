@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QColor, QPixmap
 
 class Login(QWidget):
-	def __init__(self, connection,queue):
+	def __init__(self, queue):
 		super().__init__()
 		try:
 			# Sets window title
@@ -63,7 +63,7 @@ class Login(QWidget):
 			self.setLayout(layout)
 			self.setObjectName('main') 
 			# self.show()
-			self.connection_object = connection 
+			# self.connection_object = connection 
 		except Exception as Error:
 			print(str(Error))
 		return 
@@ -113,7 +113,7 @@ class Login(QWidget):
 	
 
 class start_interface(Login):
-	def __init__(self, connection, data_changed_flag,queue):
+	def __init__(self, data_changed_flag,queue):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
 		app.setStyleSheet(open("Elements\\login.qss", "r").read())
@@ -122,7 +122,7 @@ class start_interface(Login):
 		# login_app = Login(connection,queue)
 
 		splash = QSplashScreen(QPixmap("./Elements/banner.png"), Qt.WindowStaysOnTopHint)
-		login_app = Login(connection,queue)
+		login_app = Login(queue)
 
 		splash.show()
 		splash.showMessage("Loading modules...")

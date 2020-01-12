@@ -5,6 +5,7 @@ import sys
 class manage_connection():
 	channel = ''
 	host = ''
+	connection = ''
 
 	# Function to establish connection
 	def initialize_connection(rabbitmq_username,rabbitmq_password,host):
@@ -13,6 +14,7 @@ class manage_connection():
 			creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
 			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
 			connection = pika.BlockingConnection(params)
+			manage_connection.connection = connection
 			channel = connection.channel()
 			manage_connection.channel = channel
 			manage_connection.host = host
@@ -25,7 +27,8 @@ class manage_connection():
 			channel.queue_bind(
 				exchange = 'connection_manager', 
 				queue = 'client_requests'
-				)
+			)
+
 			return channel,connection
 		except Exception as Error:
 			print("Server is Not yet started Please wait")
@@ -33,8 +36,8 @@ class manage_connection():
 			connection.close()
 			sys.exit()
 
-	def terminate_connection(connection):
-		connection.close()
+	def terminate_connection():
+		manage_connection.connection.close()
 
 	def channel_host():
 		return manage_connection.channel,manage_connection.host
