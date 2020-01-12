@@ -32,11 +32,30 @@ class manage_database():
 		except Exception as error:
 			print(str(error))
 
-	def insert_record(run_id, client_id, verdict,language, message, p_code, timestamp, source_code):
+	def insert_record(run_id, client_id, verdict,language, message, p_code, time_stamp, source_code):
 		with manage_database.conn:
 			c = manage_database.cur
 			try:
-				c.execute("INSERT INTO VERDICT VALUES (?,?,?,?,?,?,?,?)",(run_id, client_id, verdict, language, message, p_code, timestamp, source_code))
+				c.execute("INSERT INTO VERDICT VALUES (?,?,?,?,?,?,?,?)",(int(run_id), client_id, verdict, language, message, p_code, time_stamp, source_code))
+				manage_database.conn.commit()
+				# c.execute("commit")   this and the upper statements are same
+			except Exception as error:
+				print("insertion error: "+str(error))
+
+	def get_count(run_id):
+		try:
+			manage_database.cur.execute("SELECT COUNT(*) FROM verdict WHERE run_id = ?",(int(run_id)))
+			a = manage_database.cur.fetchall()
+			a = a[0][0]
+		except Exception as error:
+			print(str(error))
+		return a
+
+	def update_record(run_id, client_id, verdict,language, message, p_code, time_stamp, source_code):
+		with manage_database.conn:
+			c = manage_database.cur
+			try:
+				c.execute("UPDATE verdict SET client_id = ?,verdict = ?,language = ?,message = ?,p_code = ?,time_stamp = ?,source = ? WHERE run_id = ?",(client_id, verdict, language, message, p_code, time_stamp, source_code, int(run_id), ))
 				manage_database.conn.commit()
 				# c.execute("commit")   this and the upper statements are same
 			except Exception as error:
@@ -62,5 +81,5 @@ class manage_database():
 
 if __name__=='__main__':
 	manage_database.initialize_database()
-	manage_database.insert_record(5, '111', 'WA', 'C', 'Nul', 'ABCD', '02:09', './././')
+	manage_database.insert_record(5, '11', 'WA', 'C', 'Nul', 'ABCD', '02:09', './././')
 	print(manage_database.get_record())

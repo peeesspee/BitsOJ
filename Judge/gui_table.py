@@ -39,11 +39,6 @@ class App(QMainWindow):
 		heading = QLabel('All Judgements')
 		heading.setObjectName('main_screen_heading')
 
-		# view_judgements_button = QPushButton('View judgements')
-		# view_judgements_button.setFixedSize(200, 50)
-		# view_judgements_button.clicked.connect(lambda: self.view_judgements(judgements_table.selectionModel().currentIndex().row()))
-		# view_judgements_button.setObjectName('submit')
-
 		judgements_model = self.judgements_models(self.db, 'verdict')
 
 		
@@ -55,21 +50,20 @@ class App(QMainWindow):
 		judgements_model.setHeaderData(5, Qt.Horizontal, 'Time Stamp')
 
 		judgements_table = self.generate_view(judgements_model)
-		# judgements_table.doubleClicked.connect(
-		# 	lambda: self.view_judgements(
-		# 		judgements_table.selectionModel().currentIndex().row()
-		# 		))
+		judgements_table.doubleClicked.connect(
+			lambda: self.view_judgements(
+				judgements_table.selectionModel().currentIndex().row()
+				))
 
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
-		# head_layout.addWidget(view_judgements_button,  alignment=Qt.AlignRight)
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
 
 		main_layout = QVBoxLayout()
-		main_layout.addWidget(head_widget)
+		main_layout.addWidget(head_widget, alignment = Qt.AlignCenter)
 		main_layout.addWidget(judgements_table)
 		main_layout.setStretch(0, 5)
 		main_layout.setStretch(1, 95)
@@ -79,6 +73,10 @@ class App(QMainWindow):
 		main.setObjectName("main_screen")
 		main.show()
 		return main, judgements_model
+
+
+	def view_judgements(self,selected_row):
+		print('hello', self.table.index(selected_row, 0).data())
 
 	def init_qt_database(self):
 		try:
@@ -120,12 +118,6 @@ class App(QMainWindow):
 		vertical_header.setVisible(False)
 		return table
 
-
-	@pyqtSlot()
-	def on_click(self):
-		print("\n")
-		for currentQTableWidgetItem in self.tableWidget.selectedItems():
-			print(currentQTableWidgetItem.row(), currentQTableWidgetItem.column(), currentQTableWidgetItem.text())
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)
