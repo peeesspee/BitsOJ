@@ -184,8 +184,7 @@ class manage_submission_ui(QMainWindow):
 		main_layout.addWidget(verdict_widget)
 		main_layout.addSpacerItem(spacer_item)
 		main_layout.addWidget(button_widget)
-		main_layout.setAlignment(Qt.AlignHCenter)
-		
+
 		main_layout.addStretch(1)
 
 		main = QWidget()
@@ -307,6 +306,7 @@ class manage_submission_ui(QMainWindow):
 			show_message = 'Submission Passed all test cases!'
 		else:
 			show_message = 'Submission Failed to pass all test cases!' 
+
 		message = {
 			'Code' : 'VRDCT', 
 			'Receiver' : client_username,
@@ -402,8 +402,6 @@ class manage_submission_ui(QMainWindow):
 		message = json.dumps(message)
 		self.task_queue.put(message)
 		print('[ VERDICT ][ SENT ] Judge Verdict accepted and sent to Client ' + client_username)
-
-		# TODO: UPDATE LEADERBOARD AND SUBMISSION TABLE
 
 		self.data_changed_flags[8] = 0
 		self.close()

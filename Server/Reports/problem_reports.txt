@@ -1,4 +1,4 @@
-2020-01-12 01:51:49.907819
+2020-01-12 22:39:45.488345
 ################ BitsOJ  ################
 Contest: Kodeathon A7 - Testing
 Number of participants with at least one submission: 1
@@ -27,8 +27,8 @@ Contest Problem Details:
  > Tricolor[ TRI ]
 	 Time Limit : 1 Seconds
 	 Number of Test files: 5
-	 Total Submissions on this problem: 3
-	 AC Submissions on this problem: 1
+	 Total Submissions on this problem: 0
+	 AC Submissions on this problem: 0
  > Independent Ryuk[ IRY ]
 	 Time Limit : 1 Seconds
 	 Number of Test files: 1

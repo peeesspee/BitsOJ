@@ -1,10 +1,10 @@
-2020-01-12 01:51:49.900649
+2020-01-12 22:39:43.576045
 ################ BitsOJ  ################
 Contest: Kodeathon A7 - Testing
 Contest Teams:
 	Team		   Password		 Type
 	judge00001		bits1		JUDGE
-	judge00002		JYl4XP		JUDGE
+	judge00002		bits2		JUDGE
 	judge00003		tfl6Zu		JUDGE
 	judge00004		NHlljr		JUDGE
 	team00001		bits1		CLIENT
