@@ -80,6 +80,8 @@ def main():
 			rabbitmq_password, 
 			host
 			)
+		channel1 = connection.channel()
+		channel2 = connection.channel()
 	except:
 		ex_type,ex_obj, ex_tb = sys.exc_info()
 		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
@@ -90,7 +92,7 @@ def main():
 	try:
 		print("----------------BitsOJ v1.0----------------")
 		# Starting GUI for login portal 
-		start_interface(connection,data_changed_flags, queue) 
+		start_interface(data_changed_flags, queue) 
 		print("[ LOGIN ] Successful")
 	except Exception as error:
 		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
@@ -105,7 +107,8 @@ def main():
 				host ,
 				data_changed_flags, 
 				queue, 
-				scoreboard
+				scoreboard,
+				channel2
 			)
 
 		listen_thread.start()
@@ -116,16 +119,27 @@ def main():
 	try:
 		# Starting Main GUI
 		print('Main GUI Loading')
-		init_gui(channel,data_changed_flags, queue,scoreboard)
+		init_gui(channel1,data_changed_flags, queue,scoreboard)
 	except Exception as error:
 		ex_type,ex_obj, ex_tb = sys.exc_info()
 		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
 		print(ex_type,f_name,ex_tb.tb_lineno)
 
-	connection.close()
+	# try:
+	listen_thread.join()
+	channel.close()
+	channel1.close()
+	channel2.close()
+
+	manage_connection.terminate_connection()
+	# except Exception as error:
+	# 	ex_type,ex_obj, ex_tb = sys.exc_info()
+	# 	f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
+	# 	print('[ ERROR ] : ', ex_type,f_name,ex_tb.tb_lineno)
 
 	sys.exit(0)
-	listen_thread.join()
+
+
 
 	print("[EXIT] Signal Passed")
 	# os.kill(listen_pid, signal.SIGINT)
@@ -146,11 +160,12 @@ def manage_process(
 	data_changed_flags, 
 	queue, 
 	scoreboard,
+	channel2,
 	):
 	# this is from continuously listening from the server
 	listen_from_server = threading.Thread(
 		target = start_listening.listen_server, 
-		args = (rabbitmq_username,rabbitmq_password, host, data_changed_flags, queue, scoreboard, )
+		args = (rabbitmq_username,rabbitmq_password, host, data_changed_flags, queue, scoreboard, channel2, )
 		)
 
 	return listen_from_server

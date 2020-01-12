@@ -71,11 +71,14 @@ def main():
 	# Makes connection with RabbitMQ
 	# And returns channel,connection
 	print("[ SETUP ] ESTABLISHING CONNECTION .........")
-	channel,connection = manage_connection.initialize_connection(
-		rabbitmq_username, 
-		rabbitmq_password, 
-		host
-		)
+	try:
+		channel,connection = manage_connection.initialize_connection(
+			rabbitmq_username, 
+			rabbitmq_password, 
+			host
+			)
+	except Exception as error:
+		print(str(error))
 
 
 
@@ -101,7 +104,6 @@ def main():
 
 	print("[EXIT] Signal Passed")
 	os.kill(listen_pid, signal.SIGINT)
-
 	
 
 	sleep(1)
@@ -111,9 +113,9 @@ def main():
 
 
 # Manageing process
-def manage_process(rabbitmq_username, rabbitmq_password, cursor, host, data_changed_flags,queue,scoreboard):
+def manage_process(rabbitmq_username, rabbitmq_password, cursor, host, data_changed_flags,queue,scoreboard,):
 	# this is from continuously listening from the server
-	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (rabbitmq_username,rabbitmq_password, cursor, host, data_changed_flags, queue,scoreboard))
+	listen_from_server = multiprocessing.Process(target = start_listening.listen_server, args = (rabbitmq_username,rabbitmq_password, cursor, host, data_changed_flags, queue,scoreboard,))
 
 	listen_from_server.start()
 

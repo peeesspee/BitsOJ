@@ -67,7 +67,7 @@ class authenticate_login():
 		authenticate_login.channel.basic_consume(
 			queue = username,
 			on_message_callback = authenticate_login.server_response_handler,
-			auto_ack = True
+			# auto_ack = True
 			)
 		
 		print("[ Listening ] @ " + authenticate_login.host)
@@ -109,6 +109,7 @@ class authenticate_login():
 			# Changing login status to valid
 			authenticate_login.login_status = 'VALID'
 			authenticate_login.client_id = server_data["Client ID"]
+			authenticate_login.channel.basic_ack(True)
 			authenticate_login.channel.stop_consuming()
 			# print('[ ACK ]')
 			# authenticate_login.channel.basic_ack(True)
@@ -129,7 +130,7 @@ class authenticate_login():
 				print(str(Error))
 
 			# print('[ ACK ]')
-			# authenticate_login.channel.basic_ack(True)
+			authenticate_login.channel.basic_ack(True)
 
 		# If login authentication is not valid 
 		elif (status == 'INVLD'):
@@ -144,7 +145,7 @@ class authenticate_login():
 				print(str(Error))
 
 			# print('[ ACK ]')
-			# authenticate_login.channel.basic_ack(True)
+			authenticate_login.channel.basic_ack(True)
 		else:
 			pass
 			# print('[ A/CK ]')

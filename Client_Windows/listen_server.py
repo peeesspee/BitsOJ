@@ -18,19 +18,19 @@ class start_listening():
 	authenticate_login = ''
 	cursor = ''
 
-	def listen_server(rabbitmq_username, rabbitmq_password, host, data_changed_flags2, queue, scoreboard):
+	def listen_server(rabbitmq_username, rabbitmq_password, host, data_changed_flags2, queue, scoreboard,channel):
 		print('[ LISTEN ] Start listening...')
 		start_listening.authenticate_login = handle_config.read_config_json()
 		conn, cursor = manage_database.initialize_table()
 		manage_local_ids.initialize_local_id(cursor)
 		start_listening.cursor = cursor
 		try:
-			creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
-			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
-			connection = pika.BlockingConnection(params)
-			channel = connection.channel()
+			# creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
+			# params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+			# connection = pika.BlockingConnection(params)
+			# channel = connection.channel()
 			start_listening.channel = channel
-			start_listening.connection = connection
+			# start_listening.connection = connection
 			start_listening.host = host
 			start_listening.data_changed_flags = data_changed_flags2
 			start_listening.queue = queue
@@ -47,13 +47,13 @@ class start_listening():
 			print("[ STOP ] Keyboard interrupt")
 			start_listening.channel.stop_consuming()
 			start_listening.channel.queue_delete(start_listening.authenticate_login["Username"])
-			connection.close()
-
-		except:
-			print('[ ERROR ] Something hugee')
+			return
+		except Exception as error:
+			print('[ ERROR ] Shit ', error)
 
 	def server_response_handler(ch,method,properties,body):
 		server_data = str(body.decode("utf-8"))
+		print(server_data)
 		json_data = json.loads(server_data)
 		code = json_data["Code"]
 		if code == 'VRDCT':
