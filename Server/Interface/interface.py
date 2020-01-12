@@ -203,6 +203,8 @@ class server_window(QMainWindow):
 		logo_image = QPixmap('Elements/bitwise_header.png')
 		logo_image = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image)
+		contest_name = QLabel(self.config['Contest Name'])
+		
 		self.timer_widget = QLCDNumber()
 		self.timer_widget.setSegmentStyle(QLCDNumber.Flat)
 		self.timer_widget.setDigitCount(8)
@@ -1115,7 +1117,19 @@ class server_window(QMainWindow):
 			return
 
 		try:
-			self.window = generate_report_ui(self.data_changed_flags, self.task_queue, self.log_queue)
+			contest_name = self.config['Contest Name']
+			theme = self.config['Contest Theme']
+		except:
+			contest_name = 'BitsOJ Contest'
+			contest_theme = ' '
+
+		try:
+			self.window = generate_report_ui(
+				self.data_changed_flags, 
+				self.task_queue, 
+				self.log_queue,
+				self.config
+			)
 			self.window.show()
 		except Exception as error: 
 			print('[ UI ][ ERROR ][ REPORT ] ' + str(error))
@@ -1642,15 +1656,18 @@ class init_gui(server_window):
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
-		server_app = server_window(data_changed_flags, task_queue, log_queue)
+		
 
 		# Splash screen
-		# splash = QSplashScreen(QPixmap("Elements/bitwise.png"))
-		# splash.show()
-		# splash.finish(server_app)
+		splash = QSplashScreen(QPixmap("./Elements/banner.png"), Qt.WindowStaysOnTopHint)
+		splash.show()
+		splash.showMessage("Loading modules...")
+		server_app = server_window(data_changed_flags, task_queue, log_queue)
+		splash.finish(server_app)
+		server_app.showMaximized()
 		# Splash ends
 
-		server_app.showMaximized()
+		
 
 		# Execute the app mainloop
 		app.exec_()

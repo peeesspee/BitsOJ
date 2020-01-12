@@ -7,8 +7,8 @@ class handle_logs():
 		handle_logs.data_changed_flags = data_changed_flags
 		handle_logs.log_queue = log_queue
 
-		file = open("server_logs.txt", "a+")
-		file2 = open("latest_server_logs.txt", "w+")
+		file = open("./Reports/server_logs.txt", "a+")
+		file2 = open("./Reports/latest_server_logs.txt", "w+")
 		
 		# Infinite Loop to Poll the log_queue every second
 		while True:

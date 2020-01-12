@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap, QColor
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-from database_management import user_management, query_management, client_authentication, submissions_management
+from database_management import user_management, query_management, client_authentication, submissions_management, report_management
 import json, time
   
 class ui_widgets:
@@ -36,7 +36,7 @@ class ui_widgets:
 		accounts_table.doubleClicked.connect(
 			lambda:self.edit_account(accounts_table.selectionModel().currentIndex().row())
 		)
-
+ 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
 		head_layout.addWidget(ie_accounts_button)
@@ -510,11 +510,11 @@ class ui_widgets:
 
 			table_list[0].setItem(i, 0, QTableWidgetItem(code_tuple[i]))
 			# Get how many clients solved this problem
-			solve_count = user_management.get_ac_count(code_tuple[i])
+			solve_count = report_management.get_ac_count(code_tuple[i])
 			table_list[0].setItem(i, 1, QTableWidgetItem(str(solve_count)))
 
 			# Get how many clients submitted a code for this problem
-			submit_count = user_management.get_submission_count(code_tuple[i])
+			submit_count = report_management.get_submission_count(code_tuple[i])
 			table_list[0].setItem(i, 2, QTableWidgetItem(str(submit_count)))
 
 			if submit_count == 0:
@@ -525,11 +525,11 @@ class ui_widgets:
 			table_list[0].setItem(i, 3, QTableWidgetItem(str(accuracy) + "%"))
 
 		# Get number of active participants
-		participant_count = user_management.get_participant_count()
+		participant_count = report_management.get_participant_count()
 		child_list[4].setText(str(participant_count))
 
 		# Get number of active pro participants
-		participant_pro_count = user_management.get_participant_pro_count()
+		participant_pro_count = report_management.get_participant_pro_count()
 		child_list[6].setText(str(participant_pro_count))
 
 		# Get Accuracy
