@@ -1,7 +1,7 @@
 {
     "Problems": {
         "Problem 1": {
-            "Test File Path": "./Problems/PIK",
+            "Test File Path": "./Problems/TQL",
             "Input File": [
                 "input00.in"
             ],
@@ -10,57 +10,18 @@
             ]
         },
         "Problem 2": {
-            "Test File Path": "./Problems/TFG",
+            "Test File Path": "./Problems/TPP",
             "Input File": [
-                "input00.in"
+                "input00.in",
+                "input01.in"
             ],
             "Output File": [
-                "output00.ans"
+                "output00.ans",
+                "output01.ans"
             ]
         },
         "Problem 3": {
-            "Test File Path": "./Problems/TFT",
-            "Input File": [
-                "input00.in",
-                "input01.in",
-                "input02.in",
-                "input03.in"
-            ],
-            "Output File": [
-                "output00.ans",
-                "output01.ans",
-                "output02.ans",
-                "output03.ans"
-            ]
-        },
-        "Problem 4": {
-            "Test File Path": "./Problems/LGN",
-            "Input File": [
-                "input00.in"
-            ],
-            "Output File": [
-                "output00.ans"
-            ]
-        },
-        "Problem 5": {
-            "Test File Path": "./Problems/TRI",
-            "Input File": [
-                "input00.in",
-                "input01.in",
-                "input02.in",
-                "input03.in",
-                "input04.in"
-            ],
-            "Output File": [
-                "output00.ans",
-                "output01.ans",
-                "output02.ans",
-                "output03.ans",
-                "output04.ans"
-            ]
-        },
-        "Problem 6": {
-            "Test File Path": "./Problems/IRY",
+            "Test File Path": "./Problems/TFG",
             "Input File": [
                 "input00.in"
             ],

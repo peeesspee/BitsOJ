@@ -123,7 +123,7 @@ class test_file(QMainWindow):
 		main.addWidget(self.test_cases_table)
 		main.addWidget(upload, alignment=Qt.AlignRight)
 		main.addWidget(self.problem_box)
-		main.addWidget(solution_widget)
+		# main.addWidget(solution_widget)
 		main.addStretch(0)
 		main.addSpacing(1)
 		main_widget = QWidget()
