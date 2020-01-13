@@ -555,9 +555,8 @@ class client_authentication(manage_database):
 
 	def generate_judge_key():
 		try:
-			chars = string.ascii_uppercase + string.digits + string.ascii_lowercase
-			for i in range(0, number):
-				password = ''.join(random.choice(chars) for _ in range(6))
+			chars = string.ascii_uppercase + string.digits + string.ascii_lowercase	
+			password = ''.join(random.choice(chars) for _ in range(6))
 			return password
 		except:
 			return '__JUDGE__'
@@ -995,14 +994,11 @@ class user_management(manage_database):
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
-	def delete_all():
+	def delete_all_accounts():
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			cur.execute("DELETE FROM accounts")
-			cur.execute("DELETE FROM connected_clients")
-			cur.execute("DELETE FROM connected_judges")
-			cur.execute("DELETE FROM scoreboard")
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
@@ -1017,6 +1013,18 @@ class user_management(manage_database):
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database updation error : " + str(error))
+			conn.rollback()
+		finally:
+			return
+
+	def delete_all():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("DELETE FROM connected_clients")
+			cur.execute("DELETE FROM connected_judges")
+			conn.commit()
+		except Exception as error:
+			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 			conn.rollback()
 		finally:
 			return
@@ -1046,11 +1054,6 @@ class user_management(manage_database):
 			return
 
 	def update_judge_state(username, state, ip):
-		if state == 'Blocked':
-			hidden = 'True'
-		else:
-			hidden = 'False'
-
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()

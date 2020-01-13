@@ -69,6 +69,7 @@ def main():
 	# 6        1             Leader Board Update
 	# 7        1             Problem Edited
 	# 8        1             Blocked User
+	# 9        1             Run ID Received
 
 	##################################
 	# Makes connection with RabbitMQ

@@ -570,8 +570,8 @@ class manage_clients():
 					'Connected', 
 					'connected_judges'
 				)
-				print('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
-				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
+				print('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] ID: ' + str(judge_session_key))
+				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] ID: ' + str(judge_session_key))
 
 				# Reply to be sent to judge
 				server_message = 'Hello Judge!'

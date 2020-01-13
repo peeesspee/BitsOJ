@@ -373,17 +373,31 @@ class core():
 
 				elif code == 'JDSCNT':
 					judge = data['Judge']
-					print('[ EVENT ] Disconnect judge : ' + judge)
-					core.log('[ EVENT ] Disconnect judge : ' + judge)
-					message = {
-						'Code' : 'DSCNT'
-					}
-					message = json.dumps(message)
-					core.channel.basic_publish(
-						exchange = core.judge_unicast_exchange, 
-						routing_key = judge, 
-						body = message
-					)
+					if judge == '__ALL__':
+						# Disconnect all judges
+						print('[ EVENT ] Disconnect All Judges')
+						core.log('[ EVENT ] Disconnect All Judges')
+						message = {
+							'Code' : 'DSCNT'
+						}
+						message = json.dumps(message)
+						core.channel.basic_publish(
+							exchange = core.judge_broadcast_exchange,
+							routing_key = '', 
+							body = message
+						)
+					else:
+						print('[ EVENT ] Disconnect judge : ' + judge)
+						core.log('[ EVENT ] Disconnect judge : ' + judge)
+						message = {
+							'Code' : 'DSCNT'
+						}
+						message = json.dumps(message)
+						core.channel.basic_publish(
+							exchange = core.judge_unicast_exchange, 
+							routing_key = judge, 
+							body = message
+						)
 
 				elif code == 'JBLOCK':
 					username = data['Receiver']
