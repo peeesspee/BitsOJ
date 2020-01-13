@@ -1,8 +1,8 @@
-2020-01-12 22:39:45.488345
+2020-01-13 22:23:40.865284
 ################ BitsOJ  ################
 Contest: Kodeathon A7 - Testing
-Number of participants with at least one submission: 1
-Number of participants with at least one AC submission: 1
+Number of participants with at least one submission: 0
+Number of participants with at least one AC submission: 0
 Contest Problem Details:
  > Plots in Kashmir [ PIK ]
 	 Time Limit : 1 Seconds
@@ -17,8 +17,8 @@ Contest Problem Details:
  > The Fight against Terror[ TFT ]
 	 Time Limit : 1 Seconds
 	 Number of Test files: 4
-	 Total Submissions on this problem: 1
-	 AC Submissions on this problem: 1
+	 Total Submissions on this problem: 0
+	 AC Submissions on this problem: 0
  > Lagaan[ LGN ]
 	 Time Limit : 1 Seconds
 	 Number of Test files: 1

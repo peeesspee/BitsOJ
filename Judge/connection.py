@@ -25,7 +25,7 @@ class manage_connection():
 				exchange = 'connection_manager', 
 				queue = 'client_requests'
 				)
-			return channel,connection
+			return connection
 
 
 		except Exception as error:
@@ -34,6 +34,4 @@ class manage_connection():
 	def terminate_connection(connection):
 		connection.close()
 
-	def connect_me():
-		# print("I am from connection and this is the channel name" + str(manage_connection.channel))
-		return	manage_connection.channel
+	

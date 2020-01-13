@@ -11,13 +11,10 @@ class communicate_server():
 	key = initialize_judge.key()
 	my_ip = initialize_judge.my_ip()
 
-	def listen_server():
-
-		channel = manage_connection.connect_me()
+	def listen_server(channel):
 		channel.queue_declare( queue = 'judge_requests', durable=True )
 		channel.exchange_declare( exchange = 'judge_manager', exchange_type = 'direct', durable = True)
 		channel.queue_bind( exchange = 'judge_manager', queue = 'judge_verdicts')
-
 
 		channel.queue_declare( queue = 'judge_verdicts', durable=True )
 		channel.exchange_declare( exchange = 'judge_manager', exchange_type = 'direct', durable = True)

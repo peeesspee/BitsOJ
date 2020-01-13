@@ -1,0 +1,36 @@
+Mike has an array of length N and he wants to divide that array into 4 subarrays A,B,C and D such that (sum(A)-sum(B)) + (sum(C)-sum(D)) is maximum. Also, all these subarrays are sequential which means A comes before B in array, B comes before C and C comes before D if we traverse from left to right. The length of a subarray can also be 0, in such case sum of that subarray will be 0. All the elements of array should belong to exactly 1 subarray and none of the element can be left out.  
+
+Mike is new to programming and hence not able to think of any good solution to this problem. Can you help Mike finding the maximum sum that can be obtained? 
+
+Input :
+The first line contains an integer number n (1 ≤ n ≤ 1000).
+The second line contains n space separated integers.  ( -100 ≤ ai ≤ 100). 
+
+Output :
+Maximum sum that is possible when you choose optimal subarrays.
+
+
+Sample Input 1:
+10
+-6 -4 -7 0 7 9 8 3 8 7
+
+Sample Output 1:
+59
+
+Sample Input 2:
+4
+-1 1 -2 -2
+
+Sample Output 2:
+6
+
+
+Sample Input 1 Explanation:
+-6 -4 -7 0 7 9 8 3 8 7
+
+A = [] => Sum = 0
+B = [-6,-4,-7] => Sum = -17
+C =  [0,7,9,8,3,8,7] => Sum = 42
+D = [] => Sum = 0
+
+Total sum = 0-(-17) + 42-0 = 59
