@@ -472,7 +472,7 @@ class client_window(QMainWindow):
 					exchange = 'connection_manager',
 					routing_key = 'client_requests',
 					body = data,
-					)
+				)
 			except Exception as Error:
 				print(str(Error))
 			event.accept()
