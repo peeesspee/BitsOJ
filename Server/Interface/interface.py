@@ -1368,6 +1368,9 @@ class server_window(QMainWindow):
 				submissions_management.delete_all()
 				# Update Submissions View
 				self.data_changed_flags[0] = 1
+				scoreboard_management.delete_all()
+				# Refresh Scoreboard View
+				self.data_changed_flags[16] = 1
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
@@ -1458,17 +1461,27 @@ class server_window(QMainWindow):
 				
 				# Send disconnect message to all clients
 				message = {
-				'Code' : 'DSCNT',
-				'Mode' : 2
+					'Code' : 'DSCNT',
+					'Mode' : 2
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
 				# Set DISCONNECTED to all connected clients and judges
 				print('[ RESET ] Disconnecting all clients...')
 				self.log('[ RESET ] Disconnecting all clients...')
-				print('[ RESET ] Disconnecting all Judges...')
-				self.log('[ RESET ] Disconnecting all Judges...')
-				user_management.disconnect_all()
+				message = {
+					"Code" : 'JDSCNT',
+					"Judge" : '__ALL__'
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+				print('[ RESET ] Disconnecting all judges...')
+				self.log('[ RESET ] Disconnecting all judges...')
+
+				user_management.delete_all()
+				print('[ RESET ] Deleting all Connected Judges...')
+				self.log('[ RESET ] Deleting all Connected Judges...')
+				
 				# Refresh Client UI
 				self.data_changed_flags[1] = 1
 				# Refresh Judge UI
@@ -1486,7 +1499,7 @@ class server_window(QMainWindow):
 				# Update Accounts View
 				print('[ RESET ] Resetting Accounts...')
 				self.log('[ RESET ] Resetting Accounts...')
-				user_management.delete_all()
+				user_management.delete_all_accounts()
 
 				# Update Submissions View
 				self.data_changed_flags[5] = 1
@@ -1624,8 +1637,8 @@ class server_window(QMainWindow):
 				print('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
 				self.log('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
 				message = {
-				'Code' : 'DSCNT',
-				'Mode' : 2
+					'Code' : 'DSCNT',
+					'Mode' : 2
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
@@ -1729,7 +1742,7 @@ class init_gui(server_window):
 		server_app = server_window(data_changed_flags, task_queue, log_queue)
 		# Delay splash screen
 		t = 0
-		while(t< 1000):
+		while(t< 3000):
 			t += 0.01
 			app.processEvents()
 
