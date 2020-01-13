@@ -1,0 +1,15 @@
+2020-01-13 22:23:39.551794
+################ BitsOJ  ################
+Contest: Kodeathon A7 - Testing
+All Clients:
+	Client ID		Team Name		  IP Address
+	9				team00001		  192.168.0.0
+
+####################################################################################################
+
+Submission data grouped by clients:
+> Client: team00001
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+
+####################################################################################################

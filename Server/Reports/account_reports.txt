@@ -1,0 +1,21 @@
+2020-01-13 22:23:38.946435
+################ BitsOJ  ################
+Contest: Kodeathon A7 - Testing
+Contest Teams:
+	Team		   Password		 Type
+	judge00001		bits1		JUDGE
+	judge00002		bits2		JUDGE
+	judge00003		bits3		JUDGE
+	judge00004		bits4		JUDGE
+	team00001		bits1		CLIENT
+	team00002		bits2		CLIENT
+	team00003		bits3		CLIENT
+	team00004		bits4		CLIENT
+	team00005		bits5		CLIENT
+	team00006		bits6		CLIENT
+	team00007		bits7		CLIENT
+	team00008		bits8		CLIENT
+	team00009		bits9		CLIENT
+	team00010		bits10		CLIENT
+
+################################################

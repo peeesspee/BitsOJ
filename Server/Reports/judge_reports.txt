@@ -1,0 +1,17 @@
+2020-01-13 22:23:40.155700
+################ BitsOJ  ################
+Contest: Kodeathon A7 - Testing
+
+All Judges:
+	Judge ID		Team Name		  IP Address
+	__ADMIN__		ADMIN		  localhost
+
+####################################################################################################
+
+Submission data grouped by judgess:
+
+> Judge: ADMIN :::: Number of verdicts: 0
+	Run ID			Client ID 			 Problem Code 		 Language 			 Timestamp 			 Verdict
+	No Verdicts by this judge.
+
+####################################################################################################
