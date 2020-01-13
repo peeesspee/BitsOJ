@@ -105,7 +105,7 @@ def main():
 	#	22		0/1			1: Problem table changed
 	#	23		0/1			1: Stop logger
 	#	24		0/1			1: Server locked
-	#	25		0/1				-----------------------------FREE
+	#	25		0/1			1: Manual Reviews have just been turned off : Try to send all unjudged submissions?
 	#	26		0/1			1: Connection error : Restart server
 	#	27		0/1			1: Allow multiple IP 
 	#####################################################################################

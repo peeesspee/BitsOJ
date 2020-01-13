@@ -61,7 +61,7 @@ class ui_widgets:
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		return main, accounts_model, delete_account_button
-
+ 
 	def submissions_ui(self):
 		heading = QLabel('All Runs')
 		heading.setObjectName('main_screen_heading')
@@ -219,7 +219,7 @@ class ui_widgets:
 		return main, client_model, allow_login_button
 
 	def judge_ui(self):
-		heading = QLabel('Manage Judges')
+		heading = QLabel('Connected Judges')
 		heading.setObjectName('main_screen_heading')
 
 		allow_login_label = QLabel('Allow Judge Logins : ')

@@ -1,4 +1,4 @@
-import sys, time, json
+import sys, time, json, threading
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
@@ -358,6 +358,24 @@ class server_window(QMainWindow):
 			
 	def update_data(self):
 		try:
+			# Update contest clock
+			if self.data_changed_flags[10] == 1:
+				# Find time elapsed since contest start
+				total_time = self.contest_set_time
+				current_time = time.time()
+				time_difference = total_time - current_time
+				remaining_time = time.strftime('%H:%M:%S', time.gmtime(time_difference))
+
+				# When remaining time is less than 0, contest has ended
+				if time_difference < 0:
+					# Contest time ended
+					self.timer_widget.display('00:00:00')
+					self.process_event('STOP', 'None')
+					return
+				
+				# Update timer
+				self.timer_widget.display(remaining_time)
+
 			if self.data_changed_flags[26] == 1:
 				self.data_changed_flags[26] = 2
 				# Connection failure!
@@ -433,29 +451,65 @@ class server_window(QMainWindow):
 				message = json.dumps(message)
 				self.task_queue.put(message)
 
-			# While contest is RUNNING
-			# This block is last as it may cause a return call and not allow further function block executions
-			if self.data_changed_flags[10] == 1:
-				# Find time elapsed since contest start
-				total_time = self.contest_set_time
-				current_time = time.time()
-				time_difference = total_time - current_time
-				remaining_time = time.strftime('%H:%M:%S', time.gmtime(time_difference))
+			# If manual reviews have been turned OFF
+			if self.data_changed_flags[25] == 1:
+				print('[ UI ] Sending responses for held submissions... ')
+				self.data_changed_flags[25] = 0
+				release_thread = threading.Thread( target = self.release_held_verdicts )
+				release_thread.start()
+				release_thread.join()
+				print('[ UI ] All held responses sent!')
 
-				# When remaining time is less than 0, contest has ended
-				if time_difference < 0:
-					# Contest time ended
-					self.timer_widget.display('00:00:00')
-					self.process_event('STOP', 'None')
-					return
-				
-				# Update timer
-				self.timer_widget.display(remaining_time)
+
 
 		except Exception as error:
 			print('[ ERROR ] Interface updation error: ' + str(error))
 			self.log('[ ERROR ] Interface updation error: ' + str(error))
-			
+		return
+
+	def release_held_verdicts(self):
+		# Get the data of all those run ids whose status is REVIEW:
+		print('[ UI ] Release process started.')
+		submissions = submissions_management.get_held_submissions() 
+		for submission in submissions:
+			run_id = submission[0] 
+			client_id = submission[1] 
+			local_run_id = submission[2] 
+			source_file = submission[3] 
+			problem_code = submission[4] 
+			verdict = submission[5] 
+			judge = submission[6] 
+			timestamp = submission[7]
+			client_username = client_authentication.get_client_username(client_id)
+			print('[ UI ] Releasing Run ', run_id)
+			# Get message of submission
+			try:
+				filename = './Client_Submissions/' + str(run_id) + '_latest.info'
+				with open(filename) as file:
+					data = file.read()
+				if data != '':
+					error_data = data
+				else:
+					error_data = 'No Error data received!'
+			except:
+				error_data = 'No Error data received!'
+
+			# For each run id, send response
+			message = {
+				'Code' : 'VRDCT', 
+				'Receiver' : client_username,
+				'Local Run ID' : local_run_id,
+				'Run ID' : run_id,
+				'Status' : verdict,
+				'Message' : error_data,
+				'Judge' : judge,
+				'Client ID' : client_id,
+				'Problem Code' : problem_code,
+				'Timestamp' : timestamp
+			}
+			message = json.dumps(message)
+			self.task_queue.put(message)
+			print('[ UI ][ RESPONSE ] Sent Verdict for Run ', run_id)
 		return
 
 	def convert_to_seconds(time_str):
@@ -718,11 +772,20 @@ class server_window(QMainWindow):
 
 	def manual_reviews_handler(self, state):
 		if(state == Qt.Checked):
-			# Allow submissions
+			# Allow submissions review
 			self.set_flags(20, 1)
 		else:
-			# Stop submissions
 			self.set_flags(20, 0)
+			buttonReply = QMessageBox.question(
+				self, 
+				'Manual Review Turn OFF', 
+				'Release all under REVIEW verdicts?', 
+				QMessageBox.Yes | QMessageBox.No, 	# Button Options
+				QMessageBox.No 			# Default button
+			)
+			if buttonReply == QMessageBox.No:
+				return
+			self.set_flags(25, 1)
 		return
 
 	def allow_scoreboard_update_handler(self, state):
@@ -1305,6 +1368,9 @@ class server_window(QMainWindow):
 				submissions_management.delete_all()
 				# Update Submissions View
 				self.data_changed_flags[0] = 1
+				scoreboard_management.delete_all()
+				# Refresh Scoreboard View
+				self.data_changed_flags[16] = 1
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
@@ -1395,17 +1461,27 @@ class server_window(QMainWindow):
 				
 				# Send disconnect message to all clients
 				message = {
-				'Code' : 'DSCNT',
-				'Mode' : 2
+					'Code' : 'DSCNT',
+					'Mode' : 2
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
 				# Set DISCONNECTED to all connected clients and judges
 				print('[ RESET ] Disconnecting all clients...')
 				self.log('[ RESET ] Disconnecting all clients...')
-				print('[ RESET ] Disconnecting all Judges...')
-				self.log('[ RESET ] Disconnecting all Judges...')
-				user_management.disconnect_all()
+				message = {
+					"Code" : 'JDSCNT',
+					"Judge" : '__ALL__'
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+				print('[ RESET ] Disconnecting all judges...')
+				self.log('[ RESET ] Disconnecting all judges...')
+
+				user_management.delete_all()
+				print('[ RESET ] Deleting all Connected Judges...')
+				self.log('[ RESET ] Deleting all Connected Judges...')
+				
 				# Refresh Client UI
 				self.data_changed_flags[1] = 1
 				# Refresh Judge UI
@@ -1423,7 +1499,7 @@ class server_window(QMainWindow):
 				# Update Accounts View
 				print('[ RESET ] Resetting Accounts...')
 				self.log('[ RESET ] Resetting Accounts...')
-				user_management.delete_all()
+				user_management.delete_all_accounts()
 
 				# Update Submissions View
 				self.data_changed_flags[5] = 1
@@ -1561,8 +1637,8 @@ class server_window(QMainWindow):
 				print('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
 				self.log('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
 				message = {
-				'Code' : 'DSCNT',
-				'Mode' : 2
+					'Code' : 'DSCNT',
+					'Mode' : 2
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
@@ -1664,12 +1740,15 @@ class init_gui(server_window):
 		splash.show()
 		splash.showMessage("Loading modules...")
 		server_app = server_window(data_changed_flags, task_queue, log_queue)
+		# Delay splash screen
+		t = 0
+		while(t< 3000):
+			t += 0.01
+			app.processEvents()
+
 		splash.finish(server_app)
 		server_app.showMaximized()
 		# Splash ends
-
-		
-
 		# Execute the app mainloop
 		app.exec_()
 		return

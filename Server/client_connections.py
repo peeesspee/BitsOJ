@@ -158,6 +158,7 @@ class manage_clients():
 				client_id = json_data["ID"]
 				client_type = json_data["Type"]
 				manage_clients.client_login_handler(
+					client_key,
 					client_username, 
 					client_password, 
 					client_id, 
@@ -220,7 +221,30 @@ class manage_clients():
 		return
 	
 	# This function handles all client login requests
-	def client_login_handler(client_username, client_password, client_id, client_type, client_ip = '0.0.0.0'):
+	def client_login_handler(
+			client_key, 
+			client_username, 
+			client_password, 
+			client_id, 
+			client_type, 
+			client_ip = '0.0.0.0'
+		):
+		if (
+				client_type == 'CLIENT' and 
+				client_key != manage_clients.key or 
+				client_type == 'JUDGE' and 
+				client_key != manage_clients.judge_key
+			):
+			# REJECT
+			message = {
+					'Code' : 'LRJCT',
+					'Receiver' : client_username,
+					'Message' : 'You are using an incompatible client.\nPlease contact ADMIN. '
+				}
+			message = json.dumps(message)
+			manage_clients.task_queue.put(message)
+			return
+			
 		message = ''
 		print(
 			'[ LOGIN REQUEST ] ::: ' + 
@@ -287,9 +311,9 @@ class manage_clients():
 
 			# Validate the client from the database
 			status = client_authentication.validate_client(client_username, client_password)
-			stored_client_id = client_authentication.get_client_id(client_username)
+			stored_client_id = str(client_authentication.get_client_id(client_username))
 			print('[ LOGIN ] Stored client ID: ', stored_client_id)
-			if stored_client_id != client_id and stored_client_id != -1:
+			if stored_client_id != client_id and stored_client_id != str(-1):
 				print('[ ' + client_username + ' ] Client ID does not match.')
 				manage_clients.log('[ ' + client_username + ' ] Client ID does not match.')
 				status = False
@@ -469,7 +493,7 @@ class manage_clients():
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
 				return
-
+		########################################################################################################################
 		# Judge login is handled as a client to avoid redundancy in code
 		elif client_type == 'JUDGE':
 			if(manage_clients.data_changed_flags[12] == 0):
@@ -505,7 +529,7 @@ class manage_clients():
 			# Check if client has logged in for the first time or is already connected:
 			previously_connected_state = client_authentication.check_connected_client(client_username, 'connected_judges')
 
-			if previously_connected_state == 'Disonnected':
+			if previously_connected_state == 'Disconnected':
 				print('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
 				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
 				server_message = 'Gotta work harder, Judge :)'
@@ -536,17 +560,18 @@ class manage_clients():
 
 			# If client has logged in for the first time
 			elif previously_connected_state == 'New':
+				judge_session_key = client_authentication.generate_judge_key()
 				# Add client to connected users database
 				client_authentication.add_client(
-					'__JUDGE__', 
-					client_username, 
+					judge_session_key, 
+					client_username,
 					client_password, 
 					client_ip, 
 					'Connected', 
 					'connected_judges'
 				)
-				print('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
-				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] Sending response...')
+				print('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] ID: ' + str(judge_session_key))
+				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] ID: ' + str(judge_session_key))
 
 				# Reply to be sent to judge
 				server_message = 'Hello Judge!'
@@ -864,6 +889,7 @@ class manage_clients():
 
 	# This function handles client logout requests
 	def client_logout_handler(client_username, client_id, client_ip):
+		print('[ LOGOUT ][ ', client_username, ' ] Initiated')
 		# Get client username from database and validate
 		database_client_username = client_authentication.get_client_username(client_id) 
 		status = client_authentication.check_client_ip(client_id, client_ip)

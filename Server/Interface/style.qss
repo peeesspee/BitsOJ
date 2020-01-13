@@ -32,7 +32,6 @@ QPushButton#sidebar_button::hover
 {
 	color : #0892D0;
 	border-right : 1px solid #AED581;
-	border-left : 10px solid #AED581;
 	background-color : #22232E ;
 	font-size : 20px;
 }

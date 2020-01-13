@@ -11,6 +11,8 @@ class core():
 	file_password = ''
 	unicast_exchange = 'connection_manager'
 	broadcast_exchange = 'broadcast_manager'
+	judge_unicast_exchange = 'judge_manager'
+	judge_broadcast_exchange = 'judge_broadcast_manager'
 	config = ''
 
 	def init_core(data_changed_flags, task_queue, log_queue):
@@ -61,6 +63,16 @@ class core():
 
 			channel.exchange_declare(exchange = 'connection_manager', exchange_type = 'direct', durable = True)
 			channel.exchange_declare(exchange = 'broadcast_manager', exchange_type = 'fanout', durable = True)
+			channel.exchange_declare(
+				exchange = 'judge_manager', 
+				exchange_type = 'direct', 
+				durable = True
+			)
+			channel.exchange_declare(
+				exchange = 'judge_broadcast_manager', 
+				exchange_type = 'fanout', 
+				durable = True
+			)
 			return connection, channel
 		
 		except Exception as error:
@@ -174,6 +186,12 @@ class core():
 					core.channel.basic_publish(
 						exchange = core.unicast_exchange, 
 						routing_key = receiver, 
+						body = message
+					)
+					
+					core.channel.basic_publish(
+						exchange = core.judge_broadcast_exchange,
+						routing_key = '',
 						body = message
 					)
 					
@@ -354,34 +372,44 @@ class core():
 						)
 
 				elif code == 'JDSCNT':
-					if data['Mode'] == 1:
-						client = data['Client']
-						print('[ EVENT ] Disconnect client : ' + str(client))
-						core.log('[ EVENT ] Disconnect client : ' + str(client))
+					judge = data['Judge']
+					if judge == '__ALL__':
+						# Disconnect all judges
+						print('[ EVENT ] Disconnect All Judges')
+						core.log('[ EVENT ] Disconnect All Judges')
 						message = {
-						'Code' : 'DSCNT',
-						'Client' : client
-						}
-						message = json.dumps(message)
-						# UNICAST THIS
-						core.channel.basic_publish(
-							exchange = core.broadcast_exchange, 
-							routing_key = '', 
-							body = message
-						)
-					elif data['Mode'] == 2:
-						print('[ EVENT ] Disconnect all clients')
-						core.log('[ EVENT ] Disconnect all clients')
-						message = {
-						'Code' : 'DSCNT',
-						'Client' : 'All'
+							'Code' : 'DSCNT'
 						}
 						message = json.dumps(message)
 						core.channel.basic_publish(
-							exchange = core.broadcast_exchange, 
+							exchange = core.judge_broadcast_exchange,
 							routing_key = '', 
 							body = message
 						)
+					else:
+						print('[ EVENT ] Disconnect judge : ' + judge)
+						core.log('[ EVENT ] Disconnect judge : ' + judge)
+						message = {
+							'Code' : 'DSCNT'
+						}
+						message = json.dumps(message)
+						core.channel.basic_publish(
+							exchange = core.judge_unicast_exchange, 
+							routing_key = judge, 
+							body = message
+						)
+
+				elif code == 'JBLOCK':
+					username = data['Receiver']
+					print('[ EVENT ] Judge Block ' + username)
+					core.log('[ EVENT ] Judge Block ' + username)
+				
+					message = json.dumps(data)
+					core.channel.basic_publish(
+						exchange = core.judge_unicast_exchange, 
+						routing_key = username, 
+						body = message
+					)
 
 				elif code == 'BLOCK':
 					username = data['Receiver']

@@ -3,7 +3,7 @@ import sys
 import random
 import string
 import os
-
+ 
 global client_id_counter
 
 class manage_database():
@@ -26,7 +26,7 @@ class manage_database():
 			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
 			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text, penalty integer, is_hidden text DEFAULT 'False')")
 			cur.execute("create table if not exists problems(problem_name varchar2(30), problem_code varchar(10), test_files integer, time_limit integer)")
-			
+
 		except Exception as error:
 			print("[ DB ][ CRITICAL ERROR ] Table creation error : " + str(error))
 
@@ -241,7 +241,7 @@ class scoreboard_management():
 					print(
 						'[ SCOREBOARD ] Client: ', 
 						client_id, 
-						' Number of Scored AC Submissions for this problem ( 0 or 1 ): ', 
+						' Number of Scored AC Submissions: ', 
 						number_of_submissions
 					)
 					# If the problem has not been solved yet, ie, number_of_submissions = 0
@@ -553,6 +553,14 @@ class client_authentication(manage_database):
 		client_id = int(client_id_counter)
 		return client_id
 
+	def generate_judge_key():
+		try:
+			chars = string.ascii_uppercase + string.digits + string.ascii_lowercase	
+			password = ''.join(random.choice(chars) for _ in range(6))
+			return password
+		except:
+			return '__JUDGE__'
+
 	def add_client(client_id, user_name, password, ip, state, table_name):
 		try:
 			cur = manage_database.get_cursor()
@@ -660,6 +668,17 @@ class submissions_management(manage_database):
 		except Exception as error:
 			return 1
 
+	def get_held_submissions():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT run_id, client_id, client_run_id, source_file, problem_code, verdict, judge, timestamp FROM submissions WHERE sent_status = 'REVIEW' ORDER BY run_id ASC")
+			data = cur.fetchall()
+			if len(data) == 0 or data == '':
+				return []
+			else:
+				return data
+		except Exception as error:
+			return []
 
 	def update_submission_status(run_id, verdict, sent_status, judge = '-'):
 		cur = manage_database.get_cursor()
@@ -970,28 +989,16 @@ class user_management(manage_database):
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			# Check if client is logged in : 
-			# if client_authentication.check_connected_client(user_name) == 'Connected':
-			# 	cur.execute("SELECT * FROM accounts WHERE user_name = ?", (user_name,))
-			# 	data = cur.fetchall()
-			# 	client_type = data[0][2]
-			# 	if client_type == 'CLIENT':
-			# 		print("[ DISCONNECT ] " + user_name)
-			# 		cur.execute("UPDATE connected_clients SET state = 'Blocked' WHERE user_name = ?", (user_name, ))
-
 			cur.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
-	def delete_all():
+	def delete_all_accounts():
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			cur.execute("DELETE FROM accounts")
-			cur.execute("DELETE FROM connected_clients")
-			cur.execute("DELETE FROM connected_judges")
-			cur.execute("DELETE FROM scoreboard")
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
@@ -1006,6 +1013,18 @@ class user_management(manage_database):
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database updation error : " + str(error))
+			conn.rollback()
+		finally:
+			return
+
+	def delete_all():
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("DELETE FROM connected_clients")
+			cur.execute("DELETE FROM connected_judges")
+			conn.commit()
+		except Exception as error:
+			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 			conn.rollback()
 		finally:
 			return
@@ -1031,7 +1050,20 @@ class user_management(manage_database):
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database updation error : " + str(error))
-			conn.rollback()
+		finally:
+			return
+
+	def update_judge_state(username, state, ip):
+		try:
+			cur = manage_database.get_cursor()
+			conn = manage_database.get_connection_object()
+			cur.execute(
+				"UPDATE connected_judges SET state = ?, ip = ? where user_name = ? ", 
+				(state, ip, username, )
+			)
+			conn.commit()
+		except Exception as error:
+			print("[ DB ][ ERROR ] Database updation error : " + str(error))
 		finally:
 			return
 
