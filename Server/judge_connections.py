@@ -1,7 +1,7 @@
 import pika
 import sys
 import json, time
-from database_management import submissions_management, scoreboard_management
+from database_management import submissions_management, scoreboard_management, user_management, client_authentication
 from init_server import initialize_server
 updated_config = 0
  
@@ -37,7 +37,7 @@ class manage_judges():
 				exchange_type = 'direct', 
 				durable = True
 			)
-			channel.exchange_declare(
+			channel.exchange_declare( 
 				exchange = 'judge_broadcast_manager', 
 				exchange_type = 'fanout', 
 				durable = True
@@ -117,8 +117,8 @@ class manage_judges():
 
 		# Decode the message sent by judge
 		judge_message = str(body.decode('utf-8'))
-		print('[ PING ] Recieved a new judge verdict.')
-		manage_judges.log('[ PING ] Recieved a new judge verdict.')
+		print('[ PING ] Recieved a new judge message.')
+		manage_judges.log('[ PING ] Recieved a new judge message.')
 		try:
 			json_data = json.loads(judge_message)
 			# Validate Judge message
@@ -228,6 +228,22 @@ class manage_judges():
 					manage_judges.data_changed_flags[0] = 1
 
 				# Send Acknowldgement of message recieved and processed
+				ch.basic_ack(delivery_tag = method.delivery_tag)
+			elif code == 'LOGOUT':
+				username = json_data['Username']
+				judge_id = json_data['ID']
+				judge_ip = json_data['IP']
+				status = client_authentication.validate_connected_judge(username, judge_id, judge_ip)
+				if status == True:
+					# Valid request
+					user_management.update_judge_state(username, 'Disconnected', judge_ip)
+					print('[ JUDGE ][ LOGOUT ] ' + username + ' Logged Out')
+					manage_judges.log('[ JUDGE ][ LOGOUT ] ' + username + ' Logged Out')
+
+					manage_judges.data_changed_flags[13] = 1
+				else:
+					print('[ JUDGE ][ LOGOUT ] ' + username + ' Rejected Logout')
+					manage_judges.log('[ JUDGE ][ LOGOUT ] ' + username + ' Rejected Logout')
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 
 			else:

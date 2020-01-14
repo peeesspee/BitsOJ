@@ -530,14 +530,33 @@ class manage_clients():
 			previously_connected_state = client_authentication.check_connected_client(client_username, 'connected_judges')
 
 			if previously_connected_state == 'Disconnected':
+				status = client_authentication.validate_connected_judge(client_username, client_id, client_ip)
+				if status == False:
+					print('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ] Rejected : ID/IP mismatch')
+					manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ] Rejected : ID/IP mismatch')
+					message = {
+						'Code' : 'LRJCT', 
+						'Receiver' : client_username, 
+						'ID' : client_id,
+						'Message' : 'Login Rejected : IP mismatch'
+					}
+					message = json.dumps(message)
+					manage_clients.task_queue.put(message)
+					return
+
+				# Update state in database
+				user_management.update_judge_state(client_username, 'Connected', client_ip)
+				# Refresh Judge UI
+				manage_clients.data_changed_flags[13] = 1
+
 				print('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
 				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
-				server_message = 'Gotta work harder, Judge :)'
 				
+				server_message = 'Gotta work harder, Judge :)'
 				message = {
 					'Code' : 'VALID', 
 					'Receiver' : client_username,
-					'Client ID' : 0, 
+					'ID' : client_id,
 					'Message' : server_message
 				}
 				message = json.dumps(message)
@@ -579,7 +598,7 @@ class manage_clients():
 				message = {
 					'Code' : 'VALID', 
 					'Receiver' : client_username,
-					'Client ID' : '__JUDGE__', 
+					'ID' : judge_session_key, 
 					'Message' : server_message
 				}
 				message = json.dumps(message)
