@@ -3,14 +3,18 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap, QTextCursor, QCursor, QFont, QColor 
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QSize, QRect
-from database import manage_database
+from database_management import manage_database
 
+def handler(msg_type, msg_log_context, msg_string):
+	pass
+qInstallMessageHandler(handler)
 
-class App(QMainWindow):
-
-	def __init__(self):
+class judge_window(QMainWindow):
+	def __init__(self, data_flags):
 		super().__init__()
-		self.title = 'All Judgements'
+		self.setWindowIcon(QIcon('./Assets/logo.png'))
+		self.setWindowTitle('BitsOJ v1.0.1 [ JUDGE ]')
+		self.data_flags = data_flags
 		self.left = 0
 		self.top = 0
 		self.width = 1200
@@ -18,8 +22,6 @@ class App(QMainWindow):
 		self.db = self.init_qt_database()
 		manage_database.initialize_database()
 		
-
-		self.setWindowTitle(self.title)
 		self.setGeometry(self.left, self.top, self.width, self.height)
 
 		self.timer = QTimer()
@@ -29,11 +31,12 @@ class App(QMainWindow):
 
 		main, self.table = self.judgements_ui()
 		self.setCentralWidget(main)
-		self.show()
-
+		
 	def update_data(self):
 		try:
-			self.table.setQuery("SELECT run_id,client_id,verdict,language,p_code,time_stamp FROM verdict ORDER BY run_id")
+			if self.data_flags[4] == 1:
+				self.data_flags[4] = 0
+				self.table.setQuery("SELECT run_id,client_id,verdict,language,p_code,time_stamp FROM verdict ORDER BY run_id")
 		except Exception as error:
 			print(str(error))
 
@@ -42,8 +45,6 @@ class App(QMainWindow):
 		heading.setObjectName('main_screen_heading')
 
 		judgements_model = self.judgements_models(self.db, 'verdict')
-
-		
 		judgements_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
 		judgements_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
 		judgements_model.setHeaderData(2, Qt.Horizontal, 'Verdict')
@@ -52,11 +53,26 @@ class App(QMainWindow):
 		judgements_model.setHeaderData(5, Qt.Horizontal, 'Time Stamp')
 
 		judgements_table = self.generate_view(judgements_model)
-		judgements_table.doubleClicked.connect(
-			lambda: self.view_judgements(
-				judgements_table.selectionModel().currentIndex().row()
-				))
 
+		judgements_table.setSortingEnabled(True)
+		# Enable Alternate row colors for readablity
+		judgements_table.setAlternatingRowColors(True)
+		# Select whole row when clicked
+		judgements_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+		# Allow only one row to be selected
+		judgements_table.setSelectionMode(QAbstractItemView.SingleSelection)
+		# fit view to whole space
+		judgements_table.resizeColumnsToContents()
+		# Make table non-editable
+		judgements_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		# Set view to delete when gui is closed
+		judgements_table.setAttribute(Qt.WA_DeleteOnClose)
+
+		# judgements_table.doubleClicked.connect(
+		# 	lambda: self.view_judgements(
+		# 		judgements_table.selectionModel().currentIndex().row()
+		# 	)
+		# )
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
@@ -128,6 +144,37 @@ class App(QMainWindow):
 		#vertical_header.setSectionResizeMode(QHeaderView.Stretch)
 		vertical_header.setVisible(False)
 		return table
+	def closeEvent(self, event):
+		message = "Pressing 'Yes' will SHUT the Judge."
+		info_message = (
+			"No judgements will be processed while it is closed.\n" +
+			"Are you sure you want to exit?"
+		)
+		
+		custom_close_box = QMessageBox()
+		custom_close_box.setIcon(QMessageBox.Critical)
+		custom_close_box.setWindowTitle('Warning!')
+		custom_close_box.setText(message)
+		custom_close_box.setInformativeText(info_message)
+		custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
+		custom_close_box.setDefaultButton(QMessageBox.No)
+		button_yes = custom_close_box.button(QMessageBox.Yes)
+		button_yes.setText('Yes')
+		button_no = custom_close_box.button(QMessageBox.No)
+		button_no.setText('No')
+
+		button_yes.setObjectName("close_button_yes")
+		button_no.setObjectName("close_button_no")
+
+		button_yes.setStyleSheet(open('./Assets/style.qss', "r").read())
+		button_no.setStyleSheet(open('./Assets/style.qss', "r").read())
+
+		custom_close_box.exec_()
+
+		if custom_close_box.clickedButton() == button_yes:
+			event.accept()
+		elif custom_close_box.clickedButton() == button_no : 
+			event.ignore()
 
 
 class view_source_ui(QMainWindow):
@@ -139,7 +186,6 @@ class view_source_ui(QMainWindow):
 
 		main = self.main_view_source_ui(verdict, language, source)
 		self.setCentralWidget(main)
-
 		return
 
 	def main_view_source_ui(self, verdict_show, language_show, source):
@@ -192,8 +238,23 @@ class view_source_ui(QMainWindow):
 
 		return main
 
-if __name__ == '__main__':
-	app = QApplication(sys.argv)
-	app.setStyleSheet(open('Assets/style.qss', "r").read())
-	ex = App()
-	sys.exit(app.exec_())
+
+class main_interface(judge_window):
+	def __init__(self, data_flags):
+		# make a reference of judge_window class
+		app = QApplication(sys.argv)
+		app.setStyle("Fusion")
+		app.setStyleSheet(open('Assets/style.qss', "r").read())
+		app.aboutToQuit.connect(self.closeEvent)
+		
+		
+		# If user is about to close window
+		# app.aboutToQuit.connect(self.closeEvent)
+		
+		judge_app = judge_window(data_flags)
+		
+		judge_app.showMaximized()
+		# Splash ends
+		# Execute the app mainloop
+		app.exec_()
+		return
