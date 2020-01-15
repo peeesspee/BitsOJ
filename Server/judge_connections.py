@@ -1,10 +1,8 @@
-import pika
-import sys
-import json, time
-from database_management import submissions_management, scoreboard_management
+import json, time, os, sys, pika
+from database_management import submissions_management, scoreboard_management, user_management, client_authentication
 from init_server import initialize_server
 updated_config = 0
- 
+
 class manage_judges():
 	channel = ''
 	data_changed_flags = ''
@@ -37,7 +35,7 @@ class manage_judges():
 				exchange_type = 'direct', 
 				durable = True
 			)
-			channel.exchange_declare(
+			channel.exchange_declare( 
 				exchange = 'judge_broadcast_manager', 
 				exchange_type = 'fanout', 
 				durable = True
@@ -111,18 +109,25 @@ class manage_judges():
 
 	#This function works on judge messages and passes them on to their respective handler function
 	def judge_message_handler(ch, method, properties, body):
+		# Re-Read the config after contest starts to inculcate any changes
 		if manage_judges.updated_config == 0:
 			manage_judges.updated_config = 1
 			manage_judges.config = initialize_server.read_config()
 
 		# Decode the message sent by judge
 		judge_message = str(body.decode('utf-8'))
-		print('[ PING ] Recieved a new judge verdict.')
-		manage_judges.log('[ PING ] Recieved a new judge verdict.')
+		print('[ PING ] Recieved a new judge message.')
+		manage_judges.log('[ PING ] Recieved a new judge message.')
 		try:
 			json_data = json.loads(judge_message)
 			# Validate Judge message
-			judge_key = json_data['Judge Key']
+			judge_key = json_data.get('Judge Key')
+			if judge_key == '' or judge_key == None:
+				print('[ JUDGE ][ ERROR ] Judge key not found!')
+				manage_judges.log('[ JUDGE ][ ERROR ] Judge key not found!')
+				ch.basic_ack(delivery_tag = method.delivery_tag)
+				return
+
 			if judge_key != manage_judges.config['Judge Key']:
 				print('[ SECURITY ][ CRITICAL ] Judge Key did not match!')
 				manage_judges.log('[ SECURITY ][ CRITICAL ] Judge Key did not match!')
@@ -133,12 +138,22 @@ class manage_judges():
 					run_id = json_data['Run ID']
 					# Mark the submission
 					judge = json_data['Judge']
-					submissions_management.update_submission_status(run_id, 'SECURITY', 'HALTED', 'CHECK ' + judge)
+					# Send Database updation task to BitsOJCore
+					message = {
+						'Code' : 'UpSubStat', 
+						'RunID' : run_id,
+						'Verdict' : 'SECURITY',
+						'Sent Status' : 'HALTED',
+						'Judge' : 'CHECK' + judge
+					}
+					message = json.dumps(message)
+					manage_judges.task_queue.put(message)
+
 				manage_judges.data_changed_flags[0] = 1
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
 			# Judge has been validated.
-			code = json_data["Code"]
+			code = json_data["Code"] 
 			if code == 'VRDCT':
 				local_run_id = json_data['Local Run ID']
 				client_username = json_data['Client Username']
@@ -208,7 +223,6 @@ class manage_judges():
 				message = json.dumps(message)
 
 				# Publish message to client if allowed
-				
 				if manage_judges.data_changed_flags[20] == 0:
 					# Manual Review is OFF
 					try:
@@ -223,11 +237,45 @@ class manage_judges():
 						return
 				else:
 					# Manual Review is ON
-					submissions_management.update_submission_status(run_id, status, 'REVIEW', judge)
+					# Send Database updation task to BitsOJCore
+					message = {
+						'Code' : 'UpSubStat', 
+						'RunID' : run_id,
+						'Verdict' : status,
+						'Sent Status' : 'REVIEW',
+						'Judge' : judge
+					}
+					message = json.dumps(message)
+					manage_judges.task_queue.put(message)
+
 					# Update submission GUI
 					manage_judges.data_changed_flags[0] = 1
 
 				# Send Acknowldgement of message recieved and processed
+				ch.basic_ack(delivery_tag = method.delivery_tag)
+			elif code == 'LOGOUT':
+				username = json_data['Username']
+				judge_id = json_data['ID']
+				judge_ip = json_data['IP']
+				status = client_authentication.validate_connected_judge(username, judge_id, judge_ip)
+				if status == True:
+					# Valid request
+					# Send Database updation task to BitsOJCore
+					message = {
+						'Code' : 'UpJudgeStat', 
+						'Username' : username,
+						'State' : 'Disconnected',
+						'IP' : judge_ip
+					}
+					message = json.dumps(message)
+					manage_judges.task_queue.put(message)
+
+					print('[ JUDGE ][ LOGOUT ] ' + username + ' Logged Out')
+					manage_judges.log('[ JUDGE ][ LOGOUT ] ' + username + ' Logged Out')
+					manage_judges.data_changed_flags[13] = 1
+				else:
+					print('[ JUDGE ][ LOGOUT ] ' + username + ' Rejected Logout')
+					manage_judges.log('[ JUDGE ][ LOGOUT ] ' + username + ' Rejected Logout')
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 
 			else:
@@ -240,6 +288,10 @@ class manage_judges():
 			ch.basic_ack(delivery_tag = method.delivery_tag)
 			print('[ ERROR ] Could not parse judge JSON data : ' + str(error))
 			manage_judges.log('[ ERROR ] Could not parse judge JSON data : ' + str(error))
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print('[ ERROR ] : ',exc_type, fname, exc_tb.tb_lineno)
+			manage_judges.log('[ ERROR ] : ',exc_type, fname, exc_tb.tb_lineno)
 			return
 
 		return

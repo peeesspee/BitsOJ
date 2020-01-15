@@ -2,7 +2,6 @@ import json
 import socket
 
 class initialize_judge():
-	
 	rabbitmq_username = 'Nul'
 	rabbitmq_password = 'Nul'
 	host_ip = 'Nul'
@@ -37,6 +36,20 @@ class initialize_judge():
 				print(i)
 			print("config is ->\n",type(config))
 
+	def save_details(username, password, judge_id):
+		with open("./config.json",'r') as read_json:
+			config = json.load(read_json)
+			config['Username'] = username
+			config['Password'] = password
+			config['ID'] = judge_id
+			config = json.dumps(config)
+		with open("./config.json", "w") as file:
+			file.write(config)
 
-# if __name__=='__main__':
-# 	initialize_judge.show_config()
+	def get_credentials():
+		with open("./config.json",'r') as read_json:
+			config = json.load(read_json)
+			try:
+				return config['Username'], config['Password'], config['ID'] 
+			except:
+				return 'NULL', 'NULL', 'NULL'

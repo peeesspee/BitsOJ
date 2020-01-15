@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-from database_management import submissions_management, user_management
+from database_management import submissions_management
 import json, time
  
 
@@ -162,8 +162,15 @@ class judge_view_ui(QMainWindow):
 	def final_status(self):
 		# If something is changed in combo box, run query 
 		if self.changed == 1:
-			user_management.update_judge_state(self.username, self.state_type, self.ip)
-			
+			message = {
+				'Code' : 'UpJudgeStat', 
+				'Username' : self.username,
+				'State' : self.state_type,
+				'IP' : self.ip
+			}
+			message = json.dumps(message)
+			manage_judges.task_queue.put(message)
+
 			print('[ JUDGE ][ ' + self.username + ' ][ UPDATE ] State changed to ' + self.state_type)
 			self.log('[ JUDGE ][ ' + self.username + ' ][ UPDATE ] State changed to ' + self.state_type)
 

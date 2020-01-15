@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-from database_management import user_management
 import json, time
 
 
@@ -148,8 +147,15 @@ class account_edit_ui(QMainWindow):
 	def final_status(self):
 		# If something is changed in combo box, run query 
 		if account_edit_ui.changed == 1:
-			user_management.update_user_state(account_edit_ui.username, account_edit_ui.state_type, account_edit_ui.ip)
-			
+			message = {
+				'Code' : 'UpUserStat', 
+				'Username' : account_edit_ui.username,
+				'State' : account_edit_ui.state_type,
+				'IP' : account_edit_ui.ip
+			}
+			message = json.dumps(message)
+			self.task_queue.put(message)
+
 			print('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
 			self.log('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
 			if account_edit_ui.state_type == 'Blocked':

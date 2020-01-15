@@ -30,12 +30,6 @@ class manage_database():
 		except Exception as error:
 			print("[ DB ][ CRITICAL ERROR ] Table creation error : " + str(error))
 
-		# try:
-		# 	cur.execute("INSERT INTO problems VALUES(?, ?, ?, ?)", ('The Fight for Survival', 'TFS', 1, 1, ))
-		# 	conn.commit()
-		# except:
-		# 	print('Errorororor')
-
 		return conn, cur
 
 	def reset_database(conn):
@@ -130,6 +124,21 @@ class scoreboard_management():
 			print("[ DB ][ CRITICAL ] Could not get scoreboard : " + str(error))
 		return	
 
+	def get_user_score(username):
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute(
+				"SELECT user_name, score, problems_solved, total_time FROM scoreboard WHERE user_name = ?",
+				(
+					username,
+				)
+			)
+			data = cur.fetchall()
+			return data
+		except Exception as error:
+			print("[ DB ][ CRITICAL ] Could not get scoreboard : " + str(error))
+		return	
+
 	def delete_all():
 		try:
 			cur = manage_database.get_cursor()
@@ -214,8 +223,9 @@ class scoreboard_management():
 				cur.execute("SELECT score FROM submissions WHERE run_id = ?", (run_id, ))
 				data = cur.fetchall()
 				# Data can not be NONE (Guarenteed)
-				if data == None: # Meh, Anyways 
-					previous_score = 0
+				if data == None or len(data) == 0: 
+					print('[ DB ][ ERROR ] No submission data found!')
+					return
 				else:
 					previous_score = int(data[0][0])
 
@@ -546,6 +556,25 @@ class client_authentication(manage_database):
 			return False
 		return
 
+	def validate_connected_judge(user_name, judge_id, judge_ip):
+		#Validate judge in database
+		cur = manage_database.get_cursor()
+		cur.execute(
+			"SELECT exists(SELECT * FROM connected_judges WHERE user_name = ? and judge_id = ? and ip = ?)",
+			(
+				user_name, 
+				judge_id, 
+				judge_ip, 
+			)
+		)
+		validation_result = cur.fetchall()
+		
+		if validation_result[0][0] == 1:
+			return True
+		else:
+			return False
+		return
+
 	#This function generates a new client_id for new connections
 	def generate_new_client_id():
 		global client_id_counter
@@ -667,7 +696,7 @@ class submissions_management(manage_database):
 				return int(data[0][0]) + 1
 		except Exception as error:
 			return 1
-
+ 
 	def get_held_submissions():
 		try:
 			cur = manage_database.get_cursor()
@@ -1022,7 +1051,7 @@ class user_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("DELETE FROM connected_clients")
 			cur.execute("DELETE FROM connected_judges")
-			conn.commit()
+			cur.execute('commit')
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 			conn.rollback()

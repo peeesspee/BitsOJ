@@ -2,28 +2,100 @@ QMainWindow{
 	background-color : #181B25;
 }
 
-QHeaderView::section {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                                      stop:0 #616161, stop: 0.5 #505050,
-                                      stop: 0.6 #434343, stop:1 #656565);
-    color: white;
-    padding-left: 4px;
-    border: 0px solid #6c6c6c;
+QLabel#main_screen_heading{
+	color : #ADFF2F;
+	font-size : 30px;
+}
+QPushButton#close_button_yes{
+	text-align : center;
+	background-color : #090909 ; 
+	color : #990000;
+}
+QPushButton#close_button_yes::focus{
+	color: #AA0000;
+}
+QPushButton#close_button_yes::focus::hover{
+	color: #E91E63;
+}
+QPushButton#close_button_yes::hover{
+	color: #E91E63;
 }
 
-QTableView{
+QPushButton#close_button_no{
+	text-align : center;
+	background-color : #090909 ;
+	color : #00FF00;
+}
+QPushButton#close_button_no::focus{
+	color: #00FF00;
+}
+QPushButton#close_button_no::focus::hover{
+	color: #ADFF2F;
+}
+QPushButton#close_button_no::hover{
+	color: #ADFF2F;
+}
+
+QMessageBox{
+	background-color : #808080;
+	color: #FFFFFF;
+}
+QDialog{
+	background-color : #181B25;
+}
+QDialog QLabel{
+	color : #AAAAAA;
+}
+QDialog QPushButton{
+	text-align : center;
+	background-color : #090909 ; 
+	color : #AAAAAA;
+}
+
+
+/*################################################ TABLE OBJECTS ######################################################*/
+/* Table styles */
+QTableView
+{
 	background-color : #181B25;
 	alternate-background-color : #1E222E;
 	color : #AAAAAA;
 	border : 0px;
 	selection-background-color : #121520;
 }
-
-QTableView::item:selected{
+QTableView::item:selected
+{
 	border : 2px solid #0891D4;
 }
-
-QLabel#main_screen_heading{
-	color : #ADFF2F;
-	font-size : 30px;
+QHeaderView::section
+{ 
+	background-color : #181B25;
+	color: #E91E63;	
 }
+
+/* Scroll bar styles */
+QScrollBar:horizontal
+{
+	height : 0px;
+}
+QScrollBar:vertical{
+	margin-left : 1px;
+	width : 25px;
+	background-color : #181B25;	
+	border: 1px solid #121212;
+}
+QScrollBar::handle:vertical{
+	background : qlineargradient( spread:Reflect, x1:0, y1:0, x2:0, y2:1 , stop:0 #181B25, stop:0.5 #38424C, stop:1 #181B25);
+	width : 25px;
+	min-height : 70px;
+	margin-left : 0px;
+	margin-top : 1px;
+	margin-bottom : 1px;
+	margin-right : 0px;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+	width : 0px;
+	height : 0px;
+}
+/*################################################ /TABLE OBJECTS ######################################################*/
+

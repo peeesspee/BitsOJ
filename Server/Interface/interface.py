@@ -1463,7 +1463,7 @@ class server_window(QMainWindow):
 				message = {
 					'Code' : 'DSCNT',
 					'Mode' : 2
-				}
+				} 
 				message = json.dumps(message)
 				self.task_queue.put(message)
 				# Set DISCONNECTED to all connected clients and judges

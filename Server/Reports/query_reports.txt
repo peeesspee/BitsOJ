@@ -1,7 +1,11 @@
-2020-01-13 22:23:41.269139
+2020-01-14 12:58:12.635506
 ################ BitsOJ  ################
-Contest: Kodeathon A7 - Testing
+Contest: BitsOJ  - Test 1
 Queries and Announcements:
 	ClientID					Query					Response
+	0		Announcement		Problem : The Quidditch Lessons is the easiest one :)
+	11		please check run id-10		Nope, it is a wrong answer
+	19		please check run id 7		Wrong answer!!!
+	0		Announcement		Thanks!
 
 ################################################
