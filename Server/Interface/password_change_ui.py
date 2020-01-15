@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-from database_management import user_management
 import json, time
 
 
@@ -116,7 +115,14 @@ class password_change_ui(QMainWindow):
 
 	def final_status(self, new_password):
 		if new_password != password_change_ui.password and new_password != '':
-			user_management.update_user_password(password_change_ui.username, new_password)
+			message = {
+				'Code' : 'UpUserPwd', 
+				'Username' : password_change_ui.username,
+				'New Password' : new_password
+			}
+			message = json.dumps(message)
+			password_change_ui.task_queue.put(message)
+
 			print('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
 			self.log('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
 			# Update connected_clients view

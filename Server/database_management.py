@@ -124,6 +124,21 @@ class scoreboard_management():
 			print("[ DB ][ CRITICAL ] Could not get scoreboard : " + str(error))
 		return	
 
+	def get_user_score(username):
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute(
+				"SELECT user_name, score, problems_solved, total_time FROM scoreboard WHERE user_name = ?",
+				(
+					username,
+				)
+			)
+			data = cur.fetchall()
+			return data
+		except Exception as error:
+			print("[ DB ][ CRITICAL ] Could not get scoreboard : " + str(error))
+		return	
+
 	def delete_all():
 		try:
 			cur = manage_database.get_cursor()
@@ -681,7 +696,7 @@ class submissions_management(manage_database):
 				return int(data[0][0]) + 1
 		except Exception as error:
 			return 1
-
+ 
 	def get_held_submissions():
 		try:
 			cur = manage_database.get_cursor()
@@ -1036,7 +1051,7 @@ class user_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("DELETE FROM connected_clients")
 			cur.execute("DELETE FROM connected_judges")
-			conn.commit()
+			cur.execute('commit')
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 			conn.rollback()

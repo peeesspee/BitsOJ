@@ -2,7 +2,7 @@
 # It also sends data to clients/judges either in unicast or in broadcast.
 import json, pika, sys, time
 from init_server import initialize_server
-from database_management import client_authentication, submissions_management, scoreboard_management
+from database_management import *
    
 class core():
 	data_changed_flags = ''
@@ -39,7 +39,7 @@ class core():
 			if status == 1:
 				break
 			# Poll every second
-			time.sleep(0.5)
+			time.sleep(1)
 
 		# If we reach this point, it means the Server Shutdown has been initiated.
 		
@@ -172,7 +172,7 @@ class core():
 					core.log('[ CORE ][ ' + receiver + ' ] Run ID sent.')
 
 				elif code == 'VRDCT':
-					receiver = data['Receiver']
+					username = data['Receiver']
 					run_id = data['Run ID']
 					status = data['Status']
 					client_id = data['Client ID']
@@ -185,7 +185,7 @@ class core():
 					message = json.dumps(data)
 					core.channel.basic_publish(
 						exchange = core.unicast_exchange, 
-						routing_key = receiver, 
+						routing_key = username, 
 						body = message
 					)
 					
@@ -223,8 +223,106 @@ class core():
 					# Broadcast new scoreboard to clients whenever a new AC is recieved 
 					# and scoreboard update is allowed.
 					if status == 'AC' and core.data_changed_flags[15] == 1:
-						# Flag 18 signals interface to send scoreboard to all clients if allowed
-						core.data_changed_flags[18] = 1 
+						# Get user score and broadcast it to clients
+						data = scoreboard_management.get_user_score(username)
+						message = {
+							'Code':'SCRBD',
+							'Data' : data
+						}
+						core.channel.basic_publish(
+							exchange = core.broadcast_exchange,
+							routing_key = '',
+							body = message
+						)
+
+				elif code == 'UpSubStat':
+					# Update Submission status
+					run_id = data['RunID']
+					verdict = data['Verdict']
+					sent_status = data['Sent Status']
+					judge = data['Judge']
+					submissions_management.update_submission_status(
+							run_id, 
+							verdict, 
+							sent_status, 
+							judge
+					)
+
+				elif code == 'UpJudgeStat':
+					username = data['Username']
+					state = data['State']
+					judge_ip = data['IP']
+					user_management.update_judge_state(
+						username, 
+						state, 
+						judge_ip
+					)
+
+				elif code == 'UpUserStat':
+					username = data['Username']
+					state = data['State']
+					judge_ip = data['IP']
+					user_management.update_user_state(
+						username, 
+						state, 
+						judge_ip
+					)
+
+				elif code == 'AddNewUser':
+					username = data['Username']
+					state = data['State' ]
+					client_ip = data['IP']
+					client_id = data['ID']
+					password = data['Password' ]
+					table = data['Table']
+					client_authentication.add_client(
+						client_id, 
+						client_username, 
+						client_password, 
+						client_ip, 
+						state, 
+						table
+					)
+
+				elif code == 'AddNewScore':
+					client_username = data['Username' ]
+					client_id = data['ID']
+					score = data['Score']
+					problems_solved = data['Problems Solved']
+					total_time = data['Total Time']
+					scoreboard_management.insert_new_user(
+						client_id, 
+						client_username, 
+						score, 
+						problems_solved, 
+						total_time
+					)
+
+				elif data == 'AddNewSub':
+					run_id = data['RunID']
+					local_run_id = data['Local ID']
+					client_id = data['Client ID']
+					language = data['Language']
+					source_file_name = data['Source File Name']
+					problem_code = data['Problem Code']
+					status = data['Status']
+					timestamp = data['Timestamp']
+
+					submissions_management.insert_submission(
+						run_id, 
+						local_run_id, 
+						client_id, 
+						language, 
+						source_file_name, 
+						problem_code, 
+						status, 
+						time_stamp
+					)
+
+				elif code == 'UpUserPwd':
+					username = data['Username']
+					password = data['New Password']
+
 
 				elif code == 'SHUTDOWN':
 					receiver = data['Receiver']
@@ -339,7 +437,16 @@ class core():
 							routing_key = '', 
 							body = message
 						)
-						
+				elif code == 'AddQuery':
+					query_id = data['Query ID']
+					client_id = data['Client ID']
+					query = data['Query']
+					query_management.insert_query(
+						query_id, 
+						client_id, 
+						query
+					)
+		
 				# Client has been DiSCoNnecTed
 				elif code == 'DSCNT':
 					if data['Mode'] == 1:
@@ -432,7 +539,7 @@ class core():
 						routing_key = receiver, 
 						body = message
 					)
-			return
+					
 		except Exception as error:
 			print('[ ERROR ] Data could not be transmitted : ' + str(error)) 
 			core.log('[ ERROR ] Data could not be transmitted : ' + str(error))

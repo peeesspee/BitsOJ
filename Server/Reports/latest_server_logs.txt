@@ -1,151 +1,41 @@
-2020-01-14 01:37:52.007120  :  #### SERVER START #### ###
-2020-01-14 01:37:52.007234  :  [ SELF CHECK ][ PASS ] Systems OK. ###
-2020-01-14 01:37:52.007264  :  [ SETUP ] Initialising server... ###
-2020-01-14 01:37:52.007286  :  [ SETUP ] Initialising database... ###
-2020-01-14 01:37:52.507970  :  [ SETUP ] Initialising subprocesses... ###
-2020-01-14 01:37:52.508023  :    [ START ] Client Manager subprocess started. ###
-2020-01-14 01:37:52.508048  :  [ SETUP ] Subprocesses started ###
-2020-01-14 01:37:52.508070  :  [ SETUP ][ Process ] Client Manager: 28461 ###
-2020-01-14 01:37:52.508090  :  [ SETUP ][ Process ] Judge Manager: 28462 ###
-2020-01-14 01:37:52.508110  :  [ SETUP ][ Process ] Core: 28464 ###
-2020-01-14 01:37:52.508130  :  [ SETUP ][ Process ] Log Manager: 28459 ###
-2020-01-14 01:37:52.508149  :    [ START ] Judge Manager subprocess started. ###
-2020-01-14 01:37:52.508169  :    [ START ] Core subprocess started. ###
-2020-01-14 01:37:52.508188  :  [ LISTEN ] Started listening on client_requests ###
-2020-01-14 01:37:52.508207  :  [ LISTEN ] Started listening on judge_verdict ###
-2020-01-14 01:37:52.508232  :    [ START ] Interface subprocess started. ###
-2020-01-14 01:38:02.521233  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:38:02.521372  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 01:38:03.522647  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 01:38:14.536481  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:38:14.536579  :  [ SUBMISSION ] Client ID :16 IP:192.168.0.0 Username: team00020 Problem:TQL Language :C++ Time stamp :01:38:14 ###
-2020-01-14 01:38:14.536640  :  [ JUDGE ] Requesting a new judgement ###
-2020-01-14 01:38:14.536695  :  [ REQUEST ] New judging request sent successfully. ###
-2020-01-14 01:38:15.037471  :  [ CORE ][ team00020 ] Run ID sent. ###
-2020-01-14 01:38:15.037566  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:38:15.037623  :  [ VERDICT ] judge00002 :: WA ###
-2020-01-14 01:38:15.037690  :  [ VERDICT ] New verdict sent to team00020 ###
-2020-01-14 01:38:15.538445  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:38:15.538524  :  [ ERROR ] Could not parse judge JSON data : 'Judge Key' ###
-2020-01-14 01:38:27.554321  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:38:27.554396  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 01:42:52.412491  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
-2020-01-14 01:42:52.913270  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
-2020-01-14 01:47:52.309397  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
-2020-01-14 01:47:52.810277  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
-2020-01-14 01:50:32.523876  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:50:32.523974  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 01:50:33.525395  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 01:50:37.530479  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:50:37.530561  :  [ SUBMISSION ] Client ID :16 IP:192.168.0.0 Username: team00020 Problem:TQL Language :C++ Time stamp :01:50:37 ###
-2020-01-14 01:50:38.031417  :  [ JUDGE ] Requesting a new judgement ###
-2020-01-14 01:50:38.031463  :  [ REQUEST ] New judging request sent successfully. ###
-2020-01-14 01:50:38.031487  :  [ CORE ][ team00020 ] Run ID sent. ###
-2020-01-14 01:51:47.122866  :  [ JUDGE ][ judge00002 ][ UPDATE ] State changed to Disconnected ###
-2020-01-14 01:51:47.623647  :  [ EVENT ] Disconnect judge : judge00002 ###
-2020-01-14 01:51:50.127026  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:51:50.127106  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 01:51:50.627855  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 01:52:11.154481  :  [ EVENT ][ REJUDGE ] Run 4 by ADMIN ###
-2020-01-14 01:52:52.208626  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
-2020-01-14 01:52:52.709580  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
-2020-01-14 01:53:06.227142  :  [ JUDGE ][ judge00002 ][ UPDATE ] State changed to Disconnected ###
-2020-01-14 01:53:06.227223  :  [ EVENT ] Disconnect judge : judge00002 ###
-2020-01-14 01:53:14.238065  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:53:14.238145  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 01:53:15.239800  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 01:53:22.249658  :  [ EVENT ][ REJUDGE ] Run 4 by ADMIN ###
-2020-01-14 01:53:23.251085  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:53:23.251217  :  [ VERDICT ] judge00002 :: WA ###
-2020-01-14 01:53:23.251310  :  [ VERDICT ] New verdict sent to team00020 ###
-2020-01-14 01:53:23.251381  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:53:23.251451  :  [ ERROR ] Could not parse judge JSON data : 'Judge Key' ###
-2020-01-14 01:53:34.767334  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:53:34.767529  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 01:55:56.955112  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:55:56.955191  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 01:55:56.955238  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 01:56:07.469304  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:56:07.469413  :  [ SUBMISSION ] Client ID :16 IP:192.168.0.0 Username: team00020 Problem:TQL Language :C++ Time stamp :01:56:07 ###
-2020-01-14 01:56:07.469467  :  [ JUDGE ] Requesting a new judgement ###
-2020-01-14 01:56:07.469532  :  [ REQUEST ] New judging request sent successfully. ###
-2020-01-14 01:56:07.970276  :  [ CORE ][ team00020 ] Run ID sent. ###
-2020-01-14 01:56:07.970379  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:56:07.970442  :  [ VERDICT ] judge00002 :: WA ###
-2020-01-14 01:56:07.970486  :  [ VERDICT ] New verdict sent to team00020 ###
-2020-01-14 01:56:08.471275  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:56:08.471387  :  [ ERROR ] Could not parse judge JSON data : 'Judge Key' ###
-2020-01-14 01:56:47.021814  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:56:47.522445  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 01:57:06.048278  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:57:06.048664  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 01:57:06.048970  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 01:57:12.557527  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:57:12.557606  :  [ SUBMISSION ] Client ID :16 IP:192.168.0.0 Username: team00020 Problem:TQL Language :C++ Time stamp :01:57:12 ###
-2020-01-14 01:57:12.557654  :  [ JUDGE ] Requesting a new judgement ###
-2020-01-14 01:57:12.557711  :  [ REQUEST ] New judging request sent successfully. ###
-2020-01-14 01:57:13.058435  :  [ CORE ][ team00020 ] Run ID sent. ###
-2020-01-14 01:57:14.560542  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:57:14.560673  :  [ VERDICT ] judge00002 :: WA ###
-2020-01-14 01:57:14.560730  :  [ VERDICT ] New verdict sent to team00020 ###
-2020-01-14 01:57:14.560778  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:57:14.560824  :  [ ERROR ] Could not parse judge JSON data : 'Judge Key' ###
-2020-01-14 01:57:26.076518  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 01:57:26.076608  :  [ LOG OUT ][ team00020 ][ ACCEPT ] ###
-2020-01-14 01:57:26.577460  :  [ CORE ][ team00020 ] Shutdown. ###
-2020-01-14 01:57:30.082597  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 01:57:30.082736  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 01:57:52.612500  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
-2020-01-14 01:57:52.612630  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
-2020-01-14 02:00:04.786583  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 02:00:04.786703  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 02:00:04.786936  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 02:00:13.298440  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 02:00:13.298488  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 02:01:44.419956  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 02:01:44.420007  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 02:01:44.420042  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 02:01:50.929008  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 02:01:50.929145  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 02:02:52.513309  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
-2020-01-14 02:02:52.513390  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
-2020-01-14 02:02:59.021972  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 02:02:59.022051  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 02:02:59.522456  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 02:03:03.527836  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 02:03:03.527986  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 02:06:04.270395  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 02:06:04.270498  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 02:06:04.270566  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 02:06:08.776393  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 02:06:09.777786  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 02:06:30.305156  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 02:06:30.305236  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 02:06:30.805949  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 02:06:37.314465  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 02:06:37.815321  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 02:06:45.325741  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 02:06:45.326008  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 02:06:45.326077  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 02:06:53.336414  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 02:06:54.337862  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 02:07:37.896703  :  [ ALERT ] Recieved a new client message. ###
-2020-01-14 02:07:37.896828  :  [ LOGIN REQUEST ] ::: O9TJym :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
-2020-01-14 02:07:38.397512  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
-2020-01-14 02:07:46.407177  :  [ PING ] Recieved a new judge message. ###
-2020-01-14 02:07:46.907934  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
-2020-01-14 02:07:52.415074  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
-2020-01-14 02:07:52.415138  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
-2020-01-14 02:08:20.952544  :  [ EVENT ][ BROADCAST ] STOP Contest ###
-2020-01-14 02:08:23.956304  :  [ SECURITY ] Server Close attempt -> Accepted. ###
-2020-01-14 02:08:23.956350  :  [ EXIT ] Signal passed ###
-2020-01-14 02:08:23.956375  :  [ EXIT ] Saving Server state to file. ###
-2020-01-14 02:08:23.956396  :  [ LISTEN ] STOPPED listening to client channel ###
-2020-01-14 02:08:23.956417  :  [ LISTEN ] STOPPED listening to judge channel ###
-2020-01-14 02:08:23.956436  :  [ STOP ] Client subprocess terminated successfully! ###
-2020-01-14 02:08:23.956456  :  [ STOP ] Judge subprocess terminated successfully! ###
-2020-01-14 02:08:23.956476  :  [ EXIT ] Saved Server state to file. ###
-2020-01-14 02:08:24.957855  :  [ STOP ] Core subprocess terminated successfully! ###
-2020-01-14 02:08:24.957935  :  #### SERVER EXIT ####
+2020-01-15 01:11:38.335590  :  #### SERVER START #### ###
+2020-01-15 01:11:38.335681  :  [ SELF CHECK ][ FAIL ] Detected an abnormal system exit. ###
+2020-01-15 01:11:39.337152  :  [ SETUP ] Initialising server... ###
+2020-01-15 01:11:39.337248  :  [ SETUP ] Initialising database... ###
+2020-01-15 01:11:40.338229  :  [ SETUP ] Loading problems... ###
+2020-01-15 01:11:40.338278  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-15 01:11:40.338304  :    [ START ] Client Manager subprocess started. ###
+2020-01-15 01:11:40.338326  :  [ SETUP ] Subprocesses started ###
+2020-01-15 01:11:40.338346  :  [ SETUP ][ Process ] Client Manager: 4914 ###
+2020-01-15 01:11:40.338366  :  [ SETUP ][ Process ] Judge Manager: 4915 ###
+2020-01-15 01:11:40.338387  :  [ SETUP ][ Process ] Core: 4917 ###
+2020-01-15 01:11:40.338406  :  [ SETUP ][ Process ] Log Manager: 4908 ###
+2020-01-15 01:11:40.338425  :    [ START ] Judge Manager subprocess started. ###
+2020-01-15 01:11:40.338445  :    [ START ] Core subprocess started. ###
+2020-01-15 01:11:40.338463  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-15 01:11:40.338482  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-15 01:11:40.338502  :    [ START ] Interface subprocess started. ###
+2020-01-15 01:12:07.830163  :  [ EVENT ] SERVER RESET TRIGGERED ###
+2020-01-15 01:12:07.830253  :  [ RESET ] Disconnecting all clients... ###
+2020-01-15 01:12:07.830301  :  [ RESET ] Disconnecting all judges... ###
+2020-01-15 01:12:07.830343  :  [ EVENT ] Disconnect all clients ###
+2020-01-15 01:12:07.830386  :  [ EVENT ] Disconnect All Judges ###
+2020-01-15 01:12:08.831825  :  [ RESET ] Deleting all Connected Judges... ###
+2020-01-15 01:12:08.831912  :  [ RESET ] Clearing scoreboard... ###
+2020-01-15 01:12:08.831972  :  [ RESET ] Resetting Accounts... ###
+2020-01-15 01:12:09.332837  :  [ RESET ] Resetting Submissions... ###
+2020-01-15 01:12:09.332888  :  [ RESET ] Resetting Queries... ###
+2020-01-15 01:12:09.332916  :  [ RESET ] Reset environment... ###
+2020-01-15 01:12:22.849951  :  [ ACCOUNT ] Import Accounts from /home/valiant/Desktop/Projects/BitsOJ/Server/accounts.xlsx ###
+2020-01-15 01:12:43.375533  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-15 01:12:43.375599  :  [ EXIT ] Signal passed ###
+2020-01-15 01:12:43.375636  :  [ EXIT ] Saving Server state to file. ###
+2020-01-15 01:12:43.375679  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-15 01:12:43.375710  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-15 01:12:43.375740  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-15 01:12:43.375770  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-15 01:12:43.375809  :  [ EXIT ] Saved Server state to file. ###
+2020-01-15 01:12:44.376830  :  #### SERVER EXIT ####
 
  ###
+2020-01-15 01:12:44.376971  :  [ STOP ] Core subprocess terminated successfully! ###

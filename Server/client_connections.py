@@ -386,10 +386,17 @@ class manage_clients():
 						'Message' : 'Welcome back!.'
 					}
 					message = json.dumps(message)
-					manage_clients.task_queue.put(message)
+					manage_clients.task_queue.put(message) 
 
 					# Update client state from Disconnected to Connected 
-					user_management.update_user_state(client_username, 'Connected', client_ip)
+					message = {
+						'Code' : 'UpUserStat', 
+						'Username' : username,
+						'State' : 'Connected',
+						'IP' : client_ip
+					}
+					message = json.dumps(message)
+					manage_clients.task_queue.put(message)
 
 					# Update Connected_clients GUI
 					manage_clients.data_changed_flags[1] = 1
@@ -415,21 +422,28 @@ class manage_clients():
 				# Fetch new client ID
 				client_id = client_authentication.generate_new_client_id()
 				# Add client to connected users database
-				client_authentication.add_client(
-					client_id, 
-					client_username, 
-					client_password, 
-					client_ip, 
-					'Connected', 
-					'connected_clients'
-				)
-				scoreboard_management.insert_new_user(
-					client_id, 
-					client_username, 
-					0, 
-					0, 
-					'00:00:00'
-				)
+				message = {
+					'Code' : 'AddNewUser', 
+					'Username' : client_username,
+					'State' : 'Connected',
+					'IP' : client_ip,
+					'ID' : client_id,
+					'Password' : client_password,
+					'Table' : 'connected_clients'
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+
+				message = {
+					'Code' : 'AddNewScore', 
+					'Username' : client_username,
+					'ID' : client_id,
+					'Score' : 0,
+					'Problems Solved' : 0,
+					'Total Time' : '00:00:00'
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
 
 				print('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
 				manage_clients.log('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
@@ -544,8 +558,17 @@ class manage_clients():
 					manage_clients.task_queue.put(message)
 					return
 
-				# Update state in database
-				user_management.update_judge_state(client_username, 'Connected', client_ip)
+				# State = True here, which means a successful LOGIN
+				# Update state in database ( from BitsOJCore )
+				message = {
+					'Code' : 'UpJudgeStat', 
+					'Username' : client_username,
+					'State' : 'Connected',
+					'IP' : client_ip
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+
 				# Refresh Judge UI
 				manage_clients.data_changed_flags[13] = 1
 
@@ -581,14 +604,18 @@ class manage_clients():
 			elif previously_connected_state == 'New':
 				judge_session_key = client_authentication.generate_judge_key()
 				# Add client to connected users database
-				client_authentication.add_client(
-					judge_session_key, 
-					client_username,
-					client_password, 
-					client_ip, 
-					'Connected', 
-					'connected_judges'
-				)
+				message = {
+					'Code' : 'AddNewUser', 
+					'Username' : client_username,
+					'State' : 'Connected',
+					'IP' : client_ip,
+					'ID' : judge_session_key,
+					'Password' : client_password,
+					'Table' : 'connected_judges'
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+
 				print('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] ID: ' + str(judge_session_key))
 				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ JUDGE ][ VALID ] ID: ' + str(judge_session_key))
 
@@ -743,10 +770,11 @@ class manage_clients():
 		# current_time = initialize_server.get_time_difference(contest_start_time, current_time)
 		time_difference = initialize_server.get_abs_time_difference(current_time, time_stamp)
 
-		# UNCOMMENT THE FOLLOWING LINES IF YOU WISH TO GIVE A 20 SECONDS GRACE TIME TO CLIENTS
-		# AND BELIEVE THEIR TIMESTAMP
+		# UNCOMMENT THE FOLLOWING LINES IF YOU WISH TO GIVE A N SECONDS GRACE TIME TO CLIENTS
+		# AND BELIEVE IN THEIR TIMESTAMP
 
-		# if time_difference > 20:
+		# N = 20	# Change this value for grace period time ( Seconds )
+		# if time_difference > N:
 		# 	print('[ SUBMISSION ][ CONFLICT ] Time difference: ', time_difference, ' Seconds ', )
 		# 	print('Current Time: ' + current_time)
 		# 	manage_clients.log('[ SUBMISSION ][ CONFLICT ] Time difference: ' + str( time_difference) + ' Seconds ')
@@ -848,17 +876,21 @@ class manage_clients():
 		# Preliminary Checks successful : Process Submission now
 		try:
 			run_id, source_file_name = submission.new_submission(client_id, problem_code, language, time_stamp, source_code)
-			# Update database
-			submissions_management.insert_submission(
-				run_id, 
-				local_run_id, 
-				client_id, 
-				language, 
-				source_file_name, 
-				problem_code, 
-				'RUNNING', 
-				time_stamp
-			)
+			# Update database by BitsOJCore
+			message = {
+				'Code' : 'AddNewSub', 
+				'RunID' : run_id,
+				'Local ID' : local_run_id,
+				'Client ID' : client_id,
+				'Language' : language,
+				'Source File Name' : source_file_name,
+				'Problem Code' : problem_code,
+				'Status' : 'RUNNING',
+				'Timestamp' : timestamp
+			}
+			message = json.dumps(message)
+			manage_clients.task_queue.put(message)
+
 			manage_clients.data_changed_flags[0] = 1
 
 			# Send this run id to the client
@@ -902,7 +934,15 @@ class manage_clients():
 		query_id = submission.generate_query_id() 
 		print('[ QUERY ] Assigned Query ID: ' + str(query_id))
 		manage_clients.log('[ QUERY ] Assigned Query ID: ' + str(query_id))
-		query_management.insert_query(query_id, client_id, query)
+		# Update Database using BitsOJCore
+		message = {
+			'Code' : 'AddQuery',
+			'Query ID' : query_id,
+			'Client ID' : client_id,
+			'Query' : query
+		}
+		message = json.dumps(message)
+		manage_clients.task_queue.put(message)
 		manage_clients.data_changed_flags[9] = 1
 
 
@@ -925,8 +965,16 @@ class manage_clients():
 			if previously_connected_state == 'Connected':
 				print('[ LOG OUT ][ ' + client_username + ' ][ ACCEPT ]')
 				manage_clients.log_queue.put('[ LOG OUT ][ ' + client_username + ' ][ ACCEPT ]')
-				# Disconnect client
-				user_management.update_user_state(client_username, 'Disconnected', client_ip)
+				# Disconnect client in database using BitsOJCore
+				message = {
+					'Code' : 'UpUserStat', 
+					'Username' : client_username,
+					'State' : 'Disconnected',
+					'IP' : client_ip
+				}
+				message = json.dumps(message)
+				manage_clients.task_queue.put(message)
+
 				# Update connected clients to indicate new data
 				manage_clients.data_changed_flags[1] = 1
 				message = {

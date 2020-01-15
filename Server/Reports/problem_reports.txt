@@ -1,38 +1,23 @@
-2020-01-13 22:23:40.865284
+2020-01-14 12:58:12.231886
 ################ BitsOJ  ################
-Contest: Kodeathon A7 - Testing
-Number of participants with at least one submission: 0
-Number of participants with at least one AC submission: 0
+Contest: BitsOJ  - Test 1
+Number of participants with at least one submission: 25
+Number of participants with at least one AC submission: 3
 Contest Problem Details:
- > Plots in Kashmir [ PIK ]
+ > The Quidditch Lessons[ TQL ]
 	 Time Limit : 1 Seconds
 	 Number of Test files: 1
-	 Total Submissions on this problem: 0
+	 Total Submissions on this problem: 30
+	 AC Submissions on this problem: 3
+ > The Pumpkin Patch[ TPP ]
+	 Time Limit : 1 Seconds
+	 Number of Test files: 2
+	 Total Submissions on this problem: 1
 	 AC Submissions on this problem: 0
- > Frequency Game[ TFG ]
+ > The Frequency Game[ TFG ]
 	 Time Limit : 1 Seconds
 	 Number of Test files: 1
-	 Total Submissions on this problem: 0
-	 AC Submissions on this problem: 0
- > The Fight against Terror[ TFT ]
-	 Time Limit : 1 Seconds
-	 Number of Test files: 4
-	 Total Submissions on this problem: 0
-	 AC Submissions on this problem: 0
- > Lagaan[ LGN ]
-	 Time Limit : 1 Seconds
-	 Number of Test files: 1
-	 Total Submissions on this problem: 0
-	 AC Submissions on this problem: 0
- > Tricolor[ TRI ]
-	 Time Limit : 1 Seconds
-	 Number of Test files: 5
-	 Total Submissions on this problem: 0
-	 AC Submissions on this problem: 0
- > Independent Ryuk[ IRY ]
-	 Time Limit : 1 Seconds
-	 Number of Test files: 1
-	 Total Submissions on this problem: 0
+	 Total Submissions on this problem: 2
 	 AC Submissions on this problem: 0
 
 ################################################
