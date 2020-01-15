@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QIcon, QPixmap
-
+from init_judge import *
 from login_request import authenticate_judge
 
 
@@ -82,7 +82,12 @@ class App(QWidget):
     def login_handler(self,channel,host):
 
         if self.judge_id.text() != '' or self.password.text() != '':
-            status = authenticate_judge.login(channel,host,self.judge_id.text(),self.password.text())
+            status = authenticate_judge.login(
+                channel,
+                host,
+                self.judge_id.text(),
+                self.password.text()
+            )
             
             if( status == 'VALID'):
                 try:
@@ -112,7 +117,7 @@ class App(QWidget):
 
 
 class login_interface(App):
-    def __init__(self, channel,host):
+    def __init__(self, channel,host, data_changed_flags):
         app = QApplication(sys.argv)
         # app.setStyle("Fusion")
         app.setStyleSheet(open('Assets/login.qss', "r").read())
@@ -121,4 +126,7 @@ class login_interface(App):
         login_app = App(channel,host)
         
         # Close the server as soon as close button is clicked
-        app.exec_()
+        try:
+            app.exec_()
+        except KeyboardInterrupt:
+            data_changed_flags[3] = 1

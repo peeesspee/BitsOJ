@@ -12,7 +12,7 @@ client_id = 'Null'
 
 username = 'team00001'
 password = 'bits1'
-key = 'qmaa4nwmc724eky'
+key = 'xayottkief54car'
 
 try:
 	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
@@ -60,7 +60,7 @@ def send():
 		'Code' : 'SUBMT', 
 		'Username' : username,
 		'ID' : client_id,
-		'PCode' : 'TFT',
+		'PCode' : 'TQL',
 		'Language' : 'C++',
 		'Time' : ctime,
 		'Source' : code,

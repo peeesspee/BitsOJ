@@ -5,18 +5,21 @@ from init_judge import initialize_judge
 class authenticate_judge():
 	username = 'Nouser'
 	password = 'Nopass'
-	client_id = 0
+	judge_id = 'NULL'
 	channel = ''
 	login_status = ''
-	key = initialize_judge.key()
+	key = initialize_judge.key() 
 	my_ip = initialize_judge.my_ip()
 
 
-	def login(channel, host,username,password):
+	def login(channel, host, username, password):
 		authenticate_judge.channel = channel
 		authenticate_judge.username = username
 		authenticate_judge.password = password
-		client_id = 'Nul'
+		
+		username, password, judge_id = initialize_judge.get_credentials()
+		if judge_id != 'NULL':
+			authenticate_judge.judge_id = judge_id
 
 		print("\n[ VALIDATNG ] : " + authenticate_judge.username + "@" + authenticate_judge.password )
 
@@ -36,7 +39,7 @@ class authenticate_judge():
 			'Code': 'LOGIN',
 			'Username': authenticate_judge.username,
 			'Password': authenticate_judge.password,
-			'ID': authenticate_judge.client_id,
+			'ID': authenticate_judge.judge_id,
 			'Type': 'JUDGE',
 			'IP' : authenticate_judge.my_ip
 		}
@@ -70,8 +73,15 @@ class authenticate_judge():
 
 		if( status == 'VALID' ):
 			print("[STATUS]: " + status  )
+			judge_id = json_data['ID']
 			authenticate_judge.channel.stop_consuming()
 			authenticate_judge.login_status = status
+
+			initialize_judge.save_details(
+				authenticate_judge.username,
+				authenticate_judge.password,
+				judge_id
+			)
 			
 		elif( status == 'INVLD' ):
 			print("[STATUS] INVALID USER !!!")
@@ -89,5 +99,5 @@ class authenticate_judge():
 			authenticate_judge.login_status = status
 		
 	def get_judge_details():
-		return authenticate_judge.client_id, authenticate_judge.username, authenticate_judge.password
+		return authenticate_judge.judge_id, authenticate_judge.username, authenticate_judge.password
 

@@ -93,7 +93,7 @@ def main():
 	# 	10		0/1/2		0: SETUP 1: START 2: STOPPED	Contest Status
 	#	11		0/1				----------------------------FREE
 	#	12		0/1			1: JUDGE logins allowed
-	#   13		0/1			1: Refresh Judge GUI
+	#   13		0/1			1: Refresh Connected Judge GUI
 	#	14		0/1				------------------------ FREE
 	#	15		0/1			1: Scoreboard update allowed
 	# 	16		0/1			1: Update Scoreboard GUI

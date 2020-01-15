@@ -1,0 +1,1336 @@
+[ START ] Log subprocess started.
+[ SELF CHECK ][ PASS ] Systems OK.
+[ SETUP ] Initialising server...
+[ SETUP ] Initialising database...
+[ SETUP ] Loading problems...
+[ SETUP ] Initialising subprocesses...
+  [ START ] Client Manager subprocess started.
+  [ START ] Judge Manager subprocess started.
+[ SETUP ] Subprocesses started
+[ SETUP ][ Process ] Client Manager:  6757
+[ SETUP ][ Process ] Judge Manager:  6758
+[ SETUP ][ Process ] Core:  6761
+[ SETUP ][ Process ] Log Manager:  6754
+  [ START ] Core subprocess started.
+[ LISTEN ] Started listening on judge_verdict
+[ LISTEN ] Started listening on client_requests
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00196@bits196[ TYPE ] CLIENT IP: 192.168.52.59
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00196 ] Assigned : 2
+[ LOGIN ][ RESPONSE ] VALID to team00196
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00237@bits237[ TYPE ] CLIENT IP: 192.168.52.65
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00237 ] Assigned : 3
+[ LOGIN ][ RESPONSE ] VALID to team00237
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00234@bits234[ TYPE ] CLIENT IP: 192.168.52.63
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00234 ] Assigned : 4
+[ LOGIN ][ RESPONSE ] VALID to team00234
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00250@bits250[ TYPE ] CLIENT IP: 192.168.52.87
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00250 ] Assigned : 5
+[ LOGIN ][ RESPONSE ] VALID to team00250
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00239@Bits239[ TYPE ] CLIENT IP: 192.168.52.82
+[ LOGIN ] Stored client ID:  -1
+[ team00239 ][ REJECT ] NOT verified.
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::Team00233@bits233[ TYPE ] CLIENT IP: 192.168.52.49
+[ LOGIN ] Stored client ID:  -1
+[ Team00233 ][ REJECT ] NOT verified.
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00215@bits215[ TYPE ] CLIENT IP: 192.168.52.16
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00215 ] Assigned : 6
+[ LOGIN ][ RESPONSE ] VALID to team00215
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00238@bits238[ TYPE ] CLIENT IP: 192.168.52.81
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00238 ] Assigned : 7
+[ LOGIN ][ RESPONSE ] VALID to team00238
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00208@bits208[ TYPE ] CLIENT IP: 192.168.52.70
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00208 ] Assigned : 8
+[ LOGIN ][ RESPONSE ] VALID to team00208
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00253@bits253[ TYPE ] CLIENT IP: 192.168.52.50
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00253 ] Assigned : 9
+[ LOGIN ][ RESPONSE ] VALID to team00253
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00252@bits252[ TYPE ] CLIENT IP: 192.168.52.25
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00252 ] Assigned : 10
+[ LOGIN ][ RESPONSE ] VALID to team00252
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00231@bits231[ TYPE ] CLIENT IP: 192.168.52.74
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00231 ] Assigned : 11
+[ LOGIN ][ RESPONSE ] VALID to team00231
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00206@bits206[ TYPE ] CLIENT IP: 192.168.52.12
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00206 ] Assigned : 12
+[ LOGIN ][ RESPONSE ] VALID to team00206
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00202@bits202[ TYPE ] CLIENT IP: 192.168.52.83
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00202 ] Assigned : 13
+[ LOGIN ][ RESPONSE ] VALID to team00202
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::Team00219@bits219[ TYPE ] CLIENT IP: 192.168.6.176
+[ LOGIN ] Stored client ID:  -1
+[ Team00219 ][ REJECT ] NOT verified.
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00205@bits205[ TYPE ] CLIENT IP: 192.168.52.77
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00205 ] Assigned : 14
+[ LOGIN ][ RESPONSE ] VALID to team00205
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00211@bits211[ TYPE ] CLIENT IP: 192.168.52.64
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00211 ] Assigned : 15
+[ LOGIN ][ RESPONSE ] VALID to team00211
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00240@bits240[ TYPE ] CLIENT IP: 192.168.52.130
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00240 ] Assigned : 16
+[ LOGIN ][ RESPONSE ] VALID to team00240
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00243@bits243[ TYPE ] CLIENT IP: 192.168.52.62
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00243 ] Assigned : 17
+[ LOGIN ][ RESPONSE ] VALID to team00243
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00207@bits207[ TYPE ] CLIENT IP: 192.168.52.112
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00207 ] Assigned : 18
+[ LOGIN ][ RESPONSE ] VALID to team00207
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00232@bits232[ TYPE ] CLIENT IP: 192.168.52.113
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00232 ] Assigned : 19
+[ LOGIN ][ RESPONSE ] VALID to team00232
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00257@bits257[ TYPE ] CLIENT IP: 192.168.52.54
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00257 ] Assigned : 20
+[ LOGIN ][ RESPONSE ] VALID to team00257
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00193@bits193[ TYPE ] CLIENT IP: 192.168.52.67
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00193 ] Assigned : 21
+[ LOGIN ][ RESPONSE ] VALID to team00193
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00242@bits242[ TYPE ] CLIENT IP: 192.168.52.117
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00242 ] Assigned : 22
+[ LOGIN ][ RESPONSE ] VALID to team00242
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00226@bits226[ TYPE ] CLIENT IP: 192.168.52.52
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00226 ] Assigned : 23
+[ LOGIN ][ RESPONSE ] VALID to team00226
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00241@bits241[ TYPE ] CLIENT IP: 192.168.52.114
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00241 ] Assigned : 24
+[ LOGIN ][ RESPONSE ] VALID to team00241
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00217@bits217[ TYPE ] CLIENT IP: 192.168.52.71
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00217 ] Assigned : 25
+[ LOGIN ][ RESPONSE ] VALID to team00217
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00245@bits245[ TYPE ] CLIENT IP: 192.168.52.115
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00245 ] Assigned : 26
+[ LOGIN ][ RESPONSE ] VALID to team00245
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00246@bits246[ TYPE ] CLIENT IP: 192.168.52.101
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00246 ] Assigned : 27
+[ LOGIN ][ RESPONSE ] VALID to team00246
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00209@bits209[ TYPE ] CLIENT IP: 192.168.52.110
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00209 ] Assigned : 28
+[ LOGIN ][ RESPONSE ] VALID to team00209
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00258@bits258[ TYPE ] CLIENT IP: 192.168.52.53
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00258 ] Assigned : 29
+[ LOGIN ][ RESPONSE ] VALID to team00258
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00227@bits227[ TYPE ] CLIENT IP: 192.168.52.55
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00227 ] Assigned : 30
+[ LOGIN ][ RESPONSE ] VALID to team00227
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00218@bits218[ TYPE ] CLIENT IP: 192.168.52.108
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00218 ] Assigned : 31
+[ LOGIN ][ RESPONSE ] VALID to team00218
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00213@bits213[ TYPE ] CLIENT IP: 192.168.52.80
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00213 ] Assigned : 32
+[ LOGIN ][ RESPONSE ] VALID to team00213
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00235@bits235[ TYPE ] CLIENT IP: 192.168.52.66
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00235 ] Assigned : 33
+[ LOGIN ][ RESPONSE ] VALID to team00235
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00201@bits201[ TYPE ] CLIENT IP: 192.168.52.73
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00201 ] Assigned : 34
+[ LOGIN ][ RESPONSE ] VALID to team00201
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00228@bits228[ TYPE ] CLIENT IP: 192.168.52.75
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00228 ] Assigned : 35
+[ LOGIN ][ RESPONSE ] VALID to team00228
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00198@bits198[ TYPE ] CLIENT IP: 192.168.52.111
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00198 ] Assigned : 36
+[ LOGIN ][ RESPONSE ] VALID to team00198
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00224@bits224[ TYPE ] CLIENT IP: 192.168.52.90
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00224 ] Assigned : 37
+[ LOGIN ][ RESPONSE ] VALID to team00224
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00194@bits194[ TYPE ] CLIENT IP: 192.168.52.116
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00194 ] Assigned : 38
+[ LOGIN ][ RESPONSE ] VALID to team00194
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00222@bits222[ TYPE ] CLIENT IP: 192.168.52.107
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00222 ] Assigned : 39
+[ LOGIN ][ RESPONSE ] VALID to team00222
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00195@bits195[ TYPE ] CLIENT IP: 192.168.52.60
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00195 ] Assigned : 40
+[ LOGIN ][ RESPONSE ] VALID to team00195
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00230@bits230[ TYPE ] CLIENT IP: 192.168.52.72
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00230 ] Assigned : 41
+[ LOGIN ][ RESPONSE ] VALID to team00230
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00263@bits263[ TYPE ] CLIENT IP: 192.168.52.86
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00263 ] Assigned : 42
+[ LOGIN ][ RESPONSE ] VALID to team00263
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00236@bits236[ TYPE ] CLIENT IP: 192.168.52.68
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00236 ] Assigned : 43
+[ LOGIN ][ RESPONSE ] VALID to team00236
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00249@bits249[ TYPE ] CLIENT IP: 192.168.52.88
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00249 ] Assigned : 44
+[ LOGIN ][ RESPONSE ] VALID to team00249
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00244@bits244[ TYPE ] CLIENT IP: 192.168.6.137
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00244 ] Assigned : 45
+[ LOGIN ][ RESPONSE ] VALID to team00244
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00203@bits203[ TYPE ] CLIENT IP: 192.168.52.69
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00203 ] Assigned : 46
+[ LOGIN ][ RESPONSE ] VALID to team00203
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00261@bits261[ TYPE ] CLIENT IP: 192.168.52.15
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00261 ] Assigned : 47
+[ LOGIN ][ RESPONSE ] VALID to team00261
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00210@bits210[ TYPE ] CLIENT IP: 192.168.52.131
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00210 ] Assigned : 48
+[ LOGIN ][ RESPONSE ] VALID to team00210
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00262@bits262[ TYPE ] CLIENT IP: 192.168.52.26
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00262 ] Assigned : 49
+[ LOGIN ][ RESPONSE ] VALID to team00262
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00233@bits233[ TYPE ] CLIENT IP: 192.168.52.49
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00233 ] Assigned : 50
+[ LOGIN ][ RESPONSE ] VALID to team00233
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00239@bits239[ TYPE ] CLIENT IP: 192.168.52.82
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00239 ] Assigned : 51
+[ LOGIN ][ RESPONSE ] VALID to team00239
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00198@bits198[ TYPE ] CLIENT IP: 192.168.52.111
+[ LOGIN ] Stored client ID:  36
+[ team00198 ] Client ID does not match.
+[ team00198 ][ REJECT ] NOT verified.
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00219@bits219[ TYPE ] CLIENT IP: 192.168.6.176
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00219 ] Assigned : 52
+[ LOGIN ][ RESPONSE ] VALID to team00219
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00198@bits198[ TYPE ] CLIENT IP: 192.168.52.111
+[ LOGIN ] Stored client ID:  36
+[ team00198 ] Client ID does not match.
+[ team00198 ][ REJECT ] NOT verified.
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00198@bits198[ TYPE ] CLIENT IP: 192.168.52.111
+[ LOGIN ] Stored client ID:  36
+[ team00198 ] Client ID does not match.
+[ team00198 ][ REJECT ] NOT verified.
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: Null :::team00300@bits300[ TYPE ] CLIENT IP: 192.168.52.111
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00300 ] Assigned : 53
+[ LOGIN ][ RESPONSE ] VALID to team00300
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 41 :::team00230@bits230[ TYPE ] CLIENT IP: 192.168.52.72
+[ LOGIN ] Stored client ID:  41
+[ LOGIN ][ team00230 ][ REJECT ] Multiple Logins
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 41 :::team00230@bits230[ TYPE ] CLIENT IP: 192.168.52.72
+[ LOGIN ] Stored client ID:  41
+[ LOGIN ][ team00230 ][ REJECT ] Multiple Logins
+[ SET ] Contest Duration : 00:30:00
+
+[ UPDATE ] Contest Duration:00:30:00
+[ WRITE ] config.json
+
+[ UPDATE ] Contest Start Time:12:33:59
+[ WRITE ] config.json
+
+[ UPDATE ] Contest Status:RUNNING
+[ WRITE ] config.json
+
+[ UPDATE ] Contest Duration:00:30:00
+[ WRITE ] config.json
+
+[ UPDATE ] Contest Set Time:1578987239.8720837
+[ WRITE ] config.json
+
+[ UPDATE ] Contest End Time:13:03:59
+[ WRITE ] config.json
+[ EVENT ][ BROADCAST ] START Contest
+[ SCOREBOARD ][ BROADCAST ]
+[ CORE ][ SCOREBOARD ][ BROADCAST ]
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 50 :::team00233@bits233[ TYPE ] CLIENT IP: 192.168.52.49
+[ LOGIN ] Stored client ID:  50
+[ LOGIN ][ team00233 ][ REJECT ] Multiple Logins
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 50 :::team00233@bits233[ TYPE ] CLIENT IP: 192.168.52.49
+[ LOGIN ] Stored client ID:  50
+[ LOGIN ][ team00233 ][ REJECT ] Multiple Logins
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 50 :::team305@bits305[ TYPE ] CLIENT IP: 192.168.52.49
+[ LOGIN ] Stored client ID:  -1
+[ team305 ][ REJECT ] NOT verified.
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 41 :::team00230@bits230[ TYPE ] CLIENT IP: 192.168.52.72
+[ LOGIN ] Stored client ID:  41
+[ LOGIN ][ team00230 ][ REJECT ] Multiple Logins
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 50 :::team305@bits305[ TYPE ] CLIENT IP: 192.168.52.49
+[ LOGIN ] Stored client ID:  -1
+[ team305 ][ REJECT ] NOT verified.
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 41 :::team00230@bits230[ TYPE ] CLIENT IP: 192.168.52.72
+[ LOGIN ] Stored client ID:  41
+[ LOGIN ][ team00230 ][ REJECT ] Multiple Logins
+[ ANNOUNCEMENT ] New Announcement sent by ADMIN
+[ EVENT ][ BROADCAST ] New Query response broadcasted
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 41 :::team00297@bits297[ TYPE ] CLIENT IP: 192.168.52.72
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00297 ] Assigned : 54
+[ LOGIN ][ RESPONSE ] VALID to team00297
+[ LOGIN ][ RESPONSE ] Sent START to team00297
+[ EVENT ][ team00297 ] START Contest
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 50 :::team00296@bits296[ TYPE ] CLIENT IP: 192.168.52.49
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00296 ] Assigned : 55
+[ LOGIN ][ RESPONSE ] VALID to team00296
+[ LOGIN ][ RESPONSE ] Sent START to team00296
+[ EVENT ][ team00296 ] START Contest
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 13 :::team00202@bits202[ TYPE ] CLIENT IP: 192.168.52.83
+[ LOGIN ] Stored client ID:  13
+[ LOGIN ][ team00202 ][ REJECT ] Multiple Logins
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 13 :::team00212@bits212[ TYPE ] CLIENT IP: 192.168.52.83
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00212 ] Assigned : 56
+[ LOGIN ][ RESPONSE ] VALID to team00212
+[ LOGIN ][ RESPONSE ] Sent START to team00212
+[ EVENT ][ team00212 ] START Contest
+[ CORE ] Problem Edit in progress...
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :31 IP:192.168.52.108 Username: team00218 Problem:TQL Language :C Time stamp :12:46:16
+[ SUBMIT ] 31 for problem TQL
+[ WRITE ] Write a new file : 1.temp
+[ FILE ] New file created for client : 31 File name:  1.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00218 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00218
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  31  Problems Solved:  0
+[ SCOREBOARD ] Run:  1  Previous Score:  0
+[ SCOREBOARD ] Run:  1  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  1  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  31  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :31 IP:192.168.52.108 Username: team00218 Problem:TQL Language :C Time stamp :12:46:42
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :40 IP:192.168.52.60 Username: team00195 Problem:TQL Language :C Time stamp :12:46:45
+[ SUBMIT ] 40 for problem TQL
+[ WRITE ] Write a new file : 2.temp
+[ FILE ] New file created for client : 40 File name:  2.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00195 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: RE
+[ VERDICT ] New verdict sent to team00195
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  40  Problems Solved:  0
+[ SCOREBOARD ] Run:  2  Previous Score:  0
+[ SCOREBOARD ] Run:  2  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  2  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  40  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :6 IP:192.168.52.16 Username: team00215 Problem:TQL Language :PYTHON-3 Time stamp :12:47:02
+[ SUBMIT ] 6 for problem TQL
+[ WRITE ] Write a new file : 3.temp
+[ FILE ] New file created for client : 6 File name:  3.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00215 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00215
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  6  Problems Solved:  0
+[ SCOREBOARD ] Run:  3  Previous Score:  0
+[ SCOREBOARD ] Run:  3  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  3  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  6  This RunID is a new verdict, with no score.
+[ VERDICT ][ SENT ] Manual Verdict:NZEC - Non Zero Exit CodeSent to Client team00195
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+[ SCOREBOARD ][ BROADCAST ]
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  40  Problems Solved:  0
+[ SCOREBOARD ] Run:  2  Previous Score:  0
+[ SCOREBOARD ] Run:  2  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  2  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  40  This RunID is a new verdict, with no score.
+[ CORE ][ SCOREBOARD ][ BROADCAST ]
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :37 IP:192.168.52.90 Username: team00224 Problem:TQL Language :C Time stamp :12:47:09
+[ SUBMIT ] 37 for problem TQL
+[ WRITE ] Write a new file : 4.temp
+[ FILE ] New file created for client : 37 File name:  4.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00224 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00224
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  37  Problems Solved:  0
+[ SCOREBOARD ] Run:  4  Previous Score:  0
+[ SCOREBOARD ] Run:  4  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  4  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  37  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :37 IP:192.168.52.90 Username: team00224 Problem:TQL Language :C Time stamp :12:47:18
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :28 IP:192.168.52.110 Username: team00209 Problem:TQL Language :C Time stamp :12:47:18
+[ SUBMIT ] 28 for problem TQL
+[ WRITE ] Write a new file : 5.temp
+[ FILE ] New file created for client : 28 File name:  5.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00209 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00209
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  28  Problems Solved:  0
+[ SCOREBOARD ] Run:  5  Previous Score:  0
+[ SCOREBOARD ] Run:  5  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  5  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  28  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :8 IP:192.168.52.70 Username: team00208 Problem:TQL Language :C Time stamp :12:47:20
+[ SUBMIT ] 8 for problem TQL
+[ WRITE ] Write a new file : 6.temp
+[ FILE ] New file created for client : 8 File name:  6.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00208 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00208
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  8  Problems Solved:  0
+[ SCOREBOARD ] Run:  6  Previous Score:  0
+[ SCOREBOARD ] Run:  6  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  6  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  8  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :8 IP:192.168.52.70 Username: team00208 Problem:TQL Language :C Time stamp :12:47:27
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :19 IP:192.168.52.113 Username: team00232 Problem:TQL Language :C++ Time stamp :12:47:39
+[ SUBMIT ] 19 for problem TQL
+[ WRITE ] Write a new file : 7.temp
+[ FILE ] New file created for client : 19 File name:  7.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00232 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00232
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  19  Problems Solved:  0
+[ SCOREBOARD ] Run:  7  Previous Score:  0
+[ SCOREBOARD ] Run:  7  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  7  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  19  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :28 IP:192.168.52.110 Username: team00209 Problem:TQL Language :C Time stamp :12:47:59
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :18 IP:192.168.52.112 Username: team00207 Problem:TQL Language :C++ Time stamp :12:48:04
+[ SUBMIT ] 18 for problem TQL
+[ WRITE ] Write a new file : 8.temp
+[ FILE ] New file created for client : 18 File name:  8.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00207 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00207
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  18  Problems Solved:  0
+[ SCOREBOARD ] Run:  8  Previous Score:  0
+[ SCOREBOARD ] Run:  8  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  8  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  18  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :35 IP:192.168.52.75 Username: team00228 Problem:TQL Language :C++ Time stamp :12:48:33
+[ SUBMIT ] 35 for problem TQL
+[ WRITE ] Write a new file : 9.temp
+[ FILE ] New file created for client : 35 File name:  9.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00228 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00228
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  35  Problems Solved:  0
+[ SCOREBOARD ] Run:  9  Previous Score:  0
+[ SCOREBOARD ] Run:  9  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  9  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  35  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :35 IP:192.168.52.75 Username: team00228 Problem:TQL Language :C++ Time stamp :12:48:38
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ USER ][ team00218 ][ UPDATE ] State changed to Blocked
+[ EVENT ] Block team00218
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :11 IP:192.168.52.74 Username: team00231 Problem:TQL Language :C++ Time stamp :12:49:47
+[ SUBMIT ] 11 for problem TQL
+[ WRITE ] Write a new file : 10.temp
+[ FILE ] New file created for client : 11 File name:  10.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00231 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00231
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  11  Problems Solved:  0
+[ SCOREBOARD ] Run:  10  Previous Score:  0
+[ SCOREBOARD ] Run:  10  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  10  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  11  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :22 IP:192.168.52.117 Username: team00242 Problem:TQL Language :PYTHON-3 Time stamp :12:50:26
+[ SUBMIT ] 22 for problem TQL
+[ WRITE ] Write a new file : 11.temp
+[ FILE ] New file created for client : 22 File name:  11.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00242 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: RE
+[ VERDICT ] New verdict sent to team00242
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  22  Problems Solved:  0
+[ SCOREBOARD ] Run:  11  Previous Score:  0
+[ SCOREBOARD ] Run:  11  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  11  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  22  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :23 IP:192.168.52.52 Username: team00226 Problem:TFG Language :C Time stamp :12:50:41
+[ SUBMIT ] 23 for problem TFG
+[ WRITE ] Write a new file : 12.temp
+[ FILE ] New file created for client : 23 File name:  12.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00226 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00226
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  23  Problems Solved:  0
+[ SCOREBOARD ] Run:  12  Previous Score:  0
+[ SCOREBOARD ] Run:  12  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  12  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  23  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :23 IP:192.168.52.52 Username: team00226 Problem:TFG Language :C Time stamp :12:50:42
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :23 IP:192.168.52.52 Username: team00226 Problem:TFG Language :PYTHON-3 Time stamp :12:50:55
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :29 IP:192.168.52.53 Username: team00258 Problem:TQL Language :PYTHON-3 Time stamp :12:51:09
+[ SUBMIT ] 29 for problem TQL
+[ WRITE ] Write a new file : 13.temp
+[ FILE ] New file created for client : 29 File name:  13.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00258 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: AC
+[ VERDICT ] New verdict sent to team00258
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  29  Problems Solved:  1
+[ SCOREBOARD ] Run:  13  Previous Score:  0
+[ SCOREBOARD ] Run:  13  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  13  This is an AC submission.
+[ SCOREBOARD ] Client:  29  Number of Scored AC Submissions:  0
+[ SCOREBOARD ][ RUN  13  ][ PASS ] New AC
+[ SCOREBOARD ][ UPDATE ] Client: 29 Prev Score :0 New Score:100
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :23 IP:192.168.52.52 Username: team00226 Problem:TFG Language :PYTHON-3 Time stamp :12:51:12
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :23 IP:192.168.52.52 Username: team00226 Problem:TFG Language :PYTHON-3 Time stamp :12:51:12
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :48 IP:192.168.52.131 Username: team00210 Problem:TQL Language :PYTHON-3 Time stamp :12:51:29
+[ SUBMIT ] 48 for problem TQL
+[ WRITE ] Write a new file : 14.temp
+[ FILE ] New file created for client : 48 File name:  14.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00210 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: RE
+[ VERDICT ] New verdict sent to team00210
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  48  Problems Solved:  0
+[ SCOREBOARD ] Run:  14  Previous Score:  0
+[ SCOREBOARD ] Run:  14  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  14  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  48  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :9 IP:192.168.52.50 Username: team00253 Problem:TQL Language :C++ Time stamp :12:51:45
+[ SUBMIT ] 9 for problem TQL
+[ WRITE ] Write a new file : 15.temp
+[ FILE ] New file created for client : 9 File name:  15.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00253 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: AC
+[ VERDICT ] New verdict sent to team00253
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  9  Problems Solved:  1
+[ SCOREBOARD ] Run:  15  Previous Score:  0
+[ SCOREBOARD ] Run:  15  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  15  This is an AC submission.
+[ SCOREBOARD ] Client:  9  Number of Scored AC Submissions:  0
+[ SCOREBOARD ][ RUN  15  ][ PASS ] New AC
+[ SCOREBOARD ][ UPDATE ] Client: 9 Prev Score :0 New Score:100
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :23 IP:192.168.52.52 Username: team00226 Problem:TFG Language :PYTHON-3 Time stamp :12:52:16
+[ SUBMIT ] 23 for problem TFG
+[ WRITE ] Write a new file : 16.temp
+[ FILE ] New file created for client : 23 File name:  16.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :22 IP:192.168.52.117 Username: team00242 Problem:TQL Language :PYTHON-3 Time stamp :12:52:17
+[ SUBMIT ] 22 for problem TQL
+[ WRITE ] Write a new file : 17.temp
+[ FILE ] New file created for client : 22 File name:  17.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00226 ] Run ID sent.
+[ CORE ][ team00242 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00226
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: RE
+[ VERDICT ] New verdict sent to team00242
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  23  Problems Solved:  0
+[ SCOREBOARD ] Run:  16  Previous Score:  0
+[ SCOREBOARD ] Run:  16  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  16  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  23  This RunID is a new verdict, with no score.
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  22  Problems Solved:  0
+[ SCOREBOARD ] Run:  17  Previous Score:  0
+[ SCOREBOARD ] Run:  17  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  17  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  22  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :21 IP:192.168.52.67 Username: team00193 Problem:TQL Language :C++ Time stamp :12:52:40
+[ SUBMIT ] 21 for problem TQL
+[ WRITE ] Write a new file : 18.temp
+[ FILE ] New file created for client : 21 File name:  18.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00193 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00193
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  21  Problems Solved:  0
+[ SCOREBOARD ] Run:  18  Previous Score:  0
+[ SCOREBOARD ] Run:  18  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  18  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  21  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :3 IP:192.168.52.76 Username: team00200 Problem:TQL Language :C++ Time stamp :12:52:58
+[ SUBMISSION ][ FAIL ] Client could not be Validated.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :43 IP:192.168.52.68 Username: team00236 Problem:TQL Language :C++ Time stamp :12:53:03
+[ SUBMIT ] 43 for problem TQL
+[ WRITE ] Write a new file : 19.temp
+[ FILE ] New file created for client : 43 File name:  19.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00236 ] Run ID sent.
+[ ALERT ] Recieved a new client message.
+[ QUERY ] From 11 : please check run id-10
+[ QUERY ] Assigned Query ID: 1
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: TLE
+[ VERDICT ] New verdict sent to team00236
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  43  Problems Solved:  0
+[ SCOREBOARD ] Run:  19  Previous Score:  0
+[ SCOREBOARD ] Run:  19  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  19  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  43  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ QUERY ] From 19 : please check run id 7
+[ QUERY ] Assigned Query ID: 2
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :3 IP:192.168.52.76 Username: team00200 Problem:TQL Language :C++ Time stamp :12:53:43
+[ SUBMISSION ][ FAIL ] Client could not be Validated.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :54 IP:192.168.52.72 Username: team00297 Problem:TQL Language :C++ Time stamp :12:54:34
+[ SUBMIT ] 54 for problem TQL
+[ WRITE ] Write a new file : 20.temp
+[ FILE ] New file created for client : 54 File name:  20.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00297 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00297
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  54  Problems Solved:  0
+[ SCOREBOARD ] Run:  20  Previous Score:  0
+[ SCOREBOARD ] Run:  20  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  20  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  54  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :54 IP:192.168.52.72 Username: team00297 Problem:TQL Language :C++ Time stamp :12:55:29
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :54 IP:192.168.52.72 Username: team00297 Problem:TQL Language :C++ Time stamp :12:55:37
+[ SUBMIT ] 54 for problem TQL
+[ WRITE ] Write a new file : 21.temp
+[ FILE ] New file created for client : 54 File name:  21.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00297 ] Run ID sent.
+[ QUERY ][ RSPONSE ][ Client ] New query response sent by ADMIN
+[ EVENT ][ UNICAST ] New Query response to client
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :16 IP:192.168.52.130 Username: team00240 Problem:TQL Language :C Time stamp :12:55:38
+[ SUBMIT ] 16 for problem TQL
+[ WRITE ] Write a new file : 22.temp
+[ FILE ] New file created for client : 16 File name:  22.temp
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ VERDICT ] New verdict sent to team00297
+[ CORE ][ team00240 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  54  Problems Solved:  0
+[ SCOREBOARD ] Run:  21  Previous Score:  0
+[ SCOREBOARD ] Run:  21  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  21  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  54  This RunID is a new verdict, with no score.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00240
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  16  Problems Solved:  0
+[ SCOREBOARD ] Run:  22  Previous Score:  0
+[ SCOREBOARD ] Run:  22  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  22  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  16  This RunID is a new verdict, with no score.
+[ EVENT ][ UNICAST ] New Query response to client
+[ QUERY ][ RSPONSE ][ Client ] New query response sent by ADMIN
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :4 IP:192.168.52.63 Username: team00234 Problem:TQL Language :C++ Time stamp :12:55:56
+[ SUBMIT ] 4 for problem TQL
+[ WRITE ] Write a new file : 23.temp
+[ FILE ] New file created for client : 4 File name:  23.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00234 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00234
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  4  Problems Solved:  0
+[ SCOREBOARD ] Run:  23  Previous Score:  0
+[ SCOREBOARD ] Run:  23  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  23  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  4  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :24 IP:192.168.52.114 Username: team00241 Problem:TQL Language :C++ Time stamp :12:56:16
+[ SUBMIT ] 24 for problem TQL
+[ WRITE ] Write a new file : 24.temp
+[ FILE ] New file created for client : 24 File name:  24.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00241 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00241
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  24  Problems Solved:  0
+[ SCOREBOARD ] Run:  24  Previous Score:  0
+[ SCOREBOARD ] Run:  24  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  24  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  24  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :3 IP:192.168.52.76 Username: team00200 Problem:TQL Language :C++ Time stamp :12:56:18
+[ SUBMISSION ][ FAIL ] Client could not be Validated.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :52 IP:192.168.6.176 Username: team00219 Problem:TQL Language :C++ Time stamp :12:56:27
+[ SUBMIT ] 52 for problem TQL
+[ WRITE ] Write a new file : 25.temp
+[ FILE ] New file created for client : 52 File name:  25.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00219 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00219
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  52  Problems Solved:  0
+[ SCOREBOARD ] Run:  25  Previous Score:  0
+[ SCOREBOARD ] Run:  25  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  25  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  52  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :2 IP:192.168.52.79 Username: team00199 Problem:TQL Language :C Time stamp :12:57:07
+[ SUBMISSION ][ FAIL ] Client could not be Validated.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :51 IP:192.168.52.82 Username: team00239 Problem:TQL Language :PYTHON-3 Time stamp :12:57:10
+[ SUBMIT ] 51 for problem TQL
+[ WRITE ] Write a new file : 26.temp
+[ FILE ] New file created for client : 51 File name:  26.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00239 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: RE
+[ VERDICT ] New verdict sent to team00239
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  51  Problems Solved:  0
+[ SCOREBOARD ] Run:  26  Previous Score:  0
+[ SCOREBOARD ] Run:  26  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  26  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  51  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :2 IP:192.168.52.59 Username: team00196 Problem:TQL Language :C++ Time stamp :12:57:21
+[ SUBMIT ] 2 for problem TQL
+[ WRITE ] Write a new file : 27.temp
+[ FILE ] New file created for client : 2 File name:  27.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00196 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: AC
+[ VERDICT ] New verdict sent to team00196
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  2  Problems Solved:  1
+[ SCOREBOARD ] Run:  27  Previous Score:  0
+[ SCOREBOARD ] Run:  27  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  27  This is an AC submission.
+[ SCOREBOARD ] Client:  2  Number of Scored AC Submissions:  0
+[ SCOREBOARD ][ RUN  27  ][ PASS ] New AC
+[ SCOREBOARD ][ UPDATE ] Client: 2 Prev Score :0 New Score:100
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :2 IP:192.168.52.79 Username: team00199 Problem:TQL Language :C Time stamp :12:57:37
+[ SUBMISSION ][ FAIL ] Client could not be Validated.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :48 IP:192.168.52.131 Username: team00210 Problem:TQL Language :PYTHON-3 Time stamp :12:57:45
+[ SUBMIT ] 48 for problem TQL
+[ WRITE ] Write a new file : 28.temp
+[ FILE ] New file created for client : 48 File name:  28.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00210 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00210
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  48  Problems Solved:  0
+[ SCOREBOARD ] Run:  28  Previous Score:  0
+[ SCOREBOARD ] Run:  28  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  28  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  48  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :24 IP:192.168.52.114 Username: team00241 Problem:TQL Language :C++ Time stamp :12:58:33
+[ SUBMIT ] 24 for problem TQL
+[ WRITE ] Write a new file : 29.temp
+[ FILE ] New file created for client : 24 File name:  29.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00241 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00241
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  24  Problems Solved:  0
+[ SCOREBOARD ] Run:  29  Previous Score:  0
+[ SCOREBOARD ] Run:  29  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  29  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  24  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :11 IP:192.168.52.74 Username: team00231 Problem:TQL Language :C++ Time stamp :12:58:55
+[ SUBMIT ] 11 for problem TQL
+[ WRITE ] Write a new file : 30.temp
+[ FILE ] New file created for client : 11 File name:  30.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00231 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00231
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  11  Problems Solved:  0
+[ SCOREBOARD ] Run:  30  Previous Score:  0
+[ SCOREBOARD ] Run:  30  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  30  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  11  This RunID is a new verdict, with no score.
+[ SCOREBOARD ][ BROADCAST ]
+[ CORE ][ SCOREBOARD ][ BROADCAST ]
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :21 IP:192.168.52.67 Username: team00193 Problem:TQL Language :C++ Time stamp :13:00:17
+[ SUBMIT ] 21 for problem TQL
+[ WRITE ] Write a new file : 31.temp
+[ FILE ] New file created for client : 21 File name:  31.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ CORE ][ team00193 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00193
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  21  Problems Solved:  0
+[ SCOREBOARD ] Run:  31  Previous Score:  0
+[ SCOREBOARD ] Run:  31  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  31  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  21  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :32 IP:192.168.52.80 Username: team00213 Problem:TQL Language :PYTHON-3 Time stamp :13:00:42
+[ SUBMIT ] 32 for problem TQL
+[ WRITE ] Write a new file : 32.temp
+[ FILE ] New file created for client : 32 File name:  32.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00200  ] Initiated
+[ LOG OUT ][ team00200 ][ REJECT ]
+[ CORE ][ team00213 ] Run ID sent.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: WA
+[ VERDICT ] New verdict sent to team00213
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  32  Problems Solved:  0
+[ SCOREBOARD ] Run:  32  Previous Score:  0
+[ SCOREBOARD ] Run:  32  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  32  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  32  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :32 IP:192.168.52.80 Username: team00213 Problem:TPP Language :PYTHON-3 Time stamp :13:00:53
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :32 IP:192.168.52.80 Username: team00213 Problem:TFG Language :PYTHON-3 Time stamp :13:00:57
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00213  ] Initiated
+[ LOG OUT ][ team00213 ][ ACCEPT ]
+[ CORE ][ team00213 ] Shutdown.
+[ ANNOUNCEMENT ] New Announcement sent by ADMIN
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :48 IP:192.168.52.131 Username: team00210 Problem:TPP Language :C Time stamp :13:01:28
+[ SUBMIT ] 48 for problem TPP
+[ WRITE ] Write a new file : 33.temp
+[ FILE ] New file created for client : 48 File name:  33.temp
+[ JUDGE ] Requesting a new judgement
+[ REQUEST ] New judging request sent successfully.
+[ EVENT ][ BROADCAST ] New Query response broadcasted
+[ CORE ][ team00210 ] Run ID sent.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :48 IP:192.168.52.131 Username: team00210 Problem:TPP Language :C Time stamp :13:01:29
+[ SUBMISSION ][ REJECT ] Client sent more than allowed submissions in the time frame.
+[ PING ] Recieved a new judge message.
+[ VERDICT ] judge00002 :: CMPL
+[ VERDICT ] New verdict sent to team00210
+[ PING ] Recieved a new judge message.
+[ ERROR ] Could not parse judge JSON data : 'Judge Key'
+
+[ SCOREBOARD ] Checking new submission...
+[ SCOREBOARD ] Client:  48  Problems Solved:  0
+[ SCOREBOARD ] Run:  33  Previous Score:  0
+[ SCOREBOARD ] Run:  33  Previous RunID Score:  0
+[ SCOREBOARD ] Run:  33  This is NOT an AC submission.
+[ SCOREBOARD ] Client:  48  This RunID is a new verdict, with no score.
+[ ALERT ] Recieved a new client message.
+[ LOGIN REQUEST ] ::: 3 :::team00200@bits200[ TYPE ] CLIENT IP: 192.168.52.76
+[ LOGIN ] Stored client ID:  -1
+[ LOGIN ][ team00200 ] Assigned : 57
+[ LOGIN ][ RESPONSE ] VALID to team00200
+[ LOGIN ][ RESPONSE ] Sent START to team00200
+[ EVENT ][ team00200 ] START Contest
+
+[ UPDATE ] Contest End Time:12:57:51
+[ WRITE ] config.json
+
+[ UPDATE ] Contest Status:STOPPED
+[ WRITE ] config.json
+[ EVENT ][ BROADCAST ] STOP Contest
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00257  ] Initiated
+[ LOG OUT ][ team00257 ][ ACCEPT ]
+[ CORE ][ team00257 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00250  ] Initiated
+[ LOG OUT ][ team00250 ][ ACCEPT ]
+[ CORE ][ team00250 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00210  ] Initiated
+[ LOG OUT ][ team00210 ][ ACCEPT ]
+[ PING ] Recieved a new judge message.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00207  ] Initiated
+[ LOG OUT ][ team00207 ][ ACCEPT ]
+[ CORE ][ team00210 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00222  ] Initiated
+[ LOG OUT ][ team00222 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00212  ] Initiated
+[ LOG OUT ][ team00212 ][ ACCEPT ]
+[ CORE ][ team00207 ] Shutdown.
+[ CORE ][ team00222 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00300  ] Initiated
+[ LOG OUT ][ team00300 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00263  ] Initiated
+[ LOG OUT ][ team00263 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00240  ] Initiated
+[ LOG OUT ][ team00240 ][ ACCEPT ]
+[ JUDGE ][ LOGOUT ] judge00002 Logged Out
+[ CORE ][ team00212 ] Shutdown.
+[ CORE ][ team00300 ] Shutdown.
+[ CORE ][ team00263 ] Shutdown.
+[ CORE ][ team00240 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00252  ] Initiated
+[ LOG OUT ][ team00252 ][ ACCEPT ]
+[ CORE ][ team00252 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00203  ] Initiated
+[ LOG OUT ][ team00203 ][ ACCEPT ]
+[ CORE ][ team00203 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00235  ] Initiated
+[ LOG OUT ][ team00235 ][ ACCEPT ]
+[ CORE ][ team00235 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00232  ] Initiated
+[ LOG OUT ][ team00232 ][ ACCEPT ]
+[ CORE ][ team00232 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00241  ] Initiated
+[ LOG OUT ][ team00241 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00208  ] Initiated
+[ LOG OUT ][ team00208 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00253  ] Initiated
+[ LOG OUT ][ team00253 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00239  ] Initiated
+[ LOG OUT ][ team00239 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00195  ] Initiated
+[ LOG OUT ][ team00195 ][ ACCEPT ]
+[ CORE ][ team00241 ] Shutdown.
+[ CORE ][ team00208 ] Shutdown.
+[ CORE ][ team00253 ] Shutdown.
+[ CORE ][ team00239 ] Shutdown.
+[ CORE ][ team00195 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00209  ] Initiated
+[ LOG OUT ][ team00209 ][ ACCEPT ]
+[ CORE ][ team00209 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00205  ] Initiated
+[ LOG OUT ][ team00205 ][ ACCEPT ]
+[ CORE ][ team00205 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00226  ] Initiated
+[ LOG OUT ][ team00226 ][ ACCEPT ]
+[ CORE ][ team00226 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00243  ] Initiated
+[ LOG OUT ][ team00243 ][ ACCEPT ]
+[ CORE ][ team00243 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00201  ] Initiated
+[ LOG OUT ][ team00201 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00249  ] Initiated
+[ LOG OUT ][ team00249 ][ ACCEPT ]
+[ CORE ][ team00201 ] Shutdown.
+[ CORE ][ team00249 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00227  ] Initiated
+[ LOG OUT ][ team00227 ][ ACCEPT ]
+[ CORE ][ team00227 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00194  ] Initiated
+[ LOG OUT ][ team00194 ][ ACCEPT ]
+[ CORE ][ team00194 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ SUBMISSION ] Client ID :57 IP:192.168.52.76 Username: team00200 Problem:TQL Language :C++ Time stamp :13:01:57
+[ SUBMISSION ][ REJECT ] Contest is not running.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00246  ] Initiated
+[ LOG OUT ][ team00246 ][ ACCEPT ]
+[ CORE ][ team00246 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00217  ] Initiated
+[ LOG OUT ][ team00217 ][ ACCEPT ]
+[ CORE ][ team00217 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00261  ] Initiated
+[ LOG OUT ][ team00261 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00236  ] Initiated
+[ LOG OUT ][ team00236 ][ ACCEPT ]
+[ CORE ][ team00261 ] Shutdown.
+[ CORE ][ team00236 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00245  ] Initiated
+[ LOG OUT ][ team00245 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00231  ] Initiated
+[ LOG OUT ][ team00231 ][ ACCEPT ]
+[ CORE ][ team00245 ] Shutdown.
+[ CORE ][ team00231 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00196  ] Initiated
+[ LOG OUT ][ team00196 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00200  ] Initiated
+[ LOG OUT ][ team00200 ][ ACCEPT ]
+[ CORE ][ team00196 ] Shutdown.
+[ CORE ][ team00200 ] Shutdown.
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00224  ] Initiated
+[ LOG OUT ][ team00224 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00262  ] Initiated
+[ LOG OUT ][ team00262 ][ ACCEPT ]
+[ ALERT ] Recieved a new client message.
+[ LOGOUT ][  team00258  ] Initiated
+[ LOG OUT ][ team00258 ][ ACCEPT ]
+[ CORE ][ team00224 ] Shutdown.
+[ CORE ][ team00262 ] Shutdown.
+[ CORE ][ team00258 ] Shutdown.
+[ EXIT ] Signal passed
+[ EXIT ] Saving Server state to file.
+
+[ UPDATE ] Judge Login Allowed:True
+[ WRITE ] config.json
+[ LISTEN ] STOPPED listening to judge channel
+[ LISTEN ] STOPPED listening to client channel
+
+[ UPDATE ] Login Allowed:False
+[ WRITE ] config.json
+
+[ UPDATE ] Submission Allowed:False
+[ WRITE ] config.json
+[ STOP ] Judge subprocess terminated successfully!
+
+[ UPDATE ] Scoreboard Update Allowed:False
+[ WRITE ] config.json
+[ STOP ] Client subprocess terminated successfully!
+
+[ UPDATE ] Manual Review:False
+[ WRITE ] config.json
+
+[ UPDATE ] Submission Time Limit:1
+[ WRITE ] config.json
+[ EXIT ] Saved Server state to file.
+[ STOP ] Core subprocess terminated successfully!
+  ################################################
+  #----------SERVER CLOSED SUCCESSFULLY----------#
+  ################################################

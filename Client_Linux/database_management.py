@@ -50,12 +50,68 @@ class manage_database():
 ##############################################################
 ##############################################################
 
+
+class manage_score_database():
+	cur = None
+	conn = None
+
+	def initialize_table():
+		try:
+			conn = sqlite3.connect('score_database.db', check_same_thread = False)
+			manage_score_database.conn = conn
+			cur = conn.cursor()
+			manage_score_database.cur = cur
+			cur.execute("create table if not exists score_table(team_name varchar2(20),score integer,problems_solved integer,time_taken text")
+		except Exception as error:
+			print('[ SCORE DATABASE ERROR ] ' + str(error))
+
+	def insert_score(
+		team_name,
+		score,
+		problems_solved,
+		time_taken
+		):
+		try:
+			manage_score_database.cur.execute("INSERT INTO score_table VALUES (?,?,?,?)",(team_name,int(score),int(problems_solved),time_taken))
+			manage_score_database.conn.commit()
+		except Exception as Error:
+			print('[ SCORE INSERTION ERRRO ] ' + str(Error))
+
+
+	def update_score(
+		team_name,
+		score,
+		problems_solved,
+		time_taken
+		):
+		try:
+			manage_score_database.cur.execute("UPDATE score_table SET score = ?,problems_solved = ?,time_taken = ? WHERE team_name = ?",(int(score),int(problems_solved),time_taken,team_name,))
+			manage_score_database.conn.commit()
+		except Exception as Error:
+			print('[ SCORE UPDATION ERROR ] ' + str(Error))
+
+	def get_whether_exist_or_not(
+		team
+		):
+		manage_score_database.cur.execute("SELECT COUNT(*) FROM score_table WHERE team_name = ?",(team,))
+		x = manage_score_database.cur.fetchall()
+		x = x[0][0]
+		return x
+
+	def reset_database():
+		try:
+			manage_score_database.cur.execute("drop table if exists score_table")
+		except Exception as error:
+			print(str(error))
+
 ##############################################################
 ##############################################################
 
 class source_code(manage_database):
 
-	def get_source(run_id):
+	def get_source(
+		run_id
+		):
 		manage_database.cur.execute("SELECT source_file FROM my_submissions WHERE run_id = ?",(run_id,))
 		data = manage_database.cur.fetchall()
 		data = data[0][0]	
@@ -66,7 +122,9 @@ class manage_local_ids():
 	global local_run_id
 	local_run_id = 0
 	# Initialize local run id
-	def initialize_local_id(cur):
+	def initialize_local_id(
+		cur
+		):
 		try:
 			# Query to get the last max local id in my submission table
 			cur.execute("SELECT MAX(local_run_id) from my_submissions")
@@ -121,7 +179,12 @@ class submission_management(manage_database):
 			print(str(Error))
 
 	# Query to update the submission table whenever receive a verdict for any submission
-	def update_verdict(local_run_id,client_id,run_id,verdict):
+	def update_verdict(
+		local_run_id,
+		client_id,
+		run_id,
+		verdict
+		):
 		try:
 			# Query to update the table
 			manage_database.cur.execute("UPDATE my_submissions SET verdict = ?, run_id = ? WHERE local_run_id = ?", (verdict, int(run_id), int(local_run_id),))
@@ -131,7 +194,10 @@ class submission_management(manage_database):
 		return
 
 
-	def update_run_id(local_run_id,run_id):
+	def update_run_id(
+		local_run_id,
+		run_id
+		):
 		try:
 			# Query to update the table
 			manage_database.cur.execute("UPDATE my_submissions SET run_id = ? WHERE local_run_id = ?", (int(run_id), int(local_run_id),))
@@ -140,7 +206,9 @@ class submission_management(manage_database):
 			print("[ ERROR ] Could not update submission submission : " + str(error))
 		return
 
-	def update_verdict_reject(local_run_id):
+	def update_verdict_reject(
+		local_run_id
+		):
 		try:
 			# Query to update the table
 			manage_database.cur.execute("UPDATE my_submissions SET verdict = ? WHERE local_run_id = ?", ('REJECTED', int(local_run_id),))
@@ -159,7 +227,10 @@ class submission_management(manage_database):
 class query_management(manage_database):
 	
 	# Insert a new query in the table whenever asked
-	def insert_query(query,response):
+	def insert_query(
+		query,
+		response
+		):
 		try:
 			# Query to insert in the table
 			manage_database.cur.execute("INSERT INTO my_query VALUES(?,?)",(query,response))
@@ -168,7 +239,12 @@ class query_management(manage_database):
 			print(str(Error))
 
 	# Update a new query function
-	def update_query(client_id,query,response,Type):
+	def update_query(
+		client_id,
+		query,
+		response,
+		Type
+		):
 		# with open('config.json', 'r') as read_file:
 		# 	config = json.load(read_file)
 		config = handle_config.read_config_json()

@@ -13,4 +13,5 @@ submission_files/
 diary
 config.json
 todo.txt
-server_logs.txt
+./Reports/server_logs.txt
+./Reports/latest_server_logs.txt

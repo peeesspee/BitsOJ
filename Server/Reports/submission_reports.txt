@@ -1,0 +1,83 @@
+2020-01-14 12:58:10.462602
+################ BitsOJ  ################
+Contest: BitsOJ  - Test 1
+All Submissions:
+	Run ID		Client ID		Problem Code		Language		Timestamp		Verdict		Judge
+	1				31				TQL				C				12:42:32			CMPL		judge00002
+	2				40				TQL				C				12:43:01			NZEC		ADMIN
+	3				6				TQL				PYTHON-3				12:43:18			WA		judge00002
+	4				37				TQL				C				12:43:24			CMPL		judge00002
+	5				28				TQL				C				12:43:34			CMPL		judge00002
+	6				8				TQL				C				12:43:36			CMPL		judge00002
+	7				19				TQL				C++				12:43:55			WA		judge00002
+	8				18				TQL				C++				12:44:19			CMPL		judge00002
+	9				35				TQL				C++				12:44:48			CMPL		judge00002
+	10				11				TQL				C++				12:46:03			WA		judge00002
+	11				22				TQL				PYTHON-3				12:46:42			RE		judge00002
+	12				23				TFG				C				12:46:57			CMPL		judge00002
+	13				29				TQL				PYTHON-3				12:47:25			AC		judge00002
+	14				48				TQL				PYTHON-3				12:47:45			RE		judge00002
+	15				9				TQL				C++				12:48:01			AC		judge00002
+	16				23				TFG				PYTHON-3				12:48:32			WA		judge00002
+	17				22				TQL				PYTHON-3				12:48:32			RE		judge00002
+	18				21				TQL				C++				12:48:55			WA		judge00002
+	19				43				TQL				C++				12:49:19			TLE		judge00002
+	20				54				TQL				C++				12:50:50			WA		judge00002
+	21				54				TQL				C++				12:51:52			WA		judge00002
+	22				16				TQL				C				12:51:54			CMPL		judge00002
+	23				4				TQL				C++				12:52:12			WA		judge00002
+	24				24				TQL				C++				12:52:32			CMPL		judge00002
+	25				52				TQL				C++				12:52:42			WA		judge00002
+	26				51				TQL				PYTHON-3				12:53:25			RE		judge00002
+	27				2				TQL				C++				12:53:37			AC		judge00002
+	28				48				TQL				PYTHON-3				12:54:01			WA		judge00002
+	29				24				TQL				C++				12:54:49			CMPL		judge00002
+	30				11				TQL				C++				12:55:11			WA		judge00002
+	31				21				TQL				C++				12:56:33			WA		judge00002
+	32				32				TQL				PYTHON-3				12:56:58			WA		judge00002
+	33				48				TPP				C				12:57:44			CMPL		judge00002
+
+####################################################################################################
+
+Submission data grouped by problems:
+> Problem: TQL
+	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
+		1					31				C				  12:42:32			  CMPL
+		2					40				C				  12:43:01			  NZEC
+		3					6				PYTHON-3				  12:43:18			  WA
+		4					37				C				  12:43:24			  CMPL
+		5					28				C				  12:43:34			  CMPL
+		6					8				C				  12:43:36			  CMPL
+		7					19				C++				  12:43:55			  WA
+		8					18				C++				  12:44:19			  CMPL
+		9					35				C++				  12:44:48			  CMPL
+		10					11				C++				  12:46:03			  WA
+		11					22				PYTHON-3				  12:46:42			  RE
+		13					29				PYTHON-3				  12:47:25			  AC
+		14					48				PYTHON-3				  12:47:45			  RE
+		15					9				C++				  12:48:01			  AC
+		17					22				PYTHON-3				  12:48:32			  RE
+		18					21				C++				  12:48:55			  WA
+		19					43				C++				  12:49:19			  TLE
+		20					54				C++				  12:50:50			  WA
+		21					54				C++				  12:51:52			  WA
+		22					16				C				  12:51:54			  CMPL
+		23					4				C++				  12:52:12			  WA
+		24					24				C++				  12:52:32			  CMPL
+		25					52				C++				  12:52:42			  WA
+		26					51				PYTHON-3				  12:53:25			  RE
+		27					2				C++				  12:53:37			  AC
+		28					48				PYTHON-3				  12:54:01			  WA
+		29					24				C++				  12:54:49			  CMPL
+		30					11				C++				  12:55:11			  WA
+		31					21				C++				  12:56:33			  WA
+		32					32				PYTHON-3				  12:56:58			  WA
+> Problem: TPP
+	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
+		33					48				C				  12:57:44			  CMPL
+> Problem: TFG
+	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
+		12					23				C				  12:46:57			  CMPL
+		16					23				PYTHON-3				  12:48:32			  WA
+
+####################################################################################################

@@ -233,17 +233,38 @@ class ui_widgets():
 		heading = QLabel('Leaderboard')
 		heading.setObjectName('main_screen_heading')
 
+		score_model = self.score_models(self.score_db, 'score_table')
+
+		score_model.setHeaderData(0, Qt.Horizontal, 'RANK')
+		score_model.setHeaderData(1, Qt.Horizontal, 'TEAM_NAME')
+		score_model.setHeaderData(2, Qt.Horizontal, 'SCORE')
+		score_model.setHeaderData(3, Qt.Horizontal, 'PROBLEMS_SOLVED')
+		score_model.setHeaderData(4, Qt.Horizontal, 'TIME_TAKEN')
 
 
-		main_layout.addWidget(heading)
-		main_layout.addWidget(self.scoreboard)
-		main_layout.addStretch(5)
+		score_table = self.generate_score_view(score_model)
+		
+
+
+
+		head_layout = QHBoxLayout()
+		head_layout.addWidget(heading)
+		# head_layout.addWidget(view_submission_button,  alignment=Qt.AlignRight)
+		head_widget = QWidget()
+		head_widget.setLayout(head_layout)
+
+
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(head_widget)
+		main_layout.addWidget(score_table)
+		main_layout.setStretch(0, 5)
+		main_layout.setStretch(1, 95)
 
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen")
-
-		return main
+		main.show()
+		return main, score_model
 
 	def about_ui(self):
 		head1 = QLabel('Made with <3 by Team Bitwise')

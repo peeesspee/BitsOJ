@@ -53,6 +53,59 @@ class manage_database():
 ##############################################################
 ##############################################################
 
+class manage_score_database():
+	cur = None
+	conn = None
+
+	def initialize_table():
+		try:
+			conn = sqlite3.connect('score_database.db', check_same_thread = False)
+			manage_score_database.conn = conn
+			cur = conn.cursor()
+			manage_score_database.cur = cur
+			cur.execute("create table if not exists score_table(team_name varchar2(20),score integer,problems_solved integer,time_taken text")
+		except Exception as error:
+			print('[ SCORE DATABASE ERROR ] ' + str(error))
+
+	def insert_score(
+		team_name,
+		score,
+		problems_solved,
+		time_taken
+		):
+		try:
+			manage_score_database.cur.execute("INSERT INTO score_table VALUES (?,?,?,?)",(team_name,int(score),int(problems_solved),time_taken))
+			manage_score_database.conn.commit()
+		except Exception as Error:
+			print('[ SCORE INSERTION ERRRO ] ' + str(Error))
+
+
+	def update_score(
+		team_name,
+		score,
+		problems_solved,
+		time_taken
+		):
+		try:
+			manage_score_database.cur.execute("UPDATE score_table SET score = ?,problems_solved = ?,time_taken = ? WHERE team_name = ?",(int(score),int(problems_solved),time_taken,team_name,))
+			manage_score_database.conn.commit()
+		except Exception as Error:
+			print('[ SCORE UPDATION ERROR ] ' + str(Error))
+
+	def get_whether_exist_or_not(
+		team
+		):
+		manage_score_database.cur.execute("SELECT COUNT(*) FROM score_table WHERE team_name = ?",(team,))
+		x = manage_score_database.cur.fetchall()
+		x = x[0][0]
+		return x
+
+	def reset_database():
+		try:
+			manage_score_database.cur.execute("drop table if exists score_table")
+		except Exception as error:
+			print(str(error))
+
 ##############################################################
 ##############################################################
 

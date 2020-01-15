@@ -15,7 +15,7 @@ username = 'judge00001'
 password = 'bits1'
 channel = ''
 connectio = ''
-key = 'hw0pmpznmkm451m'
+key = '3cjxnogypnarehr'
 
 def login():
 	global username
