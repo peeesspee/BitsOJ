@@ -47,7 +47,7 @@ class client_window(QMainWindow):
 		self.score_timer = QTimer()
 		self.change_flag_1 = True
 		self.score_timer.timeout.connect(self.update_scoreboard)
-		self.score_timer.start(10000)
+		self.score_timer.start(1000)
 
 
 		self.channel = channel
