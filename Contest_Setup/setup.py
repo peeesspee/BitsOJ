@@ -1048,7 +1048,6 @@ class contest_setup(QMainWindow):
 		no = manage_local_ids.get_new_id()
 		self.client_config["No_of_Problems"] = int(no)
 		self.data = read_write.read_json()
-		print('problem_code', self.problem_code)
 		self.window = add_problem_ui(
 			no,
 			self.table_model,
@@ -1059,7 +1058,6 @@ class contest_setup(QMainWindow):
 			self
 			)
 		self.window.show()
-		print('problem_code', self.problem_code)
 
 	############################## EDIT PROBLEM ###############################
 	def edit_problem_client(self, selected_row):
