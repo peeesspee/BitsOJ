@@ -247,6 +247,7 @@ class core():
 							sent_status, 
 							judge
 					)
+					core.data_changed_flags[0] = 1
 
 				elif code == 'UpJudgeStat':
 					username = data['Username']
@@ -257,6 +258,8 @@ class core():
 						state, 
 						judge_ip
 					)
+					# Update Judge View
+					core.data_changed_flags[13] = 1
 
 				elif code == 'UpUserStat':
 					username = data['Username']
@@ -267,6 +270,10 @@ class core():
 						state, 
 						judge_ip
 					)
+					# Update User Tables View
+					core.data_changed_flags[1] = 1
+					# Update Scoreboard View
+					core.data_changed_flags[16] = 1
 
 				elif code == 'AddNewUser':
 					username = data['Username']
@@ -277,12 +284,18 @@ class core():
 					table = data['Table']
 					client_authentication.add_client(
 						client_id, 
-						client_username, 
-						client_password, 
+						username, 
+						password, 
 						client_ip, 
 						state, 
 						table
 					)
+					# Update table views
+					# Client accounts
+					core.data_changed_flags[1] = 1
+					# judge accounts
+					core.data_changed_flags[13] = 1
+					
 
 				elif code == 'AddNewScore':
 					client_username = data['Username' ]
@@ -297,6 +310,8 @@ class core():
 						problems_solved, 
 						total_time
 					)
+					# Update Scoreboard accounts view
+					core.data_changed_flags[16] = 1
 
 				elif data == 'AddNewSub':
 					run_id = data['RunID']
@@ -318,6 +333,8 @@ class core():
 						status, 
 						time_stamp
 					)
+					# Update Submissions view
+					core.data_changed_flags[0] = 1
 
 				elif code == 'UpUserPwd':
 					username = data['Username']
@@ -446,6 +463,7 @@ class core():
 						client_id, 
 						query
 					)
+					core.data_changed_flags[9] = 1
 		
 				# Client has been DiSCoNnecTed
 				elif code == 'DSCNT':

@@ -174,8 +174,6 @@ class account_edit_ui(QMainWindow):
 				message = json.dumps(message)
 				self.task_queue.put(message)
 
-			self.data_changed_flags[1] = 1
-			self.data_changed_flags[16] = 1
 		self.close()
 
 	def exit(self):

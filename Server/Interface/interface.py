@@ -397,8 +397,9 @@ class server_window(QMainWindow):
 				self.data_changed_flags[0] = 0
 			# Update connected clients table
 			if self.data_changed_flags[1] == 1:
-				self.client_model.select()
 				self.data_changed_flags[1] = 0
+				self.client_model.select()
+	
 			# Update problems table
 			if self.data_changed_flags[22] == 1:
 				self.problem_model.select()
