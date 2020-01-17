@@ -143,9 +143,8 @@ class start_listening():
 
 
 	def leaderboard(server_data):
-		
 		data = server_data["Data"]
-		data = json.dumps(data)
+		data = json.dumps(server_data)
 		start_listening.scoreboard.put(data)
 
 	def submission_verdict(server_data):

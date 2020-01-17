@@ -1,4 +1,4 @@
-from database_management import manage_database, manage_score_database
+from database_management import manage_database
 import os
 
 rabbitmq_username = 'client'
@@ -10,6 +10,3 @@ manage_database.reset_database(conn)
 
 for i in os.listdir('./Solution/'):
 	os.remove('./Solution/'+i)
-
-manage_score_database.initialize_table()
-manage_score_database.reset_database()

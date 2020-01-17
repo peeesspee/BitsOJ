@@ -8,7 +8,7 @@ from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex,
 from interface_package.ui_classes import *
 from decrypt_problem import decrypt
 from init_client import initialize_contest, handle_config
-from database_management import source_code, manage_score_database
+from database_management import source_code, manage_database
 
 
 
@@ -102,8 +102,7 @@ class client_window(QMainWindow):
 			self.data_changed_flag[0] = 2
 			self.data_changed_flag[4] = 2
 		self.queue = queue
-		self.score = score
-		manage_score_database.initialize_table()
+		self.scoreboard = score
 
 		# Initialize status bar
 		self.status = self.statusBar()
@@ -111,7 +110,6 @@ class client_window(QMainWindow):
 
 		####################################################################
 		self.db = self.init_qt_database()
-		self.score_db = self.init_qt_score_database()
 		####################################################################
 		# Define Sidebar buttons and their actions
 		button_width = 200
@@ -289,19 +287,27 @@ class client_window(QMainWindow):
 
 
 	def update_scoreboard(self):
-		if(self.scoreboard.empty()):
-			pass
-		else:
-			length = self.scoreboard.qsize()
-			for i in range(length):
-				item = self.scoreboard.get()
-				for j in item:
-					count = manage_score_database.get_whether_exist_or_not(j[0])
-					if(count):
-						manage_score_database.update_score(j[0],int(j[1]),int(j[2]),j[3])
-					else:
-						manage_score_database.insert_score(j[0],int(j[1]),int(j[2]),j[3])
-
+		try:
+			if(self.scoreboard.empty()):
+				pass
+			else:
+				length = self.scoreboard.qsize()
+				for i in range(length):
+					item = self.scoreboard.get()
+					item = eval(item)
+					item = item["Data"]
+					item = eval(item)
+					print(item)
+					for j in item:
+						print(j)
+						count = manage_database.get_whether_exist_or_not(j[0])
+						if(count):
+							manage_database.update_score(j[0],int(j[1]),int(j[2]),j[3])
+						else:
+							manage_database.insert_score(j[0],int(j[1]),int(j[2]),j[3])
+				self.score_model.setQuery("SELECT rank() over(ORDER BY score DESC,time_taken ASC) as RANK,[TEAM_NAME],[SCORE],[PROBLEMS_SOLVED],[TIME_TAKEN] FROM score_table")
+		except Exception as error:
+			print('[ SCORE UPDATE ERROR ] ' + str(error))
 
 		# score_data = handle_config.read_score_json()
 		# try:
@@ -515,14 +521,6 @@ class client_window(QMainWindow):
 		except:
 			print('[ CRITICAL ] Database loading error......')
 
-	def init_qt_score_database(self):
-		try:
-			db = QSqlDatabase.addDatabase('QSQLITE')
-			db.setDatabaseName('score_database.db')
-			return db
-		except:
-			print('[ CRITICAL ] Score Database loading error......')
-
 	def manage_models(self, db, table_name):
 		if db.open():
 			model = QSqlTableModel()
@@ -538,38 +536,21 @@ class client_window(QMainWindow):
 		return model
 
 	def score_models(self,db, table_name):
-		if db.open():
-			model = QSqlQueryModel()
-			model.setQuery("SELECT rank() over(ORDER BY score DESC,time_taken ASC) as RANK,[TEAM_NAME],[SCORE],[PROBLEMS_SOLVED],[TIME_TAKEN] FROM score_table")
-		return model
+		try:
+			if db.open():
+				model = QSqlQueryModel()
+				model.setQuery
+				(
+					"SELECT rank() over(ORDER BY score DESC,time_taken ASC) as RANK,[TEAM_NAME],[SCORE],[PROBLEMS_SOLVED],[TIME_TAKEN] FROM ?",
+					(
+						table_name
+					)
+				)
+			return model
+		except Exception as Error:
+			print('[ SCORE MODEL ] '+str(Error))
 
 	def generate_view(self, model):
-		table = QTableView() 
-		table.setModel(model)
-		# Enable sorting in the table view 
-		table.setSortingEnabled(True)
-		# Enable alternate row colors for readability
-		table.setAlternatingRowColors(True)
-		# Select whole row when clicked
-		table.setSelectionBehavior(QAbstractItemView.SelectRows)
-		# Allow only one row to be selected 
-		table.setSelectionMode(QAbstractItemView.SingleSelection)
-		# fit view to whole space 
-		table.resizeColumnsToContents()
-		# Make table non editable
-		table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-		# Set view to delete when gui is closed
-		table.setAttribute(Qt.WA_DeleteOnClose)
-
-		horizontal_header = table.horizontalHeader()
-		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
-		vertical_header = table.verticalHeader()
-		#vertical_header.setSectionResizeMode(QHeaderView.Stretch)
-		vertical_header.setVisible(False)
-		return table
-
-
-	def generate_score_view(self, model):
 		table = QTableView() 
 		table.setModel(model)
 		# Enable sorting in the table view 

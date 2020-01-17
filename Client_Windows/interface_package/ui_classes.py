@@ -229,42 +229,45 @@ class ui_widgets():
 		return main, query_model
 
 	def leaderboard_ui(self):
-		main_layout = QVBoxLayout()
-		heading = QLabel('Leaderboard')
-		heading.setObjectName('main_screen_heading')
+		try:
+			main_layout = QVBoxLayout()
+			heading = QLabel('Leaderboard')
+			heading.setObjectName('main_screen_heading')
 
-		score_model = self.score_models(self.score_db, 'score_table')
+			score_model = self.score_models(self.db, 'score_table')
 
-		score_model.setHeaderData(0, Qt.Horizontal, 'RANK')
-		score_model.setHeaderData(1, Qt.Horizontal, 'TEAM_NAME')
-		score_model.setHeaderData(2, Qt.Horizontal, 'SCORE')
-		score_model.setHeaderData(3, Qt.Horizontal, 'PROBLEMS_SOLVED')
-		score_model.setHeaderData(4, Qt.Horizontal, 'TIME_TAKEN')
-
-
-		score_table = self.generate_score_view(score_model)
-		
-
-
-
-		head_layout = QHBoxLayout()
-		head_layout.addWidget(heading)
-		# head_layout.addWidget(view_submission_button,  alignment=Qt.AlignRight)
-		head_widget = QWidget()
-		head_widget.setLayout(head_layout)
+			score_model.setHeaderData(0, Qt.Horizontal, 'RANK')
+			score_model.setHeaderData(1, Qt.Horizontal, 'TEAM_NAME')
+			score_model.setHeaderData(2, Qt.Horizontal, 'SCORE')
+			score_model.setHeaderData(3, Qt.Horizontal, 'PROBLEMS_SOLVED')
+			score_model.setHeaderData(4, Qt.Horizontal, 'TIME_TAKEN')
+			score_model.setQuery(
+				"SELECT rank() over(ORDER BY score DESC,time_taken ASC) as RANK,[TEAM_NAME],[SCORE],[PROBLEMS_SOLVED],[TIME_TAKEN] FROM score_table")
+			score_table = self.generate_view(score_model)
+			
 
 
-		main_layout = QVBoxLayout()
-		main_layout.addWidget(head_widget)
-		main_layout.addWidget(score_table)
-		main_layout.setStretch(0, 5)
-		main_layout.setStretch(1, 95)
 
-		main = QWidget()
-		main.setLayout(main_layout)
-		main.setObjectName("main_screen")
-		main.show()
-		return main, score_model
+			head_layout = QHBoxLayout()
+			head_layout.addWidget(heading)
+			# head_layout.addWidget(view_submission_button,  alignment=Qt.AlignRight)
+			head_widget = QWidget()
+			head_widget.setLayout(head_layout)
+
+
+			main_layout = QVBoxLayout()
+			main_layout.addWidget(head_widget)
+			main_layout.addWidget(score_table)
+			main_layout.setStretch(0, 5)
+			main_layout.setStretch(1, 95)
+
+			main = QWidget()
+			main.setLayout(main_layout)
+			main.setObjectName("main_screen")
+			main.show()
+			return main, score_model
+		except Exception as Error:
+			print('[ LEADERBOARD ] ' + str(Error))
 
 	def about_ui(self):
 		head1 = QLabel('Made with <3 by Team Bitwise')
