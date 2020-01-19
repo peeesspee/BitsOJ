@@ -142,14 +142,9 @@ class start_listening():
 
 
 	def leaderboard(server_data):
-		try:
-			data = handle_config.read_score_json()
-		except:
-			data = None
-		handle_config.write_score_json(server_data)
+		data = server_data["Data"]
 		data = json.dumps(server_data)
 		start_listening.scoreboard.put(data)
-		start_listening.data_changed_flags[6] = 1
 
 	def submission_verdict(server_data):
 		run_id = str(server_data["Run ID"])

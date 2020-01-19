@@ -8,7 +8,7 @@ from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex,
 from interface_package.ui_classes import *
 from decrypt_problem import decrypt
 from init_client import initialize_contest, handle_config
-from database_management import source_code
+from database_management import source_code, manage_database
 
 
 
@@ -48,48 +48,48 @@ class client_window(QMainWindow):
 		self.score_timer = QTimer()
 		self.change_flag_1 = True
 		self.score_timer.timeout.connect(self.update_scoreboard)
-		self.score_timer.start(10000)
+		self.score_timer.start(1000)
 
 
 		self.channel = channel
 
-		self.rows = 0
-		self.columns = 5
-		self.scoreboard = QTableWidget()
-		self.scoreboard.setEditTriggers(QAbstractItemView.NoEditTriggers)
-		self.scoreboard.setFixedHeight(650)
-		self.scoreboard.verticalHeader().setVisible(False)
-		self.scoreboard.setRowCount(self.rows)
-		self.scoreboard.setColumnCount(self.columns)
-		self.scoreboard.setHorizontalHeaderLabels(('Rank', 'Username', 'Score', 'Problems Solved', 'Time'))
-		self.scoreboard.horizontalHeader().setStretchLastSection(True)
-		self.scoreboard.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+		# self.rows = 0
+		# self.columns = 5
+		# self.scoreboard = QTableWidget()
+		# self.scoreboard.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		# self.scoreboard.setFixedHeight(650)
+		# self.scoreboard.verticalHeader().setVisible(False)
+		# self.scoreboard.setRowCount(self.rows)
+		# self.scoreboard.setColumnCount(self.columns)
+		# self.scoreboard.setHorizontalHeaderLabels(('Rank', 'Username', 'Score', 'Problems Solved', 'Time'))
+		# self.scoreboard.horizontalHeader().setStretchLastSection(True)
+		# self.scoreboard.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
 		config = handle_config.read_config_json()
-		score_data = handle_config.read_score_json()
-		if score_data != None:
-			score_data = eval(score_data["Data"])
-			row_data = len(score_data)
-			self.scoreboard.setRowCount(row_data)
-			for i in range(row_data):
-				for j in range(5):
-					if j == 0:
-						self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
-						self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
-					else:
-						self.scoreboard.setItem(i,j, QTableWidgetItem(str(score_data[i][j-1])))
-						self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
-					if i == 0:
-						self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
-					elif i == 1:
-						# self.scoreboard.item(i,j).setForeground(QColor('#AAA9AD'))
-						self.scoreboard.item(i,j).setForeground(QColor('#777777'))
-					elif i == 2:
-						self.scoreboard.item(i,j).setForeground(QColor('#CD7F32'))
-					elif score_data[i][0] == config["Username"]:
-						self.scoreboard.item(i,j).setForeground(QColor('#4B8B3B'))
-					else:
-						self.scoreboard.item(i,j).setForeground(QColor('#FFFFFF'))
+		# score_data = handle_config.read_score_json()
+		# if score_data != None:
+		# 	score_data = eval(score_data["Data"])
+		# 	row_data = len(score_data)
+		# 	self.scoreboard.setRowCount(row_data)
+		# 	for i in range(row_data):
+		# 		for j in range(5):
+		# 			if j == 0:
+		# 				self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
+		# 				self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
+		# 			else:
+		# 				self.scoreboard.setItem(i,j, QTableWidgetItem(str(score_data[i][j-1])))
+		# 				self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
+		# 			if i == 0:
+		# 				self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
+		# 			elif i == 1:
+		# 				# self.scoreboard.item(i,j).setForeground(QColor('#AAA9AD'))
+		# 				self.scoreboard.item(i,j).setForeground(QColor('#777777'))
+		# 			elif i == 2:
+		# 				self.scoreboard.item(i,j).setForeground(QColor('#CD7F32'))
+		# 			elif score_data[i][0] == config["Username"]:
+		# 				self.scoreboard.item(i,j).setForeground(QColor('#4B8B3B'))
+		# 			else:
+		# 				self.scoreboard.item(i,j).setForeground(QColor('#FFFFFF'))
 
 
 
@@ -102,7 +102,7 @@ class client_window(QMainWindow):
 			self.data_changed_flag[0] = 2
 			self.data_changed_flag[4] = 2
 		self.queue = queue
-		self.score = score
+		self.scoreboard = score
 
 		# Initialize status bar
 		self.status = self.statusBar()
@@ -155,7 +155,7 @@ class client_window(QMainWindow):
 		self.tab2, self.sub_model = ui_widgets.submissions_ui(self)
 		self.tab3 = ui_widgets.submit_ui(self)
 		self.tab4, self.query_model = ui_widgets.query_ui(self)
-		self.tab5 = ui_widgets.leaderboard_ui(self)
+		self.tab5, self.score_model = ui_widgets.leaderboard_ui(self)
 		self.tab6 = ui_widgets.about_ui(self)
 
 		#####################################################################
@@ -287,36 +287,58 @@ class client_window(QMainWindow):
 
 
 	def update_scoreboard(self):
-		score_data = handle_config.read_score_json()
 		try:
-			if(self.data_changed_flag[6] == 1):
-				self.data_changed_flag[6] = 0
-				data = self.score.get()
-				data = json.loads(data)
-				score = eval(data["Data"])
-				row = len(score)
-				self.scoreboard.setRowCount(row)
-				for i in range(row):
-					for j in range(5):
-						if j == 0:
-							self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
-							self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
+			if(self.scoreboard.empty()):
+				pass
+			else:
+				length = self.scoreboard.qsize()
+				for i in range(length):
+					item = self.scoreboard.get()
+					item = eval(item)
+					item = item["Data"]
+					item = eval(item)
+					print(item)
+					for j in item:
+						print(j)
+						count = manage_database.get_whether_exist_or_not(j[0])
+						if(count):
+							manage_database.update_score(j[0],int(j[1]),int(j[2]),j[3])
 						else:
-							self.scoreboard.setItem(i,j, QTableWidgetItem(str(score[i][j-1])))
-							self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
-						if i == 0:
-							self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
-						elif i == 1:
-							self.scoreboard.item(i,j).setForeground(QColor('#777777'))
-						elif i == 2:
-							self.scoreboard.item(i,j).setForeground(QColor('#CD7F32'))
-						elif score_data[i][0] == config["Username"]:
-							self.scoreboard.item(i,j).setForeground(QColor('#4B8B3B'))
-						else:
-							self.scoreboard.item(i,j).setForeground(QColor('#FFFFFF'))
+							manage_database.insert_score(j[0],int(j[1]),int(j[2]),j[3])
+				self.score_model.setQuery("SELECT rank() over(ORDER BY score DESC,time_taken ASC) as RANK,[TEAM_NAME],[SCORE],[PROBLEMS_SOLVED],[TIME_TAKEN] FROM score_table")
+		except Exception as error:
+			print('[ SCORE UPDATE ERROR ] ' + str(error))
 
-		except Exception as Error:
-			print(str(Error))
+		# score_data = handle_config.read_score_json()
+		# try:
+		# 	if(self.data_changed_flag[6] == 1):
+		# 		self.data_changed_flag[6] = 0
+		# 		data = self.score.get()
+		# 		data = json.loads(data)
+		# 		score = eval(data["Data"])
+		# 		row = len(score)
+		# 		self.scoreboard.setRowCount(row)
+		# 		for i in range(row):
+		# 			for j in range(5):
+		# 				if j == 0:
+		# 					self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
+		# 					self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
+		# 				else:
+		# 					self.scoreboard.setItem(i,j, QTableWidgetItem(str(score[i][j-1])))
+		# 					self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
+		# 				if i == 0:
+		# 					self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
+		# 				elif i == 1:
+		# 					self.scoreboard.item(i,j).setForeground(QColor('#777777'))
+		# 				elif i == 2:
+		# 					self.scoreboard.item(i,j).setForeground(QColor('#CD7F32'))
+		# 				elif score_data[i][0] == config["Username"]:
+		# 					self.scoreboard.item(i,j).setForeground(QColor('#4B8B3B'))
+		# 				else:
+		# 					self.scoreboard.item(i,j).setForeground(QColor('#FFFFFF'))
+
+		# except Exception as Error:
+		# 	print(str(Error))
 
 
 	def update_data(self):
@@ -512,6 +534,21 @@ class client_window(QMainWindow):
 			model = QSqlQueryModel()
 			model.setQuery("SELECT run_id,verdict,language,problem_number,time_stamp FROM my_submissions ORDER BY local_run_id DESC")
 		return model
+
+	def score_models(self,db, table_name):
+		try:
+			if db.open():
+				model = QSqlQueryModel()
+				model.setQuery
+				(
+					"SELECT rank() over(ORDER BY score DESC,time_taken ASC) as RANK,[TEAM_NAME],[SCORE],[PROBLEMS_SOLVED],[TIME_TAKEN] FROM ?",
+					(
+						table_name
+					)
+				)
+			return model
+		except Exception as Error:
+			print('[ SCORE MODEL ] '+str(Error))
 
 	def generate_view(self, model):
 		table = QTableView() 

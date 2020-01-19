@@ -53,8 +53,10 @@ class manage_local_ids(manage_database):
 	# Function to get the new local id
 	def get_new_id():
 		# Increment local run id by 1
-		manage_local_ids.local_run_id += 1
-		return manage_local_ids.local_run_id 
+		manage_database.cur.execute("SELECT COUNT(*) FROM problems")
+		x = manage_database.cur.fetchall()
+		x = x[0][0]
+		return (x+1)
 
 
 
