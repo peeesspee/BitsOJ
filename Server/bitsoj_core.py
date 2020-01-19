@@ -136,8 +136,8 @@ class core():
 				# Contest STOP signal
 				elif code == 'STOP':
 					# Don't allow Submissions
-					print('[ EVENT ][ BROADCAST ] STOP Contest')
-					core.log('[ EVENT ][ BROADCAST ] STOP Contest')
+					print('[ CORE ][ EVENT ][ BROADCAST ] STOP Contest')
+					core.log('[ CORE ][ EVENT ][ BROADCAST ] STOP Contest')
 					message = {
 					'Code' : 'STOP'
 					}
@@ -202,6 +202,8 @@ class core():
 					
 					# Update submission Database
 					submissions_management.update_submission_status(run_id, status, 'SENT', judge)
+					print('[ CORE ][ ' + username + ' ] Verdict sent to client.')
+					core.log('[ CORE ][ ' + username + ' ] Verdict sent to client.')
 
 					# Call scoreboard updation function
 					scoreboard_management.update_user_score(
@@ -222,18 +224,23 @@ class core():
 					core.data_changed_flags[16] = 1
 					# Broadcast new scoreboard to clients whenever a new AC is recieved 
 					# and scoreboard update is allowed.
-					if status == 'AC' and core.data_changed_flags[15] == 1:
+					if core.data_changed_flags[15] == 1:
 						# Get user score and broadcast it to clients
 						data = scoreboard_management.get_user_score(username)
+						data = str(data)
+					
 						message = {
-							'Code':'SCRBD',
+							'Code' : 'SCRBD',
 							'Data' : data
 						}
+						message = json.dumps(message)
 						core.channel.basic_publish(
 							exchange = core.broadcast_exchange,
 							routing_key = '',
 							body = message
 						)
+						print('[ CORE ] Scoreboard Updated for clients')
+						core.log('[ CORE ] Scoreboard Updated for clients')
 
 				elif code == 'UpSubStat':
 					# Update Submission status
@@ -248,6 +255,8 @@ class core():
 							judge
 					)
 					core.data_changed_flags[0] = 1
+					print('[ CORE ] Run ID ' + str(run_id) + ': Status changed.')
+					core.log('[ CORE ] Run ID ' + str(run_id) + ': Status changed.')
 
 				elif code == 'UpJudgeStat':
 					username = data['Username']
@@ -260,6 +269,8 @@ class core():
 					)
 					# Update Judge View
 					core.data_changed_flags[13] = 1
+					print('[ CORE ] Judge ' + username + ': Status changed to ' + state)
+					core.log('[ CORE ] Judge ' + username + ': Status changed to ' + state)
 
 				elif code == 'UpUserStat':
 					username = data['Username']
@@ -274,6 +285,8 @@ class core():
 					core.data_changed_flags[1] = 1
 					# Update Scoreboard View
 					core.data_changed_flags[16] = 1
+					print('[ CORE ] User ' + username + ': Status changed to ' + state)
+					core.log('[ CORE ] User ' + username + ': Status changed to ' + state)
 
 				elif code == 'AddNewUser':
 					username = data['Username']
@@ -295,6 +308,8 @@ class core():
 					core.data_changed_flags[1] = 1
 					# judge accounts
 					core.data_changed_flags[13] = 1
+					print('[ CORE ] Added new user.')
+					core.log('[ CORE ] Added new user.')
 					
 
 				elif code == 'AddNewScore':
@@ -312,34 +327,50 @@ class core():
 					)
 					# Update Scoreboard accounts view
 					core.data_changed_flags[16] = 1
+					print('[ CORE ] Added new user in scoreboard.')
+					core.log('[ CORE ] Added new user in scoreboard.')
 
-				elif data == 'AddNewSub':
-					run_id = data['RunID']
-					local_run_id = data['Local ID']
-					client_id = data['Client ID']
-					language = data['Language']
-					source_file_name = data['Source File Name']
-					problem_code = data['Problem Code']
-					status = data['Status']
-					timestamp = data['Timestamp']
+				elif code == 'AddNewSub':
+					try:
+						print('[ CORE ] Adding new submission')
+						core.log('[ CORE ] Adding new submission')
+						run_id = data['RunID']
+						local_run_id = data['Local ID']
+						client_id = data['Client ID']
+						language = data['Language']
+						source_file_name = data['Source File Name']
+						problem_code = data['Problem Code']
+						status = data['Status']
+						time_stamp = data['Timestamp']
 
-					submissions_management.insert_submission(
-						run_id, 
-						local_run_id, 
-						client_id, 
-						language, 
-						source_file_name, 
-						problem_code, 
-						status, 
-						time_stamp
-					)
-					# Update Submissions view
-					core.data_changed_flags[0] = 1
+						status = submissions_management.insert_submission(
+							run_id,
+							local_run_id, 
+							client_id, 
+							language, 
+							source_file_name, 
+							problem_code, 
+							status, 
+							time_stamp
+						) 
+						if status == 1:
+							print('[ CORE ] Submission inserted in database.')
+						else:
+							print('[ CORE ][ ERROR ] Submission NOT inserted in database.')
+						# Update Submissions view
+						core.data_changed_flags[0] = 1
+					except:
+						print('Error while inserting data')
 
 				elif code == 'UpUserPwd':
 					username = data['Username']
 					password = data['New Password']
-
+					user_management.update_user_password(username, password)
+					print('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
+					core.log('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
+					# Update account views
+					core.data_changed_flags[5] = 1
+					core.data_changed_flags[1] = 1
 
 				elif code == 'SHUTDOWN':
 					receiver = data['Receiver']
@@ -376,6 +407,8 @@ class core():
 						body = message, 
 						properties = pika.BasicProperties(delivery_mode = 2)
 					) 
+					print('[ CORE ] Added a new submission request.')
+					core.log('[ CORE ] Added a new submission request.')
 
 				elif code == 'RJUDGE':
 					run_id = data['Run ID']
@@ -387,10 +420,12 @@ class core():
 					message = json.dumps(data)
 					core.channel.basic_publish(
 						exchange = core.unicast_exchange, 
-						routing_key = 'judge_requests', 
+						routing_key = 'judge_requests',  
 						body = message, 
 						properties = pika.BasicProperties(delivery_mode = 2)
 					) 
+					print('[ CORE ] Added a new submission request.')
+					core.log('[ CORE ] Added a new submission request.')
 				
 				# UPDATE client timer to match server value
 				elif code == 'UPDATE':
@@ -559,7 +594,9 @@ class core():
 					)
 					
 		except Exception as error:
-			print('[ ERROR ] Data could not be transmitted : ' + str(error)) 
-			core.log('[ ERROR ] Data could not be transmitted : ' + str(error))
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print('[ ERROR ] Data could not be transmitted : ' + str(error) + ' on line ' + str(exc_tb.tb_lineno)) 
+			core.log('[ ERROR ] Data could not be transmitted : ' + str(error) + ' on line ' + str(exc_tb.tb_lineno))
 		finally:
 			return 0

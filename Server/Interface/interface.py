@@ -446,7 +446,7 @@ class server_window(QMainWindow):
 				scoreboard = scoreboard_management.get_scoreboard()
 				data = str(scoreboard)
 				message = {
-					'Code':'SCRBD',
+					'Code' : 'SCRBD',
 					'Data' : data
 				}
 				message = json.dumps(message)
@@ -1155,7 +1155,7 @@ class server_window(QMainWindow):
 				pass
 			else:
 				# print("Sending ", username, password, ctype)
-				self.window = password_change_ui(self.data_changed_flags, self.log_queue, username, password, ctype)
+				self.window = password_change_ui(self.data_changed_flags, self.task_queue, self.log_queue, username, password, ctype)
 				self.window.show()
 			
 		except Exception as error: 

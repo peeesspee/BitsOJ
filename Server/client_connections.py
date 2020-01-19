@@ -887,10 +887,12 @@ class manage_clients():
 				'Source File Name' : source_file_name,
 				'Problem Code' : problem_code,
 				'Status' : 'RUNNING',
-				'Timestamp' : timestamp
+				'Timestamp' : time_stamp
 			}
 			message = json.dumps(message)
 			manage_clients.task_queue.put(message)
+			print('[ CLIENT ] Sent submission request to CORE')
+			manage_clients.log('[ CLIENT ] Sent submission request to CORE')
 
 			# Send this run id to the client
 			message = {
