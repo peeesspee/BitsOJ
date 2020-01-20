@@ -260,6 +260,16 @@ class scoreboard_management():
 						
 						new_total_score = previous_total_score + problem_max_score
 
+						# THIS ASSERTION SHOULD NEVER OCCUR, BUT IT IS THERE AS A FAILSAFE
+						# Assert new_total_score should not be greater than 
+						# problem_solve_count * problem_max_score
+						if new_total_score > problem_max_score * problems_solved:
+							print('[ DB ][ SCOREBOARD ][ SECURITY ] Client Total Score error')
+							print('[ DB ][ SCOREBOARD ][ SECURITY ] Run ID: ', run_id)
+							print('[ DB ][ SCOREBOARD ][ SECURITY ] Client ID: ', client_id)
+							new_total_score = problem_max_score * problems_solved 
+							print('[ DB ][ SCOREBOARD ][ SECURITY ] Total Score RESET to ', new_total_score)
+
 						print(
 							'[ SCOREBOARD ][ UPDATE ] Client: ' 
 							+ str(client_id) 
@@ -681,9 +691,11 @@ class submissions_management(manage_database):
 		try:
 			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, 'WAITING', '-', 0, ))
 			conn.commit()
+			return 1
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
-		return
+			return 0
+		
 
 	def generate_new_run_id():
 		try:

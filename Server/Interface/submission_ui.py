@@ -361,8 +361,6 @@ class manage_submission_ui(QMainWindow):
 			print('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
 			# self.log('[ ERROR ] Judge verdict could not be written in the file!' + str(error))
 
-		self.data_changed_flags[8] = 0
-		self.data_changed_flags[18] = 1
 		self.close()
 
 	def accept_verdict(self):
@@ -403,7 +401,6 @@ class manage_submission_ui(QMainWindow):
 		self.task_queue.put(message)
 		print('[ VERDICT ][ SENT ] Judge Verdict accepted and sent to Client ' + client_username)
 
-		self.data_changed_flags[8] = 0
 		self.close()
 
 	def get_message(self, run_id):

@@ -11,6 +11,7 @@ class password_change_ui(QMainWindow):
 	def __init__(
 			self, 
 			data_changed_flags, 
+			task_queue,
 			log_queue,
 			username, 
 			password, 
@@ -23,6 +24,7 @@ class password_change_ui(QMainWindow):
 		
 		self.data_changed_flags = data_changed_flags
 		self.log_queue = log_queue
+		self.task_queue = task_queue
 		password_change_ui.username = str(username)
 		password_change_ui.password = str(password)
 		password_change_ui.ctype = str(ctype)
@@ -121,7 +123,7 @@ class password_change_ui(QMainWindow):
 				'New Password' : new_password
 			}
 			message = json.dumps(message)
-			password_change_ui.task_queue.put(message)
+			self.task_queue.put(message) 
 
 			print('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
 			self.log('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
