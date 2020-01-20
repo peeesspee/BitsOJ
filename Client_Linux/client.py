@@ -88,10 +88,24 @@ def main():
 		start_interface(connection,data_changed_flags, queue) 
 		print("[ LOGIN ] Successful")
 
+	except Exception as error:
+		ex_type,ex_obj, ex_tb = sys.exc_info()
+		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
+		print(ex_type,f_name,ex_tb.tb_lineno)
+		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
 
+	try:
 		# Manage Threads
 		print('[ SETUP ] Initialising threads....')
 		listen_pid = manage_process(rabbitmq_username,rabbitmq_password,cursor,host,data_changed_flags, queue,scoreboard)
+
+	except Exception as error:
+		ex_type,ex_obj, ex_tb = sys.exc_info()
+		f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
+		print(ex_type,f_name,ex_tb.tb_lineno)
+		print("[ CRITICAL ] GUI could not be loaded! " + str(error))
+
+	try:
 
 		# After successful login 
 		# Starting Main GUI
