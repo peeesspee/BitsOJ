@@ -151,6 +151,7 @@ class manage_judges():
 
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
+
 			# Judge has been validated.
 			code = json_data["Code"] 
 			if code == 'VRDCT':
@@ -249,6 +250,7 @@ class manage_judges():
 
 				# Send Acknowldgement of message recieved and processed
 				ch.basic_ack(delivery_tag = method.delivery_tag)
+				
 			elif code == 'LOGOUT':
 				username = json_data['Username']
 				judge_id = json_data['ID']

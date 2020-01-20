@@ -3957,3 +3957,1455 @@ Error: name 'username' is not defined ###
 
  ###
 2020-01-18 02:07:19.107555  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-20 00:26:37.292933  :  #### SERVER START #### ###
+2020-01-20 00:26:37.293112  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-20 00:26:37.293175  :  [ SETUP ] Initialising server... ###
+2020-01-20 00:26:37.293228  :  [ SETUP ] Initialising database... ###
+2020-01-20 00:26:37.794023  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-20 00:26:37.794119  :    [ START ] Client Manager subprocess started. ###
+2020-01-20 00:26:37.794174  :    [ START ] Judge Manager subprocess started. ###
+2020-01-20 00:26:37.794244  :    [ START ] Core subprocess started. ###
+2020-01-20 00:26:37.794314  :  [ SETUP ] Subprocesses started ###
+2020-01-20 00:26:37.794393  :  [ SETUP ][ Process ] Client Manager: 13964 ###
+2020-01-20 00:26:37.794471  :  [ SETUP ][ Process ] Judge Manager: 13965 ###
+2020-01-20 00:26:37.794553  :  [ SETUP ][ Process ] Core: 13967 ###
+2020-01-20 00:26:37.794647  :  [ SETUP ][ Process ] Log Manager: 13962 ###
+2020-01-20 00:26:37.794725  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-20 00:26:37.794801  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-20 00:26:38.796148  :    [ START ] Interface subprocess started. ###
+2020-01-20 00:26:39.797455  :  [ CORE ][ EVENT ][ BROADCAST ] STOP Contest ###
+2020-01-20 00:26:45.805098  :  [ EVENT ] TIMER RESET TRIGGERED ###
+2020-01-20 00:26:45.805182  :  [ RESET ] Reset environment... ###
+2020-01-20 00:27:28.863901  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-20 00:27:28.864019  :  [ EXIT ] Signal passed ###
+2020-01-20 00:27:28.864093  :  [ EXIT ] Saving Server state to file. ###
+2020-01-20 00:27:28.864161  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-20 00:27:28.864240  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-20 00:27:28.864305  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-20 00:27:28.864367  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-20 00:27:28.864429  :  [ EXIT ] Saved Server state to file. ###
+2020-01-20 00:27:29.866163  :  #### SERVER EXIT ####
+
+ ###
+2020-01-20 00:27:32.161813  :  #### SERVER START #### ###
+2020-01-20 00:27:32.161908  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-20 00:27:32.161939  :  [ SETUP ] Initialising server... ###
+2020-01-20 00:27:32.161964  :  [ SETUP ] Initialising database... ###
+2020-01-20 00:27:32.662401  :  [ SETUP ] Loading problems... ###
+2020-01-20 00:27:32.662484  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-20 00:27:32.662532  :    [ START ] Client Manager subprocess started. ###
+2020-01-20 00:27:32.662574  :  [ SETUP ] Subprocesses started ###
+2020-01-20 00:27:32.662615  :  [ SETUP ][ Process ] Client Manager: 14087 ###
+2020-01-20 00:27:32.662655  :  [ SETUP ][ Process ] Judge Manager: 14088 ###
+2020-01-20 00:27:32.662703  :  [ SETUP ][ Process ] Core: 14090 ###
+2020-01-20 00:27:32.662742  :  [ SETUP ][ Process ] Log Manager: 14085 ###
+2020-01-20 00:27:32.662781  :    [ START ] Judge Manager subprocess started. ###
+2020-01-20 00:27:32.662820  :    [ START ] Core subprocess started. ###
+2020-01-20 00:27:32.662859  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-20 00:27:32.662894  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-20 00:27:32.662929  :    [ START ] Interface subprocess started. ###
+2020-01-20 00:27:41.173798  :  [ JUDGE ][ judge00001 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 00:27:42.175152  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 00:27:42.175237  :  [ EVENT ] Disconnect judge : judge00001 ###
+2020-01-20 00:28:25.731733  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:28:25.731831  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 00:28:25.731885  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 00:28:26.232583  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 00:28:43.255048  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 00:28:43.255104  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 00:28:44.757192  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 00:29:42.333109  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:29:42.333244  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 00:29:42.333371  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 00:29:42.834293  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 00:29:46.338758  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 00:29:46.338885  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 00:29:46.839640  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 00:32:33.055602  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 00:32:33.055689  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 00:37:32.947775  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 00:37:33.448552  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 00:42:32.840374  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 00:42:33.841853  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 00:47:32.729011  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 00:47:33.229800  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 00:51:16.522242  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:51:16.522358  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 00:51:16.522408  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 00:51:16.522449  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 00:51:25.033824  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 00:51:25.033962  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 00:51:25.534461  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 00:52:32.621180  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 00:52:33.622442  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 00:54:45.292468  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:54:45.292559  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 00:54:45.292615  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 00:54:46.294029  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 00:55:01.313083  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:55:01.313170  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT IP: 192.168.0.0 ###
+2020-01-20 00:55:01.313222  :  [ LOGIN ][ REJECT ] Rejected by ADMIN ###
+2020-01-20 00:55:10.324435  :  [ SET ] IP address change allowed. ###
+2020-01-20 00:55:14.329794  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:55:14.329881  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT IP: 192.168.0.0 ###
+2020-01-20 00:55:14.329932  :  [ team00001 ] Client ID does not match. ###
+2020-01-20 00:55:14.329978  :  [ team00001 ][ REJECT ] NOT verified. ###
+2020-01-20 00:55:29.348981  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:55:29.349072  :  [ LOGIN REQUEST ] ::: Null :::team00010@bits10[ TYPE ] CLIENT IP: 192.168.0.0 ###
+2020-01-20 00:55:29.349131  :  [ LOGIN ][ team00010 ] Assigned : 8 ###
+2020-01-20 00:55:29.349183  :  [ LOGIN ][ RESPONSE ] VALID to team00010 ###
+2020-01-20 00:55:30.350594  :  [ CORE ] Added new user. ###
+2020-01-20 00:55:30.350680  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 00:55:37.359576  :  [ SET ] Contest Duration : 02:00:00 ###
+2020-01-20 00:55:39.362369  :  [ EVENT ][ BROADCAST ] START Contest ###
+2020-01-20 00:55:40.363839  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 00:55:43.868567  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:55:43.868662  :  [ SUBMISSION ] Client ID :8 IP:192.168.0.0 Username: team00010 Problem:TQL Language :C++ Time stamp :00:55:43 ###
+2020-01-20 00:55:43.868717  :  [ CLIENT ] Sent submission request to CORE ###
+2020-01-20 00:55:43.868763  :  [ JUDGE ] Requesting a new judgement ###
+2020-01-20 00:55:43.868806  :  [ REQUEST ] New judging request sent successfully. ###
+2020-01-20 00:55:44.369499  :  [ CORE ] Adding new submission ###
+2020-01-20 00:55:44.369586  :  [ CORE ][ team00010 ] Run ID sent. ###
+2020-01-20 00:55:44.369638  :  [ CORE ] Added a new submission request. ###
+2020-01-20 00:57:28.507113  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:57:28.507185  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 00:57:28.507229  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] Rejected ###
+2020-01-20 00:57:33.013112  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 00:57:33.513864  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 00:57:38.520183  :  [ JUDGE ][ judge00001 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 00:57:38.520285  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 00:57:38.520339  :  [ EVENT ] Disconnect judge : judge00001 ###
+2020-01-20 00:58:08.558324  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:58:08.558481  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 00:58:08.558559  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 00:58:10.060566  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 00:58:30.086852  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 00:58:30.087075  :  [ CORE ] Added a new submission request. ###
+2020-01-20 00:59:07.636386  :  [ JUDGE ][ judge00001 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 00:59:09.638531  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 00:59:09.638582  :  [ EVENT ] Disconnect judge : judge00001 ###
+2020-01-20 00:59:19.652260  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 00:59:19.652349  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 00:59:19.652400  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 00:59:20.153225  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 00:59:27.662729  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 00:59:28.163525  :  [ CORE ] Added a new submission request. ###
+2020-01-20 00:59:28.163617  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 00:59:28.163680  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 00:59:28.163741  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 00:59:29.165190  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 00:59:29.165310  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 01:00:28.742492  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:00:28.742639  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 01:00:29.243345  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 01:02:32.905073  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 01:02:33.405856  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 01:02:37.411094  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 01:02:37.411181  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 01:02:37.411232  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 01:02:38.412590  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 01:02:44.419679  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 01:02:44.419754  :  [ CORE ] Added a new submission request. ###
+2020-01-20 01:02:44.920500  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:02:44.920588  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 01:02:44.920639  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 01:02:45.922051  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 01:02:45.922136  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 01:02:57.436976  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:02:57.437062  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 01:02:58.438436  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 01:04:44.577364  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 01:04:44.577456  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 01:04:44.577509  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 01:04:45.578953  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 01:04:50.085182  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 01:04:51.086722  :  [ CORE ] Added a new submission request. ###
+2020-01-20 01:04:51.086809  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:04:51.086858  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 01:04:51.086903  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 01:04:52.589012  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 01:04:52.589104  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 01:05:06.607056  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:05:06.607156  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 01:05:08.109404  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 01:07:32.798557  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 01:07:33.299449  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 01:12:32.690556  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 01:12:33.692039  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 01:13:54.796379  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 01:13:54.796461  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 01:13:54.796511  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 01:13:54.796555  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 01:13:59.802426  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 01:14:00.303266  :  [ CORE ] Added a new submission request. ###
+2020-01-20 01:14:00.303316  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:14:00.303342  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 01:14:00.303366  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 01:14:01.304504  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 01:14:01.304603  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 01:14:50.368527  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:14:50.368666  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 01:14:50.368751  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 01:15:50.445767  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 01:15:50.445855  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 01:15:50.445906  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 01:15:50.946539  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 01:15:57.455192  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 01:15:57.955631  :  [ CORE ] Added a new submission request. ###
+2020-01-20 01:15:58.456472  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:15:58.456623  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 01:15:58.456754  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 01:15:59.458122  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 01:15:59.458209  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 01:17:16.562062  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:17:16.562210  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 01:17:17.563751  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 01:17:33.084425  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 01:17:33.585284  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 01:22:32.975960  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 01:22:32.976045  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 01:23:35.558139  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 01:23:35.558304  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 01:23:35.558374  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 01:23:36.059053  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 01:23:36.559852  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:23:36.559954  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 01:23:37.561293  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 01:24:26.623933  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 01:24:26.624047  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 01:24:26.624117  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 01:24:27.625571  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 01:24:27.625700  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:24:27.625774  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 01:24:28.626992  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 01:26:40.780457  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 01:26:40.780549  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 01:26:40.780605  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 01:26:41.281338  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 01:26:46.788456  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 01:26:47.289186  :  [ CORE ] Added a new submission request. ###
+2020-01-20 01:26:47.790016  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:26:47.790102  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 01:26:47.790153  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 01:26:48.290432  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 01:26:48.290515  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 01:27:06.313949  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 01:27:06.314072  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 01:27:06.314313  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 01:27:19.331231  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-20 01:27:19.331281  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-20 01:27:19.331306  :  [ EXIT ] Signal passed ###
+2020-01-20 01:27:19.331329  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-20 01:27:19.331354  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-20 01:27:19.331375  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-20 01:27:19.331397  :  [ EXIT ] Saving Server state to file. ###
+2020-01-20 01:27:19.331419  :  [ EXIT ] Saved Server state to file. ###
+2020-01-20 01:27:20.332796  :  #### SERVER EXIT ####
+
+ ###
+2020-01-20 01:27:20.332910  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-20 15:12:17.030139  :  #### SERVER START #### ###
+2020-01-20 15:12:17.030238  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-20 15:12:17.030268  :  [ SETUP ] Initialising server... ###
+2020-01-20 15:12:17.030294  :  [ SETUP ] Initialising database... ###
+2020-01-20 15:12:17.531003  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-20 15:12:17.531054  :    [ START ] Client Manager subprocess started. ###
+2020-01-20 15:12:17.531080  :  [ SETUP ] Subprocesses started ###
+2020-01-20 15:12:17.531103  :    [ START ] Judge Manager subprocess started. ###
+2020-01-20 15:12:17.531125  :  [ SETUP ][ Process ] Client Manager: 31699 ###
+2020-01-20 15:12:17.531147  :  [ SETUP ][ Process ] Judge Manager: 31700 ###
+2020-01-20 15:12:17.531168  :  [ SETUP ][ Process ] Core: 31703 ###
+2020-01-20 15:12:17.531189  :  [ SETUP ][ Process ] Log Manager: 31697 ###
+2020-01-20 15:12:17.531219  :    [ START ] Core subprocess started. ###
+2020-01-20 15:12:17.531240  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-20 15:12:17.531261  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-20 15:12:17.531282  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:12:17.531305  :  [ LOG OUT ][ team00010 ][ ACCEPT ] ###
+2020-01-20 15:12:17.531327  :    [ START ] Interface subprocess started. ###
+2020-01-20 15:12:17.531347  :  [ CORE ] User team00010: Status changed to Disconnected ###
+2020-01-20 15:12:17.531368  :  [ CORE ][ team00010 ] Shutdown. ###
+2020-01-20 15:12:18.532624  :  [ CORE ][ EVENT ][ BROADCAST ] STOP Contest ###
+2020-01-20 15:12:47.570479  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:12:47.570565  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:12:47.570626  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:12:48.071313  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:13:06.094549  :  [ SET ] IP address change allowed. ###
+2020-01-20 15:13:11.101365  :  [ EVENT ] TIMER RESET TRIGGERED ###
+2020-01-20 15:13:11.101450  :  [ RESET ] Reset environment... ###
+2020-01-20 15:13:25.119905  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:13:25.119997  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT IP: 192.168.0.0 ###
+2020-01-20 15:13:25.120051  :  [ team00001 ] Client ID does not match. ###
+2020-01-20 15:13:25.120099  :  [ team00001 ][ REJECT ] NOT verified. ###
+2020-01-20 15:13:48.150467  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:13:48.150554  :  [ LOGIN REQUEST ] ::: Null :::team00011@bits11[ TYPE ] CLIENT IP: 192.168.0.0 ###
+2020-01-20 15:13:48.150604  :  [ LOGIN ][ team00011 ] Assigned : 9 ###
+2020-01-20 15:13:48.150650  :  [ LOGIN ][ RESPONSE ] VALID to team00011 ###
+2020-01-20 15:13:49.152076  :  [ CORE ] Added new user. ###
+2020-01-20 15:13:49.152173  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 15:14:21.195125  :  [ SET ] Contest Duration : 02:00:00 ###
+2020-01-20 15:14:22.196575  :  [ EVENT ][ BROADCAST ] START Contest ###
+2020-01-20 15:14:22.196661  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 15:14:31.208713  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:14:31.709768  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:14:31.709870  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:14:31.709922  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:14:31.709969  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:14:32.710929  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:14:32.711029  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:17:17.925854  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 15:17:18.927363  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 15:20:36.186566  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:20:36.186625  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:20:37.188125  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:21:12.233266  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:21:12.233377  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:21:12.233446  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:21:13.234514  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:21:19.743376  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:21:20.744821  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:21:20.744907  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:21:20.744958  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:21:20.745005  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:21:21.746438  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:21:21.746526  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:22:17.819886  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 15:22:18.821136  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 15:27:17.712567  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 15:27:19.214434  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 15:27:49.254560  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:27:49.254676  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:27:50.256118  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:28:00.769915  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:28:00.769998  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:28:00.770075  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:28:01.270734  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:28:11.784758  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:28:12.786183  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:28:12.786270  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:28:12.786321  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:28:12.786368  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:28:13.787846  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:28:13.787933  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:31:49.569173  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:31:49.569308  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:31:50.069933  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:32:17.606539  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 15:32:19.108666  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 15:32:19.108754  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:32:19.108806  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:32:19.108856  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:32:20.109820  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:32:39.635809  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:32:40.136541  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:32:40.637304  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:32:40.637390  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:32:40.637441  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:32:41.638548  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:32:41.638649  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:34:12.256728  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:34:12.256787  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:34:12.757515  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:34:21.268695  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:34:21.268782  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:34:21.268834  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:34:21.769526  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:34:26.275152  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:34:27.276622  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:34:27.276789  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:34:27.276907  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:34:27.277013  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:34:28.278566  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:34:28.278705  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:36:37.952455  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:36:37.952801  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:36:38.453735  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:36:45.963216  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:36:45.963302  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:36:45.963353  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:36:46.464061  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:36:50.469564  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:36:50.970421  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:36:50.970509  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:36:50.970561  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:36:50.970608  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:36:51.971991  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:36:51.972079  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:37:18.006512  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 15:37:19.008079  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 15:41:08.307236  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:41:08.307368  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:41:09.308770  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:41:15.817078  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:41:15.817165  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:41:15.817217  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:41:16.317809  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:41:19.822603  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:41:20.824169  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:41:23.828664  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:41:23.828752  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:41:23.828802  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:41:24.829801  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:41:24.829886  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:41:40.851289  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:41:40.851414  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:41:41.352162  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:42:17.900681  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 15:42:18.401469  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 15:46:24.729181  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:46:24.729286  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:46:24.729350  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:46:25.731287  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:46:29.236167  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:46:30.237619  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:46:30.737953  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:46:30.738118  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:46:30.738215  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:46:31.239023  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:46:31.239135  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:47:17.801240  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 15:47:18.301977  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 15:47:52.847217  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:47:52.847309  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:47:53.848856  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:48:00.357864  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:48:00.357951  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:48:00.358003  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:48:00.859309  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:48:03.863596  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:48:05.365601  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:48:05.866010  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:48:05.866174  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:48:05.866275  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:48:06.867691  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:48:06.867779  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:48:48.423484  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:48:48.423592  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:48:48.924449  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:48:56.434495  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:48:56.434586  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:48:56.434638  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:48:56.935299  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:49:00.941112  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:49:01.441850  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:49:01.441952  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:49:01.442014  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:49:01.442069  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:49:02.443443  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:49:02.443531  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:50:46.579065  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:50:46.579147  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:50:48.081215  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:51:27.634550  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:51:27.634635  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:51:27.634687  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:51:28.135383  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:51:31.139409  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:51:32.140931  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:51:32.641688  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:51:32.641822  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:51:32.641921  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:51:33.142663  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:51:33.142773  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:52:17.700734  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 15:52:18.201516  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 15:52:54.748970  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:52:54.749120  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:52:56.251253  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:53:05.763866  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:53:05.763953  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:53:05.764103  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:53:06.264785  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:53:10.269840  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:53:10.269923  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:53:10.770670  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:53:10.770757  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:53:10.770808  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:53:11.772295  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:53:11.772414  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:54:22.363337  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:54:22.363517  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:54:22.864407  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:54:31.375857  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:54:31.375977  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:54:31.376052  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:54:32.377545  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:54:35.381616  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:54:36.383206  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:54:36.883953  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:54:36.884039  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:54:36.884089  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:54:37.384862  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:54:37.384950  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:55:15.933460  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:55:15.933545  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:55:16.934524  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:55:47.474965  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:55:47.475091  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:55:47.475160  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:55:47.975383  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:55:53.483482  :  [ EVENT ][ REJUDGE ] Run 4 by ADMIN ###
+2020-01-20 15:55:53.984292  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:55:54.485147  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:55:54.485271  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 15:55:54.485347  :  [ VERDICT ] New verdict sent to team00007 ###
+2020-01-20 15:55:54.985920  :  [ CORE ][ team00007 ] Verdict sent to client. ###
+2020-01-20 15:55:54.986100  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:56:08.503794  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:56:08.503944  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:56:09.504968  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:56:28.029165  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:56:28.029251  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:56:28.029302  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:56:29.030638  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:56:35.539195  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:56:35.539270  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:56:37.541786  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:57:09.584605  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:57:09.584690  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:57:09.584741  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:57:10.586340  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:57:16.594464  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 15:57:16.594531  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:57:17.095350  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:57:17.095493  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 15:57:17.095579  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 15:57:17.596361  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 15:57:18.097171  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 15:57:18.097260  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:57:19.098685  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 15:57:36.620707  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:57:36.620780  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:57:37.121609  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:58:57.727838  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 15:58:57.727926  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 15:58:57.727977  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 15:58:58.729372  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 15:59:05.237805  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 15:59:05.738577  :  [ CORE ] Added a new submission request. ###
+2020-01-20 15:59:05.738664  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:59:05.738714  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 15:59:05.738760  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 15:59:06.740170  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 15:59:07.240952  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 15:59:33.274516  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 15:59:33.274610  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 15:59:34.275935  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 15:59:57.305862  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-20 15:59:57.305946  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-20 15:59:57.305997  :  [ EXIT ] Signal passed ###
+2020-01-20 15:59:57.306041  :  [ EXIT ] Saving Server state to file. ###
+2020-01-20 15:59:57.306082  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-20 15:59:57.306123  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-20 15:59:57.306163  :  [ EXIT ] Saved Server state to file. ###
+2020-01-20 15:59:57.306202  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-20 15:59:58.307586  :  #### SERVER EXIT ####
+
+ ###
+2020-01-20 15:59:58.307672  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-20 16:30:13.887238  :  #### SERVER START #### ###
+2020-01-20 16:30:13.887342  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-20 16:30:13.887373  :  [ SETUP ] Initialising server... ###
+2020-01-20 16:30:13.887396  :  [ SETUP ] Initialising database... ###
+2020-01-20 16:30:14.388099  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-20 16:30:14.388148  :  [ SETUP ] Subprocesses started ###
+2020-01-20 16:30:14.388173  :  [ SETUP ][ Process ] Client Manager: 5039 ###
+2020-01-20 16:30:14.388196  :  [ SETUP ][ Process ] Judge Manager: 5040 ###
+2020-01-20 16:30:14.388217  :  [ SETUP ][ Process ] Core: 5042 ###
+2020-01-20 16:30:14.388238  :  [ SETUP ][ Process ] Log Manager: 5037 ###
+2020-01-20 16:30:14.388267  :    [ START ] Client Manager subprocess started. ###
+2020-01-20 16:30:14.388288  :    [ START ] Judge Manager subprocess started. ###
+2020-01-20 16:30:14.388308  :    [ START ] Core subprocess started. ###
+2020-01-20 16:30:14.388328  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-20 16:30:14.388348  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-20 16:30:14.388368  :    [ START ] Interface subprocess started. ###
+2020-01-20 16:31:59.027198  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:31:59.027284  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 16:31:59.027344  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 16:31:59.528476  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 16:32:06.537816  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 16:32:06.537869  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:32:07.039059  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:32:07.039571  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 16:32:07.039895  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 16:32:07.540984  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 16:32:07.541084  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 16:35:14.783212  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 16:35:15.784643  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 16:37:02.927926  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:37:02.928066  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 16:37:03.428886  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 16:37:15.946474  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:37:15.946558  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 16:37:15.946609  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 16:37:16.447258  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 16:37:25.960634  :  [ UPDATE ] Contest time 60 ###
+2020-01-20 16:37:26.461445  :  [ CORE ] Contest time extended by 60 minutes. ###
+2020-01-20 16:37:31.968653  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 16:37:32.469472  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:37:32.969953  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:37:32.970100  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 16:37:32.970186  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 16:37:33.971652  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 16:37:33.971812  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 16:39:18.611220  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:39:18.611336  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 16:39:19.112129  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 16:39:26.121197  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:39:26.121259  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 16:39:26.121289  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 16:39:26.121314  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 16:39:30.627825  :  [ EVENT ][ REJUDGE ] Run 4 by ADMIN ###
+2020-01-20 16:39:31.629342  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:39:31.629468  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:39:31.629540  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 16:39:31.629602  :  [ VERDICT ] New verdict sent to team00007 ###
+2020-01-20 16:39:32.630621  :  [ CORE ][ team00007 ] Verdict sent to client. ###
+2020-01-20 16:39:32.630706  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 16:40:14.690732  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 16:40:15.692266  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 16:40:47.734561  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:40:47.734637  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 16:40:48.736021  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 16:41:13.266547  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:41:13.266634  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 16:41:13.266685  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 16:41:13.767376  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 16:41:18.273090  :  [ EVENT ][ REJUDGE ] Run 2 by ADMIN ###
+2020-01-20 16:41:18.773887  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:41:19.274764  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:41:19.274859  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 16:41:19.274917  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 16:41:20.276371  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 16:41:20.276457  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 16:43:29.445961  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:43:29.446098  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 16:43:30.948278  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 16:45:14.586612  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 16:45:16.088867  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 16:45:28.104556  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:45:28.104640  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 16:45:28.104693  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 16:45:29.105865  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 16:45:38.117892  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 16:45:38.117985  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:45:38.118036  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:45:38.118079  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 16:45:38.118121  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 16:45:39.620284  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 16:45:39.620371  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 16:46:15.667899  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:46:15.668013  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 16:46:15.668067  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 16:47:43.783276  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:47:43.783440  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 16:47:43.783553  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 16:47:43.783638  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 16:47:48.290201  :  [ EVENT ][ REJUDGE ] Run 3 by ADMIN ###
+2020-01-20 16:47:49.291883  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:47:49.291999  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:47:49.292061  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 16:47:49.292116  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 16:47:50.293556  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 16:47:50.293691  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 16:48:23.336293  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:48:23.336371  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 16:48:24.337783  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 16:49:33.929945  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:49:33.930093  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 16:49:33.930180  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 16:49:34.932151  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 16:49:40.440078  :  [ EVENT ][ REJUDGE ] Run 3 by ADMIN ###
+2020-01-20 16:49:40.941077  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:49:40.941244  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:49:40.941346  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 16:49:40.941439  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 16:49:41.942797  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 16:49:41.942849  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 16:50:14.485851  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 16:50:15.988032  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 16:51:37.096472  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:51:37.096642  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 16:51:38.097807  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 16:51:46.108766  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:51:46.108851  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 16:51:46.108902  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 16:51:46.609595  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 16:51:53.117961  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:51:53.118113  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 16:51:53.618929  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 16:52:08.138575  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:52:08.138662  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 16:52:08.138715  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 16:52:09.140250  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 16:52:13.146048  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 16:52:14.147610  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:52:14.147696  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:52:14.147747  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 16:52:14.147793  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 16:52:15.149344  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 16:52:15.149550  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 16:52:32.172721  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 16:52:32.673493  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:52:32.673577  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:52:32.673627  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 16:52:32.673688  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 16:52:33.675285  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 16:52:33.675455  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 16:53:19.737543  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:53:19.737684  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 16:53:20.238458  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 16:53:27.247773  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:53:27.247896  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 16:53:27.247984  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 16:53:28.249499  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 16:53:34.257617  :  [ EVENT ][ REJUDGE ] Run 2 by ADMIN ###
+2020-01-20 16:53:35.259186  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:53:35.259296  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:53:35.259361  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 16:53:35.259421  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 16:53:36.261048  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 16:53:36.261316  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 16:54:30.833300  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:54:30.833530  :  [ LOGIN REQUEST ] ::: 12 :::team00001@bits1[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 16:54:30.833784  :  [ team00001 ] Client ID does not match. ###
+2020-01-20 16:54:30.834042  :  [ team00001 ][ REJECT ] NOT verified. ###
+2020-01-20 16:54:52.363208  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:54:52.363341  :  [ LOGIN REQUEST ] ::: 12 :::team00030@bits30[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 16:54:52.363416  :  [ LOGIN ][ team00030 ] Assigned : 10 ###
+2020-01-20 16:54:52.363483  :  [ LOGIN ][ RESPONSE ] VALID to team00030 ###
+2020-01-20 16:54:52.363546  :  [ LOGIN ][ RESPONSE ] Sent START to team00030 ###
+2020-01-20 16:54:52.363608  :  [ CORE ] Added new user. ###
+2020-01-20 16:54:52.864372  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 16:54:52.864454  :  [ EVENT ][ team00030 ] START Contest ###
+2020-01-20 16:55:14.893884  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 16:55:15.895335  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 16:56:32.493909  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 16:56:32.494010  :  [ LOG OUT ][ team00030 ][ ACCEPT ] ###
+2020-01-20 16:56:32.994771  :  [ CORE ] User team00030: Status changed to Disconnected ###
+2020-01-20 16:56:32.994857  :  [ CORE ][ team00030 ] Shutdown. ###
+2020-01-20 16:58:46.671102  :  [ EVENT ][ REJUDGE ] Run 3 by ADMIN ###
+2020-01-20 16:58:47.172000  :  [ CORE ] Added a new submission request. ###
+2020-01-20 16:58:47.172084  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 16:58:47.172133  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 16:58:47.172178  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 16:58:48.173627  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 16:58:48.173732  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 17:00:14.789908  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 17:00:15.290706  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 17:02:33.480487  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:02:33.480623  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 17:02:34.481797  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 17:03:34.568390  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:03:34.568653  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 17:03:34.568841  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 17:03:34.568988  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 17:03:42.079199  :  [ EVENT ][ REJUDGE ] Run 4 by ADMIN ###
+2020-01-20 17:03:43.080716  :  [ CORE ] Added a new submission request. ###
+2020-01-20 17:03:43.080827  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:03:43.080895  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 17:03:43.080955  :  [ VERDICT ] New verdict sent to team00007 ###
+2020-01-20 17:03:44.082468  :  [ CORE ][ team00007 ] Verdict sent to client. ###
+2020-01-20 17:03:44.082551  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 17:03:53.094425  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:03:53.094502  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 17:03:54.596657  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 17:04:12.620499  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:04:12.620619  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 17:04:12.620911  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 17:04:13.622415  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 17:04:18.128410  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 17:04:18.629198  :  [ CORE ] Added a new submission request. ###
+2020-01-20 17:04:18.629272  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:04:18.629321  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 17:04:18.629363  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 17:04:20.131986  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 17:04:20.132072  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 17:04:31.645866  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:04:31.645952  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 17:04:32.146731  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 17:05:07.201423  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:05:07.201595  :  [ LOGIN REQUEST ] ::: 10 :::team00031@bits31[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:05:07.201752  :  [ LOGIN ][ team00031 ] Assigned : 11 ###
+2020-01-20 17:05:07.201867  :  [ LOGIN ][ RESPONSE ] VALID to team00031 ###
+2020-01-20 17:05:07.201964  :  [ LOGIN ][ RESPONSE ] Sent START to team00031 ###
+2020-01-20 17:05:08.203605  :  [ CORE ] Added new user. ###
+2020-01-20 17:05:08.203771  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 17:05:08.203876  :  [ EVENT ][ team00031 ] START Contest ###
+2020-01-20 17:05:14.714212  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 17:05:15.215170  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 17:06:37.332109  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:06:37.332194  :  [ LOG OUT ][ team00031 ][ ACCEPT ] ###
+2020-01-20 17:06:38.333414  :  [ CORE ] User team00031: Status changed to Disconnected ###
+2020-01-20 17:06:38.333538  :  [ CORE ][ team00031 ] Shutdown. ###
+2020-01-20 17:08:11.964700  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:08:11.964892  :  [ LOGIN REQUEST ] ::: 11 :::team00031@bits31[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:08:12.465735  :  [ LOGIN ][ VALIDATION ] Checking client IP Address... ###
+2020-01-20 17:08:12.465849  :  [ RE-LOGIN ][ team00031 ][ ACCEPT ] Previous Client ID : 11 ###
+2020-01-20 17:08:12.465908  :  [ CORE ] User team00031: Status changed to Connected ###
+2020-01-20 17:09:01.539212  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:09:01.539299  :  [ LOG OUT ][ team00031 ][ ACCEPT ] ###
+2020-01-20 17:09:02.540724  :  [ CORE ] User team00031: Status changed to Disconnected ###
+2020-01-20 17:09:02.540807  :  [ CORE ][ team00031 ] Shutdown. ###
+2020-01-20 17:09:42.597140  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:09:42.597226  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 17:09:42.597276  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 17:09:43.599171  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 17:09:47.604608  :  [ EVENT ][ REJUDGE ] Run 2 by ADMIN ###
+2020-01-20 17:09:48.605981  :  [ CORE ] Added a new submission request. ###
+2020-01-20 17:09:48.606114  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:09:48.606196  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 17:09:48.606271  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 17:09:49.607814  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 17:09:49.607947  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 17:09:52.111470  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:09:52.111555  :  [ LOGIN REQUEST ] ::: 11 :::team00031@bits31[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:09:52.111606  :  [ LOGIN ][ VALIDATION ] Checking client IP Address... ###
+2020-01-20 17:09:52.111652  :  [ RE-LOGIN ][ team00031 ][ ACCEPT ] Previous Client ID : 11 ###
+2020-01-20 17:09:52.612557  :  [ CORE ] User team00031: Status changed to Connected ###
+2020-01-20 17:10:03.126691  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:10:03.126959  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 17:10:04.629127  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 17:10:14.642600  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 17:10:15.644151  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 17:10:28.160576  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:10:28.160660  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 17:10:28.160712  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 17:10:28.661375  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 17:10:34.168653  :  [ EVENT ][ REJUDGE ] Run 3 by ADMIN ###
+2020-01-20 17:10:34.669508  :  [ CORE ] Added a new submission request. ###
+2020-01-20 17:10:34.669645  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:10:34.669770  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 17:10:34.669842  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 17:10:35.671282  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 17:10:35.671366  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 17:10:49.188520  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:10:49.188606  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 17:10:50.690849  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 17:11:06.712513  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:11:06.712607  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 17:11:06.712652  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 17:11:07.713787  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 17:11:12.220212  :  [ EVENT ][ REJUDGE ] Run 4 by ADMIN ###
+2020-01-20 17:11:13.221617  :  [ CORE ] Added a new submission request. ###
+2020-01-20 17:11:13.221720  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:11:13.221773  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 17:11:13.221820  :  [ VERDICT ] New verdict sent to team00007 ###
+2020-01-20 17:11:14.723955  :  [ CORE ][ team00007 ] Verdict sent to client. ###
+2020-01-20 17:11:14.724048  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 17:11:50.270365  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:11:50.270468  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 17:11:50.771272  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 17:12:28.823168  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:12:28.823308  :  [ LOGIN REQUEST ] ::: 11 :::team00031@bits31[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:12:29.324269  :  [ LOGIN ][ team00031 ][ REJECT ] Multiple Logins ###
+2020-01-20 17:12:37.837391  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:12:37.837476  :  [ LOGIN REQUEST ] ::: 11 :::team00033@bits33[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:12:38.337890  :  [ LOGIN ][ team00033 ] Assigned : 12 ###
+2020-01-20 17:12:38.337980  :  [ LOGIN ][ RESPONSE ] VALID to team00033 ###
+2020-01-20 17:12:38.338034  :  [ LOGIN ][ RESPONSE ] Sent START to team00033 ###
+2020-01-20 17:12:38.838685  :  [ CORE ] Added new user. ###
+2020-01-20 17:12:38.838807  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 17:12:38.838881  :  [ EVENT ][ team00033 ] START Contest ###
+2020-01-20 17:12:39.339639  :  [ USER ][ team00031 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 17:12:40.341067  :  [ CORE ] User team00031: Status changed to Disconnected ###
+2020-01-20 17:12:40.341151  :  [ EVENT ] Disconnect client : team00031 ###
+2020-01-20 17:12:44.346970  :  [ USER ][ team00011 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 17:12:45.348495  :  [ CORE ] User team00011: Status changed to Disconnected ###
+2020-01-20 17:12:45.348602  :  [ EVENT ] Disconnect client : team00011 ###
+2020-01-20 17:13:03.371841  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:13:03.372033  :  [ LOGIN REQUEST ] ::: 12 :::team00031@bits31[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:13:03.372089  :  [ team00031 ] Client ID does not match. ###
+2020-01-20 17:13:03.372135  :  [ team00031 ][ REJECT ] NOT verified. ###
+2020-01-20 17:13:12.384011  :  [ USER ][ team00033 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 17:13:13.385544  :  [ CORE ] User team00033: Status changed to Disconnected ###
+2020-01-20 17:13:13.385632  :  [ EVENT ] Disconnect client : team00033 ###
+2020-01-20 17:13:18.392382  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:13:18.392495  :  [ LOGIN REQUEST ] ::: 12 :::team00032@bits32[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:13:18.392561  :  [ LOGIN ][ team00032 ] Assigned : 13 ###
+2020-01-20 17:13:18.392619  :  [ LOGIN ][ RESPONSE ] VALID to team00032 ###
+2020-01-20 17:13:18.392674  :  [ LOGIN ][ RESPONSE ] Sent START to team00032 ###
+2020-01-20 17:13:19.894581  :  [ CORE ] Added new user. ###
+2020-01-20 17:13:19.894665  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 17:13:19.894715  :  [ EVENT ][ team00032 ] START Contest ###
+2020-01-20 17:14:18.975437  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:14:18.975521  :  [ LOGIN REQUEST ] ::: 13 :::team00033@bits33[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:14:18.975571  :  [ team00033 ] Client ID does not match. ###
+2020-01-20 17:14:18.975615  :  [ team00033 ][ REJECT ] NOT verified. ###
+2020-01-20 17:14:26.986873  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:14:26.987002  :  [ LOGIN REQUEST ] ::: 13 :::team00032@bits32[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:14:27.487793  :  [ LOGIN ][ team00032 ][ REJECT ] Multiple Logins ###
+2020-01-20 17:14:57.527953  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:14:57.528039  :  [ LOGIN REQUEST ] ::: 13 :::team00035@bits35[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:14:57.528089  :  [ LOGIN ][ team00035 ] Assigned : 14 ###
+2020-01-20 17:14:57.528134  :  [ LOGIN ][ RESPONSE ] VALID to team00035 ###
+2020-01-20 17:14:57.528177  :  [ LOGIN ][ RESPONSE ] Sent START to team00035 ###
+2020-01-20 17:14:58.028950  :  [ CORE ] Added new user. ###
+2020-01-20 17:14:58.029070  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 17:14:58.029145  :  [ EVENT ][ team00035 ] START Contest ###
+2020-01-20 17:15:14.550594  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 17:15:16.052602  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 17:16:14.635538  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:16:14.635628  :  [ LOGIN REQUEST ] ::: 10 :::team00036@bits36[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:16:14.635684  :  [ LOGIN ][ team00036 ] Assigned : 15 ###
+2020-01-20 17:16:14.635736  :  [ LOGIN ][ RESPONSE ] VALID to team00036 ###
+2020-01-20 17:16:14.635788  :  [ LOGIN ][ RESPONSE ] Sent START to team00036 ###
+2020-01-20 17:16:15.136565  :  [ CORE ] Added new user. ###
+2020-01-20 17:16:16.137970  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 17:16:16.138105  :  [ EVENT ][ team00036 ] START Contest ###
+2020-01-20 17:17:22.729529  :  [ USER ][ team00035 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 17:17:24.231228  :  [ CORE ] User team00035: Status changed to Disconnected ###
+2020-01-20 17:17:24.231382  :  [ EVENT ] Disconnect client : team00035 ###
+2020-01-20 17:17:28.236089  :  [ USER ][ team00032 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 17:17:29.737889  :  [ CORE ] User team00032: Status changed to Disconnected ###
+2020-01-20 17:17:29.738006  :  [ EVENT ] Disconnect client : team00032 ###
+2020-01-20 17:17:49.764488  :  [ VERDICT ][ SENT ] Manual Verdict:AC - Correct AnswerSent to Client team00007 ###
+2020-01-20 17:17:50.765911  :  [ CORE ][ team00007 ] Verdict sent to client. ###
+2020-01-20 17:17:51.266771  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 17:18:04.784764  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:18:04.784849  :  [ LOG OUT ][ team00036 ][ ACCEPT ] ###
+2020-01-20 17:18:05.785929  :  [ CORE ] User team00036: Status changed to Disconnected ###
+2020-01-20 17:18:05.786043  :  [ CORE ][ team00036 ] Shutdown. ###
+2020-01-20 17:18:15.799211  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:18:15.799301  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 17:18:15.799355  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 17:18:16.800695  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 17:18:29.317054  :  [ EVENT ][ REJUDGE ] Run 4 by ADMIN ###
+2020-01-20 17:18:29.817837  :  [ CORE ] Added a new submission request. ###
+2020-01-20 17:18:29.817938  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:18:29.818006  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 17:18:29.818069  :  [ VERDICT ] New verdict sent to team00007 ###
+2020-01-20 17:18:30.819387  :  [ CORE ][ team00007 ] Verdict sent to client. ###
+2020-01-20 17:18:31.320220  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 17:20:14.458227  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 17:20:15.459750  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 17:20:20.466605  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:20:20.466688  :  [ LOGIN REQUEST ] ::: 10 :::team00040@bits40[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:20:20.466740  :  [ LOGIN ][ team00040 ] Assigned : 16 ###
+2020-01-20 17:20:20.466784  :  [ LOGIN ][ RESPONSE ] VALID to team00040 ###
+2020-01-20 17:20:20.466826  :  [ LOGIN ][ RESPONSE ] Sent START to team00040 ###
+2020-01-20 17:20:21.468659  :  [ CORE ] Added new user. ###
+2020-01-20 17:20:21.469035  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 17:20:21.469348  :  [ EVENT ][ team00040 ] START Contest ###
+2020-01-20 17:21:20.547877  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:21:20.548327  :  [ LOG OUT ][ team00040 ][ ACCEPT ] ###
+2020-01-20 17:21:20.548586  :  [ CORE ] User team00040: Status changed to Disconnected ###
+2020-01-20 17:21:20.548910  :  [ CORE ][ team00040 ] Shutdown. ###
+2020-01-20 17:22:25.636897  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:22:25.636961  :  [ LOGIN REQUEST ] ::: 16 :::team00040@bits40[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:22:25.636999  :  [ LOGIN ][ VALIDATION ] Checking client IP Address... ###
+2020-01-20 17:22:25.637025  :  [ RE-LOGIN ][ team00040 ][ ACCEPT ] Previous Client ID : 16 ###
+2020-01-20 17:22:26.137744  :  [ CORE ] User team00040: Status changed to Connected ###
+2020-01-20 17:22:26.638560  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:22:26.638695  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 17:22:27.139466  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 17:22:37.653216  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:22:37.653301  :  [ LOG OUT ][ team00040 ][ ACCEPT ] ###
+2020-01-20 17:22:38.154055  :  [ CORE ] User team00040: Status changed to Disconnected ###
+2020-01-20 17:22:38.154141  :  [ CORE ][ team00040 ] Shutdown. ###
+2020-01-20 17:25:07.350541  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:25:07.350637  :  [ LOGIN REQUEST ] ::: 16 :::team00040@bits40[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:25:07.350691  :  [ LOGIN ][ VALIDATION ] Checking client IP Address... ###
+2020-01-20 17:25:07.350738  :  [ RE-LOGIN ][ team00040 ][ ACCEPT ] Previous Client ID : 16 ###
+2020-01-20 17:25:08.352154  :  [ CORE ] User team00040: Status changed to Connected ###
+2020-01-20 17:25:14.860588  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 17:25:15.361370  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 17:27:53.075159  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:27:53.075243  :  [ LOGIN REQUEST ] ::: 16 :::team00039@bits39[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:27:53.075294  :  [ LOGIN ][ team00039 ] Assigned : 17 ###
+2020-01-20 17:27:53.075338  :  [ LOGIN ][ RESPONSE ] VALID to team00039 ###
+2020-01-20 17:27:53.075477  :  [ LOGIN ][ RESPONSE ] Sent START to team00039 ###
+2020-01-20 17:27:53.576228  :  [ CORE ] Added new user. ###
+2020-01-20 17:27:53.576311  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 17:27:53.576362  :  [ EVENT ][ team00039 ] START Contest ###
+2020-01-20 17:29:30.209572  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:29:30.209809  :  [ LOG OUT ][ team00039 ][ ACCEPT ] ###
+2020-01-20 17:29:30.710818  :  [ CORE ] User team00039: Status changed to Disconnected ###
+2020-01-20 17:29:30.711038  :  [ CORE ][ team00039 ] Shutdown. ###
+2020-01-20 17:30:14.779242  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 17:30:15.780710  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 17:30:26.295234  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:30:26.295405  :  [ LOGIN REQUEST ] ::: 17 :::team00040@bits40[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:30:26.295517  :  [ team00040 ] Client ID does not match. ###
+2020-01-20 17:30:26.295613  :  [ team00040 ][ REJECT ] NOT verified. ###
+2020-01-20 17:30:32.804835  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:30:32.804992  :  [ LOGIN REQUEST ] ::: 17 :::team00041@bits41[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:30:33.305867  :  [ LOGIN ][ team00041 ] Assigned : 18 ###
+2020-01-20 17:30:33.306002  :  [ LOGIN ][ RESPONSE ] VALID to team00041 ###
+2020-01-20 17:30:33.306085  :  [ LOGIN ][ RESPONSE ] Sent START to team00041 ###
+2020-01-20 17:30:33.806947  :  [ CORE ] Added new user. ###
+2020-01-20 17:30:34.307979  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 17:30:34.308140  :  [ EVENT ][ team00041 ] START Contest ###
+2020-01-20 17:30:58.842094  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:30:58.842190  :  [ LOGIN REQUEST ] ::: 18 :::team00041@bits41[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:30:58.842271  :  [ LOGIN ][ team00041 ][ REJECT ] Multiple Logins ###
+2020-01-20 17:31:04.850670  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:31:04.850808  :  [ LOGIN REQUEST ] ::: 18 :::team00042@bits42[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:31:04.850890  :  [ LOGIN ][ team00042 ] Assigned : 19 ###
+2020-01-20 17:31:04.850964  :  [ LOGIN ][ RESPONSE ] VALID to team00042 ###
+2020-01-20 17:31:04.851036  :  [ LOGIN ][ RESPONSE ] Sent START to team00042 ###
+2020-01-20 17:31:05.351908  :  [ CORE ] Added new user. ###
+2020-01-20 17:31:05.352110  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 17:31:05.352246  :  [ EVENT ][ team00042 ] START Contest ###
+2020-01-20 17:32:04.929541  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:32:04.929708  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 17:32:04.929804  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 17:32:05.430520  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 17:32:18.949938  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 17:32:19.450689  :  [ CORE ] Added a new submission request. ###
+2020-01-20 17:32:19.951449  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:32:19.951524  :  [ VERDICT ] judge00001 :: RE ###
+2020-01-20 17:32:19.951569  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 17:32:20.953187  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 17:32:20.953290  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 17:33:30.548139  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:33:30.548316  :  [ LOGIN REQUEST ] ::: 19 :::team00041@bits41[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:33:30.548420  :  [ team00041 ] Client ID does not match. ###
+2020-01-20 17:33:30.548516  :  [ team00041 ][ REJECT ] NOT verified. ###
+2020-01-20 17:33:38.060234  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 17:33:38.060402  :  [ LOGIN REQUEST ] ::: 19 :::team00043@bits43[ TYPE ] CLIENT IP: 192.168.43.183 ###
+2020-01-20 17:33:39.061990  :  [ LOGIN ][ team00043 ] Assigned : 20 ###
+2020-01-20 17:33:39.062141  :  [ LOGIN ][ RESPONSE ] VALID to team00043 ###
+2020-01-20 17:33:39.062238  :  [ LOGIN ][ RESPONSE ] Sent START to team00043 ###
+2020-01-20 17:33:39.563125  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 17:33:39.563348  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 17:33:40.565069  :  [ CORE ] Added new user. ###
+2020-01-20 17:33:40.565257  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-20 17:33:40.565369  :  [ EVENT ][ team00043 ] START Contest ###
+2020-01-20 17:33:40.565472  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 20:53:03.197054  :  [ CORE ][ EVENT ][ BROADCAST ] STOP Contest ###
+2020-01-20 20:53:45.249774  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 20:53:46.251211  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 20:53:52.759813  :  [ EVENT ] TIMER RESET TRIGGERED ###
+2020-01-20 20:53:52.760124  :  [ RESET ] Reset environment... ###
+2020-01-20 20:53:54.762390  :  [ SET ] Contest Duration : 02:00:00 ###
+2020-01-20 20:53:56.264630  :  [ EVENT ][ BROADCAST ] START Contest ###
+2020-01-20 20:53:56.264721  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 20:54:06.778493  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 20:54:06.778660  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 20:54:06.778763  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 20:54:07.780256  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 20:54:14.789768  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 20:54:15.791260  :  [ CORE ] Added a new submission request. ###
+2020-01-20 20:54:15.791375  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 20:54:15.791442  :  [ VERDICT ] judge00001 :: RE ###
+2020-01-20 20:54:15.791505  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 20:54:16.792980  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 20:54:16.793067  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 20:54:39.823246  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 20:54:39.823516  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 20:54:40.824991  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 20:56:51.494476  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 20:56:51.494564  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 20:56:51.494623  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 20:56:51.995305  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 20:56:56.501225  :  [ EVENT ][ REJUDGE ] Run 4 by ADMIN ###
+2020-01-20 20:56:57.502923  :  [ CORE ] Added a new submission request. ###
+2020-01-20 20:56:57.503012  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 20:56:57.503070  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 20:56:57.503127  :  [ VERDICT ] New verdict sent to team00007 ###
+2020-01-20 20:56:58.504630  :  [ CORE ][ team00007 ] Verdict sent to client. ###
+2020-01-20 20:56:58.504764  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 20:57:08.517726  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 20:57:08.517852  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 20:57:09.018622  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 20:57:23.037223  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 20:57:23.037315  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 20:57:23.037369  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 20:57:23.538134  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 20:57:33.550981  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 20:57:33.551081  :  [ CORE ] Added a new submission request. ###
+2020-01-20 20:57:33.551139  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 20:57:33.551192  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 20:57:33.551242  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 20:57:35.053081  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 20:57:35.053195  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 20:57:47.069005  :  [ EVENT ][ REJUDGE ] Run 2 by ADMIN ###
+2020-01-20 20:57:48.070635  :  [ CORE ] Added a new submission request. ###
+2020-01-20 20:57:48.070754  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 20:57:48.070841  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 20:57:48.070898  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 20:57:49.072436  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 20:57:49.072590  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 20:58:45.647278  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 20:58:46.148107  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:03:45.558509  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:03:46.559944  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:06:31.276521  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:06:31.276591  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 21:06:31.777223  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 21:08:45.449777  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:08:45.951742  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:09:28.507191  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:09:28.507276  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:09:28.507328  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 21:09:29.008027  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 21:09:35.015731  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:09:35.015852  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 21:09:35.516583  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 21:11:52.697934  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:11:52.698018  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:11:52.698069  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 21:11:54.200096  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 21:12:03.211428  :  [ EVENT ][ REJUDGE ] Run 3 by ADMIN ###
+2020-01-20 21:12:03.712222  :  [ CORE ] Added a new submission request. ###
+2020-01-20 21:12:03.712380  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:12:03.712478  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 21:12:03.712543  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 21:12:04.713899  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 21:12:04.713954  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:12:17.230497  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:12:17.230624  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 21:12:17.731465  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 21:13:45.346434  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:13:45.847218  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:18:45.242372  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:18:46.243881  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:23:45.639740  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:23:46.641117  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:24:07.167137  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:24:07.167192  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:24:07.167222  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 21:24:07.668043  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 21:24:40.211769  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:24:40.211822  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 21:24:41.212999  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 21:27:57.964723  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:27:57.964824  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:27:57.964889  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 21:27:58.465316  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 21:28:04.974056  :  [ EVENT ][ REJUDGE ] Run 4 by ADMIN ###
+2020-01-20 21:28:05.975973  :  [ CORE ] Added a new submission request. ###
+2020-01-20 21:28:05.976408  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:28:05.976814  :  [ VERDICT ] judge00001 :: CMPL ###
+2020-01-20 21:28:05.977080  :  [ VERDICT ] New verdict sent to team00007 ###
+2020-01-20 21:28:06.979042  :  [ CORE ][ team00007 ] Verdict sent to client. ###
+2020-01-20 21:28:06.979409  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:28:43.527661  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:28:44.028557  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:29:41.605280  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:29:41.605329  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 21:29:43.107400  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 21:29:50.116970  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:29:50.117056  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:29:50.117121  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 21:29:50.617885  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 21:29:55.123689  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 21:29:55.624468  :  [ CORE ] Added a new submission request. ###
+2020-01-20 21:29:56.125322  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:29:56.125455  :  [ VERDICT ] judge00001 :: WA ###
+2020-01-20 21:29:56.125533  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 21:29:56.626319  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 21:29:56.626449  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:30:06.639306  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:30:06.639414  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 21:30:06.639482  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 21:33:43.425839  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:33:43.926600  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:38:43.319484  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:38:44.321066  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:40:01.926606  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:40:01.926687  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:40:01.926738  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 21:40:02.427426  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 21:40:41.472672  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:40:41.472800  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 21:40:42.473989  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 21:42:18.599144  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:42:18.599228  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:42:18.599278  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] ###
+2020-01-20 21:42:21.102684  :  [ CORE ] Judge judge00001: Status changed to Connected ###
+2020-01-20 21:42:26.609942  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:42:44.132618  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:42:44.132703  :  [ LOGIN REQUEST ] ::: DVvCht :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:42:44.132754  :  [ LOGIN ][ judge00002 ][ JUDGE ][ VALID ] ID: 0FzTv9 ###
+2020-01-20 21:42:44.633223  :  [ CORE ] Added new user. ###
+2020-01-20 21:43:00.654841  :  [ VERDICT ][ SENT ] Manual Verdict:AC - Correct AnswerSent to Client team00002 ###
+2020-01-20 21:43:02.157023  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 21:43:02.157129  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:43:43.210856  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:43:44.212363  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:44:20.260855  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:44:20.260975  :  [ JUDGE ][ LOGOUT ] judge00001 Logged Out ###
+2020-01-20 21:44:20.261052  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-20 21:44:23.765193  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:44:23.765245  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 21:44:24.766569  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 21:44:46.794777  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:44:46.794861  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:44:46.794913  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] Rejected : ID/IP mismatch ###
+2020-01-20 21:45:03.818080  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:45:03.818164  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:45:03.818213  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] Rejected : ID/IP mismatch ###
+2020-01-20 21:45:19.339535  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:45:19.339644  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:45:19.339698  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 21:45:19.840598  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 21:45:39.366803  :  [ VERDICT ][ SENT ] Manual Verdict:AC - Correct AnswerSent to Client team00002 ###
+2020-01-20 21:45:39.867579  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 21:45:40.368489  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:46:01.897335  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:46:01.897448  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 21:46:03.399095  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 21:46:35.940055  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:46:35.940141  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:46:35.940193  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 21:46:36.440873  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 21:46:45.952864  :  [ VERDICT ][ SENT ] Manual Verdict:AC - Correct AnswerSent to Client team00002 ###
+2020-01-20 21:46:46.453288  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 21:46:46.453373  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:47:07.982838  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:47:07.983011  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 21:47:08.984367  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 21:47:16.994311  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:47:16.994685  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:47:16.994984  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 21:47:16.995181  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 21:47:24.004705  :  [ VERDICT ][ SENT ] Manual Verdict:AC - Correct AnswerSent to Client team00002 ###
+2020-01-20 21:47:24.004872  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 21:47:24.004959  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:47:56.046816  :  [ REJUDGE ][ All ][ All ] ###
+2020-01-20 21:47:56.547920  :  [ CORE ] Added a new submission request. ###
+2020-01-20 21:47:57.048808  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:47:57.048981  :  [ VERDICT ] judge00002 :: WA ###
+2020-01-20 21:47:57.049229  :  [ VERDICT ] New verdict sent to * ###
+2020-01-20 21:47:57.049436  :  [ CORE ] Added a new submission request. ###
+2020-01-20 21:47:57.049530  :  [ CORE ] Added a new submission request. ###
+2020-01-20 21:47:57.049616  :  [ CORE ] Added a new submission request. ###
+2020-01-20 21:47:57.049699  :  [ CORE ] Added a new submission request. ###
+2020-01-20 21:47:57.049783  :  [ CORE ][ * ] Verdict sent to client. ###
+2020-01-20 21:47:57.049867  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:47:58.051389  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:47:58.051486  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 21:47:58.051539  :  [ VERDICT ] New verdict sent to * ###
+2020-01-20 21:47:58.051587  :  [ CORE ][ * ] Verdict sent to client. ###
+2020-01-20 21:47:58.051634  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:47:59.053172  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:47:59.053289  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 21:47:59.053359  :  [ VERDICT ] New verdict sent to * ###
+2020-01-20 21:47:59.554307  :  [ CORE ][ * ] Verdict sent to client. ###
+2020-01-20 21:47:59.554493  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:48:00.055324  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:48:00.055397  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 21:48:00.055439  :  [ VERDICT ] New verdict sent to * ###
+2020-01-20 21:48:00.556226  :  [ CORE ][ * ] Verdict sent to client. ###
+2020-01-20 21:48:00.556313  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:48:01.057058  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:48:01.057159  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 21:48:01.057209  :  [ VERDICT ] New verdict sent to * ###
+2020-01-20 21:48:01.557946  :  [ CORE ][ * ] Verdict sent to client. ###
+2020-01-20 21:48:01.558031  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:48:05.563371  :  [ EVENT ][ REJUDGE ] Run 5 by ADMIN ###
+2020-01-20 21:48:05.563426  :  [ CORE ] Added a new submission request. ###
+2020-01-20 21:48:06.064157  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:48:06.064243  :  [ VERDICT ] judge00002 :: WA ###
+2020-01-20 21:48:06.064293  :  [ VERDICT ] New verdict sent to team00010 ###
+2020-01-20 21:48:06.565069  :  [ CORE ][ team00010 ] Verdict sent to client. ###
+2020-01-20 21:48:06.567109  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 21:48:43.616019  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:48:44.617288  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:53:43.513321  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:53:44.014112  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:58:43.408608  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 21:58:44.410019  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 21:59:39.484157  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 21:59:39.484275  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 21:59:39.985032  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 21:59:47.996048  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:59:47.996131  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:59:47.996182  :  [ LOGIN ][ judge00001 ][ RE-LOGIN ] Rejected : ID/IP mismatch ###
+2020-01-20 21:59:53.002743  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 21:59:53.002826  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 21:59:53.002878  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 21:59:54.004246  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:00:01.513358  :  [ JUDGE ][ judge00002 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 22:00:02.014463  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:00:02.014668  :  [ EVENT ] Disconnect judge : judge00002 ###
+2020-01-20 22:03:21.284516  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:03:21.284620  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:03:21.284683  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:03:21.785824  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:03:31.298693  :  [ JUDGE ][ judge00002 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 22:03:31.799525  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:03:31.799609  :  [ EVENT ] Disconnect judge : judge00002 ###
+2020-01-20 22:03:37.306663  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:03:37.306818  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:03:37.807641  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:03:43.314567  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 22:03:44.816764  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 22:04:43.394001  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:04:43.394086  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:04:43.394137  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:04:43.894818  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:04:49.902661  :  [ JUDGE ][ judge00002 ][ UPDATE ] State changed to Disconnected ###
+2020-01-20 22:04:49.902754  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:04:49.902805  :  [ EVENT ] Disconnect judge : judge00002 ###
+2020-01-20 22:04:52.405931  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:04:52.406015  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:04:52.906756  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:08:43.213397  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 22:08:44.214842  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 22:11:55.743642  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:11:55.743791  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:11:55.743873  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:11:56.745451  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:12:09.261191  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 22:12:09.762032  :  [ CORE ] Added a new submission request. ###
+2020-01-20 22:12:10.262916  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:12:10.263002  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 22:12:10.263074  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 22:12:11.264608  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 22:12:11.264694  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 22:12:34.795649  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:12:34.795735  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:12:35.296460  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:13:42.894554  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 22:13:43.395508  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 22:17:00.679287  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:17:00.679400  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:17:00.679469  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:17:01.680605  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:17:11.694045  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 22:17:11.694216  :  [ CORE ] Added a new submission request. ###
+2020-01-20 22:17:11.694321  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:17:11.694415  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 22:17:11.694505  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 22:17:12.695919  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 22:17:12.696020  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 22:17:21.207998  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:17:21.208131  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:17:22.209464  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:18:42.817309  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 22:18:43.318133  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 22:20:53.492690  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:20:53.492776  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:20:53.492827  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:20:54.494148  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:20:57.999065  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 22:20:59.000645  :  [ CORE ] Added a new submission request. ###
+2020-01-20 22:20:59.000730  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:20:59.000781  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 22:20:59.000827  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 22:21:00.002793  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 22:21:00.003317  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 22:21:06.512046  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:21:06.512270  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:21:07.013129  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:23:42.719221  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 22:23:44.221475  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 22:25:00.823393  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:25:00.823482  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:25:00.823533  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:25:01.323864  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:25:03.326968  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:25:03.327396  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:25:03.327650  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:26:33.445958  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:26:33.446061  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:26:33.446123  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:26:33.947345  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:26:35.950764  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:26:35.950898  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:26:35.950983  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:26:45.963855  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:26:45.963927  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:26:45.963966  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:26:45.964005  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:26:49.969273  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 22:26:50.470110  :  [ CORE ] Added a new submission request. ###
+2020-01-20 22:26:50.470195  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:26:50.470246  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 22:26:50.470290  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 22:26:51.471930  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 22:26:51.472198  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 22:26:59.483673  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:26:59.484100  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:27:00.485611  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:28:42.626857  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-20 22:28:43.628486  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-20 22:28:46.132042  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:28:46.132128  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:28:46.132178  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:28:47.133618  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:28:52.139865  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:28:52.139953  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:28:53.141445  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:29:13.665880  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:29:13.665965  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:29:13.666015  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:29:14.166681  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:29:18.171844  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 22:29:19.173316  :  [ CORE ] Added a new submission request. ###
+2020-01-20 22:29:19.173402  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:29:19.173451  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 22:29:19.173496  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 22:29:20.174676  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 22:29:20.174772  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 22:29:26.182664  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:29:26.182779  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:29:26.182851  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:30:21.261200  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-20 22:30:21.261290  :  [ EXIT ] Signal passed ###
+2020-01-20 22:30:21.261343  :  [ EXIT ] Saving Server state to file. ###
+2020-01-20 22:30:21.261389  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-20 22:30:21.261434  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-20 22:30:21.261477  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-20 22:30:21.261520  :  [ EXIT ] Saved Server state to file. ###
+2020-01-20 22:30:21.261563  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-20 22:30:22.263038  :  #### SERVER EXIT ####
+
+ ###
+2020-01-20 22:30:22.263186  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-20 22:30:55.548496  :  #### SERVER START #### ###
+2020-01-20 22:30:55.548602  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-20 22:30:55.548635  :  [ SETUP ] Initialising server... ###
+2020-01-20 22:30:55.548660  :  [ SETUP ] Initialising database... ###
+2020-01-20 22:30:56.049387  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-20 22:30:56.049477  :  [ SETUP ] Subprocesses started ###
+2020-01-20 22:30:56.049527  :  [ SETUP ][ Process ] Client Manager: 22877 ###
+2020-01-20 22:30:56.049572  :  [ SETUP ][ Process ] Judge Manager: 22878 ###
+2020-01-20 22:30:56.049614  :  [ SETUP ][ Process ] Core: 22880 ###
+2020-01-20 22:30:56.049656  :  [ SETUP ][ Process ] Log Manager: 22875 ###
+2020-01-20 22:30:56.049697  :    [ START ] Client Manager subprocess started. ###
+2020-01-20 22:30:56.049737  :    [ START ] Judge Manager subprocess started. ###
+2020-01-20 22:30:56.049777  :    [ START ] Core subprocess started. ###
+2020-01-20 22:30:56.049817  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-20 22:30:56.049857  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-20 22:30:56.049896  :    [ START ] Interface subprocess started. ###
+2020-01-20 22:31:06.563469  :  [ UPDATE ] Contest time 60 ###
+2020-01-20 22:31:07.063897  :  [ CORE ] Contest time extended by 60 minutes. ###
+2020-01-20 22:31:10.067881  :  [ ALERT ] Recieved a new client message. ###
+2020-01-20 22:31:10.067971  :  [ LOGIN REQUEST ] ::: 0FzTv9 :::judge00002@bits2[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-01-20 22:31:10.068034  :  [ LOGIN ][ judge00002 ][ RE-LOGIN ] ###
+2020-01-20 22:31:11.069595  :  [ CORE ] Judge judge00002: Status changed to Connected ###
+2020-01-20 22:31:20.080976  :  [ EVENT ][ REJUDGE ] Run 1 by ADMIN ###
+2020-01-20 22:31:21.082443  :  [ CORE ] Added a new submission request. ###
+2020-01-20 22:31:21.082581  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:31:21.082681  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 22:31:21.082776  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 22:31:22.083927  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 22:31:22.084024  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 22:31:41.609382  :  [ EVENT ][ REJUDGE ] Run 2 by ADMIN ###
+2020-01-20 22:31:43.111475  :  [ CORE ] Added a new submission request. ###
+2020-01-20 22:31:43.111615  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:31:43.111728  :  [ VERDICT ] judge00002 :: CMPL ###
+2020-01-20 22:31:43.111834  :  [ VERDICT ] New verdict sent to team00002 ###
+2020-01-20 22:31:44.113327  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 22:31:44.113447  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 22:32:21.661663  :  [ VERDICT ][ SENT ] Manual Verdict:AC - Correct AnswerSent to Client team00002 ###
+2020-01-20 22:32:22.162444  :  [ CORE ][ team00002 ] Verdict sent to client. ###
+2020-01-20 22:32:22.162536  :  [ CORE ] Scoreboard Updated for clients ###
+2020-01-20 22:32:35.178989  :  [ PING ] Recieved a new judge message. ###
+2020-01-20 22:32:35.179087  :  [ JUDGE ][ LOGOUT ] judge00002 Logged Out ###
+2020-01-20 22:32:35.679812  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-20 22:32:39.184600  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-20 22:32:39.685410  :  [ EXIT ] Signal passed ###
+2020-01-20 22:32:39.685559  :  [ EXIT ] Saving Server state to file. ###
+2020-01-20 22:32:39.685656  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-20 22:32:39.685714  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-20 22:32:39.685771  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-20 22:32:39.685815  :  [ EXIT ] Saved Server state to file. ###
+2020-01-20 22:32:39.685858  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-20 22:32:40.687326  :  #### SERVER EXIT ####
+
+ ###
+2020-01-20 22:32:40.687415  :  [ STOP ] Core subprocess terminated successfully! ###

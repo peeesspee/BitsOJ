@@ -182,6 +182,7 @@ class core():
 						judge = data['Judge']
 					except:
 						judge = 'SECURITY ERROR'
+						
 					message = json.dumps(data)
 					core.channel.basic_publish(
 						exchange = core.unicast_exchange, 
@@ -563,7 +564,9 @@ class core():
 					username = data['Receiver']
 					print('[ EVENT ] Judge Block ' + username)
 					core.log('[ EVENT ] Judge Block ' + username)
-				
+					message = {
+						'Code' : 'BLOCK'
+					}
 					message = json.dumps(data)
 					core.channel.basic_publish(
 						exchange = core.judge_unicast_exchange, 

@@ -16,11 +16,13 @@ class communicate_broadcast_server():
 			rabbitmq_password,
 			host, 
 			judge_username,
-			data_changed_flags
+			data_changed_flags,
+			task_queue
 		):
 		print('[ JUDGE ][ BROADCAST PROCESS ] Process started')
 		communicate_broadcast_server.judge_username = judge_username
 		communicate_broadcast_server.data_changed_flags = data_changed_flags
+		communicate_broadcast_server.task_queue = task_queue
 		try:
 			# Connect with host
 			creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
@@ -39,7 +41,14 @@ class communicate_broadcast_server():
 
 		try:
 			channel.queue_declare( queue = judge_username, durable=True )
-			channel.queue_bind( exchange = 'judge_broadcast_manager', queue = communicate_broadcast_server.judge_username)
+			channel.queue_bind( 
+				exchange = 'judge_broadcast_manager', 
+				queue = communicate_broadcast_server.judge_username
+			)
+			channel.queue_bind( 
+				exchange = 'judge_manager', 
+				queue = communicate_broadcast_server.judge_username
+			)
 			channel.basic_qos(prefetch_count = 1)
 
 		except Exception as error:
@@ -79,4 +88,50 @@ class communicate_broadcast_server():
 	
 	def server_response_handler(ch, method, properties, body):
 		server_data = body.decode('utf-8')
-		print(server_data)
+		data = json.loads(server_data)
+		code = data['Code']
+
+		if code == 'VRDCT':
+			username = data['Receiver']
+			run_id = data['Run ID']
+			client_id = data['Client ID']
+			verdict = data['Status']
+			language = '< Non Local >'
+			problem_code = data['Problem Code']
+			time_stamp = data['Timestamp']
+			file_with_ext = '< Non Local >'
+			judge = data['Judge']
+			message = data['Message']
+			
+			print('\n[ JUDGE ][ BROADCAST ] Update Verdict: Run ', run_id, ' by Client: ', username)
+
+			# Send Record Updation message to Core
+			message = {
+				'Code' : 'UPDATE',
+				'Run ID' : run_id,
+				'Client ID' : client_id,
+				'Verdict' : verdict,
+				'Language' : language,
+				'Problem Code' : problem_code,
+				'Timestamp' : time_stamp,
+				'Filename' : file_with_ext
+			}
+			message = json.dumps(message)
+			communicate_broadcast_server.task_queue.put(message)
+			#############################################################################################
+
+		elif code == 'DSCNT':
+			print('[ SERVER ] Disconnected by ADMIN')
+			# Send SHUT to Interface
+			communicate_broadcast_server.data_changed_flags[7] = 1
+			# Send SHUT to Core
+			communicate_broadcast_server.data_changed_flags[5] = 1
+			raise KeyboardInterrupt
+
+		elif code == 'BLOCK':
+			print('[ SERVER ] Disconnected by ADMIN')
+			# Send BLOCK to Interface
+			communicate_broadcast_server.data_changed_flags[8] = 1
+			# Send SHUT to Core
+			communicate_broadcast_server.data_changed_flags[5] = 1
+			raise KeyboardInterrupt

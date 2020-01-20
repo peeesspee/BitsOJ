@@ -4,9 +4,9 @@ from init_judge import initialize_judge
 from login_request import authenticate_judge
 from verdict import verdict
 from file_creation import file_manager
-from database_management import manage_database
+ 
 import time, json, os
-
+ 
 class communicate_server():
 	message = ''
 	key = initialize_judge.key()
@@ -22,15 +22,14 @@ class communicate_server():
 			host, 
 			username,
 			judge_id,
-			data_changed_flags
+			data_changed_flags,
+			task_queue
 		):
 		print('[ JUDGE ][ UNICAST PROCESS ] Process started')
 		communicate_server.data_changed_flags = data_changed_flags
 		communicate_server.username = username
 		communicate_server.judge_id = judge_id
-
-		# Init Database
-		manage_database.initialize_database()
+		communicate_server.task_queue = task_queue
 
 		try:
 			# Connect with host
@@ -88,10 +87,114 @@ class communicate_server():
 		except Exception as error:
 			communicate_server.data_changed_flags[1] = 1
 			print('[ JUDGE ] Error in unicast process', error)
+
 		finally:
 			return
 
+	def server_response_handler(ch, method, properties, body):
+		server_data = body.decode('utf-8')
+		message = json.loads(server_data)
+		code = message['Code']
+		if code == 'JUDGE':
+			run_id = str(message["Run ID"])
+			problem_code = message["PCode"]
+			language = message["Language"]
+			source_code = message["Source"]
+			client_id = message["Client ID"]
+			client_username = message["Client Username"]
+			local_run_id = message["Local Run ID"]
+			time_stamp = message['Time Stamp']
+
+			print('\n[ JUDGE ] New Submission-> Run ', run_id, ' by Client: ', client_username)
+
+			file_name, file_with_ext = communicate_server.make_submission_file(
+				run_id, 
+				problem_code, 
+				language, 
+				source_code
+			)
+
+			#############################################################################################
+			# Send Record insertion/Updation message to Core
+			message = {
+				'Code' : 'JUDGE',
+				'Run ID' : run_id,
+				'Client ID' : client_id,
+				'Verdict' : 'RUNNING',
+				'Language' : language,
+				'Problem Code' : problem_code,
+				'Timestamp' : time_stamp,
+				'Filename' : file_with_ext
+			}
+			message = json.dumps(message)
+			communicate_server.task_queue.put(message)
+
+			#############################################################################################
+			# Actual Judging process
+			result, error = verdict.main(file_name, file_with_ext, language, problem_code, run_id, '1')
+			#############################################################################################
+			try:
+				if language == "JAVA":
+					os.remove('bitsoj.java')
+			except Exception as error:
+				print("[ ERROR ] JAVA file deletion error :",error)
+
+			judge_cred = authenticate_judge.get_judge_details()
+			message = {
+				'Judge Key' : communicate_server.key,
+				'Code' : 'VRDCT', 
+				'Client Username' : client_username,
+				'Client ID' : client_id,
+				'Status' : result,
+				'Run ID' : run_id,
+				'Message' : error,
+				'Local Run ID' : local_run_id,
+				'PCode': problem_code,
+				'Time Stamp' : time_stamp,
+				'Judge' : judge_cred[1],
+				'IP': communicate_server.my_ip
+			}
+			message = json.dumps(message)
+			ch.basic_publish(
+				exchange = 'judge_manager',
+				routing_key = 'judge_verdicts',
+				body = message
+			)
+			#############################################################################################
+			# Update table
+			time.sleep(1)
+			# Send Record insertion/Updation message to Core
+			message = {
+				'Code' : 'UPDATE',
+				'Run ID' : run_id,
+				'Client ID' : client_id,
+				'Verdict' : result,
+				'Language' : language,
+				'Problem Code' : problem_code,
+				'Timestamp' : time_stamp,
+				'Filename' : file_with_ext
+			}
+			message = json.dumps(message)
+			communicate_server.task_queue.put(message)
+			# Ack the message manually
+			# ch.basic_ack(delivery_tag = method.delivery_tag)
+
+	def make_submission_file(run_id, problem_code, language, source_code):
+		print('[ JUDGE ] Making submission files...')
+		try:
+			file_name,file_with_ext = file_manager.file_name(run_id, problem_code, language, source_code)
+			if file_with_ext != "INVALID FILENAME":
+				file_manager.create_file(source_code, language, file_with_ext)
+				return file_name, file_with_ext
+		except:
+			print('[ JUDGE ] Error while making submission files...')
+
 	def logout():
+		if communicate_server.data_changed_flags[7] == 1:
+			# Disconnected by SERVER
+			# No Logout necessary
+			return
+			
 		try:
 			print('[ JUDGE ]Sending LOGOUT message...')
 			message = {
@@ -110,98 +213,3 @@ class communicate_server():
 		except Exception as error:
 			print('[ JUDGE ][ UNICAST ] ERROR WHILE LOGGING OUT : ', error)
 		return
-
-
-	def server_response_handler(ch, method, properties, body):
-		server_data = body.decode('utf-8')
-
-		message = json.loads(server_data)
-
-		run_id = str(message["Run ID"])
-		problem_code = message["PCode"]
-		language = message["Language"]
-		source_code = message["Source"]
-		client_id = message["Client ID"]
-		client_username = message["Client Username"]
-		local_run_id = message["Local Run ID"]
-		time_stamp = message['Time Stamp']
-
-		file_name,file_with_ext = communicate_server.make_submission_file(run_id, problem_code, language, source_code)
-		
-		print('[ JUDGE ] New Submission-> Run ', run_id, ' by Client: ', client_username)
-		# Check if such run id already exists?
-		count = manage_database.get_count(run_id)
-		if count == 0:
-			manage_database.insert_record(
-				run_id, 
-				client_id, 
-				'RUNNING',
-				language, 
-				'RUNNING', 
-				problem_code, 
-				time_stamp, 
-				file_with_ext
-			)
-			communicate_server.data_changed_flags[4] = 1
-		else:
-			manage_database.update_record(
-				run_id, 
-				client_id, 
-				'RUNNING',
-				language, 
-				'RUNNING', 
-				problem_code, 
-				time_stamp, 
-				file_with_ext
-			)
-
-		result, error = verdict.main(file_name, file_with_ext, language, problem_code, run_id, '1')
-		manage_database.update_record(
-			run_id, 
-			client_id, 
-			result,
-			language, 
-			error[:30], 
-			problem_code, 
-			time_stamp, 
-			file_with_ext
-		)
-		communicate_server.data_changed_flags[4] = 1
-		
-		try:
-			if language == "JAVA":
-				os.remove('bitsoj.java')
-		except Exception as error:
-			print("[ ERROR ] JAVA file deletion error :",error)
-
-		judge_cred = authenticate_judge.get_judge_details()
-
-		message = {
-				'Judge Key' : communicate_server.key,
-				'Code' : 'VRDCT', 
-				'Client Username' : client_username,
-				'Client ID' : client_id,
-				'Status' : result,
-				'Run ID' : run_id,
-				'Message' : error,
-				'Local Run ID' : local_run_id,
-				'PCode': problem_code,
-				'Time Stamp' : time_stamp,
-				'Judge' : judge_cred[1],
-				'IP': communicate_server.my_ip
-			}
-		
-		message = json.dumps(message)		
-
-		ch.basic_publish(
-			exchange = 'judge_manager',
-			routing_key = 'judge_verdicts',
-			body = message
-			)
-
-	def make_submission_file(run_id, problem_code, language, source_code):
-
-		file_name,file_with_ext = file_manager.file_name(run_id, problem_code, language, source_code)
-		if file_with_ext != "INVALID FILENAME":
-			file_manager.create_file(source_code, language, file_with_ext)
-			return file_name,file_with_ext
