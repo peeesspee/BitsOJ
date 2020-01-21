@@ -1,11 +1,10 @@
-from database_management import submission_management, query_management
+from database_management import submission_management, query_management, manage_database, manage_local_ids
 import pika
 import json
 import sys
 import time
 from datetime import date,datetime
 from init_client import initialize_contest, handle_config
-from database_management import manage_database, manage_local_ids
 
 class start_listening():
 	channel = None

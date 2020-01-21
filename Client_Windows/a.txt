@@ -1,0 +1,5 @@
+pika,multiprocessing,threading,os,signal,sys,json,socket,time,sqlite3,PyPDF2,datetime,PyQt5.QtWidgets,PyQt5.QtGui,PyQt5.QtSql,PyQt5.QtCore,functools,
+
+
+
+pika,multiprocessing,threading,os,signal,sys,json,socket,time,sqlite3,PyPDF2,datetime,PyQt5.QtWidgets,PyQt5.QtGui,PyQt5.QtSql,PyQt5.QtCore,functools,connection,database_management,interface_package.interface,interface_package.login_interface,listen_server,init_client,login,manage_code,
