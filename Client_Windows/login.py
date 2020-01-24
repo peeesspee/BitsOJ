@@ -109,7 +109,7 @@ class authenticate_login():
 			# Changing login status to valid
 			authenticate_login.login_status = 'VALID'
 			authenticate_login.client_id = server_data["Client ID"]
-			authenticate_login.channel.basic_ack(True)
+			# authenticate_login.channel.basic_ack(True)
 			authenticate_login.channel.stop_consuming()
 			# print('[ ACK ]')
 			# authenticate_login.channel.basic_ack(True)

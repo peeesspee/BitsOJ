@@ -6,7 +6,7 @@ from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from interface_package.ui_classes import *
-from decrypt_problem import decrypt
+# from decrypt_problem import decrypt
 from init_client import initialize_contest, handle_config
 from database_management import source_code, manage_database
 
@@ -634,7 +634,7 @@ class client_window(QMainWindow):
 		data = handle_config.read_config_json()
 		current_status = 'RUNNING'
 		Timer = data["Duration"]
-		decrypt.decrypting()
+		# decrypt.decrypting()
 		QMessageBox.warning(self, 'Info', 'Contest has been STARTED.\nNow you can view problems.')
 
 	def stop_contest(self):
@@ -667,7 +667,7 @@ class init_gui(client_window):
 		client_app = client_window(channel,data_changed_flag,queue,score)
 
 		client_app.showMaximized()
-		# server_app.showNormal()
+		
 		# Close the server as soon as close buton is clicked
 		print('Executing\\\\')
 		try:

@@ -1,0 +1,52 @@
+{
+    "client_id": "40",
+    "client_key": "v6kdkvronb62vwr",
+    "Username": "team00001",
+    "rabbitmq_username": "client",
+    "rabbitmq_password": "client",
+    "host": "192.168.6.11",
+    "No_of_Problems": 5,
+    "Problem Key": "kppmpf85i9",
+    "Problems": {
+        "Problem 1": [
+            "Nairobi has a Plan",
+            "NPL",
+            "1"
+        ],
+        "Problem 2": [
+            "Professor in Dilemma",
+            "PDL",
+            "1"
+        ],
+        "Problem 3": [
+            "Wall in the Mint",
+            "WTM",
+            "1"
+        ],
+        "Problem 4": [
+            "The Last Time",
+            "TLT",
+            "2"
+        ],
+        "Problem 5": [
+            "Bella Ciao",
+            "BC",
+            "1"
+        ]
+    },
+    "Code": {
+        "NPL": "Problem 1",
+        "PDL": "Problem 2",
+        "WTM": "Problem 3",
+        "TLT": "Problem 4",
+        "BC": "Problem 5"
+    },
+    "Languages": "('C', 'C++', 'PYTHON-3', 'JAVA')",
+    "Contest": "START",
+    "Duration": "02:00:00",
+    "Start Time": 1579609062.1184251,
+    "End Time": 1579616262.1184251,
+    "Contest Name": "Kodeathon A7 Reloaded",
+    "Contest Theme": "Money Heist",
+    "IP": "192.168.20.31"
+}

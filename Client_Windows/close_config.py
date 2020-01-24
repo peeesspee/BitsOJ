@@ -20,18 +20,11 @@ def encryptDecrypt(inpString):
   
 # Driver Code 
 if __name__ == '__main__': 
-    ip = input('Enter New IP : ')
-    with open('./config.json','r') as read:
+    with open('./config_reader.json','r') as read:
         sampleString =json.load(read)
-    # sampleString = "GeeksforGeeks"; 
-  
+    sampleString = str(sampleString)
     sampleString = encryptDecrypt(sampleString)
-    sampleString = eval(sampleString)
-    sampleString["host"] = ip
-    sampleString["Contest"] = "START"
     print(sampleString)
-    sampleString = str(sampleString) 
-    sampleString = encryptDecrypt(sampleString)
 
     
     with open('./config.json', 'w') as write:

@@ -27,7 +27,7 @@ class ui_widgets():
 		heading = QLabel('Problems')
 		heading.setObjectName('main_screen_heading')
 
-		main_layout.addWidget(heading)
+		
 		
 		column = 0
 		row = 0
@@ -57,12 +57,16 @@ class ui_widgets():
 			number_of_buttons+=1;
 
 		self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-		self.scrollArea.setFixedHeight(700)
+		# self.scrollArea.setFixedHeight(700)
 		self.scrollArea.setObjectName('myscrollarea')
 		problems_layout.setObjectName('mygrid')
 		# problems_widget = QWidget()
 		# problems_widget.setLayout(problems_layout)
+		main_layout.addWidget(heading)
 		main_layout.addWidget(self.scrollArea)
+		main_layout.setStretch(0, 5)
+		main_layout.setStretch(1, 95)
+
 		# main_layout.addWidget(problems_widget)
 		main_layout.addStretch(5)
 		main = QWidget()
@@ -138,38 +142,33 @@ class ui_widgets():
 		for i in range(config["No_of_Problems"]):
 			ui_widgets.problem_box.addItem("Problem "+str(i+1))
 
+		self.submit_solution = QPushButton('Submit', self)
+		self.submit_solution.setObjectName('submit')
+		self.submit_solution.setFixedSize(200, 50)
+		self.submit_solution.clicked.connect(lambda:ui_widgets.submit_call(self, self.data_changed_flag,ui_widgets))
+
 		self.drop_down.addWidget(ui_widgets.language_box)
 		self.drop_down.addWidget(ui_widgets.problem_box)
-		self.drop_down.addStretch(1)
+		self.drop_down.addStretch(4)
+		self.drop_down.addWidget(self.submit_solution)
+		
 		self.drop_down.setSpacing(10)
 		self.drop_widget = QWidget()
 		self.drop_widget.setContentsMargins(10, 0, 0, 0)
 		self.drop_widget.setLayout(self.drop_down)
 
 		ui_widgets.text_area = QPlainTextEdit()
-		ui_widgets.text_area.setFixedHeight(650)
+		# ui_widgets.text_area.setFixedHeight(650)
 		ui_widgets.text_area.setObjectName('text_area_content')
 		ui_widgets.text_area.setPlaceholderText('Paste your code here')
 
-		self.horizontal_layout = QHBoxLayout()
-		self.submit_solution = QPushButton('Submit', self)
-		self.submit_solution.setObjectName('submit')
-		self.submit_solution.setFixedSize(200, 50)
-		self.submit_solution.clicked.connect(lambda:ui_widgets.submit_call(self, self.data_changed_flag,ui_widgets))
-		self.horizontal_layout.addWidget(self.submit_solution,  alignment=Qt.AlignRight)
-
-		self.horizontal_widget = QWidget()
-		self.horizontal_widget.setLayout(self.horizontal_layout)
-
-
-
 		main_layout = QVBoxLayout() 
-
 		main_layout.addWidget(heading)
 		main_layout.addWidget(self.drop_widget)
 		main_layout.addWidget(ui_widgets.text_area)
-		main_layout.addWidget(self.horizontal_widget)
-		main_layout.addStretch(5)
+		main_layout.setStretch(0, 5)
+		main_layout.setStretch(1, 5)
+		main_layout.setStretch(2, 90)
 
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -220,7 +219,10 @@ class ui_widgets():
 		main_layout.addWidget(query_table)
 		main_layout.addWidget(ui_widgets.ask_query, alignment=Qt.AlignLeft)
 		main_layout.addWidget(self.send_query, alignment=Qt.AlignLeft)
-		main_layout.addStretch(5)
+		main_layout.setStretch(0, 5)
+		main_layout.setStretch(1, 80)
+		main_layout.setStretch(2, 10)
+		main_layout.setStretch(3, 5)
 
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -337,16 +339,13 @@ class ui_widgets():
 		
 		main_layout = QVBoxLayout()
 		main_layout.addStretch(5)
-		
 		main_layout.addWidget(sub_head1)
 		main_layout.addStretch(1)
 		main_layout.addWidget(cards_widget)
 		main_layout.addStretch(3)
-
 		main_layout.addWidget(head1)
 		main_layout.addWidget(head2)
 		main_layout.addWidget(link_widget)
-
 		main_layout.addStretch(2)
 
 		main_layout.setAlignment(head1, Qt.AlignCenter)
@@ -394,7 +393,6 @@ class ui_widgets():
 		
 		github_id_heading = QLabel('Github')
 		github_pixmap = QPixmap('./Elements/github.png')
-		# github_pixmap = github_pixmap.scaledToWidth(32)
 		github_id_heading.setPixmap(github_pixmap)
 		github_id_heading.setFixedSize(48, 48)
 		github_id_widget = QLabel(
@@ -427,9 +425,10 @@ class ui_widgets():
 		top_widget = QWidget()
 		top_widget.setLayout(top_layout)
 		top_widget.setFixedWidth(270)
+		top_widget.setFixedHeight(350)
 		top_widget.setObjectName('card')
 		top_widget.setGraphicsEffect(shadow_effect)
-		# top_widget.setMinimumSize(320, 300)
+		top_widget.setMinimumSize(270, 300)
 		return top_widget
 
 	def get_horizontal_widget(widget_1, widget_2):
@@ -692,11 +691,7 @@ class view_submission_ui(QMainWindow):
 		language.setObjectName('view')
 		language_layout.setObjectName('view3')
 		main.setObjectName('query_submission_widget')
-
-
 		return main
-
-
 
 
 class view_problem_ui(QMainWindow):
@@ -705,7 +700,7 @@ class view_problem_ui(QMainWindow):
 
 		self.data_changed_flags = data_changed_flags
 		self.setWindowTitle('Problem ' + str(i))
-		self.setFixedSize(900,830)
+		self.resize(900,830)
 		main = self.main_problem_view_ui(i, problem_file)
 		self.setCentralWidget(main)
 		return
