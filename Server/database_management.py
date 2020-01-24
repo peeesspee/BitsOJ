@@ -3,7 +3,7 @@ import sys
 import random
 import string
 import os
- 
+  
 global client_id_counter
 
 class manage_database():
@@ -11,7 +11,11 @@ class manage_database():
 	conn = None
 	def initialize_database():
 		try:
-			conn = sqlite3.connect('server_database.db', check_same_thread = False)
+			conn = sqlite3.connect(
+				'server_database.db', 
+				check_same_thread = False,
+				timeout = 20
+			)
 			cur = conn.cursor()
 			manage_database.cur = cur
 			manage_database.conn = conn

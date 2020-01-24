@@ -1152,10 +1152,11 @@ class ui_widgets:
 		password_input.setAlignment(Qt.AlignCenter)
 		password_input.setPlaceholderText('Admin Password')
 		password_input.setEchoMode(QLineEdit.Password)
+		password_input.setText('')
 		submit_button = QPushButton('Confirm')
 		submit_button.setFixedSize(100, 33)
 		submit_button.setObjectName('interior_button')
-		submit_button.clicked.connect(lambda: ui_widgets.unlock_ui(self, password_input.text()))
+		submit_button.clicked.connect(lambda: ui_widgets.unlock_ui(self, password_input, head1))
 		submit_button.setDefault(True)
 		password_layout = QHBoxLayout()
 		password_layout.addStretch(50)
@@ -1178,11 +1179,15 @@ class ui_widgets:
 		main.setObjectName("main_screen");
 		return main
 
-	def unlock_ui(self, entry):
+	def unlock_ui(self, password_input, heading_1):
+		entry = password_input.text()
+		password_input.setText('')
 		status = self.validate_password(entry)
 		if status:
 			# Password verified
 			self.data_changed_flags[24] = 0		# Set unlock flag
+			# heading_1.setText('SERVER UNLOCKED')
+			# heading_1.setObjectName('')
 			print('[ GUI ][ LOCK ] Server GUI has been unlocked.')
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)
@@ -1191,6 +1196,7 @@ class ui_widgets:
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
 		else:
+			heading_1.setText('SERVER LOCKED')
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Critical)
 			info_box.setWindowTitle('Failure')

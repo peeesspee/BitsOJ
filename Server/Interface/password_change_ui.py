@@ -134,6 +134,7 @@ class password_change_ui(QMainWindow):
 			# Release the window lock # BUGGY - Might remove later
 			self.data_changed_flags[14] = 0
 			self.close()
+
 		elif new_password == password_change_ui.password:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)
@@ -142,6 +143,7 @@ class password_change_ui(QMainWindow):
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
 			return
+			
 		else:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)

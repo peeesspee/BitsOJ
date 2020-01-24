@@ -10,8 +10,8 @@ Problems/
 Solution/
 problems/
 submission_files/
-diary
 config.json
 todo.txt
-./Reports/server_logs.txt
-./Reports/latest_server_logs.txt
+./Server/Reports/server_logs.txt
+./Server/Reports/latest_server_logs.txt
+./Server/todo.txt

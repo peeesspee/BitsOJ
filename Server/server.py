@@ -30,6 +30,8 @@ def main():
 	manual_review = config["Manual Review"]
 	submission_time_limit = config["Submission Time Limit"]
 
+	
+
 	####################################################################
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 30)
@@ -72,11 +74,12 @@ def main():
 	# Initialize server
 	print('[ SETUP ] Initialising server...')
 	log_queue.put('[ SETUP ] Initialising server...')
+
 	# Initialize database
 	print('[ SETUP ] Initialising database...')
 	log_queue.put('[ SETUP ] Initialising database...')
 	conn, cur = manage_database.initialize_database()
-
+	
 	# Set local variables and flags :
 	#####################################################################################
 	#index		value		meaning
@@ -172,6 +175,9 @@ def main():
 		print('[ SETUP ] Loading problems...')
 		problem_management.init_problems(config['Problems'])
 		log_queue.put('[ SETUP ] Loading problems...')
+
+		# Disconnect from DB
+		conn.close()
 
 	#####################################################################################
 

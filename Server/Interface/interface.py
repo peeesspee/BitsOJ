@@ -644,6 +644,8 @@ class server_window(QMainWindow):
 			print('[ SET ] Contest Duration : ' + str(extra_data))
 			self.log('[ SET ] Contest Duration : ' + str(extra_data))
 			save_status.update_entry('Contest Duration', str(extra_data))
+			contest_start_time = time.strftime("%H:%M:%S", time.localtime(time.time()))
+			save_status.update_entry('Contest Start Time', contest_start_time)
 			self.timer_widget.display(extra_data)
 			self.duration = str(extra_data)
 
