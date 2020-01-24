@@ -54,9 +54,9 @@ class manage_submission_ui(QMainWindow):
 		self.verdict = verdict
 		self.sent_status = sent_status
 
-		width = 800
-		height = 500
-		self.setGeometry(550, 300, width, height)
+		width = 1000
+		height = 700
+		self.setGeometry(400, 200, width, height)
 		self.setWindowTitle('Run ' + str(run_id) + 'From Client ' + str(client_id))
 		self.setFixedSize(width, height)
 		main = self.main_manage_sub_ui()
@@ -163,7 +163,7 @@ class manage_submission_ui(QMainWindow):
 		close_button = QPushButton('Close')
 		close_button.setFixedSize(150, 40)
 		close_button.clicked.connect(
-			lambda:manage_submission_ui.close(self)
+			lambda:manage_submission_ui.close_event(self)
 			)
 		close_button.setDefault(True)
 
@@ -174,7 +174,7 @@ class manage_submission_ui(QMainWindow):
 		button_widget = QWidget()
 		button_widget.setLayout(button_layout)
 
-		spacer_item = QSpacerItem(0, 50, QSizePolicy.Expanding)
+		
 		
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(submission_heading)
@@ -182,10 +182,8 @@ class manage_submission_ui(QMainWindow):
 		main_layout.addWidget(run_info_widget)
 		main_layout.addWidget(verdict_sub_heading)
 		main_layout.addWidget(verdict_widget)
-		main_layout.addSpacerItem(spacer_item)
-		main_layout.addWidget(button_widget)
-
 		main_layout.addStretch(1)
+		main_layout.addWidget(button_widget)
 
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -416,12 +414,18 @@ class manage_submission_ui(QMainWindow):
 			return 'No Error data received!'
 
 	def load_submission_data(self):
-		self.submission_ui = submission_data_ui(self.data_changed_flags, self.run_id, self.log_queue)
-		self.data_changed_flags[8] = 0
+		# Set flag
+		self.data_changed_flags[11] = 1
+		self.submission_ui = submission_data_ui(
+			self.data_changed_flags, 
+			self.run_id, 
+			self.log_queue
+		)
 		self.submission_ui.show()
 
-	def cancel(self):
-		self.data_changed_flags[8] = 0
+	def close_event(self):
+		if self.data_changed_flags[11] == 1:
+			return
 		self.close()
 
 class submission_data_ui(QMainWindow):
@@ -438,12 +442,13 @@ class submission_data_ui(QMainWindow):
 		self.run_id = run_id
 		self.log_queue = log_queue
 		
-		self.setWindowTitle('Run ' + str(self.run_id))
+		self.setWindowTitle('Data for Run ' + str(self.run_id))
 
-		width = 800
-		height = 500
-		self.setGeometry(550, 300, width, height)
+		width = 1000
+		height = 700
+		self.setGeometry(400, 200, width, height)
 		self.setFixedSize(width, height)
+		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		main = self.main_submission_data_ui()
 		self.setCentralWidget(main)
 		return
@@ -463,8 +468,18 @@ class submission_data_ui(QMainWindow):
 		self.tab_bar.addTab('Error Data')
 		self.tabs.setTabBar(self.tab_bar)
 
+		close_button = QPushButton('Close')
+		close_button.setFixedSize(150, 40)
+		close_button.clicked.connect(
+			lambda:self.close_event()
+		)
+		close_button.setDefault(True)
+		close_button.setObjectName('interior_button')
+
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(self.tabs)
+		main_layout.addWidget(close_button)
+		main_layout.setAlignment(close_button, Qt.AlignCenter)
 		main = QWidget()
 		main.setLayout(main_layout)
 
@@ -537,3 +552,7 @@ class submission_data_ui(QMainWindow):
 		file_label.setObjectName('main_screen_sub_heading')
 		filename_label.setObjectName('main_screen_content')
 		return error_widget
+
+	def close_event(self):
+		self.data_changed_flags[11] = 0
+		self.close()

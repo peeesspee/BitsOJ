@@ -187,3 +187,1212 @@
 2020-01-23 18:04:08.343965  :  #### SERVER EXIT ####
 
  ###
+2020-01-24 18:45:42.471260  :  #### SERVER START #### ###
+2020-01-24 18:45:42.471393  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 18:45:42.471434  :  [ SETUP ] Initialising server... ###
+2020-01-24 18:45:42.471462  :  [ SETUP ] Initialising database... ###
+2020-01-24 18:45:42.972202  :  [ SETUP ] Loading problems... ###
+2020-01-24 18:45:42.972262  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 18:45:42.972291  :  [ SETUP ] Subprocesses started ###
+2020-01-24 18:45:42.972315  :  [ SETUP ][ Process ] Client Manager: 8962 ###
+2020-01-24 18:45:42.972338  :  [ SETUP ][ Process ] Judge Manager: 8963 ###
+2020-01-24 18:45:42.972361  :  [ SETUP ][ Process ] Core: 8965 ###
+2020-01-24 18:45:42.972384  :  [ SETUP ][ Process ] Log Manager: 8959 ###
+2020-01-24 18:45:42.972407  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 18:45:42.972429  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 18:45:42.972451  :    [ START ] Core subprocess started. ###
+2020-01-24 18:45:42.972473  :    [ START ] Interface subprocess started. ###
+2020-01-24 18:45:48.479942  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 18:45:48.480015  :  [ EXIT ] Signal passed ###
+2020-01-24 18:45:48.480045  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 18:45:48.480070  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 18:45:49.481487  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 18:46:24.072101  :  #### SERVER START #### ###
+2020-01-24 18:46:24.072244  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 18:46:24.072287  :  [ SETUP ] Initialising server... ###
+2020-01-24 18:46:24.072313  :  [ SETUP ] Initialising database... ###
+2020-01-24 18:46:24.573548  :  [ SETUP ] Loading problems... ###
+2020-01-24 18:46:24.573611  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 18:46:24.573666  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 18:46:24.573708  :  [ SETUP ] Subprocesses started ###
+2020-01-24 18:46:24.573748  :  [ SETUP ][ Process ] Client Manager: 9025 ###
+2020-01-24 18:46:24.573786  :  [ SETUP ][ Process ] Judge Manager: 9026 ###
+2020-01-24 18:46:24.573825  :  [ SETUP ][ Process ] Core: 9028 ###
+2020-01-24 18:46:24.573864  :  [ SETUP ][ Process ] Log Manager: 9022 ###
+2020-01-24 18:46:24.573905  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 18:46:24.573947  :    [ START ] Core subprocess started. ###
+2020-01-24 18:46:24.573988  :    [ START ] Interface subprocess started. ###
+2020-01-24 18:46:34.586969  :  [ ACCOUNT ] Create 100 Clients and 0 Judge Accounts ###
+2020-01-24 18:46:34.587057  :  [ CRITICAL ] Core could not connect to RabbitMQ server :  ###
+2020-01-24 18:46:34.587110  :  [ CRITICAL ] Could not connect to RabbitMQ server :  ###
+2020-01-24 18:46:34.587209  :  [ CRITICAL ] Could not connect to RabbitMQ server :  ###
+2020-01-24 18:46:37.590945  :  [ EXIT ] ABNORMAL SYSTEM EXIT ###
+2020-01-24 18:46:54.367438  :  #### SERVER START #### ###
+2020-01-24 18:46:54.367525  :  [ SELF CHECK ][ FAIL ] Detected an abnormal system exit. ###
+2020-01-24 18:46:55.869585  :  [ SETUP ] Initialising server... ###
+2020-01-24 18:46:55.869671  :  [ SETUP ] Initialising database... ###
+2020-01-24 18:46:55.869730  :  [ SETUP ] Loading problems... ###
+2020-01-24 18:46:55.869783  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 18:46:55.869838  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 18:46:55.869889  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 18:46:55.869938  :  [ SETUP ] Subprocesses started ###
+2020-01-24 18:46:55.869999  :  [ SETUP ][ Process ] Client Manager: 9120 ###
+2020-01-24 18:46:55.870047  :  [ SETUP ][ Process ] Judge Manager: 9121 ###
+2020-01-24 18:46:55.870094  :  [ SETUP ][ Process ] Core: 9124 ###
+2020-01-24 18:46:55.870142  :  [ SETUP ][ Process ] Log Manager: 9115 ###
+2020-01-24 18:46:55.870188  :    [ START ] Core subprocess started. ###
+2020-01-24 18:46:55.870233  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 18:46:55.870281  :  [ PING ] Recieved a new judge message. ###
+2020-01-24 18:46:55.870329  :  [ JUDGE ][ LOGOUT ] judge00001 Rejected Logout ###
+2020-01-24 18:46:55.870367  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 18:46:55.870403  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 18:46:55.870441  :  [ LOG OUT ][ team00003 ][ REJECT ] ###
+2020-01-24 18:46:55.870482  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 18:46:55.870522  :  [ LOG OUT ][ team00004 ][ REJECT ] ###
+2020-01-24 18:46:55.870560  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 18:46:55.870599  :  [ LOG OUT ][ team00002 ][ REJECT ] ###
+2020-01-24 18:46:56.371282  :    [ START ] Interface subprocess started. ###
+2020-01-24 18:47:03.881360  :  [ ACCOUNT ] Create 10 Clients and 0 Judge Accounts ###
+2020-01-24 18:47:03.881501  :  [ CORE ] Generating accounts... ###
+2020-01-24 18:47:04.382272  :  [ CORE ] All accounts generated! ###
+2020-01-24 18:47:16.898808  :  [ ACCOUNT ] Create 0 Clients and 1 Judge Accounts ###
+2020-01-24 18:47:17.399575  :  [ CORE ] Generating accounts... ###
+2020-01-24 18:47:17.900403  :  [ CORE ] All accounts generated! ###
+2020-01-24 18:47:30.917659  :  [ ACCOUNT ] Import Accounts from /home/valiant/Desktop/Projects/BitsOJ/Server/accounts.xlsx ###
+2020-01-24 18:47:31.919142  :  [ ERROR ] Data could not be transmitted : name 'io_manager' is not defined on line 341 ###
+2020-01-24 18:47:40.431540  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 18:47:40.431623  :  [ EXIT ] Signal passed ###
+2020-01-24 18:47:40.431679  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 18:47:40.431729  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 18:47:40.431773  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 18:47:40.431813  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 18:47:40.431852  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 18:47:40.431891  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 18:47:41.433336  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 18:48:36.827638  :  #### SERVER START #### ###
+2020-01-24 18:48:36.827748  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 18:48:36.827780  :  [ SETUP ] Initialising server... ###
+2020-01-24 18:48:36.827805  :  [ SETUP ] Initialising database... ###
+2020-01-24 18:48:40.332233  :  [ SETUP ] Loading problems... ###
+2020-01-24 18:48:40.332289  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 18:48:40.332328  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 18:48:40.332354  :  [ SETUP ] Subprocesses started ###
+2020-01-24 18:48:40.332377  :  [ SETUP ][ Process ] Client Manager: 9435 ###
+2020-01-24 18:48:40.332399  :  [ SETUP ][ Process ] Judge Manager: 9436 ###
+2020-01-24 18:48:40.332420  :  [ SETUP ][ Process ] Core: 9438 ###
+2020-01-24 18:48:40.332441  :  [ SETUP ][ Process ] Log Manager: 9427 ###
+2020-01-24 18:48:40.332462  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 18:48:40.332482  :    [ START ] Core subprocess started. ###
+2020-01-24 18:48:40.332502  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 18:48:40.332522  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 18:48:40.332543  :    [ START ] Interface subprocess started. ###
+2020-01-24 18:48:49.345008  :  [ ACCOUNT ] Import Accounts from /home/valiant/Desktop/Projects/BitsOJ/Server/accounts.xlsx ###
+2020-01-24 18:48:50.346349  :  [ ERROR ] Data could not be transmitted : name 'filename' is not defined on line 342 ###
+2020-01-24 18:48:54.351715  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 18:48:54.351828  :  [ EXIT ] Signal passed ###
+2020-01-24 18:48:54.351899  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 18:48:54.351982  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 18:48:54.352047  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 18:48:54.352107  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 18:48:54.352177  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 18:48:54.352239  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 18:48:55.353664  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 18:49:17.849793  :  #### SERVER START #### ###
+2020-01-24 18:49:17.849938  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 18:49:17.849975  :  [ SETUP ] Initialising server... ###
+2020-01-24 18:49:17.850002  :  [ SETUP ] Initialising database... ###
+2020-01-24 18:49:20.854198  :  [ SETUP ] Loading problems... ###
+2020-01-24 18:49:20.854265  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 18:49:20.854315  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 18:49:20.854353  :  [ SETUP ] Subprocesses started ###
+2020-01-24 18:49:20.854389  :  [ SETUP ][ Process ] Client Manager: 9576 ###
+2020-01-24 18:49:20.854423  :  [ SETUP ][ Process ] Judge Manager: 9577 ###
+2020-01-24 18:49:20.854457  :  [ SETUP ][ Process ] Core: 9579 ###
+2020-01-24 18:49:20.854490  :  [ SETUP ][ Process ] Log Manager: 9572 ###
+2020-01-24 18:49:20.854523  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 18:49:20.854556  :    [ START ] Core subprocess started. ###
+2020-01-24 18:49:20.854588  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 18:49:20.854620  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 18:49:21.355291  :    [ START ] Interface subprocess started. ###
+2020-01-24 18:49:30.867586  :  [ ACCOUNT ] Import Accounts from /home/valiant/Desktop/Projects/BitsOJ/Server/accounts.xlsx ###
+2020-01-24 18:49:51.895715  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 18:49:51.895768  :  [ EXIT ] Signal passed ###
+2020-01-24 18:49:51.895798  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 18:49:51.895827  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 18:49:51.895853  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 18:49:51.895879  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 18:49:51.895904  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 18:49:51.895938  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 18:49:52.897479  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 18:50:53.923157  :  #### SERVER START #### ###
+2020-01-24 18:50:53.923277  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 18:50:53.923309  :  [ SETUP ] Initialising server... ###
+2020-01-24 18:50:53.923335  :  [ SETUP ] Initialising database... ###
+2020-01-24 18:50:55.425939  :  [ SETUP ] Loading problems... ###
+2020-01-24 18:50:55.426766  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 18:50:55.426990  :  [ SETUP ] Subprocesses started ###
+2020-01-24 18:50:55.427105  :  [ SETUP ][ Process ] Client Manager: 10200 ###
+2020-01-24 18:50:55.427235  :  [ SETUP ][ Process ] Judge Manager: 10201 ###
+2020-01-24 18:50:55.427733  :  [ SETUP ][ Process ] Core: 10203 ###
+2020-01-24 18:50:55.428010  :  [ SETUP ][ Process ] Log Manager: 10197 ###
+2020-01-24 18:50:55.428275  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 18:50:55.428560  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 18:50:55.428876  :    [ START ] Core subprocess started. ###
+2020-01-24 18:50:55.428930  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 18:50:55.428968  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 18:50:55.929555  :    [ START ] Interface subprocess started. ###
+2020-01-24 18:51:09.948363  :  [ ACCOUNT ] Import Accounts from asa.xlsx ###
+2020-01-24 18:51:22.464955  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 18:51:22.465100  :  [ EXIT ] Signal passed ###
+2020-01-24 18:51:22.465267  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 18:51:22.465363  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 18:51:22.465492  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 18:51:22.465573  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 18:51:22.465644  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 18:51:22.465713  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 18:51:23.467157  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 18:59:07.904095  :  #### SERVER START #### ###
+2020-01-24 18:59:07.904209  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 18:59:07.904241  :  [ SETUP ] Initialising server... ###
+2020-01-24 18:59:07.904266  :  [ SETUP ] Initialising database... ###
+2020-01-24 18:59:09.406504  :  [ SETUP ] Loading problems... ###
+2020-01-24 18:59:09.406616  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 18:59:09.406657  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 18:59:09.406691  :  [ SETUP ] Subprocesses started ###
+2020-01-24 18:59:09.406722  :  [ SETUP ][ Process ] Client Manager: 11034 ###
+2020-01-24 18:59:09.406754  :  [ SETUP ][ Process ] Judge Manager: 11035 ###
+2020-01-24 18:59:09.406784  :  [ SETUP ][ Process ] Core: 11037 ###
+2020-01-24 18:59:09.406814  :  [ SETUP ][ Process ] Log Manager: 11021 ###
+2020-01-24 18:59:09.406844  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 18:59:09.406873  :    [ START ] Core subprocess started. ###
+2020-01-24 18:59:09.406904  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 18:59:09.907571  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 18:59:09.907648  :    [ START ] Interface subprocess started. ###
+2020-01-24 18:59:28.431801  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 18:59:28.432011  :  [ EXIT ] Signal passed ###
+2020-01-24 18:59:28.432173  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 18:59:28.432326  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 18:59:28.432442  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 18:59:28.432525  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 18:59:28.432600  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 18:59:28.432698  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 18:59:29.433643  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 18:59:29.433753  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 18:59:34.617895  :  #### SERVER START #### ###
+2020-01-24 18:59:34.617998  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 18:59:34.618030  :  [ SETUP ] Initialising server... ###
+2020-01-24 18:59:34.618055  :  [ SETUP ] Initialising database... ###
+2020-01-24 18:59:35.619535  :  [ SETUP ] Loading problems... ###
+2020-01-24 18:59:35.619625  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 18:59:35.619678  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 18:59:35.619728  :  [ SETUP ] Subprocesses started ###
+2020-01-24 18:59:35.619772  :  [ SETUP ][ Process ] Client Manager: 11131 ###
+2020-01-24 18:59:35.619815  :  [ SETUP ][ Process ] Judge Manager: 11132 ###
+2020-01-24 18:59:35.619857  :  [ SETUP ][ Process ] Core: 11134 ###
+2020-01-24 18:59:35.619898  :  [ SETUP ][ Process ] Log Manager: 11128 ###
+2020-01-24 18:59:35.619938  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 18:59:35.619978  :    [ START ] Core subprocess started. ###
+2020-01-24 18:59:35.620018  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 18:59:35.620057  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 18:59:35.620098  :    [ START ] Interface subprocess started. ###
+2020-01-24 18:59:40.125601  :  [ EVENT ] SERVER RESET TRIGGERED ###
+2020-01-24 18:59:40.125723  :  [ RESET ] Disconnecting all clients... ###
+2020-01-24 18:59:40.125799  :  [ RESET ] Disconnecting all judges... ###
+2020-01-24 18:59:40.626639  :  [ EVENT ] Disconnect all clients ###
+2020-01-24 18:59:40.626814  :  [ EVENT ] Disconnect All Judges ###
+2020-01-24 18:59:40.626939  :  [ RESET ] Deleting all Connected Judges... ###
+2020-01-24 18:59:40.627056  :  [ RESET ] Clearing scoreboard... ###
+2020-01-24 18:59:40.627170  :  [ RESET ] Resetting Accounts... ###
+2020-01-24 18:59:40.627284  :  [ RESET ] Resetting Submissions... ###
+2020-01-24 18:59:41.128094  :  [ RESET ] Resetting Queries... ###
+2020-01-24 18:59:41.128203  :  [ RESET ] Reset environment... ###
+2020-01-24 18:59:46.134883  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 18:59:46.134966  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 18:59:46.135020  :  [ EXIT ] Signal passed ###
+2020-01-24 18:59:46.135068  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 18:59:46.135114  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 18:59:46.135162  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 18:59:46.135203  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 18:59:46.135245  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 18:59:47.136550  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 18:59:49.912491  :  #### SERVER START #### ###
+2020-01-24 18:59:49.912603  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 18:59:49.912640  :  [ SETUP ] Initialising server... ###
+2020-01-24 18:59:49.912667  :  [ SETUP ] Initialising database... ###
+2020-01-24 18:59:50.413146  :  [ SETUP ] Loading problems... ###
+2020-01-24 18:59:50.413209  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 18:59:50.413241  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 18:59:50.413267  :  [ SETUP ] Subprocesses started ###
+2020-01-24 18:59:50.413292  :  [ SETUP ][ Process ] Client Manager: 11187 ###
+2020-01-24 18:59:50.413316  :  [ SETUP ][ Process ] Judge Manager: 11188 ###
+2020-01-24 18:59:50.413339  :  [ SETUP ][ Process ] Core: 11190 ###
+2020-01-24 18:59:50.413362  :  [ SETUP ][ Process ] Log Manager: 11184 ###
+2020-01-24 18:59:50.413384  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 18:59:50.413423  :    [ START ] Core subprocess started. ###
+2020-01-24 18:59:50.413452  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 18:59:50.413475  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 18:59:50.413510  :    [ START ] Interface subprocess started. ###
+2020-01-24 18:59:59.925613  :  [ ACCOUNT ] Import Accounts from /home/valiant/Desktop/Projects/BitsOJ/Server/accounts.xlsx ###
+2020-01-24 19:00:07.935563  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 19:00:07.935621  :  [ EXIT ] Signal passed ###
+2020-01-24 19:00:07.935651  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 19:00:07.935675  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 19:00:07.935697  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 19:00:07.935729  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 19:00:07.935751  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 19:00:07.935774  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 19:00:08.937392  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 19:01:01.323766  :  #### SERVER START #### ###
+2020-01-24 19:01:01.323935  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 19:01:01.324000  :  [ SETUP ] Initialising server... ###
+2020-01-24 19:01:01.324048  :  [ SETUP ] Initialising database... ###
+2020-01-24 19:01:01.824860  :  [ SETUP ] Loading problems... ###
+2020-01-24 19:01:01.824947  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 19:01:01.824997  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 19:01:01.825041  :  [ SETUP ] Subprocesses started ###
+2020-01-24 19:01:01.825079  :  [ SETUP ][ Process ] Client Manager: 11389 ###
+2020-01-24 19:01:01.825121  :  [ SETUP ][ Process ] Judge Manager: 11390 ###
+2020-01-24 19:01:01.825156  :  [ SETUP ][ Process ] Core: 11392 ###
+2020-01-24 19:01:01.825194  :  [ SETUP ][ Process ] Log Manager: 11386 ###
+2020-01-24 19:01:01.825231  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 19:01:01.825271  :    [ START ] Core subprocess started. ###
+2020-01-24 19:01:01.825311  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 19:01:01.825351  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 19:01:02.325576  :    [ START ] Interface subprocess started. ###
+2020-01-24 19:01:10.836284  :  [ ACCOUNT ] Import Accounts from /home/valiant/Desktop/Projects/BitsOJ/Server/accounts.xlsx ###
+2020-01-24 19:01:11.837614  :  [ CORE ] Adding sheet accounts... ###
+2020-01-24 19:01:11.837730  :  [ CORE ][ ERROR ] Could not parse user lists! ###
+2020-01-24 19:01:16.844804  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 19:01:16.845590  :  [ EXIT ] Signal passed ###
+2020-01-24 19:01:16.846019  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 19:01:16.846106  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 19:01:16.846158  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 19:01:16.846206  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 19:01:16.846253  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 19:01:16.846301  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 19:01:17.847803  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 19:01:17.847929  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 19:01:57.973711  :  #### SERVER START #### ###
+2020-01-24 19:01:57.973840  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 19:01:57.973878  :  [ SETUP ] Initialising server... ###
+2020-01-24 19:01:57.973906  :  [ SETUP ] Initialising database... ###
+2020-01-24 19:02:00.977566  :  [ SETUP ] Loading problems... ###
+2020-01-24 19:02:00.977649  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 19:02:00.977717  :  [ SETUP ] Subprocesses started ###
+2020-01-24 19:02:00.977767  :  [ SETUP ][ Process ] Client Manager: 11551 ###
+2020-01-24 19:02:00.977812  :  [ SETUP ][ Process ] Judge Manager: 11552 ###
+2020-01-24 19:02:00.977856  :  [ SETUP ][ Process ] Core: 11554 ###
+2020-01-24 19:02:00.977898  :  [ SETUP ][ Process ] Log Manager: 11547 ###
+2020-01-24 19:02:00.977940  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 19:02:00.977982  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 19:02:00.978023  :    [ START ] Core subprocess started. ###
+2020-01-24 19:02:00.978064  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 19:02:00.978105  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 19:02:00.978150  :    [ START ] Interface subprocess started. ###
+2020-01-24 19:02:08.488460  :  [ ACCOUNT ] Import Accounts from /home/valiant/Desktop/Projects/BitsOJ/Server/accounts.xlsx ###
+2020-01-24 19:02:08.989262  :  [ CORE ] Adding sheet accounts... ###
+2020-01-24 19:02:08.989383  :  [ CORE ][ ERROR ] Could not parse user lists: eval() arg 1 must be a string, bytes or code object ###
+2020-01-24 19:02:13.996692  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 19:02:13.997022  :  [ EXIT ] Signal passed ###
+2020-01-24 19:02:13.997326  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 19:02:13.997834  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 19:02:13.998221  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 19:02:13.998433  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 19:02:13.998487  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 19:02:13.998530  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 19:02:15.000015  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 19:02:15.000177  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 19:02:26.046794  :  #### SERVER START #### ###
+2020-01-24 19:02:26.046889  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 19:02:26.046923  :  [ SETUP ] Initialising server... ###
+2020-01-24 19:02:26.046949  :  [ SETUP ] Initialising database... ###
+2020-01-24 19:02:26.547632  :  [ SETUP ] Loading problems... ###
+2020-01-24 19:02:26.547694  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 19:02:26.547747  :  [ SETUP ] Subprocesses started ###
+2020-01-24 19:02:26.547778  :  [ SETUP ][ Process ] Client Manager: 11625 ###
+2020-01-24 19:02:26.547803  :  [ SETUP ][ Process ] Judge Manager: 11626 ###
+2020-01-24 19:02:26.547826  :  [ SETUP ][ Process ] Core: 11628 ###
+2020-01-24 19:02:26.547852  :  [ SETUP ][ Process ] Log Manager: 11622 ###
+2020-01-24 19:02:26.547874  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 19:02:26.547897  :    [ START ] Core subprocess started. ###
+2020-01-24 19:02:26.547918  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 19:02:26.547940  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 19:02:26.547962  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 19:02:26.547985  :    [ START ] Interface subprocess started. ###
+2020-01-24 19:02:34.558121  :  [ ACCOUNT ] Import Accounts from /home/valiant/Desktop/Projects/BitsOJ/Server/accounts.xlsx ###
+2020-01-24 19:02:35.560110  :  [ CORE ] Adding sheet accounts... ###
+2020-01-24 19:02:35.560283  :  [ CORE ][ ERROR ] Could not parse user lists: eval() arg 1 must be a string, bytes or code object ###
+2020-01-24 19:02:39.064820  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 19:02:39.064965  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 19:02:39.065058  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 19:02:39.065162  :  [ EXIT ] Signal passed ###
+2020-01-24 19:02:39.065246  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 19:02:39.065318  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 19:02:39.065389  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 19:02:39.065511  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 19:02:40.067033  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 19:02:49.176982  :  #### SERVER START #### ###
+2020-01-24 19:02:49.177226  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 19:02:49.177333  :  [ SETUP ] Initialising server... ###
+2020-01-24 19:02:49.177456  :  [ SETUP ] Initialising database... ###
+2020-01-24 19:02:50.178992  :  [ SETUP ] Loading problems... ###
+2020-01-24 19:02:50.179123  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 19:02:50.179210  :  [ SETUP ] Subprocesses started ###
+2020-01-24 19:02:50.185499  :  [ SETUP ][ Process ] Client Manager: 11723 ###
+2020-01-24 19:02:50.185674  :  [ SETUP ][ Process ] Judge Manager: 11724 ###
+2020-01-24 19:02:50.185856  :  [ SETUP ][ Process ] Core: 11726 ###
+2020-01-24 19:02:50.185916  :  [ SETUP ][ Process ] Log Manager: 11720 ###
+2020-01-24 19:02:50.185967  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 19:02:50.186015  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 19:02:50.186062  :    [ START ] Core subprocess started. ###
+2020-01-24 19:02:50.186111  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 19:02:50.186156  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 19:02:50.686833  :    [ START ] Interface subprocess started. ###
+2020-01-24 19:02:58.696844  :  [ ACCOUNT ] Import Accounts from /home/valiant/Desktop/Projects/BitsOJ/Server/accounts.xlsx ###
+2020-01-24 19:02:59.198017  :  [ CORE ] Adding sheet accounts... ###
+2020-01-24 19:03:00.199627  :  [ CORE ] Sheet accounts added! ###
+2020-01-24 19:03:10.212406  :  [ USER ][ judge00001 ][ UPDATE ] Password changed to judge00001 ###
+2020-01-24 19:03:10.713231  :  [ CORE ] Updated user judge00001's Password to judge00001 ###
+2020-01-24 19:03:15.719509  :  [ USER ][ judge00002 ][ UPDATE ] Password changed to judge00002 ###
+2020-01-24 19:03:17.721947  :  [ CORE ] Updated user judge00002's Password to judge00002 ###
+2020-01-24 19:03:26.734357  :  [ USER ][ judge00003 ][ UPDATE ] Password changed to judge00003 ###
+2020-01-24 19:03:28.236447  :  [ CORE ] Updated user judge00003's Password to judge00003 ###
+2020-01-24 19:03:32.742412  :  [ USER ][ judge00004 ][ UPDATE ] Password changed to judge00004 ###
+2020-01-24 19:03:33.243419  :  [ CORE ] Updated user judge00004's Password to judge00004 ###
+2020-01-24 19:03:39.752607  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 19:03:40.253476  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 19:03:40.253573  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 19:03:40.253626  :  [ EXIT ] Signal passed ###
+2020-01-24 19:03:40.253673  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 19:03:40.253717  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 19:03:40.253761  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 19:03:40.253804  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 19:03:41.255173  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 19:03:41.255264  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 19:10:33.711444  :  #### SERVER START #### ###
+2020-01-24 19:10:33.711589  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 19:10:33.711646  :  [ SETUP ] Initialising server... ###
+2020-01-24 19:10:33.711675  :  [ SETUP ] Initialising database... ###
+2020-01-24 19:10:34.212366  :  [ SETUP ] Loading problems... ###
+2020-01-24 19:10:34.212434  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 19:10:34.212480  :  [ SETUP ] Subprocesses started ###
+2020-01-24 19:10:34.212521  :  [ SETUP ][ Process ] Client Manager: 12446 ###
+2020-01-24 19:10:34.212558  :  [ SETUP ][ Process ] Judge Manager: 12447 ###
+2020-01-24 19:10:34.212583  :  [ SETUP ][ Process ] Core: 12449 ###
+2020-01-24 19:10:34.212609  :  [ SETUP ][ Process ] Log Manager: 12443 ###
+2020-01-24 19:10:34.212674  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 19:10:34.212699  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 19:10:34.212726  :    [ START ] Core subprocess started. ###
+2020-01-24 19:10:34.212763  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 19:10:34.212800  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 19:10:34.212831  :    [ START ] Interface subprocess started. ###
+2020-01-24 19:10:57.751532  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 19:10:57.751602  :  [ EXIT ] Signal passed ###
+2020-01-24 19:10:57.751646  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 19:10:57.751682  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 19:10:57.751715  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 19:10:57.751747  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 19:10:57.751779  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 19:10:57.751819  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 19:10:58.753211  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 19:16:54.931623  :  #### SERVER START #### ###
+2020-01-24 19:16:54.931746  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 19:16:54.931800  :  [ SETUP ] Initialising server... ###
+2020-01-24 19:16:54.931844  :  [ SETUP ] Initialising database... ###
+2020-01-24 19:16:56.934165  :  [ SETUP ] Loading problems... ###
+2020-01-24 19:16:56.934338  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 19:16:56.934475  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 19:16:56.934693  :  [ SETUP ] Subprocesses started ###
+2020-01-24 19:16:56.934986  :  [ SETUP ][ Process ] Client Manager: 13034 ###
+2020-01-24 19:16:56.935511  :  [ SETUP ][ Process ] Judge Manager: 13035 ###
+2020-01-24 19:16:56.935618  :  [ SETUP ][ Process ] Core: 13037 ###
+2020-01-24 19:16:56.935706  :  [ SETUP ][ Process ] Log Manager: 13028 ###
+2020-01-24 19:16:56.935790  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 19:16:57.436513  :    [ START ] Core subprocess started. ###
+2020-01-24 19:16:57.436593  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 19:16:57.436643  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 19:16:57.436686  :    [ START ] Interface subprocess started. ###
+2020-01-24 19:17:03.943984  :  [ EVENT ] Accounts Reset... ###
+2020-01-24 19:17:16.960328  :  [ ACCOUNT ] Import Accounts from /home/valiant/Desktop/Projects/BitsOJ/Server/accounts.xlsx ###
+2020-01-24 19:17:17.461133  :  [ CORE ] Adding sheet accounts... ###
+2020-01-24 19:17:17.461220  :  [ CORE ] Sheet accounts added! ###
+2020-01-24 19:17:20.965660  :  [ ACCOUNT ] Create 10 Clients and 0 Judge Accounts ###
+2020-01-24 19:17:21.466422  :  [ CORE ] Generating accounts... ###
+2020-01-24 19:17:21.466555  :  [ CORE ] All accounts generated! ###
+2020-01-24 19:17:39.490371  :  [ EVENT ] Disconnect client : team00110 ###
+2020-01-24 19:17:46.499538  :  [ EVENT ] Disconnect client : team00109 ###
+2020-01-24 19:17:49.503600  :  [ EVENT ] Disconnect client : team00108 ###
+2020-01-24 19:17:53.509502  :  [ EVENT ] Disconnect client : team00107 ###
+2020-01-24 19:17:56.513678  :  [ EVENT ] Disconnect client : team00106 ###
+2020-01-24 19:19:12.112820  :  [ EVENT ] Accounts Reset... ###
+2020-01-24 19:19:15.116568  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 19:19:15.116781  :  [ EXIT ] Signal passed ###
+2020-01-24 19:19:15.116950  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 19:19:15.117128  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 19:19:15.117283  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 19:19:15.117475  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 19:19:15.117590  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 19:19:15.117690  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 19:19:16.119105  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 19:26:12.234107  :  #### SERVER START #### ###
+2020-01-24 19:26:12.234203  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 19:26:12.234235  :  [ SETUP ] Initialising server... ###
+2020-01-24 19:26:12.234293  :  [ SETUP ] Initialising database... ###
+2020-01-24 19:26:13.235691  :  [ SETUP ] Loading problems... ###
+2020-01-24 19:26:13.235742  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 19:26:13.235772  :  [ SETUP ] Subprocesses started ###
+2020-01-24 19:26:13.235799  :  [ SETUP ][ Process ] Client Manager: 13918 ###
+2020-01-24 19:26:13.235824  :  [ SETUP ][ Process ] Judge Manager: 13919 ###
+2020-01-24 19:26:13.235849  :  [ SETUP ][ Process ] Core: 13921 ###
+2020-01-24 19:26:13.235874  :  [ SETUP ][ Process ] Log Manager: 13916 ###
+2020-01-24 19:26:13.235898  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 19:26:13.235921  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 19:26:13.235945  :    [ START ] Core subprocess started. ###
+2020-01-24 19:26:13.235969  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 19:26:13.235992  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 19:26:13.236016  :    [ START ] Interface subprocess started. ###
+2020-01-24 19:26:34.266493  :  [ ACCOUNT ] Create 100 Clients and 0 Judge Accounts ###
+2020-01-24 19:26:35.268078  :  [ CORE ] Generating accounts... ###
+2020-01-24 19:26:35.268169  :  [ CORE ] All accounts generated! ###
+2020-01-24 19:26:42.277765  :  [ ACCOUNT ] Create 500 Clients and 0 Judge Accounts ###
+2020-01-24 19:26:43.279307  :  [ CORE ] Generating accounts... ###
+2020-01-24 19:26:43.780130  :  [ CORE ] All accounts generated! ###
+2020-01-24 19:26:49.287820  :  [ USER ][ team00600 ][ UPDATE ] Password changed to hffgyh ###
+2020-01-24 19:27:09.814394  :  [ CORE ] Updated user team00600's Password to hffgyh ###
+2020-01-24 19:27:12.818341  :  [ USER ][ team00001 ][ UPDATE ] Password changed to bfb ###
+2020-01-24 19:27:32.843691  :  [ CORE ] Updated user team00001's Password to bfb ###
+2020-01-24 19:28:07.387488  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 19:28:07.387544  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 19:28:07.387601  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 19:28:07.387641  :  [ EXIT ] Signal passed ###
+2020-01-24 19:28:07.387670  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 19:28:07.387721  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 19:28:07.387757  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 19:28:07.387783  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 19:28:08.389183  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 19:28:10.609812  :  #### SERVER START #### ###
+2020-01-24 19:28:10.609906  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 19:28:10.609938  :  [ SETUP ] Initialising server... ###
+2020-01-24 19:28:10.609967  :  [ SETUP ] Initialising database... ###
+2020-01-24 19:28:11.110659  :  [ SETUP ] Loading problems... ###
+2020-01-24 19:28:11.110715  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 19:28:11.110746  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 19:28:11.110775  :  [ SETUP ] Subprocesses started ###
+2020-01-24 19:28:11.110801  :  [ SETUP ][ Process ] Client Manager: 14100 ###
+2020-01-24 19:28:11.110827  :  [ SETUP ][ Process ] Judge Manager: 14101 ###
+2020-01-24 19:28:11.110852  :  [ SETUP ][ Process ] Core: 14103 ###
+2020-01-24 19:28:11.110877  :  [ SETUP ][ Process ] Log Manager: 14098 ###
+2020-01-24 19:28:11.110901  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 19:28:11.110926  :    [ START ] Core subprocess started. ###
+2020-01-24 19:28:11.110950  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 19:28:11.110975  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 19:28:11.111000  :    [ START ] Interface subprocess started. ###
+2020-01-24 19:28:16.618282  :  [ EVENT ] All Client + Judge disconnection under progress... ###
+2020-01-24 19:28:16.618385  :  [ EVENT ] Accounts Reset... ###
+2020-01-24 19:28:17.119105  :  [ EVENT ] Disconnect all clients ###
+2020-01-24 19:28:23.126995  :  [ ACCOUNT ] Create 100 Clients and 0 Judge Accounts ###
+2020-01-24 19:28:23.127119  :  [ CORE ] Generating accounts... ###
+2020-01-24 19:28:23.627896  :  [ CORE ] All accounts generated! ###
+2020-01-24 19:28:29.135005  :  [ USER ][ team00100 ][ UPDATE ] Password changed to bi ###
+2020-01-24 19:28:30.136516  :  [ CORE ] Updated user team00100's Password to bi ###
+2020-01-24 19:28:44.154280  :  [ ACCOUNT ] Create 500 Clients and 0 Judge Accounts ###
+2020-01-24 19:28:44.154418  :  [ CORE ] Generating accounts... ###
+2020-01-24 19:28:45.656512  :  [ CORE ] All accounts generated! ###
+2020-01-24 19:28:55.169086  :  [ USER ][ team00600 ][ UPDATE ] Password changed to gg ###
+2020-01-24 19:29:15.696334  :  [ CORE ] Updated user team00600's Password to gg ###
+2020-01-24 19:29:19.701647  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 19:29:19.701789  :  [ EXIT ] Signal passed ###
+2020-01-24 19:29:19.701899  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 19:29:19.702030  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 19:29:19.702155  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 19:29:19.702257  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 19:29:19.702355  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 19:29:19.702445  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 19:29:20.703911  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 19:29:24.186471  :  #### SERVER START #### ###
+2020-01-24 19:29:24.186597  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 19:29:24.186650  :  [ SETUP ] Initialising server... ###
+2020-01-24 19:29:24.186696  :  [ SETUP ] Initialising database... ###
+2020-01-24 19:29:24.687298  :  [ SETUP ] Loading problems... ###
+2020-01-24 19:29:24.687379  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 19:29:24.687432  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 19:29:24.687481  :  [ SETUP ] Subprocesses started ###
+2020-01-24 19:29:24.687528  :  [ SETUP ][ Process ] Client Manager: 14285 ###
+2020-01-24 19:29:24.687573  :  [ SETUP ][ Process ] Judge Manager: 14286 ###
+2020-01-24 19:29:24.687617  :  [ SETUP ][ Process ] Core: 14288 ###
+2020-01-24 19:29:24.687660  :  [ SETUP ][ Process ] Log Manager: 14283 ###
+2020-01-24 19:29:24.687698  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 19:29:24.687735  :    [ START ] Core subprocess started. ###
+2020-01-24 19:29:24.687772  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 19:29:24.687810  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 19:29:24.687856  :    [ START ] Interface subprocess started. ###
+2020-01-24 19:29:31.196556  :  [ USER ][ team00600 ][ UPDATE ] Password changed to g ###
+2020-01-24 19:29:32.197672  :  [ CORE ] Updated user team00600's Password to g ###
+2020-01-24 19:29:37.203907  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 19:29:37.204056  :  [ EXIT ] Signal passed ###
+2020-01-24 19:29:37.204132  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 19:29:37.204200  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 19:29:37.204265  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 19:29:37.204327  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 19:29:37.204389  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 19:29:37.204453  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 19:29:38.205724  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:20:40.709722  :  #### SERVER START #### ###
+2020-01-24 20:20:40.709825  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:20:40.709855  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:20:40.709880  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:20:42.712660  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:20:42.712743  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:20:42.712791  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:20:42.712834  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:20:42.712877  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:20:42.712918  :  [ SETUP ][ Process ] Client Manager: 18304 ###
+2020-01-24 20:20:42.712958  :  [ SETUP ][ Process ] Judge Manager: 18305 ###
+2020-01-24 20:20:42.712997  :  [ SETUP ][ Process ] Core: 18308 ###
+2020-01-24 20:20:42.713036  :  [ SETUP ][ Process ] Log Manager: 18302 ###
+2020-01-24 20:20:42.713077  :    [ START ] Core subprocess started. ###
+2020-01-24 20:20:42.713117  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:20:42.713156  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:20:42.713194  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:20:48.720612  :  [ EVENT ] All Client + Judge disconnection under progress... ###
+2020-01-24 20:20:48.720709  :  [ EVENT ] Accounts Reset... ###
+2020-01-24 20:20:49.721739  :  [ EVENT ] Disconnect all clients ###
+2020-01-24 20:20:58.733598  :  [ ACCOUNT ] Create 500 Clients and 10 Judge Accounts ###
+2020-01-24 20:20:58.733704  :  [ CORE ] Generating accounts... ###
+2020-01-24 20:20:59.234510  :  [ CORE ] All accounts generated! ###
+2020-01-24 20:21:06.244025  :  [ USER ][ team00500 ][ UPDATE ] Password changed to yw ###
+2020-01-24 20:21:26.270786  :  [ CORE ] Updated user team00500's Password to yw ###
+2020-01-24 20:21:30.275907  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:21:30.275974  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:21:30.276001  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:21:30.276025  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:21:30.276047  :  [ EXIT ] Signal passed ###
+2020-01-24 20:21:30.276068  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:21:30.276089  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:21:30.276110  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:21:31.277483  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:21:33.948681  :  #### SERVER START #### ###
+2020-01-24 20:21:33.948782  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:21:33.948813  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:21:33.948843  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:21:35.450821  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:21:35.450903  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:21:35.450945  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:21:35.450979  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:21:35.451011  :  [ SETUP ][ Process ] Client Manager: 18414 ###
+2020-01-24 20:21:35.451044  :  [ SETUP ][ Process ] Judge Manager: 18415 ###
+2020-01-24 20:21:35.451075  :  [ SETUP ][ Process ] Core: 18417 ###
+2020-01-24 20:21:35.451105  :  [ SETUP ][ Process ] Log Manager: 18410 ###
+2020-01-24 20:21:35.451135  :    [ START ] Core subprocess started. ###
+2020-01-24 20:21:35.451165  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:21:35.451194  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:21:35.451225  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:21:35.451257  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:21:40.958101  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:21:40.958188  :  [ EXIT ] Signal passed ###
+2020-01-24 20:21:40.958238  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:21:40.958281  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:21:40.958321  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:21:40.958375  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:21:40.958441  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:21:40.958493  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:21:41.959985  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:33:30.734572  :  #### SERVER START #### ###
+2020-01-24 20:33:30.734674  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:33:30.734706  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:33:30.734732  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:33:32.236804  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:33:32.236855  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:33:32.236882  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:33:32.236905  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:33:32.236927  :  [ SETUP ][ Process ] Client Manager: 19408 ###
+2020-01-24 20:33:32.236949  :  [ SETUP ][ Process ] Judge Manager: 19409 ###
+2020-01-24 20:33:32.236970  :  [ SETUP ][ Process ] Core: 19412 ###
+2020-01-24 20:33:32.236991  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:33:32.237012  :  [ SETUP ][ Process ] Log Manager: 19406 ###
+2020-01-24 20:33:32.237033  :    [ START ] Core subprocess started. ###
+2020-01-24 20:33:32.237054  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:33:32.237075  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:33:32.237097  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:33:36.742559  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:33:36.742723  :  [ EXIT ] Signal passed ###
+2020-01-24 20:33:36.742838  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:33:36.742940  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:33:36.743035  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:33:36.743181  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:33:36.743277  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:33:36.743381  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:33:37.744765  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:37:40.517844  :  #### SERVER START #### ###
+2020-01-24 20:37:40.517950  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:37:40.517981  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:37:40.518006  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:37:41.519333  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:37:41.519384  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:37:41.519411  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:37:41.519435  :  [ SETUP ][ Process ] Client Manager: 19763 ###
+2020-01-24 20:37:41.519457  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:37:41.519479  :  [ SETUP ][ Process ] Judge Manager: 19764 ###
+2020-01-24 20:37:41.519500  :  [ SETUP ][ Process ] Core: 19766 ###
+2020-01-24 20:37:41.519521  :  [ SETUP ][ Process ] Log Manager: 19761 ###
+2020-01-24 20:37:41.519541  :    [ START ] Core subprocess started. ###
+2020-01-24 20:37:41.519562  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:37:41.519582  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:37:41.519603  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:37:41.519624  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:37:46.025624  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:37:46.026057  :  [ EXIT ] Signal passed ###
+2020-01-24 20:37:46.026404  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:37:46.026873  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:37:46.027220  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:37:46.027375  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:37:46.027481  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:37:46.027545  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:37:47.028929  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:38:09.976024  :  #### SERVER START #### ###
+2020-01-24 20:38:09.976117  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:38:09.976152  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:38:09.976177  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:38:10.476907  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:38:10.476959  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:38:10.476985  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:38:10.477008  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:38:10.477030  :    [ START ] Core subprocess started. ###
+2020-01-24 20:38:10.477053  :  [ SETUP ][ Process ] Client Manager: 19862 ###
+2020-01-24 20:38:10.477073  :  [ SETUP ][ Process ] Judge Manager: 19863 ###
+2020-01-24 20:38:10.477094  :  [ SETUP ][ Process ] Core: 19865 ###
+2020-01-24 20:38:10.477114  :  [ SETUP ][ Process ] Log Manager: 19860 ###
+2020-01-24 20:38:10.477134  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:38:10.477154  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:38:10.477174  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:38:10.977837  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:38:19.489019  :  [ USER ][ team00500 ][ UPDATE ] Password changed to dfd ###
+2020-01-24 20:38:20.490575  :  [ CORE ] Updated user team00500's Password to dfd ###
+2020-01-24 20:42:01.805380  :  [ EVENT ] All Client + Judge disconnection under progress... ###
+2020-01-24 20:42:01.805440  :  [ EVENT ] Accounts Reset... ###
+2020-01-24 20:42:02.806787  :  [ EVENT ] Disconnect all clients ###
+2020-01-24 20:43:10.395490  :  [ EVENT ] Scoreboard broadcast to clients ( Time Out ) ###
+2020-01-24 20:43:11.897810  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-01-24 20:44:35.008111  :  [ ACCOUNT ] Create 10 Clients and 0 Judge Accounts ###
+2020-01-24 20:44:36.009646  :  [ CORE ] Generating accounts... ###
+2020-01-24 20:44:36.510428  :  [ CORE ] All accounts generated! ###
+2020-01-24 20:44:52.030642  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:44:52.030691  :  [ EXIT ] Signal passed ###
+2020-01-24 20:44:52.030717  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:44:52.030739  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:44:52.030761  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:44:52.030783  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:44:52.030803  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:44:52.030825  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:44:53.032095  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:45:29.262074  :  #### SERVER START #### ###
+2020-01-24 20:45:29.262180  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:45:29.262213  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:45:29.262239  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:45:30.764021  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:45:30.764098  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:45:30.764124  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:45:30.764148  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:45:30.764170  :  [ SETUP ][ Process ] Client Manager: 20533 ###
+2020-01-24 20:45:30.764193  :  [ SETUP ][ Process ] Judge Manager: 20534 ###
+2020-01-24 20:45:30.764214  :  [ SETUP ][ Process ] Core: 20537 ###
+2020-01-24 20:45:30.764236  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:45:30.764257  :  [ SETUP ][ Process ] Log Manager: 20530 ###
+2020-01-24 20:45:30.764279  :    [ START ] Core subprocess started. ###
+2020-01-24 20:45:30.764300  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:45:30.764321  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:45:30.764342  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:45:49.789788  :  [ USER ][ team00010 ][ UPDATE ] Password changed to bits100 ###
+2020-01-24 20:45:51.291572  :  [ CORE ] Updated user team00010's Password to bits100 ###
+2020-01-24 20:45:55.796938  :  [ USER ][ team00010 ][ UPDATE ] Password changed to bits10 ###
+2020-01-24 20:45:57.298760  :  [ CORE ] Updated user team00010's Password to bits10 ###
+2020-01-24 20:46:21.829858  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:46:21.829962  :  [ EXIT ] Signal passed ###
+2020-01-24 20:46:21.830017  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:46:21.830100  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:46:21.830185  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:46:21.830238  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:46:21.830282  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:46:21.830327  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:46:22.831346  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:46:53.999392  :  #### SERVER START #### ###
+2020-01-24 20:46:53.999494  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:46:53.999525  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:46:53.999550  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:46:54.500261  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:46:54.500348  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:46:54.500394  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:46:54.500436  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:46:54.500503  :  [ SETUP ][ Process ] Client Manager: 20653 ###
+2020-01-24 20:46:54.500631  :  [ SETUP ][ Process ] Judge Manager: 20654 ###
+2020-01-24 20:46:54.500671  :  [ SETUP ][ Process ] Core: 20656 ###
+2020-01-24 20:46:54.500696  :  [ SETUP ][ Process ] Log Manager: 20651 ###
+2020-01-24 20:46:54.500719  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:46:54.500742  :    [ START ] Core subprocess started. ###
+2020-01-24 20:46:54.500765  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:46:54.500789  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:46:55.001469  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:47:01.009534  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:47:01.510417  :  [ EXIT ] Signal passed ###
+2020-01-24 20:47:01.510512  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:47:01.510606  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:47:01.510663  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:47:01.510710  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:47:01.510756  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:47:01.510803  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:47:02.512058  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:47:02.512140  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 20:47:41.069406  :  #### SERVER START #### ###
+2020-01-24 20:47:41.069519  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:47:41.069554  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:47:41.069580  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:47:41.570338  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:47:41.570455  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:47:41.570507  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:47:41.570577  :  [ SETUP ][ Process ] Client Manager: 20798 ###
+2020-01-24 20:47:41.570624  :  [ SETUP ][ Process ] Judge Manager: 20799 ###
+2020-01-24 20:47:41.570668  :  [ SETUP ][ Process ] Core: 20801 ###
+2020-01-24 20:47:41.570710  :  [ SETUP ][ Process ] Log Manager: 20795 ###
+2020-01-24 20:47:41.570752  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:47:41.570795  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:47:41.570836  :    [ START ] Core subprocess started. ###
+2020-01-24 20:47:41.570877  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:47:41.570917  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:47:41.570957  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:47:57.090734  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:47:57.090825  :  [ EXIT ] Signal passed ###
+2020-01-24 20:47:57.090894  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:47:57.090956  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:47:57.091010  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:47:57.091087  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:47:57.091157  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:47:57.091211  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:47:58.092547  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:48:22.130422  :  #### SERVER START #### ###
+2020-01-24 20:48:22.130550  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:48:22.130589  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:48:22.130615  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:48:23.632662  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:48:23.632744  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:48:23.632793  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:48:23.632837  :  [ SETUP ][ Process ] Client Manager: 20927 ###
+2020-01-24 20:48:23.632881  :  [ SETUP ][ Process ] Judge Manager: 20928 ###
+2020-01-24 20:48:23.632923  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:48:23.632964  :  [ SETUP ][ Process ] Core: 20930 ###
+2020-01-24 20:48:23.633003  :  [ SETUP ][ Process ] Log Manager: 20922 ###
+2020-01-24 20:48:23.633046  :    [ START ] Core subprocess started. ###
+2020-01-24 20:48:23.633087  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:48:23.633126  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:48:23.633166  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:48:23.633206  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:48:36.650709  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:48:36.650813  :  [ EXIT ] Signal passed ###
+2020-01-24 20:48:36.650859  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:48:36.650903  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:48:36.650929  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:48:36.650952  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:48:36.650976  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:48:36.650998  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:48:37.652334  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:53:40.295932  :  #### SERVER START #### ###
+2020-01-24 20:53:40.296039  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:53:40.296071  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:53:40.296096  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:53:40.796820  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:53:40.796914  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:53:40.796969  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:53:40.797014  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:53:40.797056  :  [ SETUP ][ Process ] Client Manager: 21417 ###
+2020-01-24 20:53:40.797096  :  [ SETUP ][ Process ] Judge Manager: 21418 ###
+2020-01-24 20:53:40.797137  :  [ SETUP ][ Process ] Core: 21420 ###
+2020-01-24 20:53:40.797174  :  [ SETUP ][ Process ] Log Manager: 21413 ###
+2020-01-24 20:53:40.797210  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:53:40.797247  :    [ START ] Core subprocess started. ###
+2020-01-24 20:53:40.797284  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:53:40.797331  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:53:40.797370  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:54:00.823467  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:54:01.824913  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 20:55:06.822525  :  #### SERVER START #### ###
+2020-01-24 20:55:06.822643  :  [ SELF CHECK ][ FAIL ] Detected an abnormal system exit. ###
+2020-01-24 20:55:08.324557  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:55:08.324635  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:55:08.324681  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:55:08.324725  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:55:08.324765  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:55:08.324802  :  [ SETUP ][ Process ] Client Manager: 21619 ###
+2020-01-24 20:55:08.324840  :  [ SETUP ][ Process ] Judge Manager: 21620 ###
+2020-01-24 20:55:08.324879  :  [ SETUP ][ Process ] Core: 21621 ###
+2020-01-24 20:55:08.324917  :  [ SETUP ][ Process ] Log Manager: 21605 ###
+2020-01-24 20:55:08.324955  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:55:08.324993  :    [ START ] Core subprocess started. ###
+2020-01-24 20:55:08.325031  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:55:08.325069  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:55:08.325107  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:55:08.825808  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:55:29.353123  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:55:30.354675  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 20:58:00.350569  :  #### SERVER START #### ###
+2020-01-24 20:58:00.350662  :  [ SELF CHECK ][ FAIL ] Detected an abnormal system exit. ###
+2020-01-24 20:58:01.352106  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:58:01.352209  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:58:02.353569  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:58:02.353620  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:58:02.353647  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:58:02.353671  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:58:02.353693  :  [ SETUP ][ Process ] Client Manager: 21893 ###
+2020-01-24 20:58:02.353715  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:58:02.353736  :  [ SETUP ][ Process ] Judge Manager: 21894 ###
+2020-01-24 20:58:02.353757  :  [ SETUP ][ Process ] Core: 21896 ###
+2020-01-24 20:58:02.353777  :  [ SETUP ][ Process ] Log Manager: 21890 ###
+2020-01-24 20:58:02.353797  :    [ START ] Core subprocess started. ###
+2020-01-24 20:58:02.353817  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:58:02.353837  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:58:02.353858  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:58:21.380025  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:58:21.380156  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:58:21.380263  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:58:21.380340  :  [ EXIT ] Signal passed ###
+2020-01-24 20:58:21.380410  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:58:21.380502  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:58:21.380571  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:58:21.380639  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:58:22.381962  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:58:22.382033  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 20:58:43.425068  :  #### SERVER START #### ###
+2020-01-24 20:58:43.425208  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 20:58:43.425247  :  [ SETUP ] Initialising server... ###
+2020-01-24 20:58:43.425275  :  [ SETUP ] Initialising database... ###
+2020-01-24 20:58:43.925967  :  [ SETUP ] Loading problems... ###
+2020-01-24 20:58:43.926074  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 20:58:43.926117  :  [ SETUP ] Subprocesses started ###
+2020-01-24 20:58:43.926154  :  [ SETUP ][ Process ] Client Manager: 21957 ###
+2020-01-24 20:58:43.926199  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 20:58:43.926237  :  [ SETUP ][ Process ] Judge Manager: 21958 ###
+2020-01-24 20:58:43.926274  :  [ SETUP ][ Process ] Core: 21960 ###
+2020-01-24 20:58:43.926309  :  [ SETUP ][ Process ] Log Manager: 21953 ###
+2020-01-24 20:58:43.926343  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 20:58:43.926379  :    [ START ] Core subprocess started. ###
+2020-01-24 20:58:43.926414  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 20:58:43.926451  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 20:58:44.426721  :    [ START ] Interface subprocess started. ###
+2020-01-24 20:58:59.947567  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 20:58:59.947622  :  [ EXIT ] Signal passed ###
+2020-01-24 20:58:59.947650  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 20:58:59.947674  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 20:58:59.947696  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 20:58:59.947718  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 20:58:59.947741  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 20:58:59.947765  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 20:59:00.949123  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 20:59:00.949216  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 21:00:08.071290  :  #### SERVER START #### ###
+2020-01-24 21:00:08.071426  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 21:00:08.071464  :  [ SETUP ] Initialising server... ###
+2020-01-24 21:00:08.071492  :  [ SETUP ] Initialising database... ###
+2020-01-24 21:00:09.072892  :  [ SETUP ] Loading problems... ###
+2020-01-24 21:00:09.072988  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 21:00:09.073041  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 21:00:09.073083  :  [ SETUP ] Subprocesses started ###
+2020-01-24 21:00:09.073123  :  [ SETUP ][ Process ] Client Manager: 22149 ###
+2020-01-24 21:00:09.073164  :  [ SETUP ][ Process ] Judge Manager: 22150 ###
+2020-01-24 21:00:09.073204  :  [ SETUP ][ Process ] Core: 22152 ###
+2020-01-24 21:00:09.073244  :  [ SETUP ][ Process ] Log Manager: 22145 ###
+2020-01-24 21:00:09.073284  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 21:00:09.073325  :    [ START ] Core subprocess started. ###
+2020-01-24 21:00:09.073366  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 21:00:09.073407  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 21:00:09.073450  :    [ START ] Interface subprocess started. ###
+2020-01-24 21:00:55.635439  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 21:00:55.635588  :  [ EXIT ] Signal passed ###
+2020-01-24 21:00:55.635670  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 21:00:55.635742  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 21:00:55.635809  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 21:00:55.635873  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 21:00:55.635945  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 21:00:55.636033  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 21:00:56.637403  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 21:02:03.512798  :  #### SERVER START #### ###
+2020-01-24 21:02:03.512907  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 21:02:03.512960  :  [ SETUP ] Initialising server... ###
+2020-01-24 21:02:03.513003  :  [ SETUP ] Initialising database... ###
+2020-01-24 21:02:04.514383  :  [ SETUP ] Loading problems... ###
+2020-01-24 21:02:04.514442  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 21:02:04.514469  :  [ SETUP ] Subprocesses started ###
+2020-01-24 21:02:04.514493  :  [ SETUP ][ Process ] Client Manager: 22336 ###
+2020-01-24 21:02:04.514515  :  [ SETUP ][ Process ] Judge Manager: 22337 ###
+2020-01-24 21:02:04.514550  :  [ SETUP ][ Process ] Core: 22339 ###
+2020-01-24 21:02:04.514579  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 21:02:04.514601  :  [ SETUP ][ Process ] Log Manager: 22333 ###
+2020-01-24 21:02:04.514622  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 21:02:04.514644  :    [ START ] Core subprocess started. ###
+2020-01-24 21:02:04.514665  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 21:02:04.514686  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 21:02:05.015348  :    [ START ] Interface subprocess started. ###
+2020-01-24 21:03:05.096044  :  [ JUDGE ][ judge00002 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:03:06.097487  :  [ CORE ] Judge judge00002: Status changed to Disconnected ###
+2020-01-24 21:03:06.097575  :  [ EVENT ] Disconnect judge : judge00002 ###
+2020-01-24 21:03:08.600799  :  [ JUDGE ][ judge00001 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:03:09.101679  :  [ CORE ] Judge judge00001: Status changed to Disconnected ###
+2020-01-24 21:03:09.101812  :  [ EVENT ] Disconnect judge : judge00001 ###
+2020-01-24 21:03:34.134182  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 21:03:34.134420  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 21:03:34.134643  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 21:03:34.134838  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 21:03:34.135009  :  [ EXIT ] Signal passed ###
+2020-01-24 21:03:34.135175  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 21:03:34.135332  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 21:03:34.135490  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 21:03:35.136879  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 21:03:35.136950  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 21:29:32.178396  :  #### SERVER START #### ###
+2020-01-24 21:29:32.178523  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 21:29:32.178579  :  [ SETUP ] Initialising server... ###
+2020-01-24 21:29:32.178607  :  [ SETUP ] Initialising database... ###
+2020-01-24 21:29:33.180015  :  [ SETUP ] Loading problems... ###
+2020-01-24 21:29:33.180071  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 21:29:33.180100  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 21:29:33.180125  :  [ SETUP ] Subprocesses started ###
+2020-01-24 21:29:33.180148  :  [ SETUP ][ Process ] Client Manager: 24236 ###
+2020-01-24 21:29:33.180170  :  [ SETUP ][ Process ] Judge Manager: 24237 ###
+2020-01-24 21:29:33.180191  :  [ SETUP ][ Process ] Core: 24239 ###
+2020-01-24 21:29:33.180212  :  [ SETUP ][ Process ] Log Manager: 24232 ###
+2020-01-24 21:29:33.180233  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 21:29:33.180253  :    [ START ] Core subprocess started. ###
+2020-01-24 21:29:33.180274  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 21:29:33.180294  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 21:29:33.180315  :    [ START ] Interface subprocess started. ###
+2020-01-24 21:29:44.193899  :  [ USER ][ team00020 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:29:44.193995  :  [ CORE ] User team00020: Status changed to Disconnected ###
+2020-01-24 21:29:44.194046  :  [ EVENT ] Disconnect client : team00020 ###
+2020-01-24 21:29:46.697343  :  [ USER ][ team00018 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:29:47.698804  :  [ CORE ] User team00018: Status changed to Disconnected ###
+2020-01-24 21:29:47.698892  :  [ EVENT ] Disconnect client : team00018 ###
+2020-01-24 21:29:50.202461  :  [ USER ][ team00016 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:29:50.703270  :  [ CORE ] User team00016: Status changed to Disconnected ###
+2020-01-24 21:29:50.703359  :  [ EVENT ] Disconnect client : team00016 ###
+2020-01-24 21:29:53.707416  :  [ USER ][ team00008 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:29:55.209522  :  [ CORE ] User team00008: Status changed to Disconnected ###
+2020-01-24 21:29:55.209711  :  [ EVENT ] Disconnect client : team00008 ###
+2020-01-24 21:29:58.213574  :  [ USER ][ team00010 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:29:58.714337  :  [ CORE ] User team00010: Status changed to Disconnected ###
+2020-01-24 21:29:58.714443  :  [ EVENT ] Disconnect client : team00010 ###
+2020-01-24 21:30:02.218812  :  [ USER ][ team00011 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:30:03.220323  :  [ CORE ] User team00011: Status changed to Disconnected ###
+2020-01-24 21:30:03.220410  :  [ EVENT ] Disconnect client : team00011 ###
+2020-01-24 21:30:06.224166  :  [ USER ][ team00009 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:30:07.726411  :  [ CORE ] User team00009: Status changed to Disconnected ###
+2020-01-24 21:30:07.726568  :  [ EVENT ] Disconnect client : team00009 ###
+2020-01-24 21:30:11.231326  :  [ USER ][ team00004 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:30:12.232854  :  [ CORE ] User team00004: Status changed to Disconnected ###
+2020-01-24 21:30:12.232954  :  [ EVENT ] Disconnect client : team00004 ###
+2020-01-24 21:30:14.236161  :  [ USER ][ team00003 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:30:15.237792  :  [ CORE ] User team00003: Status changed to Disconnected ###
+2020-01-24 21:30:15.237928  :  [ EVENT ] Disconnect client : team00003 ###
+2020-01-24 21:30:18.242611  :  [ USER ][ team00002 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:30:19.244369  :  [ CORE ] User team00002: Status changed to Disconnected ###
+2020-01-24 21:30:19.244752  :  [ EVENT ] Disconnect client : team00002 ###
+2020-01-24 21:30:22.248991  :  [ USER ][ team00001 ][ UPDATE ] State changed to Disconnected ###
+2020-01-24 21:30:22.749827  :  [ CORE ] User team00001: Status changed to Disconnected ###
+2020-01-24 21:30:22.749915  :  [ EVENT ] Disconnect client : team00001 ###
+2020-01-24 21:31:46.369517  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:31:46.369607  :  [ SECURITY ] Client Key did not match. Client ID: Null ###
+2020-01-24 21:31:46.369674  :  [ SECURITY ] Complete Message: {"Client Key": "xayottkief54car", "Code": "DSCNT", "ID": "Null", "Username": "team00001", "IP": "192.168.0.0"} ###
+2020-01-24 21:32:16.408779  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:32:34.932684  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:32:46.448125  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:32:46.448217  :  [ LOG OUT ][ team00001 ][ REJECT ] ###
+2020-01-24 21:32:58.464079  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:33:16.487546  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 21:33:16.487694  :  [ EXIT ] Signal passed ###
+2020-01-24 21:33:16.487772  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 21:33:16.487841  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 21:33:16.487966  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 21:33:16.488068  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 21:33:16.488179  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 21:33:16.488250  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 21:33:17.489655  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 21:33:50.364710  :  #### SERVER START #### ###
+2020-01-24 21:33:50.364848  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 21:33:50.364887  :  [ SETUP ] Initialising server... ###
+2020-01-24 21:33:50.364930  :  [ SETUP ] Initialising database... ###
+2020-01-24 21:33:52.868177  :  [ SETUP ] Loading problems... ###
+2020-01-24 21:33:52.868263  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 21:33:52.868311  :  [ SETUP ] Subprocesses started ###
+2020-01-24 21:33:52.868356  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 21:33:52.868398  :  [ SETUP ][ Process ] Client Manager: 24715 ###
+2020-01-24 21:33:52.868452  :  [ SETUP ][ Process ] Judge Manager: 24716 ###
+2020-01-24 21:33:52.868508  :  [ SETUP ][ Process ] Core: 24718 ###
+2020-01-24 21:33:52.868550  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 21:33:52.868590  :  [ SETUP ][ Process ] Log Manager: 24711 ###
+2020-01-24 21:33:52.868627  :    [ START ] Core subprocess started. ###
+2020-01-24 21:33:52.868667  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 21:33:52.868706  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 21:33:52.868745  :    [ START ] Interface subprocess started. ###
+2020-01-24 21:33:59.377359  :  [ ACCOUNT ] Create 10 Clients and 0 Judge Accounts ###
+2020-01-24 21:33:59.878167  :  [ CORE ] Generating accounts... ###
+2020-01-24 21:33:59.878236  :  [ CORE ] All accounts generated! ###
+2020-01-24 21:34:18.402188  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:34:48.441394  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:34:48.441498  :  [ LOG OUT ][ team00001 ][ REJECT ] ###
+2020-01-24 21:35:00.957612  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:35:00.957706  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT IP: 192.168.0.0 ###
+2020-01-24 21:35:00.957763  :  [ LOGIN ][ REJECT ] Rejected by ADMIN ###
+2020-01-24 21:35:08.467507  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:35:08.467595  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT IP: 192.168.0.0 ###
+2020-01-24 21:35:08.467647  :  [ LOGIN ][ team00001 ] Assigned : 1 ###
+2020-01-24 21:35:08.467694  :  [ LOGIN ][ RESPONSE ] VALID to team00001 ###
+2020-01-24 21:35:09.469114  :  [ CORE ] Added new user. ###
+2020-01-24 21:35:09.469212  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-24 21:35:19.482774  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:35:19.482861  :  [ LOG OUT ][ team00001 ][ ACCEPT ] ###
+2020-01-24 21:35:20.484122  :  [ CORE ] User team00001: Status changed to Disconnected ###
+2020-01-24 21:35:20.484184  :  [ CORE ][ team00001 ] Shutdown. ###
+2020-01-24 21:35:34.002078  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:35:34.002167  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT IP:    192.168.0.0 ###
+2020-01-24 21:35:34.002218  :  [ team00001 ] Client ID does not match. ###
+2020-01-24 21:35:34.002263  :  [ team00001 ][ REJECT ] NOT verified. ###
+2020-01-24 21:35:44.015616  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:35:44.015704  :  [ LOGIN REQUEST ] ::: Null :::team00002@bits2[ TYPE ] CLIENT IP:    192.168.0.0 ###
+2020-01-24 21:35:44.015757  :  [ LOGIN ][ team00002 ] Assigned : 2 ###
+2020-01-24 21:35:44.015804  :  [ LOGIN ][ RESPONSE ] VALID to team00002 ###
+2020-01-24 21:35:45.017109  :  [ CORE ] Added new user. ###
+2020-01-24 21:35:45.017223  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-24 21:36:38.085396  :  [ EVENT ] All Client + Judge disconnection under progress... ###
+2020-01-24 21:36:38.085501  :  [ EVENT ] Disconnect all clients ###
+2020-01-24 21:36:38.586174  :  [ EVENT ] Accounts Reset... ###
+2020-01-24 21:36:49.600813  :  [ ACCOUNT ] Create 10 Clients and 0 Judge Accounts ###
+2020-01-24 21:36:50.101603  :  [ CORE ] Generating accounts... ###
+2020-01-24 21:36:50.602450  :  [ CORE ] All accounts generated! ###
+2020-01-24 21:36:56.610727  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:36:56.610829  :  [ LOGIN REQUEST ] ::: 2 :::team00002@bits2[ TYPE ] CLIENT IP:    192.168.0.0 ###
+2020-01-24 21:36:56.610926  :  [ LOGIN ][ team00002 ] Assigned : 3 ###
+2020-01-24 21:36:56.611004  :  [ LOGIN ][ RESPONSE ] VALID to team00002 ###
+2020-01-24 21:36:58.113239  :  [ CORE ] Added new user. ###
+2020-01-24 21:36:58.113411  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-24 21:38:38.746851  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 21:38:39.247769  :  [ EXIT ] Signal passed ###
+2020-01-24 21:38:39.247935  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 21:38:39.248053  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 21:38:39.248167  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 21:38:39.248294  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 21:38:39.248405  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 21:38:39.248515  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 21:38:40.249971  :  #### SERVER EXIT ####
+
+ ###
+2020-01-24 21:38:40.250061  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-01-24 21:38:56.187882  :  #### SERVER START #### ###
+2020-01-24 21:38:56.187986  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-24 21:38:56.188018  :  [ SETUP ] Initialising server... ###
+2020-01-24 21:38:56.188043  :  [ SETUP ] Initialising database... ###
+2020-01-24 21:38:57.189474  :  [ SETUP ] Loading problems... ###
+2020-01-24 21:38:57.189527  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-24 21:38:57.189554  :    [ START ] Client Manager subprocess started. ###
+2020-01-24 21:38:57.189577  :  [ SETUP ] Subprocesses started ###
+2020-01-24 21:38:57.189599  :    [ START ] Judge Manager subprocess started. ###
+2020-01-24 21:38:57.189621  :    [ START ] Core subprocess started. ###
+2020-01-24 21:38:57.189642  :  [ SETUP ][ Process ] Client Manager: 25200 ###
+2020-01-24 21:38:57.189686  :  [ SETUP ][ Process ] Judge Manager: 25201 ###
+2020-01-24 21:38:57.189733  :  [ SETUP ][ Process ] Core: 25203 ###
+2020-01-24 21:38:57.189775  :  [ SETUP ][ Process ] Log Manager: 25194 ###
+2020-01-24 21:38:57.189810  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-24 21:38:57.189844  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-24 21:38:57.189878  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:38:57.189914  :  [ LOG OUT ][ team00002 ][ REJECT ] ###
+2020-01-24 21:38:57.189948  :    [ START ] Interface subprocess started. ###
+2020-01-24 21:39:06.701651  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:39:06.701884  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT IP: 192.168.0.0 ###
+2020-01-24 21:39:06.702009  :  [ LOGIN ][ team00001 ] Assigned : 4 ###
+2020-01-24 21:39:06.702094  :  [ LOGIN ][ RESPONSE ] VALID to team00001 ###
+2020-01-24 21:39:07.202922  :  [ CORE ] Added new user. ###
+2020-01-24 21:39:07.203122  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-24 21:39:13.711752  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:39:13.711871  :  [ LOG OUT ][ team00001 ][ ACCEPT ] ###
+2020-01-24 21:39:15.214052  :  [ CORE ] User team00001: Status changed to Disconnected ###
+2020-01-24 21:39:15.214190  :  [ CORE ][ team00001 ] Shutdown. ###
+2020-01-24 21:39:18.218295  :  [ EVENT ] All Client + Judge disconnection under progress... ###
+2020-01-24 21:39:18.718829  :  [ EVENT ] Accounts Reset... ###
+2020-01-24 21:39:19.219748  :  [ EVENT ] Disconnect all clients ###
+2020-01-24 21:39:27.731388  :  [ ACCOUNT ] Create 10 Clients and 0 Judge Accounts ###
+2020-01-24 21:39:28.232174  :  [ CORE ] Generating accounts... ###
+2020-01-24 21:39:29.233722  :  [ CORE ] All accounts generated! ###
+2020-01-24 21:39:33.739462  :  [ ALERT ] Recieved a new client message. ###
+2020-01-24 21:39:33.739557  :  [ LOGIN REQUEST ] ::: Null :::team00001@bits1[ TYPE ] CLIENT IP: 192.168.0.0 ###
+2020-01-24 21:39:33.739609  :  [ LOGIN ][ team00001 ] Assigned : 5 ###
+2020-01-24 21:39:33.739655  :  [ LOGIN ][ RESPONSE ] VALID to team00001 ###
+2020-01-24 21:39:34.240402  :  [ CORE ] Added new user. ###
+2020-01-24 21:39:34.240496  :  [ CORE ] Added new user in scoreboard. ###
+2020-01-24 21:39:45.254783  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-24 21:39:45.755621  :  [ EXIT ] Signal passed ###
+2020-01-24 21:39:45.755717  :  [ EXIT ] Saving Server state to file. ###
+2020-01-24 21:39:45.755781  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-24 21:39:45.755850  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-24 21:39:45.755901  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-24 21:39:45.755949  :  [ EXIT ] Saved Server state to file. ###
+2020-01-24 21:39:45.755995  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-24 21:39:46.757342  :  #### SERVER EXIT ####
+
+ ###

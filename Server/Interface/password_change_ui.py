@@ -20,8 +20,6 @@ class password_change_ui(QMainWindow):
 		):
 		super(password_change_ui, self).__init__(parent)
 
-		print(password_change_ui.username, password_change_ui.ctype, password_change_ui.password)
-		
 		self.data_changed_flags = data_changed_flags
 		self.log_queue = log_queue
 		self.task_queue = task_queue

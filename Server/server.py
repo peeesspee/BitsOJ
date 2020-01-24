@@ -89,15 +89,15 @@ def main():
 	#	3		0/1			0/1: Disallow/Allow submissions
 	#	4		0/1			1: A create accounts window is open --------------------
 	#	5		0/1			1: Update accounts view
-	#   6		0/1			1: Database data deletion under progress  --------------------
+	#   6		0/1			1: Database data deletion under progress 
 	#	7		0/1			1: Server shutdown
-	#   8		0/1			 ------------------------------- FREE
+	#   8		0/1			1: Core EXIT 
 	#	9		0/1			1: Refresh query gui
 	# 	10		0/1/2		0: SETUP 1: START 2: STOPPED	Contest Status
-	#	11		0/1				----------------------------FREE
+	#	11		0/1			1: Submission files open
 	#	12		0/1			1: JUDGE logins allowed
 	#   13		0/1			1: Refresh Connected Judge GUI
-	#	14		0/1				------------------------ FREE
+	#	14		0/1			1: Do not allow multiple logins with same IP address
 	#	15		0/1			1: Scoreboard update allowed
 	# 	16		0/1			1: Update Scoreboard GUI
 	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
@@ -176,9 +176,6 @@ def main():
 		problem_management.init_problems(config['Problems'])
 		log_queue.put('[ SETUP ] Loading problems...')
 
-		# Disconnect from DB
-		conn.close()
-
 	#####################################################################################
 
 	# Manage subprocesses
@@ -193,38 +190,37 @@ def main():
 		log_queue
 	)
 	print('[ SETUP ] Subprocesses started')
-	print('[ SETUP ][ Process ] Client Manager: ', client_pid)
-	print('[ SETUP ][ Process ] Judge Manager: ', judge_pid)
-	print('[ SETUP ][ Process ] Core: ', core_pid)
-	print('[ SETUP ][ Process ] Log Manager: ', log_pid)
-
 	log_queue.put('[ SETUP ] Subprocesses started')
+	print('[ SETUP ][ Process ] Client Manager: ', client_pid)
 	log_queue.put('[ SETUP ][ Process ] Client Manager: ' + str(client_pid))
+	print('[ SETUP ][ Process ] Judge Manager: ', judge_pid)
 	log_queue.put('[ SETUP ][ Process ] Judge Manager: ' + str(judge_pid))
+	print('[ SETUP ][ Process ] Core: ', core_pid)
 	log_queue.put('[ SETUP ][ Process ] Core: ' + str(core_pid))
+	print('[ SETUP ][ Process ] Log Manager: ', log_pid)
 	log_queue.put('[ SETUP ][ Process ] Log Manager: ' + str(log_pid))
-
+	
 	# Initialize GUI handler
 	try:
 		init_gui(data_changed_flags, task_queue, log_queue)
 	except Exception as error:
-		print("[ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
+		print("[ MAIN ][ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
 		log_queue.put("[ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-		print(exc_type, fname, exc_tb.tb_lineno)
+		print('[ MAIN ] Error data: ' , exc_type, fname, exc_tb.tb_lineno)
 	#####################################################################################
-	# Server process is in idle state here on. Active processes are:
+	# Server process handles GUI here on. Other active processes are:
 	# client_manager
-	# bitsoj_core
+	# Bitsoj_core
 	# judge_manager
+	# Log_manager
 	#####################################################################################
 	# If we reach here, it means the GUI process has ended, 
 	# which further means the Server has been shut down by press of Close button.
 	print("[ EXIT ] Signal passed")
 	log_queue.put("[ EXIT ] Signal passed")
 
-	
 	# Send SIGINT to both client and judge subprocesses
 	# SIGINT : Keyboard Interrupt ( Handled by both subprocesses internally )
 	# We're not exactly Killing the processes. They get the time to shut down on their own :)
@@ -279,11 +275,18 @@ def main():
 	# Stop logger service
 	data_changed_flags[23] = 1
 	system_stop()
-	sleep(1)
+	# Wait until LOGGER exits successfully
+	while data_changed_flags[23] != 0:
+		pass
+
+	# Wait until CORE exits successfully
+	while data_changed_flags[8] != 1:
+		pass
+ 
 	print("  ################################################")
 	print("  #----------SERVER CLOSED SUCCESSFULLY----------#")
 	print("  ################################################")
-
+	#####################################################################################
 
 def manage_process(
 		judge_username, 

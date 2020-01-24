@@ -2,15 +2,17 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from database_management import user_management
 from account_io import *
+import json
 
 class ie_accounts_ui(QMainWindow):
 	filename = ''
 	def log(self, text):
 		self.log_queue.put(text)
-	def __init__(self, data_changed_flags, log_queue, parent=None):
+	def __init__(self, data_changed_flags, task_queue, log_queue, parent=None):
 		super(ie_accounts_ui, self).__init__(parent)
 		ie_accounts_ui.data_changed_flags = data_changed_flags
 		self.log_queue = log_queue
+		self.task_queue = task_queue
 		self.setGeometry(700, 350, 500, 200)
 		self.setWindowTitle('Import/Export Accounts')
 		self.setFixedSize(500, 200)
@@ -21,7 +23,6 @@ class ie_accounts_ui(QMainWindow):
 
 	def add_ie_accounts_ui(self):
 		label1 = QLabel('File Location: ')
-
 		self.file_entry = QLineEdit()
 		self.file_entry.setText(ie_accounts_ui.filename)
 		self.file_entry.setPlaceholderText('Enter file path (.xlsx files only)')
@@ -104,9 +105,19 @@ class ie_accounts_ui(QMainWindow):
 
 		print('[ ACCOUNT ] Import Accounts from ' + filename )
 		self.log('[ ACCOUNT ] Import Accounts from ' + filename )
+
 		u_list, p_list, t_list = io_manager.read_file(filename)
+
 		if len(u_list) != 0:
-			status = user_management.add_sheet_accounts(u_list, p_list, t_list)
+			message = {
+				'Code' : 'AddSheetUsers',
+				'UserList' : u_list,
+				'PassList' : p_list,
+				'TypeList' : t_list
+			}
+			message = json.dumps(message)
+			self.task_queue.put(message)
+
 		elif p_list[0] != 'FNF':
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Critical)
@@ -115,6 +126,7 @@ class ie_accounts_ui(QMainWindow):
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
 			return
+
 		else:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Critical)
@@ -124,19 +136,6 @@ class ie_accounts_ui(QMainWindow):
 			info_box.exec_()
 			return
 
-		if status == 0:
-			# Database insertion error
-			info_box = QMessageBox()
-			info_box.setIcon(QMessageBox.Critical)
-			info_box.setWindowTitle('Error')
-			info_box.setText('Database insertion error: Team names should be unique.')
-			info_box.setStandardButtons(QMessageBox.Ok)
-			info_box.exec_()
-
-		# Reset the critical section flag
-		ie_accounts_ui.data_changed_flags[4] = 0
-		# Indicate new insertions in accounts
-		ie_accounts_ui.data_changed_flags[5] = 1
 		self.close()
 
 	def export_manager(self, filename):
@@ -149,20 +148,16 @@ class ie_accounts_ui(QMainWindow):
 			info_box.exec_()
 			return
 
-		
 		print('[ ACCOUNT ] Export Accounts to ' + filename)
 		self.log('[ ACCOUNT ] Export Accounts to ' + filename)
 		u_list, p_list, t_list = user_management.get_sheet_accounts()
 		io_manager.write_file(u_list, p_list, t_list)
-		# Reset the critical section flag
-		ie_accounts_ui.data_changed_flags[4] = 0
+		
 		# Indicate new insertions in accounts
 		ie_accounts_ui.data_changed_flags[5] = 1
 		self.close()
 
 	def cancel(self):
-		# Reset the critical section flag
-		ie_accounts_ui.data_changed_flags[4] = 0
 		self.close()
 
 	def validate_filename(filename):
