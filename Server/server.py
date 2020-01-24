@@ -114,6 +114,7 @@ def main():
 	#####################################################################################
 	
 	# Set submission time limit
+	data_changed_flags[14] = 0
 	data_changed_flags[21] = submission_time_limit
 	data_changed_flags[23] = 0
 	data_changed_flags[26] = 0

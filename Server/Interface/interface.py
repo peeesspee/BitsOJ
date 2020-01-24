@@ -133,9 +133,9 @@ class server_window(QMainWindow):
 		# Each tab is an object returned by the respective function associated with its UI
 		# Tab UI are managed by interface_packages/ui_classes.py file 
 		self.tab0, self.account_model, self.delete_account_button = ui_widgets.accounts_ui(self)
-		self.tab1, self.sub_model, self.allow_sub_button = ui_widgets.submissions_ui(self)
+		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
 		self.tab2, self.judge_model = ui_widgets.judge_ui(self)
-		self.tab3, self.client_model, self.allow_login_button = ui_widgets.client_ui(self)
+		self.tab3, self.client_model = ui_widgets.client_ui(self)
 		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5, self.score_model, self.scoring_type_label = ui_widgets.leaderboard_ui(self)
 		self.tab6, self.problem_model = ui_widgets.problem_ui(self)
@@ -600,10 +600,10 @@ class server_window(QMainWindow):
 			self.delete_account_button.setEnabled(False)
 			self.timer_reset_button.setEnabled(False)
 			# Allow submissions now
-			self.allow_sub_button.setChecked(True)
+			# self.allow_sub_button.setChecked(True)
 			self.data_changed_flags[3] = 1
 			# Allow logins now
-			self.allow_login_button.setChecked(True)
+			# self.allow_login_button.setChecked(True)
 			self.data_changed_flags[2] = 1
 
 		elif status == "STOPPED":
@@ -632,10 +632,10 @@ class server_window(QMainWindow):
 			self.timer_reset_button.setEnabled(True)
 			self.timer_reset_button.setToolTip('Reset Contest timer')
 			# Don't allow submissions now
-			self.allow_sub_button.setChecked(False)
+			# self.allow_sub_button.setChecked(False)
 			self.data_changed_flags[3] = 0
 			# Don't allow logins now
-			self.allow_login_button.setChecked(False)
+			# self.allow_login_button.setChecked(False)
 			self.data_changed_flags[2] = 0
 		return
 
@@ -753,6 +753,20 @@ class server_window(QMainWindow):
 			self.set_flags(27, 0)
 			print('[ SET ] IP address change not allowed.')
 			self.log_queue.put('[ SET ] IP address change not allowed.')
+		return
+
+	def allow_same_ip_handler(self, state):
+		if(state == Qt.Checked):
+			# Allow logins
+			self.set_flags(14, 1)
+			print('[ SET ] Same IP not allowed.')
+			self.log_queue.put('[ SET ] Same IP not allowed.')
+		else:
+			# Stop logins
+			self.set_flags(14, 0)
+			print('[ SET ] Same IP allowed.')
+			self.log_queue.put('[ SET ] Same IP allowed.')
+			
 		return
 
 	def allow_judge_login_handler(self, state):

@@ -66,27 +66,6 @@ class ui_widgets:
 		heading = QLabel('All Runs')
 		heading.setObjectName('main_screen_heading')
 
-		# TODO
-		manual_review_flag = self.check_manual_review_allowed()
-		manual_review_label = QLabel('Manual Review')
-		manual_review_label.setObjectName('main_screen_content')
-		manual_review_label.setToolTip(
-			'Review each submission before updating Leaderboard\nand sending client response.\nUse only when necessary!'
-		)
-		manual_review_button = QCheckBox('')
-		manual_review_button.setFixedSize(30, 30)
-		manual_review_button.setChecked(manual_review_flag)
-		manual_review_button.stateChanged.connect(self.manual_reviews_handler)
-
-		submission_allowed_flag = self.check_submission_allowed()
-		allow_submission_label = QLabel('Allow Submissions')
-		allow_submission_label.setObjectName('main_screen_content')
-		allow_submission_label.setToolTip('Allow/Disallow client submissions.')
-		allow_submission_button = QCheckBox('')
-		allow_submission_button.setFixedSize(30, 30)
-		allow_submission_button.setChecked(submission_allowed_flag)
-		allow_submission_button.stateChanged.connect(self.allow_submissions_handler)
-
 		edit_submission_button = QPushButton('Review', self)
 		edit_submission_button.setFixedSize(200, 50)
 		edit_submission_button.clicked.connect(
@@ -124,17 +103,12 @@ class ui_widgets:
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
-		head_layout.addWidget(manual_review_label)
-		head_layout.addWidget(manual_review_button)
-		head_layout.addWidget(allow_submission_label)
-		head_layout.addWidget(allow_submission_button)
 		head_layout.addWidget(edit_submission_button)
 		head_layout.addWidget(rejudge_problem_button)
 		head_layout.setStretch(0, 80)
-		head_layout.setStretch(1, 5)
-		head_layout.setStretch(2, 5)
-		head_layout.setStretch(3, 5)
-		head_layout.setStretch(4, 5)
+		head_layout.setStretch(1, 10)
+		head_layout.setStretch(2, 10)
+
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
@@ -148,7 +122,7 @@ class ui_widgets:
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
 		main.show()
-		return main, submission_model, allow_submission_button
+		return main, submission_model
 
 
 	def client_ui(self):
@@ -167,21 +141,6 @@ class ui_widgets:
 		heading = QLabel('Connected Clients')
 		heading.setObjectName('main_screen_heading')
 
-		allow_login_label = QLabel('Allow Logins : ')
-		allow_login_label.setObjectName('main_screen_content')
-		login_allowed_flag = self.check_login_allowed()
-		allow_login_button = QCheckBox('')
-		allow_login_button.setFixedSize(30, 30)
-		allow_login_button.setChecked(login_allowed_flag)
-		allow_login_button.stateChanged.connect(self.allow_login_handler)
-
-		multiple_ip_label = QLabel('Allow IP Change : ')
-		multiple_ip_label.setObjectName('main_screen_content')
-		ip_checker_button = QCheckBox('')
-		ip_checker_button.setFixedSize(30, 30)
-		ip_checker_button.setChecked(False)
-		ip_checker_button.stateChanged.connect(self.allow_ip_change_handler)
-
 		edit_client_button = QPushButton('Edit State', self)
 		edit_client_button.setFixedSize(200, 50)
 		edit_client_button.clicked.connect(
@@ -192,17 +151,9 @@ class ui_widgets:
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
-		head_layout.addWidget(multiple_ip_label)
-		head_layout.addWidget(ip_checker_button)
-		head_layout.addWidget(allow_login_label)
-		head_layout.addWidget(allow_login_button)
 		head_layout.addWidget(edit_client_button)
-		head_layout.setStretch(0, 60)
-		head_layout.setStretch(1, 5)
-		head_layout.setStretch(2, 5)
-		head_layout.setStretch(3, 5)
-		head_layout.setStretch(4, 5)
-		head_layout.setStretch(5, 20)
+		head_layout.setStretch(0, 90)
+		head_layout.setStretch(1, 10)
 		
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
@@ -216,21 +167,11 @@ class ui_widgets:
 		main = QWidget()
 		main.setLayout(main_layout)
 		main.setObjectName("main_screen");
-		return main, client_model, allow_login_button
+		return main, client_model
 
 	def judge_ui(self):
 		heading = QLabel('Connected Judges')
 		heading.setObjectName('main_screen_heading')
-
-		allow_login_label = QLabel('Allow Judge Logins : ')
-		allow_login_label.setObjectName('main_screen_content')
-
-		login_allowed_flag = self.check_judge_login_allowed()
-		
-		allow_login_button = QCheckBox('')
-		allow_login_button.setFixedSize(30, 30)
-		allow_login_button.setChecked(login_allowed_flag)
-		allow_login_button.stateChanged.connect(self.allow_judge_login_handler)
 
 		judge_model = self.manage_models(self.db, 'connected_judges')
 		judge_model.setHeaderData(0, Qt.Horizontal, 'Judge ID')
@@ -246,13 +187,8 @@ class ui_widgets:
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
-		head_layout.addWidget(allow_login_label)
-		head_layout.addWidget(allow_login_button)
-		head_layout.setStretch(0, 80)
-		head_layout.setStretch(1, 10)
-		head_layout.setStretch(2, 10)
+		head_layout.setStretch(0, 100)
 		
-
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
@@ -332,14 +268,6 @@ class ui_widgets:
 
 		scoring_label = QLabel('Scoring Type: ' + scoring_type)
 
-		update_scoreboard_label = QLabel('Allow Scoreboard Broadcast: ')
-		update_scoreboard_label.setObjectName('main_screen_content')
-		update_scoreboard_flag = self.check_scoreboard_update_allowed()
-		update_scoreboard_button = QCheckBox('')
-		update_scoreboard_button.setFixedSize(30, 30)
-		update_scoreboard_button.setChecked(update_scoreboard_flag)
-		update_scoreboard_button.stateChanged.connect(self.allow_scoreboard_update_handler)
-
 		score_model = self.manage_leaderboard_model(self.db, 'scoreboard')
 		score_table = self.generate_view(score_model)
 		score_table.setSortingEnabled(False)
@@ -355,17 +283,11 @@ class ui_widgets:
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
 		head_layout.addWidget(scoring_label)
-		head_layout.addWidget(update_scoreboard_label)
-		head_layout.addWidget(update_scoreboard_button)
 		head_layout.addWidget(update_button)
 
-		head_layout.setStretch(0, 30)
-		head_layout.setStretch(1, 40)
-		head_layout.setStretch(2, 10)
-		head_layout.setStretch(3, 10)
-		head_layout.setStretch(4, 10)
-
+		head_layout.setAlignment(heading, Qt.AlignLeft)
 		head_layout.setAlignment(scoring_label, Qt.AlignCenter)
+		head_layout.setAlignment(update_button, Qt.AlignRight)
 
 		
 		head_widget = QWidget()
@@ -531,8 +453,6 @@ class ui_widgets:
 		# Get number of active pro participants
 		participant_pro_count = report_management.get_participant_pro_count()
 		child_list[6].setText(str(participant_pro_count))
-
-		# Get Accuracy
 
 		return
 
@@ -897,6 +817,111 @@ class ui_widgets:
 			timer_reset_button
 		)
 
+	def contest_flag_settings(self):
+		contest_reset_label = QLabel('Contest Flags:')
+		contest_reset_label.setObjectName('main_screen_sub_heading')
+
+		allow_client_login_label = QLabel('Allow Logins')
+		allow_client_login_label.setObjectName('main_screen_content')
+		tooltip = ('Allow clients to Login.')
+		allow_client_login_label.setToolTip(tooltip)
+		allow_client_login_flag = self.check_login_allowed()
+		allow_client_login_button = QCheckBox('')
+		allow_client_login_button.setFixedSize(30, 30)
+		allow_client_login_button.setChecked(allow_client_login_flag)
+		allow_client_login_button.stateChanged.connect(self.allow_login_handler)
+		allow_client_login_widget = ui_widgets.get_horizontal_widget(allow_client_login_button, allow_client_login_label)
+
+		allow_judge_login_label = QLabel('Allow Judge Logins')
+		allow_judge_login_label.setObjectName('main_screen_content')
+		tooltip = ('Allow judges to Login.')
+		allow_judge_login_label.setToolTip(tooltip)
+		allow_judge_login_flag = self.check_judge_login_allowed()
+		allow_judge_login_button = QCheckBox('')
+		allow_judge_login_button.setFixedSize(30, 30)
+		allow_judge_login_button.setChecked(allow_judge_login_flag)
+		allow_judge_login_button.stateChanged.connect(self.allow_judge_login_handler)
+		allow_judge_login_widget = ui_widgets.get_horizontal_widget(allow_judge_login_button, allow_judge_login_label)
+
+		submission_allowed_flag = self.check_submission_allowed()
+		allow_submission_label = QLabel('Allow Submissions')
+		allow_submission_label.setObjectName('main_screen_content')
+		allow_submission_label.setToolTip('Allow/Disallow client submissions.')
+		allow_submission_button = QCheckBox('')
+		allow_submission_button.setFixedSize(30, 30)
+		allow_submission_button.setChecked(submission_allowed_flag)
+		allow_submission_button.stateChanged.connect(self.allow_submissions_handler)
+		allow_submission_widget = ui_widgets.get_horizontal_widget(allow_submission_button, allow_submission_label)
+
+		manual_review_flag = self.check_manual_review_allowed()
+		manual_review_label = QLabel('Manual Review')
+		manual_review_label.setObjectName('main_screen_content')
+		manual_review_label.setToolTip(
+			'Review each submission before updating Leaderboard and sending client response.' +
+			'\nWhen disbled, you can choose to release all under Review submissions.'
+		)
+		manual_review_button = QCheckBox('')
+		manual_review_button.setFixedSize(30, 30)
+		manual_review_button.setChecked(manual_review_flag)
+		manual_review_button.stateChanged.connect(self.manual_reviews_handler)
+		manual_review_widget = ui_widgets.get_horizontal_widget(manual_review_button, manual_review_label)
+
+		ip_checker_label = QLabel('Force same IP')
+		tooltip = (
+			'When enabled, clients will not be able to login with same' +
+			'\ncredentials on different machines.'
+		)
+		ip_checker_label.setToolTip(tooltip)
+		ip_checker_label.setObjectName('main_screen_content')
+		ip_checker_button = QCheckBox('')
+		ip_checker_button.setFixedSize(30, 30)
+		ip_checker_button.setChecked(False)
+		ip_checker_button.stateChanged.connect(self.allow_ip_change_handler)
+		ip_checker_widget = ui_widgets.get_horizontal_widget(ip_checker_button, ip_checker_label)
+
+		same_ip_label = QLabel('Enforce distinct IP Logins')
+		tooltip = ('When enabled, participants will not be able to open two clients on same machine' +
+			'\nThis may cause issues when clients are on a shared network.'
+		)
+		same_ip_label.setToolTip(tooltip)
+		same_ip_label.setObjectName('main_screen_content')
+		same_ip_button = QCheckBox('')
+		same_ip_button.setFixedSize(30, 30)
+		same_ip_button.setChecked(False)
+		same_ip_button.stateChanged.connect(self.allow_same_ip_handler)
+		same_ip_widget = ui_widgets.get_horizontal_widget(same_ip_button, same_ip_label)
+
+		update_scoreboard_label = QLabel('Allow Scoreboard Broadcast')
+		update_scoreboard_label.setObjectName('main_screen_content')
+		update_scoreboard_flag = self.check_scoreboard_update_allowed()
+		update_scoreboard_button = QCheckBox('')
+		update_scoreboard_button.setFixedSize(30, 30)
+		update_scoreboard_button.setChecked(update_scoreboard_flag)
+		update_scoreboard_button.stateChanged.connect(self.allow_scoreboard_update_handler)
+		update_scoreboard_widget = ui_widgets.get_horizontal_widget(update_scoreboard_button, update_scoreboard_label)
+
+		button_layout = QGridLayout()
+		button_layout.addWidget(allow_client_login_widget, 0, 0)
+		button_layout.addWidget(allow_judge_login_widget, 0, 1)
+		button_layout.addWidget(allow_submission_widget, 1, 0)
+		button_layout.addWidget(manual_review_widget, 1, 1)
+		button_layout.addWidget(ip_checker_widget, 2, 0)
+		button_layout.addWidget(same_ip_widget, 2, 1)
+		button_layout.addWidget(update_scoreboard_widget, 3, 0)
+		button_layout.setColumnStretch(0,1)
+		button_layout.setColumnStretch(1,3)
+		button_widget = QWidget()
+		button_widget.setLayout(button_layout)
+
+		contest_reset_layout = QVBoxLayout()
+		contest_reset_layout.addWidget(contest_reset_label)
+		contest_reset_layout.addWidget(button_widget)
+		contest_reset_layout.addStretch(1)
+		contest_reset_widget = QWidget()
+		contest_reset_widget.setLayout(contest_reset_layout)
+		contest_reset_widget.setObjectName('content_box')
+		return contest_reset_widget
+		
 	def settings_ui(self):
 		heading = QLabel('Server Settings')
 		heading.setObjectName('main_screen_heading')
@@ -938,15 +963,18 @@ class ui_widgets:
 			timer_reset_button
 		) = ui_widgets.contest_reset_settings(self)
 
-
+		contest_flag_widget = ui_widgets.contest_flag_settings(self)
 		
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
 		main_layout.addWidget(time_management_widget)
 		main_layout.addWidget(contest_reset_widget)
+		main_layout.addWidget(contest_flag_widget)
 		main_layout.setStretch(0, 10)
-		main_layout.setStretch(1, 45)
-		main_layout.setStretch(2, 45)
+		main_layout.setStretch(1, 30)
+		main_layout.setStretch(2, 30)
+		main_layout.setStretch(3, 30)
+
 
 		main = QWidget()
 		main.setLayout(main_layout)
