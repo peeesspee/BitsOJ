@@ -599,12 +599,6 @@ class server_window(QMainWindow):
 			self.client_reset_button.setEnabled(True)
 			self.delete_account_button.setEnabled(False)
 			self.timer_reset_button.setEnabled(False)
-			# Allow submissions now
-			# self.allow_sub_button.setChecked(True)
-			self.data_changed_flags[3] = 1
-			# Allow logins now
-			# self.allow_login_button.setChecked(True)
-			self.data_changed_flags[2] = 1
 
 		elif status == "STOPPED":
 			self.set_status('STOPPED')
@@ -631,12 +625,6 @@ class server_window(QMainWindow):
 			self.delete_account_button.setEnabled(True)
 			self.timer_reset_button.setEnabled(True)
 			self.timer_reset_button.setToolTip('Reset Contest timer')
-			# Don't allow submissions now
-			# self.allow_sub_button.setChecked(False)
-			self.data_changed_flags[3] = 0
-			# Don't allow logins now
-			# self.allow_login_button.setChecked(False)
-			self.data_changed_flags[2] = 0
 		return
 
 	def process_event(self, data, extra_data):
