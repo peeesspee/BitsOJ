@@ -1,6 +1,7 @@
 # This module handles xlsx files
 import openpyxl
 from database_management import user_management
+
 class io_manager:
 	def read_file(filename = './accounts.xlsx'):
 		u_list = []

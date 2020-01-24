@@ -52,26 +52,26 @@ class verdict():
 			classfile = 'python'
 			runfile = 'python3 ' + PATH + file_with_ext
 
-		print(classfile)
-		print(runfile)
+		# print(classfile)
+		# print(runfile)
 		return classfile,runfile
 
 	def compile_file(classfile, lang):
 
 		if lang != 'PYTHON-2' and lang != 'PYTHON-3':
-			print("COMPILING...")
+			print("[ JUDGE ] Compiling...")
 			process = subprocess.run(classfile, capture_output=True, text=True, shell=True)
 			exit_code = process.returncode
 			output = process.stdout
 			error = process.stderr
 			if exit_code == 0:
-				print("COMPILATION SUCCESSFUL")
+				print("[ JUDGE ] Compilation Successful")
 				return verdict.ERROR
 			else :
 				verdict.ERROR = True
 				verdict.VERDICT = 'CMPL'
 				verdict.result = error
-				print("COMPILATION ERROR !!!")
+				print("[ JUDGE ] Compilation Error")
 				return verdict.ERROR
 
 		else:
@@ -85,10 +85,8 @@ class verdict():
 		SUBM_PATH = './submission_files/' 
 
 		if verdict.ERROR == False:
-################################################################################
-
+			################################################################################
 			# code for java 
-			
 			if language == 'JAVA':
 				list_of_inputfiles = os.listdir(INPUT_PATH)
 				for file in list_of_inputfiles:
@@ -96,71 +94,64 @@ class verdict():
 						pos = file.index('.')
 						ext = file[pos+1:]
 						if ext == 'in':
-							print("STARTED RUNNING SUBMITTED FILE")
+							print("[ JUDGE ] Running...")
 							command = 'ulimit -p ' + initialize_judge.processlimit + ' && '
 							command = command + 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
-							print("command is ->", command)
+							# print("command is ->", command)
 							process = subprocess.run(command, capture_output=True, text=True, shell=True)
-							print(process)
-
-
+							# print(process)
 							# if process.returncode != 0 and process.stderr == '':
 							if process.returncode == 124:
-								print("there is no stderr in run time therefore it is tle")
+								print("[ JUDGE ] Time Limit Exceeded")
 								verdict.ERROR = True
 								verdict.VERDICT = 'TLE'
-								verdict.result = 'Time Limit Exceeded !!!'
+								verdict.result = 'Time Limit Exceeded'
 								os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
 								return verdict.ERROR
 
-
 							if process.returncode != 0:
-								print("there is some Runtime error as returncode is not 0")
+								print("[ JUDGE ] Runtime Error")
 								verdict.ERROR = True
 								verdict.VERDICT = 'RE'
 								verdict.result = process.stderr
-								os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
+								os.remove(SUBM_PATH + 'output_' + file[:pos]  + '_' + run_id)
 								return verdict.ERROR
 
 							if process.returncode == 0:
-								print("NO RUN TIME ERROR")
+								print("[ JUDGE ] File Run Successful [ No RTE ]")
 								pass
-
 					except:
 						pass
 
 				return verdict.ERROR
 
-				
-################################################################################
-
+			# For all other Languages, 
 			list_of_inputfiles = os.listdir(INPUT_PATH)
-
 			for file in list_of_inputfiles:
 				try:
 					pos = file.index('.')
 					ext = file[pos+1:]
 					if ext == 'in':
-						print("STARTED RUNNING SUBMITTED FILE")
+						print("[ JUDGE ] Running...")
 						command = 'ulimit -p ' + initialize_judge.processlimit + ' && '
 						command = command + 'timeout ' + time_limit + runfile + ' < ' + INPUT_PATH + file + ' > ' + SUBM_PATH + 'output_' + file[:pos]  + '_'+ run_id
-						print("command is ->", command)
+						# print("command is ->", command)
 						process = subprocess.run(command, capture_output=True, text=True, shell=True)
-						print(process)
+						# print(process)
 
 
 						# if process.returncode != 0 and process.stderr == '':
 						if process.returncode == 124:
-							print("there is no stderr in run time therefore it is tle")
+							print("[ JUDGE ] Time Limit Exceeded")
 							verdict.ERROR = True
 							verdict.VERDICT = 'TLE'
-							verdict.result = 'Time Limit Exceeded !!!'
+							verdict.result = 'Time Limit Exceeded'
 							os.remove(SUBM_PATH+'output_' + file[:pos]  + '_'+ run_id)
 							return verdict.ERROR
 
 
 						if process.returncode != 0:
-							print("there is some Runtime error as returncode is not 0")
+							print("[ JUDGE ] Runtime Error")
 							verdict.ERROR = True
 							verdict.VERDICT = 'RE'
 							verdict.result = process.stderr
@@ -168,7 +159,7 @@ class verdict():
 							return verdict.ERROR
 
 						if process.returncode == 0:
-							print("NO RUN TIME ERROR")
+							print("[ JUDGE ] File Run Successful [ No RTE ]")
 							pass
 
 				except:
@@ -212,15 +203,15 @@ class verdict():
 						cases_passed = str(int(cases_passed) + 1)
 					else:
 						verdict.result = 'Wrong Answer !!!'
-						print(verdict.result)
-						print("[TEST CASES PASSED] "+str(cases_passed))	
+						# print(verdict.result)
+						print("[ JUDGE ][ WA ] Test cases passed: " + str(cases_passed))	
 						verdict.VERDICT = 'WA'
 						return verdict.result,verdict.VERDICT
 
 					g.close()
 					f.close()
 
-			print("ALL TEST CASES PASSED")
+			print("[ JUDGE ][ AC ] All test cases passed")
 			verdict.result = "All Correct"
 			verdict.VERDICT = "AC"
 			return verdict.result, verdict.VERDICT
@@ -242,7 +233,6 @@ class verdict():
 			if e == True:
 				result = verdict.result
 				verd = verdict.VERDICT
-
 				verdict.VERDICT = 'Nul'
 				verdict.result = 'Nul'
 				verdict.ERROR = False
@@ -273,10 +263,9 @@ class verdict():
 		if e == False:
 			time_limit = timelimit + 's '
 			e = verdict.run_file(runfile, problem_code, run_id, time_limit, lang)
-
-			print(verdict.ERROR)
-			print(verdict.VERDICT)
-			print(verdict.result)
+			# print(verdict.ERROR)
+			# print(verdict.VERDICT)
+			# print(verdict.result)
 			verdict.remove_object(file_name, file_with_ext, lang)
 
 			if e == True:
@@ -296,11 +285,3 @@ class verdict():
 				verdict.result = 'Nul'
 				verdict.ERROR = False
 				return verd,result
-
-
-# v,r=verdict.main(file_name, file_with_ext, lang, problem_code, run_id, timelimit)
-# v,r=verdict.main("SAC3", "SAC3.cpp", "C++", "SAC", "980", "2")
-# print("verdict is --->",v)
-# print("result is ---->",r)
-
-# _main_ = verdict.trial("ABCD1234", "ABCD1234.cpp")

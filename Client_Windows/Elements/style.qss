@@ -327,7 +327,6 @@ QLabel#main_screen_heading{
 	font-size : 30px;
 }
 QLabel#about_screen_heading{
-	margin-top : 200px;
 	color : #E91E63;
 	font-size : 30px;
 }
@@ -581,6 +580,6 @@ QWidget#banner_overlay{
 
 QLabel#about_screen_heading_2{
 	color : #E91E63;
-	font-size : 48px;
+	font-size : 24px;
 }
 

@@ -169,7 +169,7 @@ class judge_view_ui(QMainWindow):
 				'IP' : self.ip
 			}
 			message = json.dumps(message)
-			manage_judges.task_queue.put(message)
+			self.task_queue.put(message)
 
 			print('[ JUDGE ][ ' + self.username + ' ][ UPDATE ] State changed to ' + self.state_type)
 			self.log('[ JUDGE ][ ' + self.username + ' ][ UPDATE ] State changed to ' + self.state_type)
@@ -181,7 +181,7 @@ class judge_view_ui(QMainWindow):
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
-
+ 
 			elif self.state_type == 'Disconnected':
 				message = {
 					"Code" : "JDSCNT",

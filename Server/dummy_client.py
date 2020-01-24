@@ -12,7 +12,7 @@ client_id = 'Null'
 
 username = 'team00001'
 password = 'bits1'
-key = 'xayottkief54car'
+key = '6qi2bguep7l06rc'
 
 try:
 	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
@@ -40,7 +40,7 @@ def login():
 		'Password' : password,
 		'ID' : client_id,
 		'Type' : 'CLIENT',
-		'IP' : '192.168.0.0'
+		'IP' : '   192.168.0.0'
 		}
 	
 	message = json.dumps(message)

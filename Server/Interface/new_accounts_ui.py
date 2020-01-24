@@ -9,10 +9,11 @@ class new_accounts_ui(QMainWindow):
 	judge_no = 0
 	data_changed_flags = ''
 	
-	def __init__(self, data_changed_flags, log_queue, parent=None):
+	def __init__(self, data_changed_flags, task_queue, log_queue, parent=None):
 		super(new_accounts_ui, self).__init__(parent)
 		new_accounts_ui.data_changed_flags = data_changed_flags
 		self.log_queue = log_queue
+		self.task_queue = task_queue
 		self.setGeometry(700, 350, 300, 200)
 		self.setWindowTitle('Generate Accounts')
 		self.setFixedSize(500, 300)
@@ -127,18 +128,19 @@ class new_accounts_ui(QMainWindow):
 			str(new_accounts_ui.judge_no) + 
 			' Judge Accounts'
 		)
-		user_management.generate_n_users(
-			new_accounts_ui.client_no, new_accounts_ui.judge_no, 
-			new_accounts_ui.pwd_type
-		)
-		# Reset the critical section flag
-		new_accounts_ui.data_changed_flags[4] = 0
-		# Indicate new insertions in accounts
-		new_accounts_ui.data_changed_flags[5] = 1
+
+		# Put account generation message in task queue
+		message = {
+			'Code' : 'AddNUsers',
+			'Clients' : new_accounts_ui.client_no,
+			'Judges' : new_accounts_ui.judge_no,
+			'Password Type' : new_accounts_ui.pwd_type
+		}
+		message = json.dumps(message)
+		self.task_queue.put(message)
+
 		self.close()
 
 	def cancel(self):
-		# Reset the critical section flag
-		new_accounts_ui.data_changed_flags[4] = 0
 		self.close()
 

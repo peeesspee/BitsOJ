@@ -99,7 +99,8 @@ class manage_clients():
 			channel.basic_consume(
 				queue = 'client_requests', 
 				on_message_callback = manage_clients.client_message_handler,
-				exclusive = True 		# Only server can listen to this queue
+				exclusive = True, 		# Only server can listen to this queue
+				auto_ack = False
 			)
 			channel.start_consuming()
 		# Handle keyboard interrupt ctrl+c and terminate successfully
@@ -113,7 +114,7 @@ class manage_clients():
 			manage_clients.log('[ ERROR ] : Channel closed by Broker')
 
 		except (pika.exceptions.ChannelClosedByBroker):
-			print(
+			print( 
 				'[ ERROR ] : Could not get a lock on client_requests.' +
 				' Please check management portal and remove any consumers from the queue'
 			)
@@ -122,9 +123,10 @@ class manage_clients():
 				'Please check management portal and remove any consumers from the queue'
 			)
 		except Exception as error: 
-			print('[ UI ][ CRITICAL ]: ' + str(error))
-			manage_clients.log('[ UI ][ CRITICAL ]: ' + str(error))
-		finally:
+			print('[ CLIENT PROCESS ][ CRITICAL ]: ' + str(error))
+			manage_clients.log('[ CLIENT PROCESS ][ CRITICAL ]: ' + str(error))
+
+		finally: 
 			manage_clients.data_changed_flags[7] = 1
 			connection.close()
 			print('[ STOP ] Client subprocess terminated successfully!')
@@ -135,14 +137,29 @@ class manage_clients():
 	def client_message_handler(ch, method, properties, body):
 		print('[ ALERT ] Recieved a new client message.')
 		manage_clients.log('[ ALERT ] Recieved a new client message.')
-		# Decode the message sent by client
-		client_message = str(body.decode('utf-8'))
-		# JSON Parsing here 
+		
 		try:
+			# Decode the message sent by client
+			client_message = str(body.decode('utf-8'))
+			# JSON Parsing here 
 			json_data = json.loads(client_message)
 			# Validate Client Key( Make sure client is authentic! )
-			client_key = json_data["Client Key"]
-			if client_key != manage_clients.key and client_key != manage_clients.judge_key:
+			client_key = json_data.get("Client Key")
+			client_code = json_data.get("Code")
+			client_ip = json_data.get("IP")
+
+			if client_key == None or client_code == None or client_ip == None:
+				print('[ SECURITY ] Client data is not in the correct format.')
+				manage_clients.log('[ SECURITY ] Client data is not in the correct format.')
+				print('[ SECURITY ] Complete Message: ' + client_message)
+				manage_clients.log('[ SECURITY ] Complete Message: ' + client_message)
+				ch.basic_ack(delivery_tag = method.delivery_tag)
+				return
+
+			# Strip IP address of spaces
+			client_ip = client_ip.replace(' ', '')
+
+			if  client_key != manage_clients.key and client_key != manage_clients.judge_key :
 				print('[ SECURITY ] Client Key did not match. Client ID: ' + str(json_data['ID']))
 				manage_clients.log('[ SECURITY ] Client Key did not match. Client ID: ' + str(json_data['ID']))
 				print('[ SECURITY ] Complete Message: ' + client_message)
@@ -150,13 +167,11 @@ class manage_clients():
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
 
-			client_code = json_data["Code"]
-			client_ip = json_data["IP"]
 			if client_code == 'LOGIN':
-				client_username = json_data["Username"]
-				client_password = json_data["Password"]
-				client_id = json_data["ID"]
-				client_type = json_data["Type"]
+				client_username = json_data.get("Username", 'NONE')
+				client_password = json_data.get("Password", 'NONE')
+				client_id = json_data.get("ID", 'NONE')
+				client_type = json_data.get("Type", 'NONE')
 				manage_clients.client_login_handler(
 					client_key,
 					client_username, 
@@ -165,15 +180,16 @@ class manage_clients():
 					client_type,
 					client_ip
 				)
+
 			elif client_code == 'SUBMT':
 				# recieved_client_username = json_data["Username"]
-				local_run_id = json_data["Local Run ID"]
-				client_id = json_data["ID"]		
-				problem_code = json_data["PCode"]		
-				language = json_data["Language"]		
-				time_stamp = json_data["Time"]		
-				source_code = json_data["Source"]	
-				username = json_data['Username']
+				local_run_id = json_data.get("Local Run ID", 'NONE')
+				client_id = json_data.get("ID", 'NONE')
+				problem_code = json_data.get("PCode", 'NONE')
+				language = json_data.get("Language", 'NONE')
+				time_stamp = json_data.get("Time", 'NONE')
+				source_code = json_data.get("Source", 'NONE')
+				username = json_data.get("Username", 'NONE')
 				manage_clients.client_submission_handler(
 					client_id,
 					client_ip,
@@ -185,37 +201,40 @@ class manage_clients():
 					source_code
 				)
 			elif client_code == 'QUERY':
-				client_id = json_data['ID']
-				query = json_data['Query'][:100]
-				username = json_data['Username']
+				client_id = json_data.get('ID', "NONE")
+				query = json_data.get('Query', "NONE")
+				username = json_data.get('Username', "NONE")
+				query = query[:100]
 
-				if client_id == 'Nul':
+				if client_id == 'NONE' or client_id == "Nul":
 					print('[ REJECT ] Client has not logged in.')
 					manage_clients.log('[ REJECT ] Client has not logged in.')
 					return
+
 				manage_clients.client_query_handler(
 					client_id, 
 					username,
 					query
 				)
+
 			elif client_code == 'DSCNT':
-				client_username = json_data["Username"]
-				client_id = json_data["ID"]
+				client_username = json_data.get("Username", "NONE")
+				client_id = json_data.get("ID", "NONE")
 				manage_clients.client_logout_handler(
 					client_username, 
 					client_id,
 					client_ip
 				)
 			else:
-				print('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
-				manage_clients.log('[ ERROR ] Client sent garbage data. Trust me you don\'t wanna see it! ')
+				print('[ CODE ERROR ] Client sent wrong code. Complete Message: ' + client_message)
+				manage_clients.log('[ CODE ERROR ] Client sent wrong code. Complete Message: ' + client_message)
 				# Raise Security Exception maybe?
 		except Exception as error:
-			print("[ ERROR ] Client json data could not be parsed : "  + str(error))
-			manage_clients.log("[ ERROR ] Client json data could not be parsed : "  + str(error))
 			exc_type, exc_obj, exc_tb = sys.exc_info()
 			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-			print('ERROR: ', exc_type, fname, exc_tb.tb_lineno)
+			# print(exc_type, fname, )
+			print('[ ERROR ] Client sent unparsable data. Line: ' + str(exc_tb.tb_lineno) + ' Complete Message: ' + client_message + "\nError: " + str(error))
+			manage_clients.log('[ ERROR ] Client sent unparsable data. Line: ' + str(exc_tb.tb_lineno) + ' Complete Message: ' + client_message + "\nError: " + str(error))
 		# Acknowledge the message
 		ch.basic_ack(delivery_tag = method.delivery_tag)
 		return
@@ -288,7 +307,7 @@ class manage_clients():
 			return
 		
 		if client_type == 'CLIENT':
-			# If client logins have been halted by the Admin, Send a rejection message to the client
+			# If client logins have been halted by the ADMIN, Send a rejection message to the client
 			if(manage_clients.data_changed_flags[2] == 0):
 				print('[ LOGIN ][ REJECT ] Rejected by ADMIN')
 				manage_clients.log('[ LOGIN ][ REJECT ] Rejected by ADMIN')
@@ -391,17 +410,13 @@ class manage_clients():
 					# Update client state from Disconnected to Connected 
 					message = {
 						'Code' : 'UpUserStat', 
-						'Username' : username,
+						'Username' : client_username,
 						'State' : 'Connected',
 						'IP' : client_ip
 					}
 					message = json.dumps(message)
 					manage_clients.task_queue.put(message)
 
-					# Update Connected_clients GUI
-					manage_clients.data_changed_flags[1] = 1
-					# Update scoreboard view
-					manage_clients.data_changed_flags[16] = 1
 					return
 	
 				else:
@@ -411,7 +426,7 @@ class manage_clients():
 						'Code' : 'LRJCT',
 						'Receiver' : client_username,
 						'Client ID' : client_id, 
-						'Message' : 'Preliminary Validation Failed. Contact site Admin for more information.'
+						'Message' : 'Preliminary Validation Failed. Contact site ADMIN for more information.'
 					}
 					message = json.dumps(message)
 					manage_clients.task_queue.put(message)
@@ -419,6 +434,31 @@ class manage_clients():
 
 			# If client has logged in for the first time
 			elif previously_connected_state == 'New':
+				# Check for IP address Duplicacy
+				if manage_clients.data_changed_flags[14] == 1:
+					status = client_authentication.check_duplicate_ip(client_ip)
+					if status == 0:
+						# Unique IP
+						print('[ LOGIN ] IP duplicacy : None')
+						manage_clients.log('[ LOGIN ] IP duplicacy : None')
+						pass
+					elif status == 1:
+						# Duplicate IP address
+						print('[ LOGIN ][ REJECT] Duplicate IP Address.')
+						manage_clients.log('[ LOGIN ][ REJECT] Duplicate IP Address.')
+						message = {
+							'Code' : 'LRJCT',
+							'Receiver' : client_username,
+							'Client ID' : client_id, 
+							'Message' : 'Multiple logins with same PC are not allowed.'
+						}
+						message = json.dumps(message)
+						manage_clients.task_queue.put(message)
+						return
+					else:
+						print('[ CLIENT ] Error while checking for client IP address.')
+						manage_clients.log('[ CLIENT ] Error while checking for client IP address.')
+			
 				# Fetch new client ID
 				client_id = client_authentication.generate_new_client_id()
 				# Add client to connected users database
@@ -448,13 +488,8 @@ class manage_clients():
 				print('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
 				manage_clients.log('[ LOGIN ][ ' + client_username + ' ] Assigned : ' + str(client_id) )
 
-				# Update connected clients GUI to indicate new client
-				manage_clients.data_changed_flags[1] = 1
-				# Update Scoreboard 
-				manage_clients.data_changed_flags[16] = 1
-				
 				# Reply to be sent to client
-				server_message = 'BitsOJ v1.1: Validation Successful.'
+				server_message = 'BitsOJ V1.0: Validation Successful.'
 				
 				message = {
 					'Code' : 'VALID', 
@@ -569,9 +604,6 @@ class manage_clients():
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
 
-				# Refresh Judge UI
-				manage_clients.data_changed_flags[13] = 1
-
 				print('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
 				manage_clients.log('[ LOGIN ][ ' + client_username + ' ][ RE-LOGIN ]')
 				
@@ -644,10 +676,7 @@ class manage_clients():
 				}
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
-				# Update JUDGE view
-				manage_clients.data_changed_flags[13] = 1
 				return
-
 
 	def validate_ip(ip):
 		# This function validates wherther an ip address matches coorect pattern or not.
@@ -664,9 +693,16 @@ class manage_clients():
 		except:
 			return False
 		
-
-
-	def client_submission_handler(client_id, client_ip, client_username, local_run_id, problem_code, language, time_stamp, source_code):
+	def client_submission_handler(
+			client_id, 
+			client_ip, 
+			client_username, 
+			local_run_id, 
+			problem_code, 
+			language, 
+			time_stamp, 
+			source_code
+		):
 		# This block ensures that the config read by this process is latest
 		if manage_clients.already_read == 0:
 			manage_clients.already_read = 1
@@ -705,8 +741,8 @@ class manage_clients():
 			manage_clients.log('[ SUBMISSION ][ EXCESSIVE DATA ] Validation failed!')
 			flag = 1
 		if initialize_server.convert_to_seconds(time_stamp) == -1:
-			print('[ SUBMISSION ][ TIMESTAMP ] Validation failed!')
-			manage_clients.log('[ SUBMISSION ][ TIMESTAMP ] Validation failed!')
+			print('[ SUBMISSION ][ Timestamp ] Validation failed!')
+			manage_clients.log('[ SUBMISSION ][ Timestamp ] Validation failed!')
 			flag = 1
 		if manage_clients.validate_ip(client_ip) == False:
 			print('[ SUBMISSION ][ IP ] Validation failed!')
@@ -722,19 +758,13 @@ class manage_clients():
 			flag = 1
 		
 
-		# Validate client submission data
 		if flag == 1:
-			status = False
-		else:
-			status = True
-			
-		if status == False:
 			print('[ SUBMISSION ][ FAIL ] Preliminary validation Failed.')
 			manage_clients.log('[ SUBMISSION ][ FAIL ] Preliminary validation Failed.')
 			message = {
 				'Code' : 'SRJCT',
 				'Receiver' : client_username,
-				'Message' : 'Your submission could not be processed! Please contact Admin with your problem.',
+				'Message' : 'Your submission could not be processed! Please contact ADMIN with your problem.',
 				'Local Run ID' : local_run_id
 			}
 			message = json.dumps(message)
@@ -782,7 +812,7 @@ class manage_clients():
 		# We don't believe in clients, so timestamp is server time.
 		time_stamp = initialize_server.get_time_difference(contest_start_time, current_time)
 		
-		# Validation Finished
+		# Preliminary Validation Finished
 
 		# If contest is not in running state, reject all submissions.
 		# This might reject some submissions when user sends code just before contest ends
@@ -886,12 +916,12 @@ class manage_clients():
 				'Source File Name' : source_file_name,
 				'Problem Code' : problem_code,
 				'Status' : 'RUNNING',
-				'Timestamp' : timestamp
+				'Timestamp' : time_stamp
 			}
 			message = json.dumps(message)
 			manage_clients.task_queue.put(message)
-
-			manage_clients.data_changed_flags[0] = 1
+			print('[ CLIENT ] Sent submission request to CORE')
+			manage_clients.log('[ CLIENT ] Sent submission request to CORE')
 
 			# Send this run id to the client
 			message = {
@@ -919,6 +949,7 @@ class manage_clients():
 			}
 			message = json.dumps(message)
 			manage_clients.task_queue.put(message)
+
 			print('[ REQUEST ] New judging request sent successfully.')
 			manage_clients.log('[ REQUEST ] New judging request sent successfully.')
 			#######################################################################
@@ -943,8 +974,8 @@ class manage_clients():
 		}
 		message = json.dumps(message)
 		manage_clients.task_queue.put(message)
-		manage_clients.data_changed_flags[9] = 1
-
+		return
+		
 
 	# This function handles client logout requests
 	def client_logout_handler(client_username, client_id, client_ip):

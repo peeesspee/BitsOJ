@@ -11,6 +11,7 @@ class password_change_ui(QMainWindow):
 	def __init__(
 			self, 
 			data_changed_flags, 
+			task_queue,
 			log_queue,
 			username, 
 			password, 
@@ -19,10 +20,9 @@ class password_change_ui(QMainWindow):
 		):
 		super(password_change_ui, self).__init__(parent)
 
-		print(password_change_ui.username, password_change_ui.ctype, password_change_ui.password)
-		
 		self.data_changed_flags = data_changed_flags
 		self.log_queue = log_queue
+		self.task_queue = task_queue
 		password_change_ui.username = str(username)
 		password_change_ui.password = str(password)
 		password_change_ui.ctype = str(ctype)
@@ -121,7 +121,7 @@ class password_change_ui(QMainWindow):
 				'New Password' : new_password
 			}
 			message = json.dumps(message)
-			password_change_ui.task_queue.put(message)
+			self.task_queue.put(message) 
 
 			print('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
 			self.log('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
@@ -132,6 +132,7 @@ class password_change_ui(QMainWindow):
 			# Release the window lock # BUGGY - Might remove later
 			self.data_changed_flags[14] = 0
 			self.close()
+
 		elif new_password == password_change_ui.password:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)
@@ -140,6 +141,7 @@ class password_change_ui(QMainWindow):
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
 			return
+			
 		else:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)

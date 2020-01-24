@@ -113,10 +113,13 @@ class rejudge_problem_ui(QMainWindow):
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
 			return
+
 		print('[ REJUDGE ][ ' + selected_code_ + ' ][ ' + selected_client_ + ' ]')
 		self.log('[ REJUDGE ][ ' + selected_code_ + ' ][ ' + selected_client_ + ' ]')
+
 		if selected_code_ == 'All':
 			selected_code_ = '*'
+
 		if selected_client_ == 'All':
 			selected_client_ = '*'
 		else:
@@ -131,6 +134,7 @@ class rejudge_problem_ui(QMainWindow):
 			info_box.setText('Rejudge Failed.')
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
+			
 		elif data == 'NF':
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)
@@ -169,12 +173,8 @@ class rejudge_problem_ui(QMainWindow):
 				message = json.dumps(message)
 				rejudge_problem_ui.task_queue.put(message)
 	
-		# Reset the critical section flag
-		rejudge_problem_ui.data_changed_flags[25] = 0
 		self.close()
 
 	def cancel(self):
-		# Reset the critical section flag
-		rejudge_problem_ui.data_changed_flags[25] = 0
 		self.close()
 

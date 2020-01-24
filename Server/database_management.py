@@ -3,7 +3,7 @@ import sys
 import random
 import string
 import os
- 
+  
 global client_id_counter
 
 class manage_database():
@@ -11,7 +11,11 @@ class manage_database():
 	conn = None
 	def initialize_database():
 		try:
-			conn = sqlite3.connect('server_database.db', check_same_thread = False)
+			conn = sqlite3.connect(
+				'server_database.db', 
+				check_same_thread = False,
+				timeout = 20
+			)
 			cur = conn.cursor()
 			manage_database.cur = cur
 			manage_database.conn = conn
@@ -259,6 +263,16 @@ class scoreboard_management():
 						print('[ SCOREBOARD ][ RUN ', run_id, ' ][ PASS ] New AC')
 						
 						new_total_score = previous_total_score + problem_max_score
+
+						# THIS ASSERTION SHOULD NEVER OCCUR, BUT IT IS THERE AS A FAILSAFE
+						# Assert new_total_score should not be greater than 
+						# problem_solve_count * problem_max_score
+						if new_total_score > problem_max_score * problems_solved:
+							print('[ DB ][ SCOREBOARD ][ SECURITY ] Client Total Score error')
+							print('[ DB ][ SCOREBOARD ][ SECURITY ] Run ID: ', run_id)
+							print('[ DB ][ SCOREBOARD ][ SECURITY ] Client ID: ', client_id)
+							new_total_score = problem_max_score * problems_solved 
+							print('[ DB ][ SCOREBOARD ][ SECURITY ] Total Score RESET to ', new_total_score)
 
 						print(
 							'[ SCOREBOARD ][ UPDATE ] Client: ' 
@@ -604,6 +618,17 @@ class client_authentication(manage_database):
 			conn.rollback()
 		return	
 
+	def get_connected_clients():
+		response = []
+		try:
+			cur = manage_database.get_cursor()
+			cur.execute("SELECT user_name FROM connected_clients")
+			data = cur.fetchall()
+			for entry in data:
+				response.append(entry[0])
+		except Exception as error:
+			print("[ DB ][ ERROR ] : Could not fetch client list.")
+		return response
 		
 	# Get client_id when user_name is known
 	def get_client_id(user_name):
@@ -658,19 +683,25 @@ class client_authentication(manage_database):
 			# If user was not connected earlier, this exception will be raised
 			return 0
 
-	def get_connected_clients():
-		response = []
+	def check_duplicate_ip(ip):
 		try:
 			cur = manage_database.get_cursor()
-			cur.execute("SELECT user_name FROM connected_clients")
-			data = cur.fetchall()
-			for entry in data:
-				response.append(entry[0])
-		except Exception as error:
-			print("[ DB ][ ERROR ] : Could not fetch client list.")
-		return response
+			cur.execute(
+					"SELECT * FROM connected_clients WHERE ip = ?", 
+					(
+						ip, 
+					)
+				)
+			result = cur.fetchall()
+			if len(result) == 0 or result == '':
+				return 0	# No other clients with same IP Address
+			else:
+				return 1	# Client with same IP Address exists
+		except:
+			# In case of error, allow the duplicate IP address, but mark it as suspicious
+			return 2	# Status unknown
 
-	
+
 class submissions_management(manage_database):
 	def insert_submission(run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp):
 		cur = manage_database.get_cursor()
@@ -681,9 +712,11 @@ class submissions_management(manage_database):
 		try:
 			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, 'WAITING', '-', 0, ))
 			conn.commit()
+			return 1
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
-		return
+			return 0
+		
 
 	def generate_new_run_id():
 		try:
@@ -949,9 +982,10 @@ class query_management(manage_database):
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
 
-class user_management(manage_database):
+class user_management(manage_database): 
 	def generate_n_users(no_of_clients, no_of_judges, password_type):
 		cur = manage_database.get_cursor()
+		conn = manage_database.get_connection_object()
 		# Get max client and judge usernames till now
 		try:
 			cur.execute("SELECT max(user_name) from accounts where client_type = 'CLIENT'")
@@ -971,21 +1005,31 @@ class user_management(manage_database):
 		judge_pass_list = user_management.generate_passwords(max_judge_username, no_of_judges, password_type)
 
 		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
-		cur.execute("begin")
+		# cur.execute("begin")
 		try:
 			for i in range(0, no_of_clients):
+				print('[ DB ] Adding Account : ', client_list[i] , ' @ ', client_pass_list[i])
 				cur.execute("INSERT into accounts values (?, ?, ? )" , (client_list[i], client_pass_list[i], 'CLIENT'))
 
+			conn.commit()
+			print('[ DB ] Commit')
+			
 			for i in range(0, no_of_judges):
+				print('[ DB ] Adding Account : ', judge_list[i] , ' @ ', judge_pass_list[i])
 				cur.execute("INSERT into accounts values (?, ?, ? )" , (judge_list[i], judge_pass_list[i], 'JUDGE'))
 
-			cur.execute("commit")
+			conn.commit()
+			print('[ DB ] Commit')
+			print('[ DB ] All accounts added!')
+			
+			return 1
 
 		except Exception as error:
 			print('[ CRITICAL ] Database insertion error: ' + str(error))
 			cur.execute('rollback')
+			return 0
 		# INSERTION FINISHED
-		return
+		
 
 	def generate_clients(no_of_clients, max_so_far):
 		client_list = list()
@@ -1119,21 +1163,22 @@ class user_management(manage_database):
 
 		cur = manage_database.get_cursor()
 		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
-
-		cur.execute("begin")
 		try:
+			# cur.execute("begin")
 			for i in range(0, u_len):
-				cur.execute("INSERT into accounts values (?, ?, ? )" , (user_list[i], password_list[i], type_list[i], ))
-			cur.execute("commit")
-
+				cur.execute(
+						"INSERT into accounts values (?, ?, ? )" , 
+						(user_list[i], password_list[i], type_list[i], 
+					)
+				)
+			conn.commit()
+			# INSERTION FINISHED
+			return 1
 		except Exception as error:
 			print('[ CRITICAL ] Database insertion error: ' + str(error))
 			cur.execute('rollback')
 			return 0
-			
-		# INSERTION FINISHED
-		return 1
-
+		
 	def get_sheet_accounts():
 		cur = manage_database.get_cursor()
 		u_list = []
@@ -1323,7 +1368,7 @@ class report_management(manage_database):
 				return len(data)
 
 		except Exception as error:
-			print(str(error))
+			print('[ DB ][ ERROR ]', error)
 			return 0
 
 			return
@@ -1340,7 +1385,7 @@ class report_management(manage_database):
 				return len(data)
 
 		except Exception as error:
-			print(str(error))
+			print('[ DB ][ ERROR ]', error)
 			return 0
 
 	def get_participant_count():
@@ -1355,7 +1400,7 @@ class report_management(manage_database):
 				return len(data)
 
 		except Exception as error:
-			print(str(error))
+			print('[ DB ][ ERROR ]', error)
 			return 0
 
 	def get_participant_pro_count():
@@ -1370,7 +1415,7 @@ class report_management(manage_database):
 				return len(data)
 
 		except Exception as error:
-			print(str(error))
+			print('[ DB ][ ERROR ]', error)
 			return 0
 
 

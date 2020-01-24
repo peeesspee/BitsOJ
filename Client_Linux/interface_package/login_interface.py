@@ -1,11 +1,11 @@
-import sys, time
+import sys
 from PyQt5.QtWidgets import * 
 from login import authenticate_login
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QColor, QPixmap
 
 class Login(QWidget):
-	def __init__(self, connection,queue):
+	def __init__(self, queue, connection):
 		super().__init__()
 		try:
 			# Sets window title
@@ -13,7 +13,7 @@ class Login(QWidget):
 			# Resize Size of the window 
 			self.resize(700, 600)
 			# Window Icon
-			self.setWindowIcon(QIcon('Elements/logo.png'))
+			self.setWindowIcon(QIcon("Elements/logo.png"))
 
 			# Frame Geometry
 			qtRectangle = self.frameGeometry()
@@ -44,7 +44,7 @@ class Login(QWidget):
 			self.button_login = QPushButton('Login', self)
 			self.button_login.setFixedWidth(300)
 			self.button_login.setFixedHeight(80)
-			self.button_login.clicked.connect(lambda:self.handle_login(queue,connection))
+			self.button_login.clicked.connect(lambda:self.handle_login(queue))
 			self.button_login.setDefault(True)
 			self.button_login.setObjectName('login')
 
@@ -62,25 +62,26 @@ class Login(QWidget):
 
 			self.setLayout(layout)
 			self.setObjectName('main') 
-	
+			# self.show()
 			self.connection_object = connection 
 		except Exception as Error:
 			print(str(Error))
 		return 
 
 	# Function for handling the login of the user  
-	def handle_login(self,queue,connection):
+	def handle_login(self,queue):
 		# QApplication.quit()
 		# Username and Password are not empty the check credentials
 		if (self.username.text() != '' and self.password.text() != ''):
 
 			# login function to send the username and password to the server for authentication
-			authenticate_login.login(self.username.text(),self.password.text(),queue,connection)
+			authenticate_login.login(self.username.text(),self.password.text(),queue)
 			
 
 			# If authentication is successful then close login window and open main window 
 			if( authenticate_login.login_status == 'VALID'):
 				try:
+					print('[ VALID ] Login')
 					QApplication.quit()
 				except Exception as error:
 					print('[ ERROR ] Could not exit properly : ' + str(error) )
@@ -112,16 +113,16 @@ class Login(QWidget):
 	
 
 class start_interface(Login):
-	def __init__(self, connection, data_changed_flag,queue):
+	def __init__(self, data_changed_flag,queue,connection):
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
-		app.setStyleSheet(open('Elements/login.qss', "r").read())
+		app.setStyleSheet(open("Elements/login.qss", "r").read())
 		app.aboutToQuit.connect(self.closeEvent)
 		# make a reference of App class
 		# login_app = Login(connection,queue)
-		
+
 		splash = QSplashScreen(QPixmap("./Elements/banner.png"), Qt.WindowStaysOnTopHint)
-		login_app = Login(connection,queue)
+		login_app = Login(queue,connection)
 
 		splash.show()
 		splash.showMessage("Loading modules...")

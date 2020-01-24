@@ -149,9 +149,9 @@ class manage_judges():
 					message = json.dumps(message)
 					manage_judges.task_queue.put(message)
 
-				manage_judges.data_changed_flags[0] = 1
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
+
 			# Judge has been validated.
 			code = json_data["Code"] 
 			if code == 'VRDCT':
@@ -248,11 +248,9 @@ class manage_judges():
 					message = json.dumps(message)
 					manage_judges.task_queue.put(message)
 
-					# Update submission GUI
-					manage_judges.data_changed_flags[0] = 1
-
 				# Send Acknowldgement of message recieved and processed
 				ch.basic_ack(delivery_tag = method.delivery_tag)
+				
 			elif code == 'LOGOUT':
 				username = json_data['Username']
 				judge_id = json_data['ID']
@@ -272,7 +270,6 @@ class manage_judges():
 
 					print('[ JUDGE ][ LOGOUT ] ' + username + ' Logged Out')
 					manage_judges.log('[ JUDGE ][ LOGOUT ] ' + username + ' Logged Out')
-					manage_judges.data_changed_flags[13] = 1
 				else:
 					print('[ JUDGE ][ LOGOUT ] ' + username + ' Rejected Logout')
 					manage_judges.log('[ JUDGE ][ LOGOUT ] ' + username + ' Rejected Logout')
@@ -294,4 +291,5 @@ class manage_judges():
 			manage_judges.log('[ ERROR ] : ',exc_type, fname, exc_tb.tb_lineno)
 			return
 
-		return
+		finally:
+			return
