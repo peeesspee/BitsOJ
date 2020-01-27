@@ -1,31 +1,3 @@
 {
-    "Problems": {
-        "Problem 1": {
-            "Test File Path": "./Problems/TRP",
-            "Input File": [
-                "input00.in"
-            ],
-            "Output File": [
-                "output00.ans"
-            ]
-        },
-        "Problem 2": {
-            "Test File Path": "./Problems/HOC",
-            "Input File": [
-                "input00.in"
-            ],
-            "Output File": [
-                "output00.ans"
-            ]
-        },
-        "Problem 3": {
-            "Test File Path": "./Problems/ACC",
-            "Input File": [
-                "input00.in"
-            ],
-            "Output File": [
-                "output00.ans"
-            ]
-        }
-    }
+    "Problems": {}
 }
