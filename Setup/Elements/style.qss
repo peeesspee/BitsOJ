@@ -4,7 +4,7 @@ QPushButton{
 	font-size : 20px;
 	text-align : center; 	
 	border : 1px solid #ADFF2F;
-	background-color : #161A28;
+	background-color : #171B1F;
 	color : #62C9F3;
 	width : 150px;
 	height : 40px;
@@ -36,6 +36,7 @@ QPushButton::!enabled{
 	color: #E91E63;
 }
 
+
 QRadioButton{
 	color : #999999;
 }
@@ -51,6 +52,7 @@ QRadioButton::indicator::checked{
 	image: url(./Elements/radio_checked.png);
 }
 
+
 QCheckBox{
 	color : #23B2EE;
 	margin-left : 15px;
@@ -60,10 +62,12 @@ QCheckBox::indicator{
 	height : 20px;
 }
 
+
 QMessageBox{
 	background-color : #808080;
 	color: #FFFFFF;
 }
+
 
 QWidget#main_widget{
 	background-color: #0D101B;
@@ -82,6 +86,7 @@ QWidget#screen_widget
 QWidget#content_box{
 	border: 1px solid #888888;
 }
+
 
 QTabWidget#main_tabs{
 	border : none;
@@ -110,6 +115,7 @@ QTabBar::tab:selected
 	border-top : 1px solid #B2FF59;
 }
 
+
 QLabel#main_screen_heading{
 	color : #ADFF2F;
 	font-size : 36px;
@@ -124,7 +130,7 @@ QLabel#main_screen_sub_heading2{
 }
 QLabel#main_screen_content{
 	color : #DDDDDD;
-	font-size : 20px;
+	font-size : 25px;
 }
 
 QDialog{
@@ -138,6 +144,7 @@ QDialog QPushButton{
 	background-color : #090909 ; 
 	color : #AAAAAA;
 }
+
 
 QComboBox
 {
@@ -172,6 +179,7 @@ QComboBox::down-arrow
     height: 10px;
 }
 
+
 QLabel#account_label
 {
 	color : #23B2EE;
@@ -182,11 +190,13 @@ QWidget#account_window
 	background-color : #181B25;
 }
 
+
 QTextEdit
 {
 	background : #2D353D;
 	color : #AAAAAA;
 }
+
 
 QLineEdit
 {
@@ -196,6 +206,7 @@ QLineEdit
 	border : 1px solid #181B25;
 	padding-left : 5px;
 }
+
 
 QToolTip
 {
