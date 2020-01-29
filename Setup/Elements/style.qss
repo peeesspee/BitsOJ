@@ -1,0 +1,220 @@
+QPushButton{
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 0px; 
+	font-size : 20px;
+	text-align : center; 	
+	border : 1px solid #ADFF2F;
+	background-color : #171B1F;
+	color : #62C9F3;
+	width : 150px;
+	height : 40px;
+}
+QPushButton::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+}
+QPushButton::hover::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+}
+QPushButton::pressed
+{
+	color : #23B2EE;
+	background-color : #202428;
+}
+QPushButton::hover
+{
+	color : #0892D0;
+	background-color : #202428 ;
+}
+QPushButton::disabled{
+	color: #E91E63;
+}
+QPushButton::!enabled{
+	color: #E91E63;
+}
+
+
+QRadioButton{
+	color : #23B2EE;
+	font-size : 24px;
+}
+QRadioButton::indicator{
+	width :25px;
+	height: 25px;
+	border-radius : 12px;
+}
+QRadioButton::indicator::unchecked{
+	image: url(./Elements/radio_unchecked.png);
+}
+QRadioButton::indicator::checked{
+	image: url(./Elements/radio_checked.png);
+}
+
+
+QCheckBox{
+	color : #23B2EE;
+	margin-left : 15px;
+	font-size : 24px;
+}
+QCheckBox::indicator{
+	width : 24px;
+	height : 24px;
+}
+
+
+QMessageBox{
+	background-color : #808080;
+	color: #FFFFFF;
+}
+
+
+QWidget#main_widget{
+	background-color: #0D101B;
+	color: #AAAAAA;
+}
+QWidget#sidebar{
+	background-color : #161A28;
+	margin-left : 0px;
+}
+QWidget#screen_widget
+{
+	color : #CCCCCC;
+	background-color : #161A28;
+	margin-top : -10px;
+}
+QWidget#content_box{
+	border: 1px solid #888888;
+}
+
+
+QTabWidget#main_tabs{
+	border : none;
+}
+QTabWidget::pane{
+	color : #AAAAAA;
+	border : 1px solid #121212;
+	margin-top : 0px;
+	background-color : #121520;
+}
+QTabBar
+{
+	background : #161a28;
+}
+QTabBar::tab
+{
+	width: 140px; 
+	height: 35px; 
+	margin: 0px; 
+	background : #161a28;
+	color : #777777;
+}
+QTabBar::tab:selected
+{ 
+	color : #E91E63;
+	border-top : 1px solid #B2FF59;
+}
+
+
+QLabel#main_screen_heading{
+	color : #ADFF2F;
+	font-size : 36px;
+}
+QLabel#main_screen_sub_heading{
+	color : #23B2EE;
+	font-size : 28px;
+}
+QLabel#main_screen_sub_heading2{
+	color : #E91E63;
+	font-size : 28px;
+}
+QLabel#main_screen_content{
+	color : #DDDDDD;
+	font-size : 25px;
+}
+
+QDialog{
+	background-color : #181B25;
+}
+QDialog QLabel{
+	color : #AAAAAA;
+}
+QDialog QPushButton{
+	text-align : center;
+	background-color : #090909 ; 
+	color : #AAAAAA;
+}
+
+
+QComboBox
+{
+	background : #2D353D;
+	color : #AAAAAA;
+	border: 1px solid #181B25;
+    border-radius: 3px;
+    height : 30px;
+}
+QComboBox::drop-down 
+{
+	background : #777777;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid; 
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+QComboBox QAbstractItemView 
+{		/* This is the style of dropdown menu*/
+    background-color : #181B25;
+	color : #AAAAAA;
+	border : 1px solid #2D353D;
+	selection-background-color : #181B25;
+}
+QComboBox::down-arrow 
+{
+    image: url(./Elements/down_arrow.png);
+    width: 10px;
+    height: 10px;
+}
+
+
+QLabel#account_label
+{
+	color : #23B2EE;
+}
+
+QWidget#account_window
+{
+	background-color : #181B25;
+}
+
+
+QTextEdit
+{
+	background : #2D353D;
+	color : #AAAAAA;
+}
+
+
+QLineEdit
+{
+	height : 30px;
+	background : #2D353D;
+	color : #AAAAAA;
+	border : 1px solid #181B25;
+	padding-left : 5px;
+}
+
+
+QToolTip
+{
+	color : #AAAAAA;
+	background : #2D353D;
+}
+/*--------------SUB LAYOUT ENDS---------*/
+
+/*################################################ /LAYOUT OBJECTS ######################################################*/

@@ -203,6 +203,7 @@ class server_window(QMainWindow):
 		logo_image = QPixmap('Elements/bitwise_header.png')
 		logo_image = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image)
+		
 		contest_theme = self.config['Contest Theme']
 		contest_name = QLabel(self.config['Contest Name'] + ' : ' + contest_theme)
 		contest_name.setObjectName('main_screen_sub_heading')
