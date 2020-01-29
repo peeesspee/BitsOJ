@@ -38,12 +38,13 @@ QPushButton::!enabled{
 
 
 QRadioButton{
-	color : #999999;
+	color : #23B2EE;
+	font-size : 24px;
 }
 QRadioButton::indicator{
-	width :16px;
-	height: 16px;
-	border-radius : 8px;
+	width :25px;
+	height: 25px;
+	border-radius : 12px;
 }
 QRadioButton::indicator::unchecked{
 	image: url(./Elements/radio_unchecked.png);
@@ -56,10 +57,11 @@ QRadioButton::indicator::checked{
 QCheckBox{
 	color : #23B2EE;
 	margin-left : 15px;
+	font-size : 24px;
 }
 QCheckBox::indicator{
-	width : 20px;
-	height : 20px;
+	width : 24px;
+	height : 24px;
 }
 
 
