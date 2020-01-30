@@ -6,8 +6,8 @@ import sys
 
 def main():
 	config = init_setup.read_config()
-
 	app = QApplication(sys.argv)
+	app.setStyleSheet(open('Elements/style.qss', "r").read())
 	app.setAttribute(Qt.AA_EnableHighDpiScaling)
 	wizard = main_window(config)
 	wizard.show()

@@ -1,31 +1,40 @@
-2020-01-27 23:09:40.671563  :  #### SERVER START #### ###
-2020-01-27 23:09:40.671756  :  [ SELF CHECK ][ PASS ] Systems OK. ###
-2020-01-27 23:09:40.671825  :  [ SETUP ] Initialising server... ###
-2020-01-27 23:09:40.671882  :  [ SETUP ] Initialising database... ###
-2020-01-27 23:09:41.172729  :  [ SETUP ] Loading problems... ###
-2020-01-27 23:09:41.172865  :  [ SETUP ] Initialising subprocesses... ###
-2020-01-27 23:09:41.172984  :    [ START ] Client Manager subprocess started. ###
-2020-01-27 23:09:41.173059  :  [ SETUP ] Subprocesses started ###
-2020-01-27 23:09:41.173139  :  [ SETUP ][ Process ] Client Manager: 18412 ###
-2020-01-27 23:09:41.173223  :  [ SETUP ][ Process ] Judge Manager: 18413 ###
-2020-01-27 23:09:41.173327  :  [ SETUP ][ Process ] Core: 18415 ###
-2020-01-27 23:09:41.173432  :  [ SETUP ][ Process ] Log Manager: 18408 ###
-2020-01-27 23:09:41.173588  :    [ START ] Judge Manager subprocess started. ###
-2020-01-27 23:09:41.173666  :    [ START ] Core subprocess started. ###
-2020-01-27 23:09:41.173775  :  [ LISTEN ] Started listening on client_requests ###
-2020-01-27 23:09:41.173869  :  [ LISTEN ] Started listening on judge_verdict ###
-2020-01-27 23:09:41.173958  :    [ START ] Interface subprocess started. ###
-2020-01-27 23:11:02.778137  :  [ ALERT ] Recieved a new client message. ###
-2020-01-27 23:11:02.778229  :  [ SECURITY ] Client Key did not match. Client ID: iZmYps ###
-2020-01-27 23:11:02.778301  :  [ SECURITY ] Complete Message: {"Client Key": "e9ix9ejcxjz0io4", "Code": "LOGIN", "Username": "judge00001", "Password": "bits1", "ID": "iZmYps", "Type": "JUDGE", "IP": "127.0.1.1"} ###
-2020-01-27 23:13:53.000263  :  [ SECURITY ] Server Close attempt -> Accepted. ###
-2020-01-27 23:13:53.000412  :  [ LISTEN ] STOPPED listening to client channel ###
-2020-01-27 23:13:53.000503  :  [ LISTEN ] STOPPED listening to judge channel ###
-2020-01-27 23:13:53.000603  :  [ EXIT ] Signal passed ###
-2020-01-27 23:13:53.000686  :  [ EXIT ] Saving Server state to file. ###
-2020-01-27 23:13:53.000763  :  [ STOP ] Judge subprocess terminated successfully! ###
-2020-01-27 23:13:53.000842  :  [ STOP ] Client subprocess terminated successfully! ###
-2020-01-27 23:13:53.000925  :  [ EXIT ] Saved Server state to file. ###
-2020-01-27 23:13:54.002413  :  #### SERVER EXIT ####
+2020-01-29 12:35:47.461008  :  #### SERVER START #### ###
+2020-01-29 12:35:47.961792  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-01-29 12:35:47.961873  :  [ SETUP ] Initialising server... ###
+2020-01-29 12:35:47.961925  :  [ SETUP ] Initialising database... ###
+2020-01-29 12:35:47.961971  :  [ SETUP ] Loading problems... ###
+2020-01-29 12:35:47.962017  :  [ SETUP ] Initialising subprocesses... ###
+2020-01-29 12:35:47.962063  :  [ SETUP ] Subprocesses started ###
+2020-01-29 12:35:47.962106  :    [ START ] Client Manager subprocess started. ###
+2020-01-29 12:35:47.962149  :  [ SETUP ][ Process ] Client Manager: 12671 ###
+2020-01-29 12:35:47.962193  :    [ START ] Core subprocess started. ###
+2020-01-29 12:35:47.962235  :    [ START ] Judge Manager subprocess started. ###
+2020-01-29 12:35:47.962277  :  [ SETUP ][ Process ] Judge Manager: 12672 ###
+2020-01-29 12:35:47.962320  :  [ SETUP ][ Process ] Core: 12674 ###
+2020-01-29 12:35:47.962361  :  [ SETUP ][ Process ] Log Manager: 12669 ###
+2020-01-29 12:35:47.962403  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-01-29 12:35:47.962446  :  [ LISTEN ] Started listening on client_requests ###
+2020-01-29 12:35:47.962488  :    [ START ] Interface subprocess started. ###
+2020-01-29 12:36:26.010260  :  [ ACCOUNT ] Create 10 Clients and 0 Judge Accounts ###
+2020-01-29 12:36:26.010344  :  [ CORE ] Generating accounts... ###
+2020-01-29 12:36:26.511095  :  [ CORE ] All accounts generated! ###
+2020-01-29 12:36:52.042800  :  [ ACCOUNT ] Create 1 Clients and 0 Judge Accounts ###
+2020-01-29 12:36:52.543532  :  [ CORE ] Generating accounts... ###
+2020-01-29 12:36:52.543622  :  [ CORE ] All accounts generated! ###
+2020-01-29 12:37:01.053416  :  [ ACCOUNT ] Create 1 Clients and 0 Judge Accounts ###
+2020-01-29 12:37:01.554227  :  [ CORE ] Generating accounts... ###
+2020-01-29 12:37:02.055060  :  [ CORE ] All accounts generated! ###
+2020-01-29 12:38:07.638599  :  [ USER ][ team00002 ][ UPDATE ] State changed to Blocked ###
+2020-01-29 12:38:08.139371  :  [ CORE ] User team00002: Status changed to Blocked ###
+2020-01-29 12:38:08.139458  :  [ EVENT ] Block team00002 ###
+2020-01-29 12:38:27.167433  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-01-29 12:38:27.167495  :  [ EXIT ] Signal passed ###
+2020-01-29 12:38:27.167523  :  [ EXIT ] Saving Server state to file. ###
+2020-01-29 12:38:27.167546  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-01-29 12:38:27.167572  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-01-29 12:38:27.167593  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-01-29 12:38:27.167615  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-01-29 12:38:27.167644  :  [ EXIT ] Saved Server state to file. ###
+2020-01-29 12:38:28.168945  :  #### SERVER EXIT ####
 
  ###

@@ -2,7 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import *
-import socket
+from problem_ui import *
+import socket, time
 
 # This class creates pages for the setup wizard, based on the page id given to it.
 class wizard_page(QWizardPage):
@@ -316,13 +317,88 @@ class wizard_page(QWizardPage):
 		self.title_label = QLabel('Problems')
 		self.title_label.setObjectName('main_screen_heading')
 		
+		self.add_problem_button = QPushButton("Add Problem")
+		self.add_problem_button.setFixedSize(200, 40)
+		self.add_problem_button.setToolTip("Add a Problem")
+		self.add_problem_button.clicked.connect(self.add_problem)
+
+		self.reset_problems_button = QPushButton("Reset Problems")
+		self.reset_problems_button.setFixedSize(200, 40)
+		self.reset_problems_button.setToolTip("Delete all the Problems")
+		self.reset_problems_button.clicked.connect(self.reset_all_problems)
+
+		self.topbar_widget = QWidget()
+		self.topbar_layout = QHBoxLayout(self.topbar_widget)
+		self.topbar_layout.addWidget(self.title_label)
+		self.topbar_layout.addStretch(1)
+		self.topbar_layout.addWidget(self.add_problem_button)
+		self.topbar_layout.addWidget(self.reset_problems_button)
+
+		self.problems_list = QWidget()
+		self.problems_list_layout = QVBoxLayout(self.problems_list)
+		self.problems_list_layout.setAlignment(Qt.AlignTop)
+
+		# Add existing problems to this scroll area
+		self.problems = self.config.get('Problems', {})
+		self.number_of_problems = self.config.get('Number Of Problems', 0)
+
+		for i in range(1, self.number_of_problems + 1):
+			problem_id = "Problem " + str(i)
+			problem = self.problems.get(problem_id)
+			problem_name = problem["Name"]
+			problem_code = problem["Code"]
+
+			card_widget = QWidget()
+			card_layout = QHBoxLayout(card_widget)
+			main_label = QLabel( problem_id + " : ")
+			main_label.setObjectName('main_screen_content')
+			problem_name_widget = QLabel(problem_name)
+			problem_name_widget.setObjectName('main_screen_sub_heading')
+			problem_code_widget = QLabel(" [ " + problem_code + " ] ")
+			problem_code_widget.setObjectName('main_screen_sub_heading2')
+
+			card_layout.addWidget(main_label)
+			card_layout.addWidget(problem_name_widget)
+			card_layout.addWidget(problem_code_widget)
+			card_layout.addStretch(1)
+
+			card_widget.setFixedHeight(100)
+			card_widget.setObjectName('problem_card')
+			self.problems_list_layout.addWidget(card_widget)
+
+		self.scroll_area = QScrollArea()
+		self.scroll_area.setWidget(self.problems_list)
+		self.scroll_area.setWidgetResizable(True)
+
 		self.main_widget = QWidget()
 		self.main_widget.setObjectName('content_box')
 		self.main_layout = QVBoxLayout(self.main_widget)
-		self.main_layout.addWidget(self.title_label)
-	
-		self.main_layout.addStretch(1)
+		self.main_layout.addWidget(self.topbar_widget)
+		self.main_layout.addWidget(self.scroll_area)
+		self.main_layout.setStretch(0, 10)
+		self.main_layout.setStretch(1, 90)
+		self.main_layout.setAlignment(Qt.AlignTop)
 		return self.main_widget
+
+	def reset_all_problems(self):
+		try:
+			self.window.close()
+		except:
+			pass
+
+		remove_all_problems(self.config, self.wizard())
+
+
+	def add_problem(self):
+		try:
+			self.window.close()
+		except:
+			pass
+		self.window = add_problem_ui(self.config, self.wizard())
+		self.wizard().setVisible(False)
+		self.window.show()
+		self.window.activateWindow()
+	
 
 	def languages_page(self):
 		self.title_label = QLabel('Languages')
@@ -458,12 +534,21 @@ class wizard_page(QWizardPage):
 			self.penalty_time
 		)
 		self.registerField("Penalty Time", self.penalty_time)
-		
+
+		if self.selected_ranklist in ["IOI", "LONG"]:
+			self.penalty_score.setReadOnly(True)
+			self.penalty_score.setToolTip('This Ranklist has no penalty score')
+			self.penalty_time.setReadOnly(True)
+			self.penalty_time.setToolTip('This Ranklist has no penalty time')
+		else:
+			self.penalty_score.setReadOnly(False)
+			self.penalty_score.setToolTip('Penalty score per wrong answer')
+			self.penalty_time.setReadOnly(False)
+			self.penalty_time.setToolTip('Penalty time (in minutes) per wrong answer')
+	
 		self.ranklist_layout.addWidget(self.problem_max_score_widget)
 		self.ranklist_layout.addWidget(self.penalty_score_widget)
 		self.ranklist_layout.addWidget(self.penalty_time_widget)
-
-
 		
 		self.main_widget = QWidget()
 		self.main_widget.setObjectName('content_box')
@@ -478,12 +563,24 @@ class wizard_page(QWizardPage):
 
 	def ranklist_rbutton_state_change_handler(self, index):
 		widget = self.ranklist_rbutton_list[index]
+		ranklist = self.available_ranklists[index]
 		state = widget.isChecked()
 		if state == True:
-			print("[ SETUP ] Ranklist " + self.available_ranklists[index], " : Selected")
-			self.wizard().ranklist_states[self.available_ranklists[index]] = "TRUE"
+			print("[ SETUP ] Ranklist ", ranklist, " : Selected")
+			self.wizard().ranklist_states[ranklist] = "TRUE"
+			if ranklist in ["IOI", "LONG"]:
+				self.penalty_score.setReadOnly(True)
+				self.penalty_score.setToolTip('This Ranklist has no penalty score')
+				self.penalty_time.setReadOnly(True)
+				self.penalty_time.setToolTip('This Ranklist has no penalty time')
+			else:
+				self.penalty_score.setReadOnly(False)
+				self.penalty_score.setToolTip('Penalty score per wrong answer')
+				self.penalty_time.setReadOnly(False)
+				self.penalty_time.setToolTip('Penalty time (in minutes) per wrong answer')
+
 		else:
-			self.wizard().ranklist_states[self.available_ranklists[index]] = "FALSE"
+			self.wizard().ranklist_states[ranklist] = "FALSE"
 
 	def all_done_page(self):
 		self.title_label = QLabel('Finalize')

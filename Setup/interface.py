@@ -9,7 +9,6 @@ import time
 class main_window(QWizard):
 	def __init__(self, config, parent=None):
 		super(main_window, self).__init__(parent)
-		self.setStyleSheet(open('Elements/style.qss', "r").read())
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 		self.config = config
 
@@ -30,6 +29,9 @@ class main_window(QWizard):
 				self.ranklist_states[ranklist] = "TRUE"
 			else:
 				self.ranklist_states[ranklist] = "FALSE"
+
+		self.problems = self.config.get('Problems', {})
+		self.number_of_problems = self.config.get('Number Of Problems', 0)
 
 		self.home_page = wizard_page(config, 1)
 		self.addPage(self.home_page)
@@ -85,4 +87,5 @@ class main_window(QWizard):
 		elif page == 6:
 			# Do final config creation here
 			print('[ SETUP ] Finish')
+			print(self.problems)
 			
