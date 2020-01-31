@@ -9,7 +9,13 @@ def main():
 	app = QApplication(sys.argv)
 	app.setStyleSheet(open('Elements/style.qss', "r").read())
 	app.setAttribute(Qt.AA_EnableHighDpiScaling)
-	wizard = main_window(config)
+
+	screen = app.primaryScreen()
+	rect = screen.availableGeometry()
+	available_width = rect.width()
+	available_height = rect.height()
+
+	wizard = main_window(config, available_width, available_height)
 	wizard.show()
 	sys.exit(app.exec_())
 	

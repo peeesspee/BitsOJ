@@ -314,6 +314,9 @@ class wizard_page(QWizardPage):
 			self.host_entry.setText('localhost')
 
 	def problems_page(self):
+		# Signal mapper for Open Buttons
+		self.problem_signal_mapper = QSignalMapper()
+
 		self.title_label = QLabel('Problems')
 		self.title_label.setObjectName('main_screen_heading')
 		
@@ -343,12 +346,15 @@ class wizard_page(QWizardPage):
 		self.number_of_problems = self.config.get('Number Of Problems', 0)
 
 		for i in range(1, self.number_of_problems + 1):
+			# Make the card widget
 			problem_id = "Problem " + str(i)
 			problem = self.problems.get(problem_id)
 			problem_name = problem["Name"]
 			problem_code = problem["Code"]
 
 			card_widget = QWidget()
+			card_widget.setFixedHeight(100)
+			card_widget.setObjectName('problem_card')
 			card_layout = QHBoxLayout(card_widget)
 			main_label = QLabel( problem_id + " : ")
 			main_label.setObjectName('main_screen_content')
@@ -356,15 +362,25 @@ class wizard_page(QWizardPage):
 			problem_name_widget.setObjectName('main_screen_sub_heading')
 			problem_code_widget = QLabel(" [ " + problem_code + " ] ")
 			problem_code_widget.setObjectName('main_screen_sub_heading2')
-
+			problem_open_widget = QPushButton('Open')
 			card_layout.addWidget(main_label)
 			card_layout.addWidget(problem_name_widget)
 			card_layout.addWidget(problem_code_widget)
 			card_layout.addStretch(1)
-
-			card_widget.setFixedHeight(100)
-			card_widget.setObjectName('problem_card')
+			card_layout.addWidget(problem_open_widget)
+			card_layout.setAlignment(Qt.AlignLeft)
+			card_layout.setAlignment(problem_open_widget, Qt.AlignRight)
 			self.problems_list_layout.addWidget(card_widget)
+
+			self.problem_signal_mapper.setMapping(
+				problem_open_widget, 
+				i
+			)
+			problem_open_widget.clicked.connect(self.problem_signal_mapper.map)
+
+		self.problem_signal_mapper.mapped[int].connect(
+			self.open_problem
+		)
 
 		self.scroll_area = QScrollArea()
 		self.scroll_area.setWidget(self.problems_list)
@@ -380,13 +396,28 @@ class wizard_page(QWizardPage):
 		self.main_layout.setAlignment(Qt.AlignTop)
 		return self.main_widget
 
+	def open_problem(self, p_id):
+		print('[ OPEN ] Problem ', p_id)
+		try:
+			self.window.close()
+		except:
+			pass
+		self.window = edit_problem_ui(
+			p_id,
+			self.config,
+			self.wizard()
+		)
+		self.wizard().setVisible(False)
+		self.window.show()
+		self.window.activateWindow()
+
 	def reset_all_problems(self):
 		try:
 			self.window.close()
 		except:
 			pass
 
-		remove_all_problems(self.config, self.wizard())
+		remove_all_problems(self.wizard(), self.scroll_area)
 
 
 	def add_problem(self):
@@ -394,7 +425,11 @@ class wizard_page(QWizardPage):
 			self.window.close()
 		except:
 			pass
-		self.window = add_problem_ui(self.config, self.wizard())
+		self.window = add_problem_ui(
+			self.config, 
+			self.wizard(), 
+			self.problem_signal_mapper
+		)
 		self.wizard().setVisible(False)
 		self.window.show()
 		self.window.activateWindow()

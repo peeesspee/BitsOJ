@@ -7,10 +7,13 @@ from ui_widgets import *
 import time
 
 class main_window(QWizard):
-	def __init__(self, config, parent=None):
+	def __init__(self, config, available_width, available_height, parent=None):
 		super(main_window, self).__init__(parent)
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 		self.config = config
+		
+		self.available_width = available_width
+		self.available_height = available_height
 
 		self.selected_languages = {}
 		languages = self.config["Languages"]

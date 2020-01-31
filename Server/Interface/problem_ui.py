@@ -220,7 +220,7 @@ class problem_edit_ui(QMainWindow):
 		source_widget = QWidget()
 		source_widget.setLayout(source_layout)
 		source_widget.setToolTip(
-			'Use \'&le\', \'&ge\' and \'&ne\' for \'less than or equal to\', \n\'greater than or equal to\' and \'not equal to\' symbols respectively.'
+			'Use \'<=\', \'>=\' and \'!=\' for \'less than or equal to\', \n\'greater than or equal to\' and \'not equal to\' symbols respectively.'
 		)
 		
 		scroll_area = QScrollArea()
@@ -500,9 +500,9 @@ class problem_edit_ui(QMainWindow):
 
 	def modify(self, content_data):
 		try:
-			content_data = content_data.replace('&le', '\u2264')
-			content_data = content_data.replace('&ge', '\u2265')
-			content_data = content_data.replace('&ne', '\u2260')
+			content_data = content_data.replace('<=', '\u2264')
+			content_data = content_data.replace('>=', '\u2265')
+			content_data = content_data.replace('!=', '\u2260')
 			return content_data
 		except:
 			return content_data
