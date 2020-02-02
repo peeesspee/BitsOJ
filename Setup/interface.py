@@ -11,7 +11,7 @@ class main_window(QWizard):
 		super(main_window, self).__init__(parent)
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 		self.config = config
-		
+
 		self.available_width = available_width
 		self.available_height = available_height
 
@@ -118,7 +118,7 @@ class main_window(QWizard):
 
 		try:
 			content = json.dumps(self.config, indent = 4)
-			with open('config2.json', 'w') as file:
+			with open('config.json', 'w') as file:
 				file.write(content)
 		except Exception as error:
 			print('[ ERROR ] File could not be written: ', error)

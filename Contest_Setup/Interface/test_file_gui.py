@@ -16,7 +16,6 @@ from judge_api import judge
 
 
 class test_file(QMainWindow):
-
 	def __init__(self, selected_row, selected_model, server_config, parent=None):
 		super(test_file, self).__init__(parent)
 
@@ -201,7 +200,7 @@ class test_file(QMainWindow):
 		self.output = []
 		x = QFileDialog()
 		x.setFileMode(QFileDialog.DirectoryOnly)
-		x.setOption(QFileDialog.ShowDirsOnly, False)
+		x.setOption(QFileDialog.ShowDirsOnly, True)
 		name = x.getExistingDirectory(self, 'Select Test Case Folder')
 		if name != '':
 			for i in os.listdir('./Problems/'+self.problem_code+'/'):
