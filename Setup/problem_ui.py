@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
-import json
+from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
+from PyQt5.QtCore import *
+from shutil import copyfile
+import json, os
 
 class add_problem_ui(QMainWindow):
 	def __init__(
@@ -8,6 +10,7 @@ class add_problem_ui(QMainWindow):
 			config,
 			wizard,
 			problem_signal_mapper,
+			problem_tests_mapper,
 			parent=None
 		):
 		super(add_problem_ui, self).__init__(parent)
@@ -15,6 +18,7 @@ class add_problem_ui(QMainWindow):
 		self.config = config
 		self.wizard = wizard
 		self.problem_signal_mapper = problem_signal_mapper
+		self.problem_tests_mapper = problem_tests_mapper
 		self.setFocus()
 
 		self.problem = ''
@@ -29,6 +33,7 @@ class add_problem_ui(QMainWindow):
 		self.example_output_syntax= '' 
 
 		self.setWindowTitle("[ SETUP ] Problem")
+		self.setWindowIcon(QIcon('Elements/logo.png'))
 		self.width = 1200
 		self.height = 750
 		self.setGeometry(300, 100, self.width, self.height)
@@ -50,13 +55,13 @@ class add_problem_ui(QMainWindow):
 		self.header_layout.addWidget(self.import_xml_file_button)
 		
 		confirm_button = QPushButton('Confirm')
-		confirm_button.setFixedSize(150, 30)
+		confirm_button.setFixedSize(150, 40)
 		confirm_button.clicked.connect(lambda:self.final_status())
 		confirm_button.setDefault(True)
 		confirm_button.setObjectName('interior_button')
 		
 		cancel_button = QPushButton('Cancel')
-		cancel_button.setFixedSize(150, 30)
+		cancel_button.setFixedSize(150, 40)
 		cancel_button.clicked.connect(lambda:self.exit())
 		cancel_button.setObjectName('interior_button')
 		cancel_button.setDefault(True)
@@ -211,6 +216,9 @@ class add_problem_ui(QMainWindow):
 			return content_data
 	
 	def final_status(self):	
+		if self.code_content.text() == 'NULL':
+			self.code_content.setText('')
+
 		problem_name = self.problem_content.text()
 		problem_code = self.code_content.text()
 		author = self.author_content.text()
@@ -232,9 +240,9 @@ class add_problem_ui(QMainWindow):
 			output_data,
 		)
 
-		# if status == 0:
-		# 	error_box(self.wizard.available_width, self.wizard.available_height)
-		# 	return
+		if status == 0:
+			error_box(self.wizard.available_width, self.wizard.available_height)
+			return
 
 		problem = {
 			"Name" : problem_name,
@@ -255,6 +263,18 @@ class add_problem_ui(QMainWindow):
 		problem_id = "Problem " + str(problem_number) 
 		self.wizard.problems[problem_id] = problem
 
+		# Make problem directory for test data
+		try:
+			os.mkdir('./Problems/' + problem_code)
+		except FileExistsError:
+			pass
+		except Exception as error:
+			print(
+				'[ CRITICAL ] The current directory requires sudo elevation to create folders.' + 
+				'\nRestart Setup with sudo privileges.'
+			)
+			return
+
 		card_widget = QWidget()
 		card_widget.setFixedHeight(100)
 		card_widget.setObjectName('problem_card')
@@ -266,13 +286,16 @@ class add_problem_ui(QMainWindow):
 		problem_code_widget = QLabel(" [ " + problem_code + " ] ")
 		problem_code_widget.setObjectName('main_screen_sub_heading2')
 		problem_open_widget = QPushButton('Open')
+		problem_test_files_widget = QPushButton('Test Files')
 		card_layout.addWidget(main_label)
 		card_layout.addWidget(problem_name_widget)
 		card_layout.addWidget(problem_code_widget)
 		card_layout.addStretch(1)
+		card_layout.addWidget(problem_test_files_widget)
 		card_layout.addWidget(problem_open_widget)
 		card_layout.setAlignment(Qt.AlignLeft)
 		card_layout.setAlignment(problem_open_widget, Qt.AlignRight)
+		card_layout.setAlignment(problem_test_files_widget, Qt.AlignRight)
 		# OKAY this line is long :D 
 		# Basically it accesses the QScrollWidget and adds out problem card to it
 		# How? You ask.
@@ -283,7 +306,12 @@ class add_problem_ui(QMainWindow):
 				problem_open_widget, 
 				problem_number
 			)
+		self.problem_tests_mapper.setMapping(
+				problem_test_files_widget, 
+				problem_number
+			)
 		problem_open_widget.clicked.connect(self.problem_signal_mapper.map)
+		problem_test_files_widget.clicked.connect(self.problem_tests_mapper.map)
 
 		self.wizard.setVisible(True)
 		self.close()
@@ -297,10 +325,18 @@ class add_problem_ui(QMainWindow):
 			input_data,
 			output_data,
 		):
+		try:
+			time_limit = int(time_limit)
+		except:
+			# If non decimal time limit is written
+			return 0
+
 		if (
 				problem_name == '' or 
 				problem_code == '' or
+				problem_code == 'NULL' or
 				time_limit == '' or
+				time_limit <= 0 or
 				statement == '' or
 				input_data == '' or
 				output_data == ''
@@ -378,7 +414,11 @@ class remove_all_problems(QMessageBox):
 
 		print('[ SETUP ] Removed all problems...')
 
-###############################################################################
+
+# A LOT of redundant code,
+# Plan to merge this and the add problem classes together,
+# Right now, this is pretty much same as the add_problem class except 
+# the __init__ method.
 class edit_problem_ui(QMainWindow):
 	def __init__(
 			self,
@@ -408,6 +448,7 @@ class edit_problem_ui(QMainWindow):
 		) = self.get_problem_details(problem_id)
 
 		self.setWindowTitle("[ SETUP ] View Problem")
+		self.setWindowIcon(QIcon('Elements/logo.png'))
 		self.width = 1200
 		self.height = 750
 		self.setGeometry(300, 100, self.width, self.height)
@@ -428,13 +469,13 @@ class edit_problem_ui(QMainWindow):
 		self.header_layout.addWidget(self.import_xml_file_button)
 		
 		confirm_button = QPushButton('Update')
-		confirm_button.setFixedSize(150, 30)
+		confirm_button.setFixedSize(150, 40)
 		confirm_button.clicked.connect(lambda:self.final_status())
 		confirm_button.setDefault(True)
 		confirm_button.setObjectName('interior_button')
 		
 		cancel_button = QPushButton('Close')
-		cancel_button.setFixedSize(150, 30)
+		cancel_button.setFixedSize(150, 40)
 		cancel_button.clicked.connect(lambda:self.exit())
 		cancel_button.setObjectName('interior_button')
 		cancel_button.setDefault(True)
@@ -631,6 +672,18 @@ class edit_problem_ui(QMainWindow):
 		example_input = self.example_input_syntax_content.toPlainText()
 		example_output = self.example_output_syntax_content.toPlainText()
 
+		# Check Necessary fields
+		status = self.check_problem(
+			time_limit,
+			statement,
+			input_data,
+			output_data,
+		)
+
+		if status == 0:
+			error_box(self.wizard.available_width, self.wizard.available_height)
+			return
+
 		problem = {
 			"Name" : problem_name,
 			"Code" : problem_code,
@@ -649,13 +702,33 @@ class edit_problem_ui(QMainWindow):
 		self.wizard.setVisible(True)
 		self.close()
 
+	def check_problem(
+			self,
+			time_limit,
+			statement,
+			input_data,
+			output_data,
+		):
+		try:
+			time_limit = int(time_limit)
+		except:
+			return 0
+		if (
+				time_limit == '' or
+				time_limit <= 0 or
+				statement == '' or
+				input_data == '' or
+				output_data == ''
+			):
+			return 0
+		else:
+			return 1
+
 	def exit(self):
 		self.wizard.setVisible(True)
 		self.close()
 
-
-
-class view_case_ui(QMainWindow):
+class test_files_ui(QMainWindow):
 	problem_path = ''
 	text_box = ''
 	line_endings_shown = 0
@@ -663,23 +736,228 @@ class view_case_ui(QMainWindow):
 	file_not_found = 0
 
 	def __init__(
+			self,
+			p_id, 
+			wizard,
+			parent=None
+		):
+		super(test_files_ui, self).__init__(parent)
+		self.p_id = p_id
+		self.wizard = wizard
+
+		self.problem_id = 'Problem ' + str(self.p_id)
+		self.problem = self.wizard.problems.get(self.problem_id, {"Code" : "NULL"})
+		self.problem_code = self.problem.get('Code')
+		
+		self.setWindowTitle('Problem ' + str(p_id))
+		self.setWindowIcon(QIcon('Elements/logo.png'))
+		self.width = 1200
+		self.height = 750
+		self.setGeometry(300, 100, self.width, self.height)
+		self.setFixedSize(self.width, self.height)
+		main = self.main_test_files_ui()
+		self.setCentralWidget(main)
+		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
+		return
+
+	def main_test_files_ui(self):
+		heading = QLabel('All Test Files')
+		import_folder_button = QPushButton('Add Test Files')
+		import_folder_button.clicked.connect(self.get_test_files)
+
+		topbar_widget = QWidget()
+		topbar_layout = QHBoxLayout(topbar_widget)
+		topbar_layout.addWidget(heading)
+		topbar_layout.addStretch(1)
+		topbar_layout.addWidget(import_folder_button)
+
+		self.test_cases_table = QTableWidget()
+		self.test_cases_table.setColumnCount(2)
+		self.test_cases_table.setObjectName('inner_table')
+		self.test_cases_table.setHorizontalHeaderLabels(
+			("Input Files", "Output Files")
+		)
+		self.test_cases_table.resizeColumnsToContents()
+		self.test_cases_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		self.test_cases_table.setAlternatingRowColors(True)
+		
+		vertical_header = self.test_cases_table.verticalHeader()
+		vertical_header.setVisible(False)
+		horizontal_header = self.test_cases_table.horizontalHeader()
+		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+		# Add older files if exists
+		number_of_files = self.wizard.problems['Problem ' + str(self.p_id)]['IO Files']
+		self.test_cases_table.setRowCount(number_of_files)
+		for i in range(number_of_files):
+			dest = "{0:02}".format(i)
+			for j in range(0, 2):
+				if j == 0:
+					self.test_cases_table.setItem(i, j, QTableWidgetItem('input' + dest + '.in'))
+				else:
+					self.test_cases_table.setItem(i, j, QTableWidgetItem('output' + dest + '.ans'))
+
+		# Make test files viewable
+		self.test_cases_table.cellDoubleClicked.connect(
+			lambda:self.manage_io_file(
+				self.problem_code,
+				self.test_cases_table.selectionModel().currentIndex().row(),
+				self.test_cases_table.selectionModel().currentIndex().column()
+			)
+		)
+
+		close_button = QPushButton('Close')
+		close_button.setFixedSize(150, 40)
+		close_button.clicked.connect(lambda:self.exit())
+		close_button.setObjectName('interior_button')
+		close_button.setDefault(True)
+		button_widget = QWidget()
+		button_layout = QHBoxLayout(button_widget)
+		button_layout.addWidget(close_button)
+		button_layout.setAlignment(Qt.AlignCenter)
+		
+		main_layout = QVBoxLayout()
+		main_layout.addWidget(topbar_widget)
+		main_layout.addWidget(self.test_cases_table)
+		main_layout.addWidget(button_widget)
+		main_layout.setStretch(0, 10)
+		main_layout.setStretch(1, 80)
+		main_layout.setStretch(2, 10)
+		main = QWidget()
+		main.setLayout(main_layout)
+		main.setObjectName('account_window')
+		heading.setObjectName('main_screen_heading')
+		return main
+
+	def get_test_files(self):
+		file_dialog = QFileDialog()
+		file_dialog.setFileMode(QFileDialog.Directory)
+		file_dialog.setOption(QFileDialog.ShowDirsOnly)
+		file_dialog.setAcceptMode(QFileDialog.AcceptOpen)
+		folder_path = file_dialog.getExistingDirectory(self, 'Select Test Case Folder')
+		if folder_path == '':
+			# No folder selected i.e., selection cancelled or closed
+			return
+		
+		# Number of input and output files
+		input_files = 0
+		output_files = 0
+		# List of input and output file names
+		self.input_files_list = []
+		self.output_files_list = []
+
+		for i in os.listdir(folder_path):
+			if i.endswith(".in"):
+				input_files += 1
+				self.input_files_list.append(i)
+			elif i.endswith(".ans"):
+				output_files += 1
+				self.output_files_list.append(i)
+
+		if input_files != output_files:
+			print('[ ERROR ] Unequal number of input and output files in the folder!')
+			return
+		elif input_files == 0 or output_files == 0:
+			print('[ ERROR ] At least one each of Input and Output files must be there.')
+			return
+
+		if self.problem_code == 'NULL':
+			print('[ ERROR ] Problem content not found!')
+			return
+		
+		# Clear the Problem Code folder
+		for any_file in os.listdir('./Problems/' + self.problem_code + '/'):
+			os.remove('./Problems/' + self.problem_code + '/' + any_file)
+
+		# Add this folder path to our configuration
+		self.wizard.problems[self.problem_id]["Test File Path"] = folder_path
+
+		# Update configuration for number of input and output files to expect
+		self.wizard.problems[self.problem_id]['IO Files'] = input_files
+		
+		# Sort these lists to get test data in correct order
+		self.input_files_list.sort()
+		self.output_files_list.sort()
+
+		try:
+			for i in range(input_files):
+				dest = "{0:02}".format(i)
+				# Copy Input files
+				copyfile(
+					folder_path + '/' + self.input_files_list[i],
+					'./Problems/' + self.problem_code + '/input' + dest + '.in'
+				)
+				self.input_files_list[i] = 'input' + dest + '.in'
+				# Copy Output files
+				copyfile(
+					folder_path + '/' + self.output_files_list[i],
+					'./Problems/' + self.problem_code + '/output' + dest + '.ans'
+				)
+				self.output_files_list[i] = 'output' + dest + '.ans'
+
+			self.wizard.problems[self.problem_id]["Test File Path"] = './Problems/' + self.problem_code + '/'
+
+			self.test_cases_table.setRowCount(input_files)
+			for i in range(input_files):
+				for j in range(2):
+					if j == 0:
+						self.test_cases_table.setItem(i,j, QTableWidgetItem(self.input_files_list[i]))
+					if j == 1:
+						self.test_cases_table.setItem(i,j, QTableWidgetItem(self.output_files_list[i]))
+
+		except Exception as Error:
+			QMessageBox.warning(self, 'Error', str(Error))
+		finally:
+			return
+
+	def manage_io_file(self, problem_code, row, column):
+		if column == 0:
+			# Input file is selected
+			# Get file name:
+			input_file_name = self.test_cases_table.item(row, column).text()
+
+			file_path = "./Problems/" + problem_code + "/" + input_file_name 
+			self.ui = view_case_ui(
+				file_path
+			)
+			self.ui.show()
+		elif column == 1:
+			# Output file is selected
+			# Get file name:
+			output_file_name = self.test_cases_table.item(row, column).text()
+			file_path = "./Problems/" + problem_code + "/" + output_file_name 
+			self.ui = view_case_ui(
+				file_path
+			)
+			self.ui.show()
+		return
+
+	def exit(self):
+		self.wizard.setVisible(True)
+		self.close()
+
+class view_case_ui(QMainWindow):
+	def __init__(
+			self, 
+			problem_path,
 			parent=None
 		):
 		super(view_case_ui, self).__init__(parent)
-		view_case_ui.problem_path = problem_path
+
+		self.button_mode = 1
+		self.problem_path = problem_path
+		self.file_not_found = 0
 
 		self.setWindowTitle('View Case')
 		self.setGeometry(550, 250, 800, 700)
 		self.setFixedSize(800,700)
 		main = self.main_view_case_ui()
 		self.setCentralWidget(main)
-		# self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		return
 
 	def main_view_case_ui(self):
 		heading = QLabel('View Test File')
 		open_label = QLabel("Open: ")
-		path = QLabel(view_case_ui.problem_path)
+		path = QLabel(self.problem_path)
 		path_layout = QHBoxLayout()
 		path_layout.addWidget(open_label)
 		path_layout.addWidget(path)
@@ -690,9 +968,12 @@ class view_case_ui(QMainWindow):
 		show_line_endings_label = QLabel('Show Line endings: ')
 
 		show_line_endings_button = QCheckBox('')
-		show_line_endings_button.setFixedSize(30, 30)
 		show_line_endings_button.setChecked(False)
-		show_line_endings_button.stateChanged.connect(view_case_ui.line_end_toggle)
+		show_line_endings_button.stateChanged.connect(
+			lambda:self.line_end_toggle(
+				show_line_endings_button.checkState()
+			)
+		)
 
 		line_end_layout = QHBoxLayout()
 		line_end_layout.addWidget(show_line_endings_label)
@@ -701,36 +982,33 @@ class view_case_ui(QMainWindow):
 		line_end_widget = QWidget()
 		line_end_widget.setLayout(line_end_layout)
 
-		file_text_box = QTextEdit()
-		file_text_box.setReadOnly(True)
-		file_text_box.setFixedHeight(500)
-		view_case_ui.text_box = file_text_box
-
+		self.file_text_box = QTextEdit()
+		self.file_text_box.setReadOnly(True)
+		self.file_text_box.setFixedHeight(500)
+		
 		# Try to open file:
 		try:
 			file_content = ''
-			with open (view_case_ui.problem_path, "r") as myfile:
-				data=myfile.readlines()
+			# File is read line by line to maybe show line numbers in the future
+			with open (self.problem_path, "r") as myfile:
+				data = myfile.readlines()
 			# print(data)
 			for i in data:
 				file_content = file_content + i
-
-			view_case_ui.backup_file_content = repr(file_content)
-			file_not_found = 0
-			# print(data)
+			self.backup_file_content = repr(file_content)
+	
 		except Exception as error:
 			print("[ CRITICAL ] Could not read test file : " + str(error))
-			self.log_queue.put("[ CRITICAL ] Could not read test file : " + str(error))
 			file_content = "CRITICAL ERROR\nFile not found!"
-			view_case_ui.backup_file_content = " CRITICAL ERROR\nFile not found! "
-			file_not_found = 1
+			self.backup_file_content = " CRITICAL ERROR\nFile not found! "
+			self.file_not_found = 1
 
-		file_text_box.setText(file_content)
+		self.file_text_box.setText(file_content)
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(heading)
 		main_layout.addWidget(path_widget)
 		main_layout.addWidget(line_end_widget)
-		main_layout.addWidget(view_case_ui.text_box)
+		main_layout.addWidget(self.file_text_box)
 		main_layout.addStretch(1)
 		main = QWidget()
 		main.setLayout(main_layout)
@@ -743,25 +1021,23 @@ class view_case_ui(QMainWindow):
 		
 		return main
 
-	def line_end_toggle(state):
+	def line_end_toggle(self, state):
 		try:
-			if(state == Qt.Checked) and view_case_ui.file_not_found == 0:
+			if(state == Qt.Checked) and self.file_not_found == 0:
 				# line endings show
-				data = view_case_ui.backup_file_content
+				data = self.backup_file_content
 				data = data.replace('\\r', '  CR\r')
 				data = data.replace('\\n', '  LF\n')
 				data = data[1:-1]
 				
-				view_case_ui.line_endings_shown = 1
-				view_case_ui.text_box.setText(data)
-			elif view_case_ui.file_not_found == 0:
+				self.line_endings_shown = 1
+				self.file_text_box.setText(data)
+			elif self.file_not_found == 0:
 				# line endings hide
-				if view_case_ui.line_endings_shown == 1:
-					view_case_ui.line_endings_shown = 0
+				if self.line_endings_shown == 1:
+					self.line_endings_shown = 0
 					# Replace current text with backup text
-					view_case_ui.text_box.setText(eval(view_case_ui.backup_file_content))
-		except:
-			print('[ ERROR ] Could not show line endings. File Size might be too big.')
-			self.log_queue.put('[ ERROR ] Could not show line endings. File Size might be too big.')
-				
+					self.file_text_box.setText(eval(self.backup_file_content))
+		except Exception as error:
+			print('[ ERROR ] Could not show line endings: ', error)	
 		return
