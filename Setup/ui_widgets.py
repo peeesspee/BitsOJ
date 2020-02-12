@@ -275,7 +275,9 @@ class wizard_page(QWizardPage):
 		self.host_entry.setToolTip('RabbitMQ Host IP Address')
 		self.host_entry.setText(self.config.get("Host", "localhost"))
 		self.registerField("Host", self.host_entry)
+
 		self.automatic_switch = QCheckBox('This PC')
+		self.automatic_switch.setChecked(False)
 		self.automatic_switch.stateChanged.connect(self.ip_switch_change)
 		self.host_widget = self.get_horizontal_widget(
 			self.host_entry,
@@ -544,10 +546,8 @@ class wizard_page(QWizardPage):
 		self.title_label = QLabel('Ranking')
 		self.title_label.setObjectName('main_screen_heading')
 
-		self.message_ranklist = QLabel(
-			'Set the Ranking style in the contest.'
-		)
-		self.message_ranklist.setObjectName('main_screen_content')
+		self.message_ranklist = QLabel('Ranklist Style')
+		self.message_ranklist.setObjectName('main_screen_sub_heading')
 
 		self.rbutton_signal_mapper = QSignalMapper()
 		self.ranklist_rbutton_list = []
@@ -557,6 +557,7 @@ class wizard_page(QWizardPage):
 
 		self.ranklist_widget = QWidget()
 		self.ranklist_layout  = QVBoxLayout(self.ranklist_widget)
+		self.ranklist_layout.addWidget(self.message_ranklist)
 
 		for ranklist in self.available_ranklists:
 			ranklist_radiobutton = QRadioButton(ranklist)
@@ -579,6 +580,9 @@ class wizard_page(QWizardPage):
 		self.rbutton_signal_mapper.mapped[int].connect(
 			self.ranklist_rbutton_state_change_handler
 		)
+
+		self.scoring_label = QLabel('Scoring')
+		self.scoring_label.setObjectName('main_screen_sub_heading')
 
 		problem_config_score = self.config.get("Problem Max Score", 100)
 		self.problem_max_score_label = QLabel('Problem Score:')
@@ -623,7 +627,8 @@ class wizard_page(QWizardPage):
 			self.penalty_score.setToolTip('Penalty score per wrong answer')
 			self.penalty_time.setReadOnly(False)
 			self.penalty_time.setToolTip('Penalty time (in minutes) per wrong answer')
-	
+		
+		self.ranklist_layout.addWidget(self.scoring_label)
 		self.ranklist_layout.addWidget(self.problem_max_score_widget)
 		self.ranklist_layout.addWidget(self.penalty_score_widget)
 		self.ranklist_layout.addWidget(self.penalty_time_widget)
@@ -632,11 +637,10 @@ class wizard_page(QWizardPage):
 		self.main_widget.setObjectName('content_box')
 		self.main_layout = QVBoxLayout(self.main_widget)
 		self.main_layout.addWidget(self.title_label)
-		self.main_layout.addWidget(self.message_ranklist)
 		self.main_layout.addWidget(self.ranklist_widget)
 		self.main_layout.setStretch(0, 10)
-		self.main_layout.setStretch(1, 10)
-		self.main_layout.setStretch(2, 80)
+		self.main_layout.setStretch(1, 90)
+	
 		return self.main_widget
 
 	def ranklist_rbutton_state_change_handler(self, index):

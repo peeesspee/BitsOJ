@@ -37,8 +37,8 @@ QPushButton::!enabled{
 }
 
 QRadioButton{
-	color : #23B2EE;
-	font-size : 24px;
+	color : #DDDDDD;
+	font-size : 25px;
 }
 QRadioButton::indicator{
 	width :25px;
@@ -85,7 +85,7 @@ QWidget#screen_widget
 	margin-top : -10px;
 }
 QWidget#content_box{
-	border: 1px solid #888888;
+	background : #101422;
 }
 QWidget#problem_card{
 	border : 1px solid #313d3a;
@@ -208,7 +208,7 @@ QLineEdit
 	border : 1px solid #181B25;
 	padding-left : 5px;
 }
-
+ 
 
 QToolTip
 {
