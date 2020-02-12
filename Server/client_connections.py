@@ -29,8 +29,6 @@ class manage_clients():
 		manage_clients.languages = manage_clients.config['Languages']
 		superuser_username = manage_clients.config["Server Username"]
 		superuser_password = manage_clients.config["Server Password"]
-		judge_username = manage_clients.config["Judge Username"]
-		judge_password = manage_clients.config["Judge Password"]
 		host = manage_clients.config["Server IP"]
 		manage_clients.key = manage_clients.config["Client Key"]
 		manage_clients.judge_key = manage_clients.config["Judge Key"]

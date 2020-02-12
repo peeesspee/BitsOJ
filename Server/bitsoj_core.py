@@ -42,12 +42,11 @@ class core():
 			if status == 1:
 				break
 			# Poll every second
-			time.sleep(1)
+			# time.sleep(1)
 
 		# If we reach this point, it means the Server Shutdown has been initiated.
 		
 		# Shut down connection
-		time.sleep(1)
 		print("[ STOP ] Core subprocess terminated successfully!")
 		core.log("[ STOP ] Core subprocess terminated successfully!")
 		channel.stop_consuming()
@@ -96,6 +95,8 @@ class core():
 		# While there is data to process in the task_queue,
 		try:
 			while task_queue.empty() == False:
+				size = task_queue.qsize()
+				print('[ CORE ] ', size , ' operations in line.')
 				# Data in the task queue is in JSON format
 				data = task_queue.get()
 				data = json.loads(data)
@@ -416,7 +417,7 @@ class core():
 				elif code == 'UpUserPwd':
 					username = data['Username']
 					password = data['New Password']
-					user_management.update_user_password(username, password)
+					user_management.update_user_password(username, password) 
 					print('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
 					core.log('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
 					# Update account views

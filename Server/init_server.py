@@ -94,7 +94,7 @@ class initialize_server():
 		try:
 			problems = initialize_server.config['Problems']
 			for problem, content in problems.items():
-				if content['Code'] == problem_code:
+				if content['Code'] == problem_code: 
 					return content
 			return 'NULL'
 		except Exception as error:

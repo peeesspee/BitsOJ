@@ -1235,7 +1235,15 @@ class server_window(QMainWindow):
 			if problem == None:
 				pass
 			else:
-				self.window = problem_edit_ui(self.data_changed_flags, self.task_queue, self.log_queue, problem, code, test_files, time_limit)
+				self.window = problem_edit_ui(
+					self.data_changed_flags, 
+					self.task_queue, 
+					self.log_queue, 
+					problem, 
+					code, 
+					test_files, 
+					time_limit
+				)
 				self.window.show()
 			
 		except Exception as error: 

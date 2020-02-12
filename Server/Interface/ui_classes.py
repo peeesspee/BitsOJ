@@ -313,7 +313,7 @@ class ui_widgets:
 		view_problem_button = QPushButton('Manage Problem', self)
 		view_problem_button.setFixedSize(200, 50)
 		view_problem_button.clicked.connect(
-			lambda:self.view_problem(problem_table.selectionModel().currentIndex().row())
+			lambda:self.view_problem(problem_table.selectionModel().currentIndex().row()) 
 		)
 		view_problem_button.setObjectName("topbar_button")
 		view_problem_button.setToolTip('View/Edit Problems')
@@ -337,7 +337,6 @@ class ui_widgets:
 		head_layout.setStretch(2, 10)
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
-
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
@@ -421,13 +420,13 @@ class ui_widgets:
 		table_list = stats_widget.findChildren(QTableWidget)
 		# 2nd QLabel in this list is contest_problems_number_answer
 		number_of_problems = self.config['Number Of Problems']
-		child_list[2].setText(number_of_problems)
+		child_list[2].setText(str(number_of_problems))
 		number_of_problems = int(number_of_problems)
 
 		# table_list[0] contains problem_solved_table
 		table_list[0].setRowCount(int(number_of_problems))
-		code_tuple_string = self.config['Problem Codes']
-		code_tuple = eval(code_tuple_string)
+
+		code_tuple = self.config['Problem Codes']
 		for i in range(0, number_of_problems ):
 
 			table_list[0].setItem(i, 0, QTableWidgetItem(code_tuple[i]))

@@ -16,6 +16,8 @@ class manage_database():
 				check_same_thread = False,
 				timeout = 20
 			)
+			# WAL Mode for concurrent read/write
+			# conn.execute('PRAGMA journal_mode=WAL')
 			cur = conn.cursor()
 			manage_database.cur = cur
 			manage_database.conn = conn
@@ -57,6 +59,8 @@ class manage_database():
 
 class problem_management(manage_database):
 	def init_problems(problem_dictionary):
+		# This may seem counter intuitive, but it is meant to be done only
+		# once for a contest in best case scenario
 		try:
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
@@ -72,7 +76,7 @@ class problem_management(manage_database):
 
 		try:
 			for problem, content in problem_dictionary.items():
-				problem_name = content['Title']
+				problem_name = content['Name']
 				problem_code = content['Code']
 				problem_time = content['Time Limit']
 				files = content['IO Files']
@@ -83,8 +87,8 @@ class problem_management(manage_database):
 				conn.commit()
 		except Exception as error:
 			print('[ DB ][ ERROR ] Corrupted config file: ' + str(error))
-			
 			cur.execute('rollback')
+			pass
 		return
 
 	def update_problem(change_type, key, new_value):
@@ -104,6 +108,7 @@ class problem_management(manage_database):
 			return
 		except Exception as error:
 			print('[ DB ][ ERROR ] Could not update database: ' + str(error))
+			pass
 
 class scoreboard_management():
 	def insert_new_user(client_id, user_name, score, problems_solved, total_time):
@@ -116,6 +121,7 @@ class scoreboard_management():
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not add scoreboard entry : " + str(error))
 			conn.rollback()
+			pass
 		return
 
 	def get_scoreboard():
@@ -140,7 +146,8 @@ class scoreboard_management():
 			data = cur.fetchall()
 			return data
 		except Exception as error:
-			print("[ DB ][ CRITICAL ] Could not get scoreboard : " + str(error))
+			print("[ DB ][ CRITICAL ] Could not get user score : " + str(error))
+			pass
 		return	
 
 	def delete_all():
@@ -151,7 +158,7 @@ class scoreboard_management():
 		except:
 			print("[ DB ][ CRITICAL ] Could not reset scoreboard : " + str(error))
 
-
+	# This is the main scoreboard update logic. Feel free to optimize
 	def update_user_score(
 			client_id,
 			run_id, 
@@ -164,14 +171,19 @@ class scoreboard_management():
 			ranking_algorithm
 		):
 		problem_max_score = int(problem_max_score)
-		# scoreboard(client_id user_name score problems_solved total_time penalty) <- Here, score is total score
-		# submissions(run_id client_run_id client_id language source_file problem_code) 
-		# verdict timestamp sent_status judge score) <- This score is submission score
+		# Scoreboard table is: 
+		# 	scoreboard(client_id user_name score problems_solved total_time penalty) <- Here, score is total score
+		# Submissions table is: 
+		# 	submissions(run_id client_run_id client_id language source_file problem_code) <- This score is individual submission score
+		# verdict timestamp sent_status judge score) 
 		if ranking_algorithm == 1:
 			# ACM style ranklist
 			# For every unsolved problem, if it is a wrong answer, penalty of penalty_time is added 
-			# For every unsolved problem, the first AC submission time is recorded 
+			# For every unsolved problem, the first AC submission time is recorded, 
 			# along with all the penalties for the solved problems.
+
+			# TODO
+
 			try:
 				pass
 			except Exception as error:
@@ -180,6 +192,9 @@ class scoreboard_management():
 				print('[ DB ][ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error) + 'On ', exc_type, fname, exc_tb.tb_lineno)
 			finally:
 				return
+
+		# IOI and LONG style ranklists are basically the same for all regards. 
+		# Penalties do not matter in LONG style ranklist.
 		elif ranking_algorithm == 2 or ranking_algorithm == 3:
 			print('\n[ SCOREBOARD ] Checking new submission...')
 			# IOI style ranklist
@@ -198,7 +213,7 @@ class scoreboard_management():
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			try:
-				# Get number of problems solved till now based on client_id
+				# Get number of problems solved till now, based on client_id
 				cur.execute(
 				"SELECT DISTINCT problem_code FROM submissions WHERE client_id = ? AND verdict = 'AC'",
 					(
@@ -234,7 +249,6 @@ class scoreboard_management():
 					previous_score = int(data[0][0])
 
 				print('[ SCOREBOARD ] Run: ', run_id, ' Previous RunID Score: ', previous_score)
-
 
 				# Check if this is an AC submission, and if it is the first AC of this problem
 				if status == 'AC':
@@ -1012,16 +1026,13 @@ class user_management(manage_database):
 				cur.execute("INSERT into accounts values (?, ?, ? )" , (client_list[i], client_pass_list[i], 'CLIENT'))
 
 			conn.commit()
-			print('[ DB ] Commit')
 			
 			for i in range(0, no_of_judges):
 				print('[ DB ] Adding Account : ', judge_list[i] , ' @ ', judge_pass_list[i])
 				cur.execute("INSERT into accounts values (?, ?, ? )" , (judge_list[i], judge_pass_list[i], 'JUDGE'))
 
 			conn.commit()
-			print('[ DB ] Commit')
 			print('[ DB ] All accounts added!')
-			
 			return 1
 
 		except Exception as error:
@@ -1162,6 +1173,7 @@ class user_management(manage_database):
 			return
 
 		cur = manage_database.get_cursor()
+		conn = manage_database.get_connection_object()
 		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
 		try:
 			# cur.execute("begin")

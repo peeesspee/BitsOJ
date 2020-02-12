@@ -166,7 +166,7 @@ QCheckBox::indicator{
 	height : 20px;
 }
 QCheckBox{
-	color : #CCCCCC;
+	color : #171B1F;
 }
 QCheckBox#top_level_checkbox{
 	color : #23B2EE;
