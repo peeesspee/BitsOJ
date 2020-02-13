@@ -2,7 +2,10 @@
 Offline Judge for competitive programming contests.  
 
 ## Setup
-### Setting up backend services:
+### Run this script to bypass the following steps:
+1.  `sudo chmod +x configure.sh`
+2.  `./configure.sh`
+### Or, run these commands manually:
 #### 1.Update the system:  
 `sudo apt-get update`  
 `sudo apt-get upgrade`  
