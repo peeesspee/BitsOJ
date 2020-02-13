@@ -36,10 +36,9 @@ QPushButton::!enabled{
 	color: #E91E63;
 }
 
-
 QRadioButton{
-	color : #23B2EE;
-	font-size : 24px;
+	color : #DDDDDD;
+	font-size : 25px;
 }
 QRadioButton::indicator{
 	width :25px;
@@ -86,11 +85,19 @@ QWidget#screen_widget
 	margin-top : -10px;
 }
 QWidget#content_box{
-	border: 1px solid #888888;
+	background : #101422;
+}
+QWidget#problem_card{
+	border : 1px solid #313d3a;
+	background : #101422;
+}
+QWidget#account_window
+{
+	background-color : #181B25;
 }
 
 
-QTabWidget#main_tabs{
+QTabWidget{
 	border : none;
 }
 QTabWidget::pane{
@@ -181,17 +188,10 @@ QComboBox::down-arrow
     height: 10px;
 }
 
-
 QLabel#account_label
 {
 	color : #23B2EE;
 }
-
-QWidget#account_window
-{
-	background-color : #181B25;
-}
-
 
 QTextEdit
 {
@@ -208,13 +208,107 @@ QLineEdit
 	border : 1px solid #181B25;
 	padding-left : 5px;
 }
-
+ 
 
 QToolTip
 {
 	color : #AAAAAA;
 	background : #2D353D;
 }
-/*--------------SUB LAYOUT ENDS---------*/
+
+QScrollArea{
+	border : 0px;
+}
+QScrollArea QWidget
+{
+	background-color : #101422;
+	border : 0px;
+}
+QScrollArea QTextEdit
+{
+	background : #2D353D;
+	color : #AAAAAA;
+}
+QScrollArea QLineEdit
+{
+	height : 30px;
+	background : #2D353D;
+	color : #AAAAAA;
+	border : 1px solid #181B25;
+}
+QScrollArea QPushButton{
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 0px; 
+	font-size : 20px;
+	text-align : center; 	
+	border : 1px solid #ADFF2F;
+	background-color : #171B1F;
+	color : #62C9F3;
+	width : 150px;
+	height : 40px;
+}
+QScrollArea QPushButton::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+}
+QScrollArea QPushButton::hover::focus
+{
+	color : #23B2EE;
+	background-color : #2B2C39 ;
+}
+QScrollArea QPushButton::pressed
+{
+	color : #23B2EE;
+	background-color : #202428;
+}
+QScrollArea QPushButton::hover
+{
+	color : #0892D0;
+	background-color : #202428 ;
+}
+
+
+QTableView
+{
+	background-color : #181B25;
+	alternate-background-color : #1E222E;
+	color : #AAAAAA;
+	border : 0px;
+	selection-background-color : #121520;
+}
+QTableView::item:selected
+{
+	border : 2px solid #0891D4;
+}
+QHeaderView::section
+{ 
+	background-color : #181B25;
+	color: #E91E63;	
+}
+
+QScrollBar:horizontal
+{
+	height : 0px;
+}
+QScrollBar:vertical{
+	margin-left : 1px;
+	width : 25px;
+	background-color : #181B25;	
+	border: 1px solid #121212;
+}
+QScrollBar::handle:vertical{
+	background : qlineargradient( spread:Reflect, x1:0, y1:0, x2:0, y2:1 , stop:0 #181B25, stop:0.5 #38424C, stop:1 #181B25);
+	width : 25px;
+	min-height : 70px;
+	margin-left : 0px;
+	margin-top : 1px;
+	margin-bottom : 1px;
+	margin-right : 0px;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+	width : 0px;
+	height : 0px;
+}
 
 /*################################################ /LAYOUT OBJECTS ######################################################*/

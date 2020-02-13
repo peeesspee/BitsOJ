@@ -19,8 +19,8 @@ sys.path.append('../')
 
 def main():
 	config = initialize_server.read_config()
-	judge_username = config["Server Username"]
-	judge_password = config["Server Password"]
+	rabbitmq_username = config["Server Username"]
+	rabbitmq_password = config["Server Password"]
 	host = config["Server IP"]
 	login_status = config["Login Allowed"]
 	judge_login = config["Judge Login Allowed"]
@@ -120,25 +120,25 @@ def main():
 	data_changed_flags[26] = 0
 	data_changed_flags[27] = 0
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
-	if login_status == 'True' or login_status == 'true':
+	if login_status == True:
 		data_changed_flags[2] = 1
 	else:
 		data_changed_flags[2] = 0
 
 	# Check if judges can log in
-	if judge_login == 'True' or judge_login == 'true':
+	if judge_login == True:
 		data_changed_flags[12] = 1
 	else:
 		data_changed_flags[12] = 0
 
 	# Do not allow new submissions unless timer is active or admin begins contest
-	if submission_status == 'True' or submission_status == 'true':
+	if submission_status == True:
 		data_changed_flags[3] = 1
 	else:
 		data_changed_flags[3] = 0
 
 	# If scoreboard update is allowed, set this flag to 1
-	if scoreboard_status == 'True' or scoreboard_status == 'true':
+	if scoreboard_status == True:
 		data_changed_flags[15] = 1
 	else:
 		data_changed_flags[15] = 0
@@ -154,7 +154,7 @@ def main():
 		#DEFAULT TO ACM
 		data_changed_flags[17] = 1
 
-	if manual_review == 'True':
+	if manual_review == True:
 		data_changed_flags[20] = 1
 	else:
 		data_changed_flags[20] = 0
@@ -176,15 +176,15 @@ def main():
 		print('[ SETUP ] Loading problems...')
 		problem_management.init_problems(config['Problems'])
 		log_queue.put('[ SETUP ] Loading problems...')
-
+ 
 	#####################################################################################
 
 	# Manage subprocesses
 	print('[ SETUP ] Initialising subprocesses...')
 	log_queue.put('[ SETUP ] Initialising subprocesses...')
 	client_pid, judge_pid, core_pid = manage_process(
-		judge_username, 
-		judge_password, 
+		rabbitmq_username, 
+		rabbitmq_password, 
 		host, 
 		data_changed_flags, 
 		task_queue,
@@ -231,29 +231,29 @@ def main():
 	#####################################################################################
 	# Write config file with changed data.
 	if data_changed_flags[2] == 1:
-		login_status = 'True'
+		login_status = True
 	else:
-		login_status = 'False'
+		login_status = False
 
 	if data_changed_flags[12] == 1:
-		judge_login = 'True'
+		judge_login = True
 	else:
-		judge_login = 'False'
+		judge_login = False
 
 	if data_changed_flags[3] == 1:
-		submission_status = 'True'
+		submission_status = True
 	else:
-		submission_status = 'False'
+		submission_status = False
 
 	if data_changed_flags[15] == 1:
-		scoreboard_status = 'True'
+		scoreboard_status = True
 	else:
-		scoreboard_status = 'False'
+		scoreboard_status = False
 
 	if data_changed_flags[20] == 1:
-		manual_review = 'True'
+		manual_review = True
 	else:
-		manual_review = 'False'
+		manual_review = False
 
 	submission_time_limit = data_changed_flags[21]
 
@@ -290,8 +290,8 @@ def main():
 	#####################################################################################
 
 def manage_process(
-		judge_username, 
-		judge_password, 
+		rabbitmq_username, 
+		rabbitmq_password, 
 		host, 
 		data_changed_flags, 
 		task_queue,
@@ -303,7 +303,7 @@ def manage_process(
 		)
 	judge_handler_process = multiprocessing.Process(
 		target = manage_judges.listen_judges, 
-		args = (judge_username, judge_password, host, data_changed_flags, task_queue, log_queue, )
+		args = (rabbitmq_username, rabbitmq_password, host, data_changed_flags, task_queue, log_queue, )
 		)
 	core_process = multiprocessing.Process(
 		target = core.init_core,

@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
-from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
+# from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import *
-import socket
+from problem_ui import *
+import socket, time, os
 
 # This class creates pages for the setup wizard, based on the page id given to it.
 class wizard_page(QWizardPage):
@@ -274,7 +275,9 @@ class wizard_page(QWizardPage):
 		self.host_entry.setToolTip('RabbitMQ Host IP Address')
 		self.host_entry.setText(self.config.get("Host", "localhost"))
 		self.registerField("Host", self.host_entry)
+
 		self.automatic_switch = QCheckBox('This PC')
+		self.automatic_switch.setChecked(False)
 		self.automatic_switch.stateChanged.connect(self.ip_switch_change)
 		self.host_widget = self.get_horizontal_widget(
 			self.host_entry,
@@ -313,16 +316,166 @@ class wizard_page(QWizardPage):
 			self.host_entry.setText('localhost')
 
 	def problems_page(self):
+		# Signal mapper for Open Buttons
+		self.problem_signal_mapper = QSignalMapper()
+		self.problem_tests_mapper = QSignalMapper()
+
 		self.title_label = QLabel('Problems')
 		self.title_label.setObjectName('main_screen_heading')
 		
+		self.add_problem_button = QPushButton("Add Problem")
+		self.add_problem_button.setFixedSize(200, 40)
+		self.add_problem_button.setToolTip("Add a Problem")
+		self.add_problem_button.clicked.connect(self.add_problem)
+
+		self.reset_problems_button = QPushButton("Reset Problems")
+		self.reset_problems_button.setFixedSize(200, 40)
+		self.reset_problems_button.setToolTip("Delete all the Problems")
+		self.reset_problems_button.clicked.connect(self.reset_all_problems)
+
+		self.topbar_widget = QWidget()
+		self.topbar_layout = QHBoxLayout(self.topbar_widget)
+		self.topbar_layout.addWidget(self.title_label)
+		self.topbar_layout.addStretch(1)
+		self.topbar_layout.addWidget(self.add_problem_button)
+		self.topbar_layout.addWidget(self.reset_problems_button)
+
+		self.problems_list = QWidget()
+		self.problems_list_layout = QVBoxLayout(self.problems_list)
+		self.problems_list_layout.setAlignment(Qt.AlignTop)
+
+		# Add existing problems to this scroll area
+		self.problems = self.config.get('Problems', {})
+		self.number_of_problems = self.config.get('Number Of Problems', 0)
+
+		for i in range(1, self.number_of_problems + 1):
+			# Make the card widget
+			problem_id = "Problem " + str(i)
+			problem = self.problems.get(problem_id)
+			problem_name = problem["Name"]
+			problem_code = problem["Code"]
+
+			# Make problem directory for test data
+			try:
+				os.mkdir('./Problems/' + problem_code)
+			except FileExistsError:
+				pass
+			except Exception as error:
+				print(
+					'[ CRITICAL ] The current directory requires sudo elevation to create folders.' + 
+					'\nRestart Setup with sudo privileges.'
+				)
+				return
+
+
+			card_widget = QWidget()
+			card_widget.setFixedHeight(100)
+			card_widget.setObjectName('problem_card')
+			card_layout = QHBoxLayout(card_widget)
+			main_label = QLabel( problem_id + " : ")
+			main_label.setObjectName('main_screen_content')
+			problem_name_widget = QLabel(problem_name)
+			problem_name_widget.setObjectName('main_screen_sub_heading')
+			problem_code_widget = QLabel(" [ " + problem_code + " ] ")
+			problem_code_widget.setObjectName('main_screen_sub_heading2')
+			problem_open_widget = QPushButton('Open')
+			problem_test_files_widget = QPushButton('Test Files')
+			card_layout.addWidget(main_label)
+			card_layout.addWidget(problem_name_widget)
+			card_layout.addWidget(problem_code_widget)
+			card_layout.addStretch(1)
+			card_layout.addWidget(problem_test_files_widget)
+			card_layout.addWidget(problem_open_widget)
+			card_layout.setAlignment(Qt.AlignLeft)
+			card_layout.setAlignment(problem_open_widget, Qt.AlignRight)
+			card_layout.setAlignment(problem_test_files_widget, Qt.AlignRight)
+			self.problems_list_layout.addWidget(card_widget)
+
+			self.problem_signal_mapper.setMapping(
+				problem_open_widget, 
+				i
+			)
+			self.problem_tests_mapper.setMapping(
+				problem_test_files_widget, 
+				i
+			)
+			problem_open_widget.clicked.connect(self.problem_signal_mapper.map)
+			problem_test_files_widget.clicked.connect(self.problem_tests_mapper.map)
+
+		self.problem_signal_mapper.mapped[int].connect(
+			self.open_problem
+		)
+		self.problem_tests_mapper.mapped[int].connect(
+			self.problem_test_files_manager
+		)
+
+		self.scroll_area = QScrollArea()
+		self.scroll_area.setWidget(self.problems_list)
+		self.scroll_area.setWidgetResizable(True)
+
 		self.main_widget = QWidget()
 		self.main_widget.setObjectName('content_box')
 		self.main_layout = QVBoxLayout(self.main_widget)
-		self.main_layout.addWidget(self.title_label)
-	
-		self.main_layout.addStretch(1)
+		self.main_layout.addWidget(self.topbar_widget)
+		self.main_layout.addWidget(self.scroll_area)
+		self.main_layout.setStretch(0, 10)
+		self.main_layout.setStretch(1, 90)
+		self.main_layout.setAlignment(Qt.AlignTop)
 		return self.main_widget
+
+	def open_problem(self, p_id):
+		print('[ OPEN ] Problem ', p_id)
+		try:
+			self.window.close()
+		except:
+			pass
+		self.window = edit_problem_ui(
+			p_id,
+			self.config,
+			self.wizard()
+		)
+		self.wizard().setVisible(False)
+		self.window.show()
+		self.window.activateWindow()
+
+	def problem_test_files_manager(self, p_id):
+		print('[ TESTS ] Problem ', p_id)
+		try:
+			self.window.close()
+		except:
+			pass
+		self.window = test_files_ui(
+			p_id,
+			self.wizard()
+		)
+		self.wizard().setVisible(False)
+		self.window.show()
+		self.window.activateWindow()
+
+	def reset_all_problems(self):
+		try:
+			self.window.close()
+		except:
+			pass
+
+		remove_all_problems(self.wizard(), self.scroll_area)
+
+
+	def add_problem(self):
+		try:
+			self.window.close()
+		except:
+			pass
+		self.window = add_problem_ui(
+			self.config, 
+			self.wizard(), 
+			self.problem_signal_mapper,
+			self.problem_tests_mapper
+		)
+		self.wizard().setVisible(False)
+		self.window.show()
+		self.window.activateWindow()
+	
 
 	def languages_page(self):
 		self.title_label = QLabel('Languages')
@@ -393,10 +546,8 @@ class wizard_page(QWizardPage):
 		self.title_label = QLabel('Ranking')
 		self.title_label.setObjectName('main_screen_heading')
 
-		self.message_ranklist = QLabel(
-			'Set the Ranking style in the contest.'
-		)
-		self.message_ranklist.setObjectName('main_screen_content')
+		self.message_ranklist = QLabel('Ranklist Style')
+		self.message_ranklist.setObjectName('main_screen_sub_heading')
 
 		self.rbutton_signal_mapper = QSignalMapper()
 		self.ranklist_rbutton_list = []
@@ -406,6 +557,7 @@ class wizard_page(QWizardPage):
 
 		self.ranklist_widget = QWidget()
 		self.ranklist_layout  = QVBoxLayout(self.ranklist_widget)
+		self.ranklist_layout.addWidget(self.message_ranklist)
 
 		for ranklist in self.available_ranklists:
 			ranklist_radiobutton = QRadioButton(ranklist)
@@ -429,67 +581,96 @@ class wizard_page(QWizardPage):
 			self.ranklist_rbutton_state_change_handler
 		)
 
+		self.scoring_label = QLabel('Scoring')
+		self.scoring_label.setObjectName('main_screen_sub_heading')
+
 		problem_config_score = self.config.get("Problem Max Score", 100)
 		self.problem_max_score_label = QLabel('Problem Score:')
 		self.problem_max_score = QLineEdit()
 		self.problem_max_score.setPlaceholderText("Max Score")
+		self.problem_max_score.setText('100')
 		self.problem_max_score_widget = self.get_horizontal_widget(
 			self.problem_max_score_label,
 			self.problem_max_score
 		)
-		self.registerField("Problem Score", self.problem_max_score)
+		self.registerField("Problem_Score", self.problem_max_score)
 
 		penalty_config_score = self.config.get("Penalty Score", 0)
 		self.penalty_score_label = QLabel('Penalty Score:  ')
 		self.penalty_score = QLineEdit()
 		self.penalty_score.setPlaceholderText("No Penalty")
+		self.penalty_score.setText('0')
 		self.penalty_score_widget = self.get_horizontal_widget(
 			self.penalty_score_label,
 			self.penalty_score
 		)
-		self.registerField("Penalty Score", self.penalty_score)
+		self.registerField("Penalty_Score", self.penalty_score)
 		
 		penalty_config_score = self.config.get("Penalty Time", 0)
 		self.penalty_time_label = QLabel('Penalty Time:   ')
 		self.penalty_time = QLineEdit()
 		self.penalty_time.setPlaceholderText("0 Minutes")
+		self.penalty_time.setText('0')
 		self.penalty_time_widget = self.get_horizontal_widget(
 			self.penalty_time_label,
 			self.penalty_time
 		)
-		self.registerField("Penalty Time", self.penalty_time)
+		self.registerField("Penalty_Time", self.penalty_time)
+
+		if self.selected_ranklist in ["IOI", "LONG"]:
+			self.penalty_score.setReadOnly(True)
+			self.penalty_score.setToolTip('This Ranklist has no penalty score')
+			self.penalty_time.setReadOnly(True)
+			self.penalty_time.setToolTip('This Ranklist has no penalty time')
+		else:
+			self.penalty_score.setReadOnly(False)
+			self.penalty_score.setToolTip('Penalty score per wrong answer')
+			self.penalty_time.setReadOnly(False)
+			self.penalty_time.setToolTip('Penalty time (in minutes) per wrong answer')
 		
+		self.ranklist_layout.addWidget(self.scoring_label)
 		self.ranklist_layout.addWidget(self.problem_max_score_widget)
 		self.ranklist_layout.addWidget(self.penalty_score_widget)
 		self.ranklist_layout.addWidget(self.penalty_time_widget)
-
-
 		
 		self.main_widget = QWidget()
 		self.main_widget.setObjectName('content_box')
 		self.main_layout = QVBoxLayout(self.main_widget)
 		self.main_layout.addWidget(self.title_label)
-		self.main_layout.addWidget(self.message_ranklist)
 		self.main_layout.addWidget(self.ranklist_widget)
 		self.main_layout.setStretch(0, 10)
-		self.main_layout.setStretch(1, 10)
-		self.main_layout.setStretch(2, 80)
+		self.main_layout.setStretch(1, 90)
+	
 		return self.main_widget
 
 	def ranklist_rbutton_state_change_handler(self, index):
 		widget = self.ranklist_rbutton_list[index]
+		ranklist = self.available_ranklists[index]
 		state = widget.isChecked()
 		if state == True:
-			print("[ SETUP ] Ranklist " + self.available_ranklists[index], " : Selected")
-			self.wizard().ranklist_states[self.available_ranklists[index]] = "TRUE"
+			print("[ SETUP ] Ranklist ", ranklist, " : Selected")
+			self.wizard().ranklist_states[ranklist] = "TRUE"
+			if ranklist in ["IOI", "LONG"]:
+				self.penalty_score.setReadOnly(True)
+				self.penalty_score.setToolTip('This Ranklist has no penalty score')
+				self.penalty_time.setReadOnly(True)
+				self.penalty_time.setToolTip('This Ranklist has no penalty time')
+			else:
+				self.penalty_score.setReadOnly(False)
+				self.penalty_score.setToolTip('Penalty score per wrong answer')
+				self.penalty_time.setReadOnly(False)
+				self.penalty_time.setToolTip('Penalty time (in minutes) per wrong answer')
+
 		else:
-			self.wizard().ranklist_states[self.available_ranklists[index]] = "FALSE"
+			self.wizard().ranklist_states[ranklist] = "FALSE"
 
 	def all_done_page(self):
 		self.title_label = QLabel('Finalize')
 		self.title_label.setObjectName('main_screen_heading')
 		message = (
-			"You're all done here!\nCopy the generated config files into Server, Client and Judge folders\n" + 
+			"You're all done here!\n" + 
+			"Press the Finish button to generate the configuration files.\n" + 
+			"Copy the generated config files into Server, Client and Judge folders in BitsOJ directory\n" + 
 			"and proceed to start the Server."
 		)
 		self.all_done_content = QLabel(message)

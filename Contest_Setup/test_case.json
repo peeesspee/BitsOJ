@@ -1,3 +1,9 @@
 {
-    "Problems": {}
+    "Problems": {
+        "Problem 1": {
+            "Test File Path": "Null",
+            "Input File": "Null",
+            "Output File": "Null"
+        }
+    }
 }
