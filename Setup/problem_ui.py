@@ -37,7 +37,7 @@ class add_problem_ui(QMainWindow):
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 		self.width = 1200
 		self.height = 750
-		self.setGeometry(300, 100, self.width, self.height)
+		self.setGeometry(400, 100, self.width, self.height)
 		self.setFixedSize(self.width, self.height)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		self.setWindowFlags(Qt.WindowStaysOnTopHint);
@@ -463,13 +463,11 @@ class edit_problem_ui(QMainWindow):
 
 		self.title = QLabel("Edit Problem")
 		self.title.setObjectName('main_screen_heading')
-		self.import_xml_file_button = QPushButton("Import XML")
-		self.import_xml_file_button.clicked.connect(self.import_xml)
+
 		self.header_widget = QWidget()
 		self.header_layout = QHBoxLayout(self.header_widget)
 		self.header_layout.addWidget(self.title)
 		self.header_layout.addStretch(1)
-		self.header_layout.addWidget(self.import_xml_file_button)
 		
 		confirm_button = QPushButton('Update')
 		confirm_button.setFixedSize(150, 40)

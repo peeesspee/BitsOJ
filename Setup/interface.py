@@ -1,10 +1,9 @@
 # Special thanks to www.pythonspot.com for this!
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
-# from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import *
 from ui_widgets import *
-import time, string, random
+import time, string, random, shutil, json
 
 class main_window(QWizard):
 	def __init__(self, config, available_width, available_height, parent=None):
@@ -82,7 +81,10 @@ class main_window(QWizard):
 			self.generate_client_config()
 			print('[ SETUP ] Generating Judge data...')
 			self.generate_judge_config()
+			print('[ SETUP ] Copying Problem data...')
+			self.copy_problems()
 			print('[ SETUP ] Process Completed')
+
 
 	def write_changes(self):
 		# RabbitMQ Page Data
@@ -193,7 +195,7 @@ class main_window(QWizard):
 
 		try:
 			content = json.dumps(config, indent = 4)
-			with open('./Contest Data/Server/config.json', 'w') as file:
+			with open('./Contest_Data/Server/config.json', 'w') as file:
 				file.write(content)
 		except Exception as error:
 			print('[ ERROR ] Server File could not be written: ', error)
@@ -265,7 +267,7 @@ class main_window(QWizard):
 
 		try:
 			content = json.dumps(config, indent = 4)
-			with open('./Contest Data/Client/config.json', 'w') as file:
+			with open('./Contest_Data/Client/config.json', 'w') as file:
 				file.write(content)
 		except Exception as error:
 			print('[ ERROR ] Client File could not be written: ', error)
@@ -325,7 +327,31 @@ class main_window(QWizard):
 
 		try:
 			content = json.dumps(config, indent = 4)
-			with open('./Contest Data/Judge/config.json', 'w') as file:
+			with open('./Contest_Data/Judge/config.json', 'w') as file:
 				file.write(content)
 		except Exception as error:
 			print('[ ERROR ] Client File could not be written: ', error)
+
+	def copy_problems(self):
+		try:
+			# Copy test cases in Server and Judge
+			shutil.rmtree('./Contest_Data/Server/Problem Data')
+			shutil.rmtree('./Contest_Data/Judge/problems')
+			shutil.copytree('./Problems', './Contest_Data/Server/Problem Data')
+			shutil.copytree('./Problems', './Contest_Data/Judge/problems')
+			# Copy problem json data in Client
+			for problem_key, problem_value in self.config['Problems'].items():
+				print('[ WRITE ] ' , problem_key)
+				# Make problem json
+				filename = problem_key.replace(' ', '_')
+				problem_value = json.dumps(problem_value, indent = 4)
+				# ENCRYPT HERE
+				file_content = problem_value
+				
+				with open('./Contest_Data/Client/Problems/' + filename + '.json', 'w') as file:
+					file.write(file_content)
+
+		except Exception as error:
+			print('[ ERROR ] Could not copy problem data: ', error)
+		finally:
+			return

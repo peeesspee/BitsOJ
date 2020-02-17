@@ -367,7 +367,6 @@ class wizard_page(QWizardPage):
 				)
 				return
 
-
 			card_widget = QWidget()
 			card_widget.setFixedHeight(100)
 			card_widget.setObjectName('problem_card')
