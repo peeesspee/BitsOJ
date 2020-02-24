@@ -29,7 +29,7 @@ class server_window(QMainWindow):
 	def __init__(self, data_changed_flags2, task_queue, log_queue):
 		super().__init__()
 		# Set app icon
-		self.setWindowIcon(QIcon('Elements/logo.png'))
+		self.setWindowIcon(QIcon('Elements/logo1.png'))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ]')
 
@@ -200,7 +200,7 @@ class server_window(QMainWindow):
 
 		#Define top bar
 		logo = QLabel(self)
-		logo_image = QPixmap('Elements/bitwise_header.png')
+		logo_image = QPixmap('Elements/header_2.png')
 		logo_image = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image)
 		
@@ -1800,7 +1800,7 @@ class init_gui(server_window):
 		server_app = server_window(data_changed_flags, task_queue, log_queue)
 		# Delay splash screen
 		t = 0
-		while(t< 3000):
+		while(t< 500):
 			t += 0.01
 			app.processEvents()
 

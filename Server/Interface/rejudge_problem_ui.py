@@ -66,6 +66,7 @@ class rejudge_problem_ui(QMainWindow):
 		client_entry = QComboBox()
 		client_entry.addItem(rejudge_problem_ui.select_text)
 		client_entry.addItem('All')
+		rejudge_problem_ui.client_list.sort()
 		for entry in rejudge_problem_ui.client_list:
 			client_entry.addItem(entry)
 		client_entry.activated[str].connect(rejudge_problem_ui.client_combo_box_data_changed)
