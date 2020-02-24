@@ -78,7 +78,7 @@ def main():
 	# Initialize database
 	print('[ SETUP ] Initialising database...')
 	log_queue.put('[ SETUP ] Initialising database...')
-	conn, cur = manage_database.initialize_database()
+	manage_database.initialize_database()
 	
 	# Set local variables and flags :
 	#####################################################################################
@@ -175,6 +175,7 @@ def main():
 		# Load Problems into problems table
 		print('[ SETUP ] Loading problems...')
 		problem_management.init_problems(config['Problems'])
+
 		log_queue.put('[ SETUP ] Loading problems...')
  
 	#####################################################################################

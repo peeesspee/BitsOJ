@@ -16,8 +16,6 @@ class manage_database():
 				check_same_thread = False,
 				timeout = 20
 			)
-			# WAL Mode for concurrent read/write
-			# conn.execute('PRAGMA journal_mode=WAL')
 			cur = conn.cursor()
 			manage_database.cur = cur
 			manage_database.conn = conn
@@ -36,7 +34,7 @@ class manage_database():
 		except Exception as error:
 			print("[ DB ][ CRITICAL ERROR ] Table creation error : " + str(error))
 
-		return conn, cur
+		return
 
 	def reset_database(conn):
 		cur = conn.cursor()
@@ -174,8 +172,8 @@ class scoreboard_management():
 		# Scoreboard table is: 
 		# 	scoreboard(client_id user_name score problems_solved total_time penalty) <- Here, score is total score
 		# Submissions table is: 
-		# 	submissions(run_id client_run_id client_id language source_file problem_code) <- This score is individual submission score
-		# verdict timestamp sent_status judge score) 
+		# 	submissions(run_id client_run_id client_id language source_file problem_code 
+		# 	verdict timestamp sent_status judge score) <- This score is individual submission score
 		if ranking_algorithm == 1:
 			# ACM style ranklist
 			# For every unsolved problem, if it is a wrong answer, penalty of penalty_time is added 
@@ -225,7 +223,6 @@ class scoreboard_management():
 					problems_solved = 0
 				else:
 					problems_solved = len(data)
-
 				print('[ SCOREBOARD ] Client: ', client_id, ' Problems Solved: ', problems_solved)
 
 				# Get Previous total score of the client
@@ -235,7 +232,6 @@ class scoreboard_management():
 					previous_total_score = 0
 				else:
 					previous_total_score = int(data[0][0])
-
 				print('[ SCOREBOARD ] Run: ', run_id, ' Previous Score: ', previous_total_score)
 
 				# Get Previous problem score of the run_id
@@ -247,7 +243,6 @@ class scoreboard_management():
 					return
 				else:
 					previous_score = int(data[0][0])
-
 				print('[ SCOREBOARD ] Run: ', run_id, ' Previous RunID Score: ', previous_score)
 
 				# Check if this is an AC submission, and if it is the first AC of this problem
@@ -950,7 +945,6 @@ class query_management(manage_database):
 		conn = manage_database.get_connection_object()
 		try:
 			cur.execute("INSERT INTO queries values(?, ?, ?, ?)", (query_id, client_id, query, 'TO BE ANSWERED', ))
-			cur.execute('commit')
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
@@ -1019,27 +1013,29 @@ class user_management(manage_database):
 		judge_pass_list = user_management.generate_passwords(max_judge_username, no_of_judges, password_type)
 
 		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
-		# cur.execute("begin")
+		cur.execute("begin")
 		try:
 			for i in range(0, no_of_clients):
 				print('[ DB ] Adding Account : ', client_list[i] , ' @ ', client_pass_list[i])
 				cur.execute("INSERT into accounts values (?, ?, ? )" , (client_list[i], client_pass_list[i], 'CLIENT'))
-
 			conn.commit()
-			
+		except Exception as error:
+			print('[ CRITICAL ] Database insertion error: ' + str(error))
+			cur.execute('rollback')
+			return 0
+
+		try:	
 			for i in range(0, no_of_judges):
 				print('[ DB ] Adding Account : ', judge_list[i] , ' @ ', judge_pass_list[i])
 				cur.execute("INSERT into accounts values (?, ?, ? )" , (judge_list[i], judge_pass_list[i], 'JUDGE'))
-
 			conn.commit()
-			print('[ DB ] All accounts added!')
-			return 1
-
 		except Exception as error:
 			print('[ CRITICAL ] Database insertion error: ' + str(error))
 			cur.execute('rollback')
 			return 0
 		# INSERTION FINISHED
+		print('[ DB ] All accounts added!')
+		return 1
 		
 
 	def generate_clients(no_of_clients, max_so_far):
@@ -1156,11 +1152,12 @@ class user_management(manage_database):
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			cur.execute("UPDATE accounts SET password = ? where user_name = ? ", (password, username, ))
+			conn.commit()
 			cur.execute("UPDATE connected_clients SET password = ? where user_name = ? ", (password, username, ))
 			conn.commit()
 		except Exception as error:
+			print(error)
 			print("[ DB ][ ERROR ] Database updation error : " + str(error))
-			conn.rollback()
 		finally:
 			return
 
@@ -1176,10 +1173,10 @@ class user_management(manage_database):
 		conn = manage_database.get_connection_object()
 		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
 		try:
-			# cur.execute("begin")
+			cur.execute("begin")
 			for i in range(0, u_len):
-				username = user_list[i]
-				if username[0:4] != 'team' and username[0:5] != 'judge':
+				username = str(user_list[i])
+				if len(username) < 5 or (username[0:4] != 'team' and username[0:5] != 'judge'):
 					username = 'team_' + username
 				cur.execute(
 						"INSERT into accounts values (?, ?, ? )" , 
