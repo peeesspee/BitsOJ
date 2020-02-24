@@ -1178,9 +1178,12 @@ class user_management(manage_database):
 		try:
 			# cur.execute("begin")
 			for i in range(0, u_len):
+				username = user_list[i]
+				if username[0:4] != 'team' and username[0:5] != 'judge':
+					username = 'team_' + username
 				cur.execute(
 						"INSERT into accounts values (?, ?, ? )" , 
-						(user_list[i], password_list[i], type_list[i], 
+						(username, password_list[i], type_list[i], 
 					)
 				)
 			conn.commit()

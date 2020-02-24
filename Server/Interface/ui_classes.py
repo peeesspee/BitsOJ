@@ -865,9 +865,9 @@ class ui_widgets:
 		manual_review_button.stateChanged.connect(self.manual_reviews_handler)
 		manual_review_widget = ui_widgets.get_horizontal_widget(manual_review_button, manual_review_label)
 
-		ip_checker_label = QLabel('Force same IP')
+		ip_checker_label = QLabel('Users can change IP') 
 		tooltip = (
-			'When enabled, clients will not be able to login with same' +
+			'When enabled, clients will be able to login with same' +
 			'\ncredentials on different machines.'
 		)
 		ip_checker_label.setToolTip(tooltip)
@@ -878,7 +878,7 @@ class ui_widgets:
 		ip_checker_button.stateChanged.connect(self.allow_ip_change_handler)
 		ip_checker_widget = ui_widgets.get_horizontal_widget(ip_checker_button, ip_checker_label)
 
-		same_ip_label = QLabel('Enforce distinct IP Logins')
+		same_ip_label = QLabel('One client per IP')
 		tooltip = ('When enabled, participants will not be able to open two clients on same machine' +
 			'\nThis may cause issues when clients are on a shared network.'
 		)
