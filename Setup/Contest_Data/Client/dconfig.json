@@ -1,0 +1,27 @@
+{
+    "rabbitmq_username": "client",
+    "rabbitmq_password": "client",
+    "host": "localhost",
+    "client_id": "NUL",
+    "client_key": "6rIxlcS",
+    "Username": "NUL",
+    "Problem Key": "QZgyNLNTEOWyFTG",
+    "Contest": "START",
+    "Duration": "00:00:00",
+    "Start Time": 0,
+    "End Time": 0,
+    "Contest Name": "Kodeathon A6",
+    "Contest Theme": "Setupify",
+    "Languages": "['C++', 'C', 'PYTHON-3', 'JAVA']",
+    "No_of_Problems": 1,
+    "Problems": {
+        "Problem 1": [
+            "Life of Pi",
+            "LOP",
+            "1"
+        ]
+    },
+    "Code": {
+        "LOP": "Problem 1"
+    }
+}

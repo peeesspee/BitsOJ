@@ -41,8 +41,13 @@ def main():
 	rect = screen.availableGeometry()
 	available_width = rect.width()
 	available_height = rect.height()
-
-	wizard = main_window(config, available_width, available_height)
+	key = 'haSCgWdWjF13W2F1WbWshAWgC7W3C1W1CjWbC1dW7CgWvGR7THYYgJYyNb2Nb72gbcwh'
+	wizard = main_window(
+		config, 
+		available_width, 
+		available_height, 
+		key
+	)
 	wizard.show()
 	sys.exit(app.exec_())
 	

@@ -3,13 +3,22 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtCore import *
 from ui_widgets import *
-import time, string, random, shutil, json
+import time, string, random, shutil, json, os
 
 class main_window(QWizard):
-	def __init__(self, config, available_width, available_height, parent=None):
+	def __init__(
+			self, 
+			config, 
+			available_width, 
+			available_height, 
+			key,
+			parent=None
+		):
 		super(main_window, self).__init__(parent)
 		self.setWindowIcon(QIcon('Elements/logo.png'))
 		self.config = config
+
+		self.hardcode_key = key
 
 		self.available_width = available_width
 		self.available_height = available_height
@@ -83,8 +92,12 @@ class main_window(QWizard):
 			self.generate_judge_config()
 			print('[ SETUP ] Copying Problem data...')
 			self.copy_problems()
-			print('[ SETUP ] Process Completed')
-
+			print('[ SETUP ] Encrypting Client configs...')
+			exit_code = self.encrypt_client_configs()
+			if exit_code == 0:
+				print('[ SETUP ] Process Completed')
+			else:
+				print('[ SETUP ] Client configurations could not be encrypted. Restart setup.')
 
 	def write_changes(self):
 		# RabbitMQ Page Data
@@ -193,6 +206,8 @@ class main_window(QWizard):
 		config['Penalty Time'] = self.config['Penalty Time']
 		config['Problems'] = self.config['Problems']
 
+		self.server_config = config
+
 		try:
 			content = json.dumps(config, indent = 4)
 			with open('./Contest_Data/Server/config.json', 'w') as file:
@@ -265,13 +280,16 @@ class main_window(QWizard):
 		config['Problems'] = new_problem_dict
 		config['No_of_Problems'] = i - 1
 
+		self.client_config = config
+
 		try:
 			content = json.dumps(config, indent = 4)
-			with open('./Contest_Data/Client/config.json', 'w') as file:
+			# Make this config accessible later on for tweaking
+			self.client_config_content = content
+			with open('./Contest_Data/Client/decrypted_config.json', 'w') as file:
 				file.write(content)
 		except Exception as error:
 			print('[ ERROR ] Client File could not be written: ', error)
-		
 
 	def generate_judge_config(self):
 		# DEFAULT Config
@@ -325,6 +343,8 @@ class main_window(QWizard):
 			formatted_dict[problem_code] = int(problem_time_limit)
 		config['Code Time Limit'] = formatted_dict
 
+		self.judge_config = config
+
 		try:
 			content = json.dumps(config, indent = 4)
 			with open('./Contest_Data/Judge/config.json', 'w') as file:
@@ -337,21 +357,98 @@ class main_window(QWizard):
 			# Copy test cases in Server and Judge
 			shutil.rmtree('./Contest_Data/Server/Problem Data')
 			shutil.rmtree('./Contest_Data/Judge/problems')
+			
 			shutil.copytree('./Problems', './Contest_Data/Server/Problem Data')
 			shutil.copytree('./Problems', './Contest_Data/Judge/problems')
+
 			# Copy problem json data in Client
 			for problem_key, problem_value in self.config['Problems'].items():
 				print('[ WRITE ] ' , problem_key)
 				# Make problem json
 				filename = problem_key.replace(' ', '_')
+
+				# 'problem_value' is our original problem dict
+				# we have to tweak some keys a bit
+				problem_value['Problem Name'] = problem_value['Name']
+				problem_value['Problem Code'] = problem_value['Code']
+				
+				temp = problem_value.pop('Name', 'NULL')
+				temp = problem_value.pop('Code', 'NULL')
+
 				problem_value = json.dumps(problem_value, indent = 4)
 				# ENCRYPT HERE
 				file_content = problem_value
 				
-				with open('./Contest_Data/Client/Problems/' + filename + '.json', 'w') as file:
+				with open('./Contest_Data/Client/Problems/' + filename + '.json', 'w+') as file:
 					file.write(file_content)
 
 		except Exception as error:
 			print('[ ERROR ] Could not copy problem data: ', error)
 		finally:
 			return
+	
+	def encrypt_client_configs(self):
+		# Encrypt client config.json
+		# Content in self.client_config_content
+
+		client_config_encrypted = self.encryptDecrypt(
+			str(self.client_config), 
+			self.hardcode_key
+		)
+		# Remove unencrypted config
+		os.remove('./Contest_Data/Client/decrypted_config.json')
+		# Write new config file
+		with open('./Contest_Data/Client/config.json', 'w+') as file:
+			json.dump(client_config_encrypted, file, indent = 4)
+
+		# Re check encrypted config
+		try:
+			with open('./Contest_Data/Client/config.json', 'r') as file:
+				client_config_encrypted = json.load(file)
+
+			client_config_decrypted = self.encryptDecrypt(
+				client_config_encrypted, 
+				self.hardcode_key
+			)
+			client_config_decrypted = eval(client_config_decrypted)
+			
+			if self.client_config != client_config_decrypted:
+				print('[ CRITICAL ] Error occured while encrypting client config.json! Restart setup.')
+				return 1
+		except:
+			return 1
+
+		# Encrypt problem content
+		file_key = self.server_config['File Password']
+		folder_path = './Contest_Data/Client/Problems/'
+		for file_name in os.listdir(folder_path):
+			# Read file
+			with open(folder_path + file_name, 'r') as file:
+				data = json.load(file)
+			data = str(data)
+
+			# Encrypt Key
+			encrypted_data = self.encryptDecrypt(data, file_key)
+
+			# Write file
+			with open(folder_path + file_name, 'w+') as file:
+				json.dump(encrypted_data, file, indent = 4)
+
+			# Check by re-decrypting
+			with open(folder_path + file_name, 'r') as file:
+				encrypted_data = json.load(file)
+				new_data = self.encryptDecrypt(encrypted_data, file_key)
+				if new_data != data:
+					print('[ CRITICAL ] Error occured in encryption of file data.')
+					return 1
+
+			# Encrypted
+			print('\t> ', file_name, '  [ ENCRYPTED ]')
+
+		return 0
+
+	def encryptDecrypt(self, inpString, xorKey): 
+		length = len(inpString)
+		for i in range(length):
+			inpString = (inpString[:i] + chr(ord(inpString[i]) ^ ord(xorKey[i%len(xorKey)])) + inpString[i+1 : ])
+		return inpString

@@ -35,10 +35,11 @@ class add_problem_ui(QMainWindow):
 
 		self.setWindowTitle("[ SETUP ] Problem")
 		self.setWindowIcon(QIcon('Elements/logo.png'))
-		self.width = 1200
-		self.height = 750
-		self.setGeometry(400, 100, self.width, self.height)
-		self.setFixedSize(self.width, self.height)
+		self.custom_width = 1200
+		self.custom_height = 750
+		self.setGeometry(400, 100, self.custom_width, self.custom_height)
+		self.setFixedSize(self.custom_width, self.custom_height)
+
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		self.setWindowFlags(Qt.WindowStaysOnTopHint);
 
@@ -401,6 +402,7 @@ class remove_all_problems(QMessageBox):
 		if buttonReply == self.No:
 			print('[ DELETION ] Cancelled')
 			return
+
 		# Deletion initiated
 		# Clear the problem list card_widget
 		widget = self.scroll_area.widget()
@@ -791,7 +793,7 @@ class test_files_ui(QMainWindow):
 		horizontal_header = self.test_cases_table.horizontalHeader()
 		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
 		# Add older files if exists
-		number_of_files = self.wizard.problems['Problem ' + str(self.p_id)]['IO Files']
+		number_of_files = self.wizard.problems['Problem ' + str(self.p_id)].get('IO Files', 0)
 		self.test_cases_table.setRowCount(number_of_files)
 		for i in range(number_of_files):
 			dest = "{0:02}".format(i)
@@ -850,11 +852,17 @@ class test_files_ui(QMainWindow):
 		self.input_files_list = []
 		self.output_files_list = []
 
+		print('[ IO FILES ] Current directory contents: ')
+		for i in os.listdir(folder_path):
+			print('\t> ', i)
+
 		for i in os.listdir(folder_path):
 			if i.endswith(".in"):
+				print('[ IO FILES ] Found an input file: ', i)
 				input_files += 1
 				self.input_files_list.append(i)
 			elif i.endswith(".ans"):
+				print('[ IO FILES ] Found an output file: ', i)
 				output_files += 1
 				self.output_files_list.append(i)
 
