@@ -390,7 +390,6 @@ class main_window(QWizard):
 	def encrypt_client_configs(self):
 		# Encrypt client config.json
 		# Content in self.client_config_content
-
 		client_config_encrypted = self.encryptDecrypt(
 			str(self.client_config), 
 			self.hardcode_key
