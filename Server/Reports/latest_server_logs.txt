@@ -1,29 +1,30 @@
-2020-02-25 01:18:24.959895  :  #### SERVER START #### ###
-2020-02-25 01:18:24.960043  :  [ SELF CHECK ][ PASS ] Systems OK. ###
-2020-02-25 01:18:24.960080  :  [ SETUP ] Initialising server... ###
-2020-02-25 01:18:24.960107  :  [ SETUP ] Initialising database... ###
-2020-02-25 01:18:25.961530  :  [ SETUP ] Loading problems... ###
-2020-02-25 01:18:25.961599  :  [ SETUP ] Initialising subprocesses... ###
-2020-02-25 01:18:25.961629  :    [ START ] Client Manager subprocess started. ###
-2020-02-25 01:18:25.961654  :  [ SETUP ] Subprocesses started ###
-2020-02-25 01:18:25.961678  :  [ SETUP ][ Process ] Client Manager: 8049 ###
-2020-02-25 01:18:25.961700  :  [ SETUP ][ Process ] Judge Manager: 8050 ###
-2020-02-25 01:18:25.961722  :  [ SETUP ][ Process ] Core: 8052 ###
-2020-02-25 01:18:25.961744  :  [ SETUP ][ Process ] Log Manager: 8045 ###
-2020-02-25 01:18:25.961766  :    [ START ] Judge Manager subprocess started. ###
-2020-02-25 01:18:25.961787  :    [ START ] Core subprocess started. ###
-2020-02-25 01:18:25.961808  :  [ LISTEN ] Started listening on judge_verdict ###
-2020-02-25 01:18:25.961829  :  [ LISTEN ] Started listening on client_requests ###
-2020-02-25 01:18:25.961850  :    [ START ] Interface subprocess started. ###
-2020-02-25 01:20:04.071881  :  [ STOP ] Core subprocess terminated successfully! ###
-2020-02-25 01:20:04.071963  :  [ SECURITY ] Server Close attempt -> Accepted. ###
-2020-02-25 01:20:04.572318  :  [ LISTEN ] STOPPED listening to client channel ###
-2020-02-25 01:20:04.572411  :  [ EXIT ] Signal passed ###
-2020-02-25 01:20:04.572460  :  [ EXIT ] Saving Server state to file. ###
-2020-02-25 01:20:04.572503  :  [ STOP ] Client subprocess terminated successfully! ###
-2020-02-25 01:20:04.572545  :  [ LISTEN ] STOPPED listening to judge channel ###
-2020-02-25 01:20:04.572585  :  [ EXIT ] Saved Server state to file. ###
-2020-02-25 01:20:04.572627  :  [ STOP ] Judge subprocess terminated successfully! ###
-2020-02-25 01:20:05.573929  :  #### SERVER EXIT ####
+2020-02-25 01:28:30.710002  :  #### SERVER START #### ###
+2020-02-25 01:28:30.710134  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-02-25 01:28:30.710168  :  [ SETUP ] Initialising server... ###
+2020-02-25 01:28:30.710195  :  [ SETUP ] Initialising database... ###
+2020-02-25 01:28:31.210869  :  [ SETUP ] Loading problems... ###
+2020-02-25 01:28:31.210951  :  [ SETUP ] Initialising subprocesses... ###
+2020-02-25 01:28:31.210998  :    [ START ] Judge Manager subprocess started. ###
+2020-02-25 01:28:31.211039  :  [ SETUP ] Subprocesses started ###
+2020-02-25 01:28:31.211079  :  [ SETUP ][ Process ] Client Manager: 8952 ###
+2020-02-25 01:28:31.211117  :  [ SETUP ][ Process ] Judge Manager: 8953 ###
+2020-02-25 01:28:31.211154  :  [ SETUP ][ Process ] Core: 8955 ###
+2020-02-25 01:28:31.211189  :  [ SETUP ][ Process ] Log Manager: 8950 ###
+2020-02-25 01:28:31.211227  :    [ START ] Core subprocess started. ###
+2020-02-25 01:28:31.211266  :    [ START ] Client Manager subprocess started. ###
+2020-02-25 01:28:31.211304  :  [ LISTEN ] Started listening on client_requests ###
+2020-02-25 01:28:31.211344  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-02-25 01:28:31.711999  :    [ START ] Interface subprocess started. ###
+2020-02-25 01:28:36.216580  :  [ CORE ] User deleted: team00996 ###
+2020-02-25 01:28:36.216628  :  [ EVENT ] Disconnect client : team00996 ###
+2020-02-25 01:29:03.251021  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-02-25 01:29:03.251107  :  [ EXIT ] Signal passed ###
+2020-02-25 01:29:03.251157  :  [ EXIT ] Saving Server state to file. ###
+2020-02-25 01:29:03.251203  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-02-25 01:29:03.251281  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-02-25 01:29:03.251341  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-02-25 01:29:03.251413  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-02-25 01:29:03.251480  :  [ EXIT ] Saved Server state to file. ###
+2020-02-25 01:29:04.252814  :  #### SERVER EXIT ####
 
  ###

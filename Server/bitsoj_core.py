@@ -41,10 +41,6 @@ class core():
 			status = core.poll(task_queue)
 			if status == 1:
 				break
-			# Poll every second
-			# time.sleep(1)
-
-		# If we reach this point, it means the Server Shutdown has been initiated.
 		
 		# Shut down connection
 		print("[ STOP ] Core subprocess terminated successfully!")
@@ -247,6 +243,13 @@ class core():
 						)
 						print('[ CORE ] Scoreboard Updated for clients')
 						core.log('[ CORE ] Scoreboard Updated for clients')
+
+				elif code == 'DelUsr':
+					username = data['Client']
+					user_management.delete_user(username)
+					print('[ CORE ] User deleted: ', username)
+					core.log('[ CORE ] User deleted: ' + username)
+					# Update Submission status
 
 				elif code == 'UpSubStat':
 					# Update Submission status

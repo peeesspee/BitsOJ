@@ -1294,7 +1294,13 @@ class server_window(QMainWindow):
 
 		if custom_box.clickedButton() == button_yes:
 			# Delete from accounts table and connected clients table
-			user_management.delete_user(username)
+			message = {
+				'Code' : 'DelUsr',
+				'Client' : username
+			}
+			message = json.dumps(message)
+			self.task_queue.put(message)
+
 			# Broadcast this user disconnection
 			message = {
 				'Code' : 'DSCNT',

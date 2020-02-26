@@ -259,7 +259,8 @@ class add_problem_ui(QMainWindow):
 			"Constraints" : constraints,
 			"Example Input" : example_input,
 			"Example Output" : example_output,
-			"Max Score" : 100
+			"Max Score" : 100,
+			"IO Files" : 0
 		}
 
 		problem_number = self.wizard.number_of_problems + 1
@@ -876,6 +877,9 @@ class test_files_ui(QMainWindow):
 		if self.problem_code == 'NULL':
 			print('[ ERROR ] Problem content not found!')
 			return
+
+		# Update IO Files entry in problem
+		self.wizard.problems[self.problem_id]['IO Files'] = input_files
 		
 		# Clear the Problem Code folder
 		for any_file in os.listdir('./Problems/' + self.problem_code + '/'):
