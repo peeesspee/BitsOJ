@@ -10,7 +10,6 @@ from interface_package.ui_classes import *
 from init_client import initialize_contest, handle_config
 from database_management import source_code, manage_database
 
-
 global current_status 
 current_status = "STOPPED" 
 
@@ -23,10 +22,8 @@ def handler(msg_type, msg_log_context, msg_string):
 	pass
 qInstallMessageHandler(handler)
 
-
-
 class client_window(QMainWindow):
-	def __init__(self,channel, data_changed_flag2,queue,score):
+	def __init__(self, channel, data_changed_flag2, queue, score):
 		super().__init__()
 		global current_status
 		current_status = "STOPPED"
@@ -34,7 +31,7 @@ class client_window(QMainWindow):
 		# Set app icon
 		self.setWindowIcon(QIcon("Elements\\logo.png"))
 		# Set window title
-		self.setWindowTitle('BitsOJ v1.0.1 [ Client ]')
+		self.setWindowTitle('BitsOJ v1.33.5 [ Client ]')
 		
 		# self.setFixedSize(1200,700)
 		self.resize(1200,700)
@@ -52,51 +49,12 @@ class client_window(QMainWindow):
 
 		self.channel = channel
 
-		# self.rows = 0
-		# self.columns = 5
-		# self.scoreboard = QTableWidget()
-		# self.scoreboard.setEditTriggers(QAbstractItemView.NoEditTriggers)
-		# self.scoreboard.setFixedHeight(650)
-		# self.scoreboard.verticalHeader().setVisible(False)
-		# self.scoreboard.setRowCount(self.rows)
-		# self.scoreboard.setColumnCount(self.columns)
-		# self.scoreboard.setHorizontalHeaderLabels(('Rank', 'Username', 'Score', 'Problems Solved', 'Time'))
-		# self.scoreboard.horizontalHeader().setStretchLastSection(True)
-		# self.scoreboard.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-
 		config = handle_config.read_config_json()
-		# score_data = handle_config.read_score_json()
-		# if score_data != None:
-		# 	score_data = eval(score_data["Data"])
-		# 	row_data = len(score_data)
-		# 	print("row_data = ",row_data)
-		# 	self.scoreboard.setRowCount(row_data)
-		# 	for i in range(row_data):
-		# 		for j in range(5):
-		# 			if j == 0:
-		# 				self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
-		# 				self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
-		# 			else:
-		# 				self.scoreboard.setItem(i,j, QTableWidgetItem(str(score_data[i][j-1])))
-		# 				self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
-		# 			if i == 0:
-		# 				self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
-		# 			elif i == 1:
-		# 				# self.scoreboard.item(i,j).setForeground(QColor('#AAA9AD'))
-		# 				self.scoreboard.item(i,j).setForeground(QColor('#777777'))
-		# 			elif i == 2:
-		# 				self.scoreboard.item(i,j).setForeground(QColor('#CD7F32'))
-		# 			elif score_data[i][0] == config["Username"]:
-		# 				self.scoreboard.item(i,j).setForeground(QColor('#4B8B3B'))
-		# 			else:
-		# 				self.scoreboard.item(i,j).setForeground(QColor('#FFFFFF'))
-
-
-
+		
 		# Make data_changed_flag accessible from the class methods
 		self.data_changed_flag = data_changed_flag2
 		if config["Contest"] == "RUNNING":
-			self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ RUNNING ]')
+			self.setWindowTitle('BitsOJ v1.33.5 [ CLIENT ][ RUNNING ]')
 			current_status = "RUNNING"
 			Timer = config["Duration"]
 			self.data_changed_flag[0] = 2
@@ -106,7 +64,6 @@ class client_window(QMainWindow):
 
 		# Initialize status bar
 		self.status = self.statusBar()
-
 
 		####################################################################
 		self.db = self.init_qt_database()
@@ -144,8 +101,6 @@ class client_window(QMainWindow):
 		self.button_6.setFixedSize(button_width, button_height)
 		self.button_6.clicked.connect(self.show_about)
 		self.button_6.setObjectName('sidebar_button') 
-
-		#####################################################################
 
 		#####################################################################
 		# Manage tabs o the right window
@@ -309,38 +264,7 @@ class client_window(QMainWindow):
 				self.score_model.setQuery("SELECT rank() over(ORDER BY score DESC,time_taken ASC) as RANK,[TEAM_NAME],[SCORE],[PROBLEMS_SOLVED],[TIME_TAKEN] FROM score_table")
 		except Exception as error:
 			print('[ SCORE UPDATE ERROR ] ' + str(error))
-		# score_data = handle_config.read_score_json()
-		# try:
-		# 	if(self.data_changed_flag[6] == 1):
-		# 		self.data_changed_flag[6] = 0
-		# 		data = self.score.get()
-		# 		data = json.loads(data)
-		# 		score = eval(data["Data"])
-		# 		row = len(score)
-		# 		print("row",row)
-		# 		self.scoreboard.setRowCount(row)
-		# 		for i in range(row):
-		# 			for j in range(5):
-		# 				if j == 0:
-		# 					self.scoreboard.setItem(i,j, QTableWidgetItem(str(i+1)))
-		# 					self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
-		# 				else:
-		# 					self.scoreboard.setItem(i,j, QTableWidgetItem(str(score[i][j-1])))
-		# 					self.scoreboard.item(i,j).setTextAlignment(Qt.AlignCenter)
-		# 				if i == 0:
-		# 					self.scoreboard.item(i,j).setForeground(QColor('#B29700'))
-		# 				elif i == 1:
-		# 					self.scoreboard.item(i,j).setForeground(QColor('#777777'))
-		# 				elif i == 2:
-		# 					self.scoreboard.item(i,j).setForeground(QColor('#CD7F32'))
-		# 				elif score_data[i][0] == config["Username"]:
-		# 					self.scoreboard.item(i,j).setForeground(QColor('#4B8B3B'))
-		# 				else:
-		# 					self.scoreboard.item(i,j).setForeground(QColor('#FFFFFF'))
-
-		# except Exception as Error:
-		# 	print(str(Error))
-
+		
 
 	def update_data(self):
 		try:
@@ -349,14 +273,14 @@ class client_window(QMainWindow):
 				QApplication.quit()
 
 			if self.data_changed_flag[0] == 1:
-				self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ RUNNING ]')
+				self.setWindowTitle('BitsOJ v1.33.5 [ CLIENT ][ RUNNING ]')
 				self.start_contest()
 				self.set_status()
 				self.data_changed_flag[0] = 2
 			# If data has changed in submission table
 			
 			if self.data_changed_flag[0] == 3 or self.data_changed_flag[0] == 5:
-				self.setWindowTitle('BitsOJ v1.0.1 [ CLIENT ][ STOPPED ]')
+				self.setWindowTitle('BitsOJ v1.33.5 [ CLIENT ][ STOPPED ]')
 				if self.data_changed_flag[0] != 5:
 					self.stop_contest()
 				else:
@@ -405,6 +329,7 @@ class client_window(QMainWindow):
 					self.data_changed_flag[4] = 1
 				except Exception as Error:
 					print(str(Error))
+
 			if(self.data_changed_flag[4] == 1):
 				try:
 					total_time = initialize_contest.return_contest_end_time()
@@ -423,6 +348,7 @@ class client_window(QMainWindow):
 			if(self.data_changed_flag[5] == 1):
 				QMessageBox.warning(self, 'Alert', 'You are disconnected by the admin.\nPlease contact Administrator.')
 				QApplication.quit()
+
 			if(self.data_changed_flag[5] == 2):
 				QMessageBox.warning(self, 'Alert', 'All Clients are disconnected by the admin.\nPlease contact Administrator.')
 				QApplication.quit()
@@ -443,12 +369,8 @@ class client_window(QMainWindow):
 			print(ex_type,f_name,ex_tb.tb_lineno)
 
 	####################################################################################
-
-
 	def update_leaderboard(data):
 		pass
-
-
 	#####################################################################################
 
 	def closeEvent(self, event):
@@ -460,34 +382,28 @@ class client_window(QMainWindow):
 		custom_close_box.setWindowTitle('Warning!')
 		custom_close_box.setText(message)
 		custom_close_box.setInformativeText(detail_message)
-
-
 		custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
 		custom_close_box.setDefaultButton(QMessageBox.No)
-
 		button_yes = custom_close_box.button(QMessageBox.Yes)
 		button_yes.setText('Yes')
 		button_no = custom_close_box.button(QMessageBox.No)
 		button_no.setText('No')
-
 		button_yes.setObjectName("close_button_yes")
 		button_no.setObjectName("close_button_no")
-
 		button_yes.setStyleSheet(open("Elements\\style.qss", "r").read())
 		button_no.setStyleSheet(open("Elements\\style.qss", "r").read())
-
 		custom_close_box.exec_()
 
 		if custom_close_box.clickedButton() == button_yes:
 			try:
 				config = handle_config.read_config_json()
 				data = {
-				"Code" : "DSCNT",
-				'IP' : config["IP"],
-				"Client Key" : config["client_key"],
-				"Username" : config["Username"],
-				"ID" : config["client_id"],
-				"Type" : "CLIENT"
+					"Code" : "DSCNT",
+					'IP' : config["IP"],
+					"Client Key" : config["client_key"],
+					"Username" : config["Username"],
+					"ID" : config["client_id"],
+					"Type" : "CLIENT"
 				}
 				data = json.dumps(data)
 				self.channel.basic_publish(
@@ -510,7 +426,7 @@ class client_window(QMainWindow):
 			db.setDatabaseName('client_database.db')
 			return db
 		except:
-			print('[ CRITICAL ] Database loading error......')
+			print('[ CRITICAL ] Database loading error...')
 
 	def manage_models(self, db, table_name):
 		if db.open():
@@ -539,7 +455,7 @@ class client_window(QMainWindow):
 				)
 			return model
 		except Exception as Error:
-			print('[ SCORE MODEL ] '+str(Error))
+			print('[ SCORE MODEL ] ' + str(Error))
 
 	def generate_view(self, model):
 		table = QTableView() 
@@ -580,31 +496,38 @@ class client_window(QMainWindow):
 			QMessageBox.warning(self, 'Message', 'Please select submission to view. ')
 		else:
 			try:
-				self.window = view_submission_ui(self.data_changed_flag,source_file,verdict,language,run)
+				self.window = view_submission_ui(
+						self.data_changed_flag,
+						source_file,
+						verdict,
+						language,
+						run
+					)
 				self.window.show()
 			except Exception as Error:
 				print(str(Error))
 		
-
 	def show_problem(self, i, data_changed_flags):
-		if data_changed_flags[0] == 0:
-			QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
-		else:
-			try:
-				with open('.\\Problems\\Problem_'+str(i)+'.json') as read:
-					problem = json.load(read)
-				problem = handle_config.encryptDecrypt(problem)
-				problem = eval(problem)
-			except Exception as Error:
+		config = handle_config.read_config_json()
+		if "Problem Key" in config:
+			if data_changed_flags[0] == 0:
+				QMessageBox.warning(self, 'Message', 'Contest not yet started.\nPlease wait.')
+			else:
+				try:
+					with open('.\\Problems\\Problem_' + str(i) + '.json') as read:
+						problem = json.load(read)
+					problem = handle_config.encryptDecrypt(problem, config["Problem Key"])
+					problem = eval(problem)
+				except Exception as Error:
+						print(str(Error))
+				try:
+					self.problem_window = view_problem_ui(str(i), data_changed_flags, problem)
+					self.problem_window.show()
+				except Exception as Error:
 					print(str(Error))
-			try:
-				self.problem_window = view_problem_ui(str(i), data_changed_flags, problem)
-				self.problem_window.show()
-			except Exception as Error:
-				print(str(Error))
-
-				
-
+		else:
+			QMessageBox.warning(self, 'Message', 'This incident has been reported.\n Contact Admin.')
+			return
 
 	def view_reply(self,selected_row):
 		try:
@@ -669,15 +592,9 @@ class init_gui(client_window):
 		client_app.showMaximized()
 		
 		# Close the server as soon as close buton is clicked
-		print('Executing\\\\')
 		try:
 			app.exec_()
 		except Exception as error:
 			ex_type,ex_obj, ex_tb = sys.exc_info()
 			f_name = os.path.split(ex_tb.tb_frame.f_code.co_filename)[1]
 			print(ex_type,f_name,ex_tb.tb_lineno)
-
-		print('Executing\\\\\\')
-
-
-
