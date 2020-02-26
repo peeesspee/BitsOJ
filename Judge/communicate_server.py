@@ -131,7 +131,14 @@ class communicate_server():
 
 			#############################################################################################
 			# Actual Judging process
-			result, error = verdict.main(file_name, file_with_ext, language, problem_code, run_id, '1')
+
+
+			######################   Function for time limit of problems  ###########
+			time_limit = initialize_judge.get_time_limit()
+			time = time_limit[problem_code]
+			#########################################################################
+
+			result, error = verdict.main(file_name, file_with_ext, language, problem_code, run_id, time)
 			#############################################################################################
 			try:
 				if language == "JAVA":

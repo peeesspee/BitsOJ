@@ -12,7 +12,7 @@ client_id = 'Null'
 
 username = 'team00001'
 password = 'bits1'
-key = 'xayottkief54car'
+key = '3jHI8vu'
 
 try:
 	creds = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
@@ -40,7 +40,7 @@ def login():
 		'Password' : password,
 		'ID' : client_id,
 		'Type' : 'CLIENT',
-		'IP' : '192.168.0.0'
+		'IP' : '   192.168.0.0'
 		}
 	
 	message = json.dumps(message)
@@ -73,22 +73,28 @@ def send():
 	print("sent code")
 
 def query():
-	global client_id, key, username
-	print("Sending Query")
-	code = 'Hello server! How are you?'
+	# global client_id, key, username
+	# print("Sending Query")
+	# code = 'Hello server! How are you?'
 
-	message = {
-		'Client Key' : key,
-		'Code' : 'QUERY', 
-		'Query' : code,
-		'ID' : client_id,
-		'Username' : username,
-		'IP' : '192.168.0.0'
-		}
-	message = json.dumps(message)
+	# message = {
+	# 	'Client Key' : key,
+	# 	'Code' : 'QUERY', 
+	# 	'Query' : code,
+	# 	'ID' : client_id,
+	# 	'Username' : username,
+	# 	'IP' : '192.168.0.0'
+	# 	}
+	# message = json.dumps(message)
 	
-	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
-	print("sent code")
+	# channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
+	# print("sent code")
+	try:
+		channel.queue_delete(
+			'client_requests'
+		)
+	except Exception as error: 
+		print(error)
 
 
 
@@ -149,7 +155,7 @@ def listen():
 
 def main():
 	global username, key
-	print('1.Login\n2.Send solution\n3.Listen\n4.Query\n5.Exit')
+	print('1.Login\n2.Send solution\n3.Listen\n4.Try and delete queue\n5.Exit')
 	while True:
 		a = input('> ')
 		if(a == ''):

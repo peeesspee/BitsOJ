@@ -24,7 +24,6 @@ class initialize_server():
 		# Basic credentials for login to RabbitMQ Server
 		initialize_server.duration = config["Contest Duration"]
 		initialize_server.file_password = config["File Password"]
-		initialize_server.config = config
 		return config
 
 	def convert_to_seconds(time_str):
@@ -95,7 +94,7 @@ class initialize_server():
 		try:
 			problems = initialize_server.config['Problems']
 			for problem, content in problems.items():
-				if content['Code'] == problem_code:
+				if content['Code'] == problem_code: 
 					return content
 			return 'NULL'
 		except Exception as error:

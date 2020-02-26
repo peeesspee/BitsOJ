@@ -52,8 +52,11 @@ class problem_edit_ui(QMainWindow):
 		self.setFixedSize(self.width, self.height)
 		self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 		
-		self.tab1 = self.get_problem_widget()
-		self.tab2 = self.get_files_ui(self.test_files)
+		try:
+			self.tab1 = self.get_problem_widget()
+			self.tab2 = self.get_files_ui(self.test_files)
+		except Exception as error:
+			print('[ UI ][ ERROR ] Could not get UI: ', error)
 
 		self.tabs = QTabWidget()
 		self.tabs.setObjectName('main_tabs')
@@ -101,12 +104,13 @@ class problem_edit_ui(QMainWindow):
 		self.log_queue.put(text)
 
 	def get_problem_widget(self):
-		problem = initialize_server.get_problem_details(self.code)
+		problem = initialize_server.get_problem_details(self.code) 
+
 		if problem != 'NULL':
 			self.author = problem['Author']
 			self.statement = problem['Statement']
-			self.input_syntax= problem['Input Format'] 
-			self.output_syntax= problem['Output Format']
+			self.input_syntax= problem['Input'] 
+			self.output_syntax= problem['Output']
 			self.constraints= problem['Constraints']
 			self.example_input_syntax= problem['Example Input'] 
 			self.example_output_syntax= problem['Example Output'] 
@@ -220,7 +224,7 @@ class problem_edit_ui(QMainWindow):
 		source_widget = QWidget()
 		source_widget.setLayout(source_layout)
 		source_widget.setToolTip(
-			'Use \'&le\', \'&ge\' and \'&ne\' for \'less than or equal to\', \n\'greater than or equal to\' and \'not equal to\' symbols respectively.'
+			'Use \'<=\', \'>=\' and \'!=\' for \'less than or equal to\', \n\'greater than or equal to\' and \'not equal to\' symbols respectively.'
 		)
 		
 		scroll_area = QScrollArea()
@@ -500,9 +504,9 @@ class problem_edit_ui(QMainWindow):
 
 	def modify(self, content_data):
 		try:
-			content_data = content_data.replace('&le', '\u2264')
-			content_data = content_data.replace('&ge', '\u2265')
-			content_data = content_data.replace('&ne', '\u2260')
+			content_data = content_data.replace('<=', '\u2264')
+			content_data = content_data.replace('>=', '\u2265')
+			content_data = content_data.replace('!=', '\u2260')
 			return content_data
 		except:
 			return content_data

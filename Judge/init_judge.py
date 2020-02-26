@@ -46,6 +46,17 @@ class initialize_judge():
 		with open("./config.json", "w") as file:
 			file.write(config)
 
+
+######################   Function for time limit of problems  #################################
+
+
+	def get_time_limit():
+		with open("./config.json", 'r') as read_json:
+			config = json.load(read_json)
+			return config["Code Time Limit"]
+
+################################################################################################
+
 	def get_credentials():
 		with open("./config.json",'r') as read_json:
 			config = json.load(read_json)
@@ -53,3 +64,4 @@ class initialize_judge():
 				return config['Username'], config['Password'], config['ID'] 
 			except:
 				return 'NULL', 'NULL', 'NULL'
+

@@ -20,6 +20,8 @@ class handle_logs():
 
 		file.close()
 		file2.close()
+		# Signal to MAIN for exit
+		data_changed_flags[23] = 0
 		sys.exit(0)
 
 	def poll(file, file2, log_queue):
@@ -34,7 +36,7 @@ class handle_logs():
 			print('[ ERROR ] Log error : ' + str(error)) 
 		finally:
 			# If sys exit is called, the following flag will be 1
-			return handle_logs.data_changed_flags[23]
+			return handle_logs.data_changed_flags[23] 
 
 	def log(file, file2, data):
 		current_date_time = datetime.datetime.now()

@@ -20,8 +20,6 @@ class password_change_ui(QMainWindow):
 		):
 		super(password_change_ui, self).__init__(parent)
 
-		print(password_change_ui.username, password_change_ui.ctype, password_change_ui.password)
-		
 		self.data_changed_flags = data_changed_flags
 		self.log_queue = log_queue
 		self.task_queue = task_queue
@@ -134,6 +132,7 @@ class password_change_ui(QMainWindow):
 			# Release the window lock # BUGGY - Might remove later
 			self.data_changed_flags[14] = 0
 			self.close()
+
 		elif new_password == password_change_ui.password:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)
@@ -142,6 +141,7 @@ class password_change_ui(QMainWindow):
 			info_box.setStandardButtons(QMessageBox.Ok)
 			info_box.exec_()
 			return
+			
 		else:
 			info_box = QMessageBox()
 			info_box.setIcon(QMessageBox.Information)

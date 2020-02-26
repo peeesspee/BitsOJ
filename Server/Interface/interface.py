@@ -29,7 +29,7 @@ class server_window(QMainWindow):
 	def __init__(self, data_changed_flags2, task_queue, log_queue):
 		super().__init__()
 		# Set app icon
-		self.setWindowIcon(QIcon('Elements/logo.png'))
+		self.setWindowIcon(QIcon('Elements/logo1.png'))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ]')
 
@@ -133,9 +133,9 @@ class server_window(QMainWindow):
 		# Each tab is an object returned by the respective function associated with its UI
 		# Tab UI are managed by interface_packages/ui_classes.py file 
 		self.tab0, self.account_model, self.delete_account_button = ui_widgets.accounts_ui(self)
-		self.tab1, self.sub_model, self.allow_sub_button = ui_widgets.submissions_ui(self)
+		self.tab1, self.sub_model = ui_widgets.submissions_ui(self)
 		self.tab2, self.judge_model = ui_widgets.judge_ui(self)
-		self.tab3, self.client_model, self.allow_login_button = ui_widgets.client_ui(self)
+		self.tab3, self.client_model = ui_widgets.client_ui(self)
 		self.tab4, self.query_model = ui_widgets.query_ui(self)
 		self.tab5, self.score_model, self.scoring_type_label = ui_widgets.leaderboard_ui(self)
 		self.tab6, self.problem_model = ui_widgets.problem_ui(self)
@@ -200,9 +200,10 @@ class server_window(QMainWindow):
 
 		#Define top bar
 		logo = QLabel(self)
-		logo_image = QPixmap('Elements/bitwise_header.png')
+		logo_image = QPixmap('Elements/header_2.png')
 		logo_image = logo_image.scaledToWidth(104)
 		logo.setPixmap(logo_image)
+		
 		contest_theme = self.config['Contest Theme']
 		contest_name = QLabel(self.config['Contest Name'] + ' : ' + contest_theme)
 		contest_name.setObjectName('main_screen_sub_heading')
@@ -387,7 +388,6 @@ class server_window(QMainWindow):
 				info_box.exec_()
 				self.data_changed_flags[7] = 1
 				self.log_queue.put("[ EXIT ] ABNORMAL SYSTEM EXIT")
-				self.data_changed_flags[23] = 1
 				self.close()
 			# If data has changed in submission table
 			# Update submission table
@@ -422,6 +422,7 @@ class server_window(QMainWindow):
 				self.data_changed_flags[16] = 0
 			# System EXIT
 			if self.data_changed_flags[7] == 1:
+				print('[ UI ] EXIT')
 				sys.exit()
 
 			if self.data_changed_flags[19] == 1:
@@ -599,12 +600,6 @@ class server_window(QMainWindow):
 			self.client_reset_button.setEnabled(True)
 			self.delete_account_button.setEnabled(False)
 			self.timer_reset_button.setEnabled(False)
-			# Allow submissions now
-			self.allow_sub_button.setChecked(True)
-			self.data_changed_flags[3] = 1
-			# Allow logins now
-			self.allow_login_button.setChecked(True)
-			self.data_changed_flags[2] = 1
 
 		elif status == "STOPPED":
 			self.set_status('STOPPED')
@@ -631,12 +626,6 @@ class server_window(QMainWindow):
 			self.delete_account_button.setEnabled(True)
 			self.timer_reset_button.setEnabled(True)
 			self.timer_reset_button.setToolTip('Reset Contest timer')
-			# Don't allow submissions now
-			self.allow_sub_button.setChecked(False)
-			self.data_changed_flags[3] = 0
-			# Don't allow logins now
-			self.allow_login_button.setChecked(False)
-			self.data_changed_flags[2] = 0
 		return
 
 	def process_event(self, data, extra_data):
@@ -644,6 +633,8 @@ class server_window(QMainWindow):
 			print('[ SET ] Contest Duration : ' + str(extra_data))
 			self.log('[ SET ] Contest Duration : ' + str(extra_data))
 			save_status.update_entry('Contest Duration', str(extra_data))
+			contest_start_time = time.strftime("%H:%M:%S", time.localtime(time.time()))
+			save_status.update_entry('Contest Start Time', contest_start_time)
 			self.timer_widget.display(extra_data)
 			self.duration = str(extra_data)
 
@@ -751,6 +742,20 @@ class server_window(QMainWindow):
 			self.set_flags(27, 0)
 			print('[ SET ] IP address change not allowed.')
 			self.log_queue.put('[ SET ] IP address change not allowed.')
+		return
+
+	def allow_same_ip_handler(self, state):
+		if(state == Qt.Checked):
+			# Allow logins
+			self.set_flags(14, 1)
+			print('[ SET ] Same IP not allowed.')
+			self.log_queue.put('[ SET ] Same IP not allowed.')
+		else:
+			# Stop logins
+			self.set_flags(14, 0)
+			print('[ SET ] Same IP allowed.')
+			self.log_queue.put('[ SET ] Same IP allowed.')
+			
 		return
 
 	def allow_judge_login_handler(self, state):
@@ -1007,7 +1012,7 @@ class server_window(QMainWindow):
 		except:
 			pass
 		try:
-			self.window = new_accounts_ui(self.data_changed_flags, self.log_queue)
+			self.window = new_accounts_ui(self.data_changed_flags, self.task_queue, self.log_queue)
 			self.window.show()		
 		except Exception as error:
 			print('[ UI ][ ERROR ] : ' + str(error))
@@ -1022,11 +1027,18 @@ class server_window(QMainWindow):
 			self.window.close()
 		except:
 			pass
+
 		try:
 			codes = self.config['Problem Codes']
 			client_list = []
 			client_list = client_authentication.get_connected_clients()
-			self.window = rejudge_problem_ui(self.data_changed_flags, self.task_queue, self.log_queue, codes, client_list)
+			self.window = rejudge_problem_ui(
+				self.data_changed_flags, 
+				self.task_queue, 
+				self.log_queue, 
+				codes, 
+				client_list
+			)
 			self.window.show()			
 		except Exception as error:
 			print('[ UI ][ ERROR ] : ' + str(error))
@@ -1043,7 +1055,11 @@ class server_window(QMainWindow):
 			pass
 
 		try:
-			self.window = ie_accounts_ui(self.data_changed_flags, self.log_queue)
+			self.window = ie_accounts_ui(
+				self.data_changed_flags, 
+				self.task_queue, 
+				self.log_queue
+			)
 			self.window.show()			
 		except Exception as error:
 			print('[ UI ][ ERROR ] : ' + str(error))
@@ -1219,7 +1235,15 @@ class server_window(QMainWindow):
 			if problem == None:
 				pass
 			else:
-				self.window = problem_edit_ui(self.data_changed_flags, self.task_queue, self.log_queue, problem, code, test_files, time_limit)
+				self.window = problem_edit_ui(
+					self.data_changed_flags, 
+					self.task_queue, 
+					self.log_queue, 
+					problem, 
+					code, 
+					test_files, 
+					time_limit
+				)
 				self.window.show()
 			
 		except Exception as error: 
@@ -1228,6 +1252,8 @@ class server_window(QMainWindow):
 		finally:
 			return
 
+	# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	# Code related to database reset
 	@pyqtSlot()
 	def delete_account(self, selected_rows):
 		if self.data_changed_flags[6] == 0:
@@ -1243,6 +1269,7 @@ class server_window(QMainWindow):
 			# Reset data_changed_flag for deletion of account
 			self.data_changed_flags[6] = 0
 			return
+			
 		message = "Are you sure you want to delete : " + username + " ? "
 		custom_box = QMessageBox()
 		custom_box.setIcon(QMessageBox.Critical)
@@ -1267,12 +1294,18 @@ class server_window(QMainWindow):
 
 		if custom_box.clickedButton() == button_yes:
 			# Delete from accounts table and connected clients table
-			user_management.delete_user(username)
+			message = {
+				'Code' : 'DelUsr',
+				'Client' : username
+			}
+			message = json.dumps(message)
+			self.task_queue.put(message)
+
 			# Broadcast this user disconnection
 			message = {
-			'Code' : 'DSCNT',
-			'Mode' : 1,
-			'Client' : username
+				'Code' : 'DSCNT',
+				'Mode' : 1,
+				'Client' : username
 			}
 			message = json.dumps(message)
 			self.task_queue.put(message)
@@ -1295,6 +1328,7 @@ class server_window(QMainWindow):
 		# If no row is selected, return
 		try:
 			message = "Are you sure you want to DELETE ALL accounts?"
+			message += "\nAll connected clients will also be disconnected!"
 		
 			custom_close_box = QMessageBox()
 			custom_close_box.setIcon(QMessageBox.Critical)
@@ -1318,9 +1352,34 @@ class server_window(QMainWindow):
 			custom_close_box.exec_()
 
 			if custom_close_box.clickedButton() == button_yes:
+				print('[ EVENT ] All Client + Judge disconnection under progress...')
+				self.log('[ EVENT ] All Client + Judge disconnection under progress...')
+				message = {
+					'Code' : 'DSCNT',
+					'Mode' : 2
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+				# Set DISCONNECTED to all connected clients and judges
+				user_management.disconnect_all()
+				self.data_changed_flags[1] = 1
+				self.data_changed_flags[13] = 1
+
+				print('[ EVENT ] Accounts Reset...')
+				self.log('[ EVENT ] Accounts Reset...')
+
+				# Delete all connected_clients and connected_judges
 				user_management.delete_all()
+				# Delete all accounts
+				user_management.delete_all_accounts()
+
+				# Update Clients View
+				self.data_changed_flags[1] = 1
+				# Update Judges View
+				self.data_changed_flags[13] = 1
 				# Update Accounts View
 				self.data_changed_flags[5] = 1
+
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except:
@@ -1332,7 +1391,73 @@ class server_window(QMainWindow):
 			self.data_changed_flags[6] = 0
 			return
 
-	
+	def disconnect_all(self):
+		if self.data_changed_flags[6] == 0:
+			# Set critical flag
+			self.data_changed_flags[6] = 1
+		else:
+			# If one data deletion window is already opened, process it first.
+			return
+
+		status = self.password_verification()
+		if status == 1:
+			pass
+		elif status == 2:
+			self.data_changed_flags[6] = 0 
+			return
+		else:
+			self.data_changed_flags[6] = 0
+			QMessageBox.about(self, "Access Denied!", "Authentication failed!")
+			return
+
+		# If no row is selected, return
+		try:
+			message = "Are you sure to DISCONNECT all clients?\nClients will be able to login again\nif permitted."
+			
+			custom_close_box = QMessageBox()
+			custom_close_box.setIcon(QMessageBox.Critical)
+			custom_close_box.setWindowTitle('Disconnect Clients')
+			custom_close_box.setText(message)
+
+			custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
+			custom_close_box.setDefaultButton(QMessageBox.No)
+
+			button_yes = custom_close_box.button(QMessageBox.Yes)
+			button_yes.setText('Yes')
+			button_no = custom_close_box.button(QMessageBox.No)
+			button_no.setText('No')
+
+			button_yes.setObjectName("close_button_yes")
+			button_no.setObjectName("close_button_no")
+
+			button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
+			button_no.setStyleSheet(open('Interface/style.qss', "r").read())
+
+			custom_close_box.exec_()
+
+			if custom_close_box.clickedButton() == button_yes:
+				print('[ EVENT ] All Client + Judge disconnection under progress...')
+				self.log('[ EVENT ] All Client + Judge disconnection under progress...')
+				message = {
+					'Code' : 'DSCNT',
+					'Mode' : 2
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+				# Set DISCONNECTED to all connected clients and judges
+				user_management.disconnect_all()
+				self.data_changed_flags[1] = 1
+				self.data_changed_flags[13] = 1
+			elif custom_close_box.clickedButton() == button_no : 
+				pass
+		except Exception as error:
+			print('Could not reset database : ' + str(error))
+			self.log('Could not reset database : ' + str(error))
+		finally:
+			# Reset critical flag
+			self.data_changed_flags[6] = 0
+		return
+
 	def reset_submissions(self):
 		if self.data_changed_flags[6] == 0:
 			# Set critical flag
@@ -1366,9 +1491,13 @@ class server_window(QMainWindow):
 			custom_close_box.exec_()
 
 			if custom_close_box.clickedButton() == button_yes:
+				print('[ EVENT ] Submission Reset...')
+				self.log('[ EVENT ] Submission Reset...')
+
 				submissions_management.delete_all()
 				# Update Submissions View
 				self.data_changed_flags[0] = 1
+
 				scoreboard_management.delete_all()
 				# Refresh Scoreboard View
 				self.data_changed_flags[16] = 1
@@ -1416,6 +1545,8 @@ class server_window(QMainWindow):
 			custom_close_box.exec_()
 
 			if custom_close_box.clickedButton() == button_yes:
+				print('[ EVENT ] Queries Reset...')
+				self.log('[ EVENT ] Queries Reset...')
 				query_management.delete_all()
 				# Update Queriess View
 				self.data_changed_flags[9] = 1
@@ -1589,81 +1720,12 @@ class server_window(QMainWindow):
 			# Reset critical flag
 			self.data_changed_flags[6] = 0
 		return
+	# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-	def disconnect_all(self):
-		if self.data_changed_flags[6] == 0:
-			# Set critical flag
-			self.data_changed_flags[6] = 1
-		else:
-			# If one data deletion window is already opened, process it first.
-			return
-
-		status = self.password_verification()
-		if status == 1:
-			pass
-		elif status == 2:
-			self.data_changed_flags[6] = 0 
-			return
-		else:
-			self.data_changed_flags[6] = 0
-			QMessageBox.about(self, "Access Denied!", "Authentication failed!")
-			return
-
-		# If no row is selected, return
-		try:
-			message = "Are you sure to DISCONNECT all clients?\nClients will be able to login again\nif permitted."
-			
-			custom_close_box = QMessageBox()
-			custom_close_box.setIcon(QMessageBox.Critical)
-			custom_close_box.setWindowTitle('Disconnect Clients')
-			custom_close_box.setText(message)
-
-			custom_close_box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
-			custom_close_box.setDefaultButton(QMessageBox.No)
-
-			button_yes = custom_close_box.button(QMessageBox.Yes)
-			button_yes.setText('Yes')
-			button_no = custom_close_box.button(QMessageBox.No)
-			button_no.setText('No')
-
-			button_yes.setObjectName("close_button_yes")
-			button_no.setObjectName("close_button_no")
-
-			button_yes.setStyleSheet(open('Interface/style.qss', "r").read())
-			button_no.setStyleSheet(open('Interface/style.qss', "r").read())
-
-			custom_close_box.exec_()
-
-			if custom_close_box.clickedButton() == button_yes:
-				print('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
-				self.log('[ EVENT ] CLIENT DISCONNECT TRIGGERED')
-				message = {
-					'Code' : 'DSCNT',
-					'Mode' : 2
-				}
-				message = json.dumps(message)
-				self.task_queue.put(message)
-				print('[ EVENT ][ RESET ] Disconnecting all clients...')
-				self.log('[ EVENT ][ RESET ] Disconnecting all clients...')
-				# Set DISCONNECTED to all connected clients
-				user_management.disconnect_all()
-				self.data_changed_flags[1] = 1
-			elif custom_close_box.clickedButton() == button_no : 
-				pass
-		except Exception as error:
-			print('Could not reset database : ' + str(error))
-			self.log('Could not reset database : ' + str(error))
-		finally:
-			# Reset critical flag
-			self.data_changed_flags[6] = 0
-		return
-
-	###################################################
-	
 	###################################################
 	def set_status(self, message = 'SETUP'):
 		self.status.showMessage('	BitsOJ Server > ' + message)
-	###################################################
+	
 	def closeEvent(self, event):
 		# If server exit is called, accept
 		if self.data_changed_flags[23] == 1:
@@ -1725,6 +1787,7 @@ class server_window(QMainWindow):
 		elif custom_close_box.clickedButton() == button_no : 
 			event.ignore()
 
+
 class init_gui(server_window):
 	def __init__(self, data_changed_flags, task_queue, log_queue):
 		# make a reference of App class
@@ -1743,7 +1806,7 @@ class init_gui(server_window):
 		server_app = server_window(data_changed_flags, task_queue, log_queue)
 		# Delay splash screen
 		t = 0
-		while(t< 3000):
+		while(t< 500):
 			t += 0.01
 			app.processEvents()
 

@@ -3,7 +3,10 @@
 import json, pika, sys, time
 from init_server import initialize_server
 from database_management import *
-   
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
+
+
 class core():
 	data_changed_flags = ''
 	task_queue = ''
@@ -38,17 +41,13 @@ class core():
 			status = core.poll(task_queue)
 			if status == 1:
 				break
-			# Poll every second
-			time.sleep(1)
-
-		# If we reach this point, it means the Server Shutdown has been initiated.
 		
 		# Shut down connection
-		time.sleep(1)
 		print("[ STOP ] Core subprocess terminated successfully!")
 		core.log("[ STOP ] Core subprocess terminated successfully!")
 		channel.stop_consuming()
 		connection.close()
+		core.data_changed_flags[8] = 1
 		sys.exit(0)
 
 	def log(message):
@@ -92,6 +91,8 @@ class core():
 		# While there is data to process in the task_queue,
 		try:
 			while task_queue.empty() == False:
+				size = task_queue.qsize()
+				print('[ CORE ] ', size , ' operations in line.')
 				# Data in the task queue is in JSON format
 				data = task_queue.get()
 				data = json.loads(data)
@@ -243,6 +244,13 @@ class core():
 						print('[ CORE ] Scoreboard Updated for clients')
 						core.log('[ CORE ] Scoreboard Updated for clients')
 
+				elif code == 'DelUsr':
+					username = data['Client']
+					user_management.delete_user(username)
+					print('[ CORE ] User deleted: ', username)
+					core.log('[ CORE ] User deleted: ' + username)
+					# Update Submission status
+
 				elif code == 'UpSubStat':
 					# Update Submission status
 					run_id = data['RunID']
@@ -311,7 +319,53 @@ class core():
 					core.data_changed_flags[13] = 1
 					print('[ CORE ] Added new user.')
 					core.log('[ CORE ] Added new user.')
+
+				elif code == 'AddNUsers':
+					print('[ CORE ] Generating accounts...')
+					core.log('[ CORE ] Generating accounts...')
+
+					client_no = data['Clients' ]
+					judge_no = data['Judges' ]
+					pwd_type = data['Password Type' ]
+
+					status = user_management.generate_n_users(
+						client_no, 
+						judge_no, 
+						pwd_type
+					)
+					if status == 1:
+						print('[ CORE ] All accounts generated!')
+						core.log('[ CORE ] All accounts generated!')
+					else:
+						print('[ CORE ] Account generation failed!')
+						core.log('[ CORE ] Account generation failed!')
+
+					# Indicate new insertions in accounts
+					core.data_changed_flags[5] = 1
+
+				elif code == 'AddSheetUsers':
+					print('[ CORE ] Adding sheet accounts...')
+					core.log('[ CORE ] Adding sheet accounts...')
 					
+					u_list = data['UserList']
+					p_list = data['PassList']
+					t_list = data['TypeList']
+					
+					status = user_management.add_sheet_accounts(
+						u_list, 
+						p_list, 
+						t_list
+					)
+					if status == 0:
+						# Database insertion error
+						print('[ CORE ][ ERROR ] Database insertion error: Team names should be unique.')
+						core.log('[ CORE ][ ERROR ] Database insertion error: Team names should be unique.')
+					else:
+						print('[ CORE ] Sheet accounts added!')
+						core.log('[ CORE ] Sheet accounts added!')
+	
+					# Indicate new insertions in accounts
+					core.data_changed_flags[5] = 1
 
 				elif code == 'AddNewScore':
 					client_username = data['Username' ]
@@ -366,7 +420,7 @@ class core():
 				elif code == 'UpUserPwd':
 					username = data['Username']
 					password = data['New Password']
-					user_management.update_user_password(username, password)
+					user_management.update_user_password(username, password) 
 					print('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
 					core.log('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
 					# Update account views
@@ -417,6 +471,7 @@ class core():
 					submissions_management.update_submission_status(run_id, 'REJUDGE', 'REJUDGE')
 					# Refresh GUI
 					core.data_changed_flags[0] = 1
+
 					data['Code'] = 'JUDGE'
 					message = json.dumps(data)
 					core.channel.basic_publish(
@@ -425,8 +480,8 @@ class core():
 						body = message, 
 						properties = pika.BasicProperties(delivery_mode = 2)
 					) 
-					print('[ CORE ] Added a new submission request.')
-					core.log('[ CORE ] Added a new submission request.')
+					print('[ CORE ] Added a new Rejudge request for RunID: ' + str(run_id))
+					core.log('[ CORE ] Added a new Rejudge request for RunID: ' + str(run_id))
 				
 				# UPDATE client timer to match server value
 				elif code == 'UPDATE':

@@ -29,8 +29,6 @@ class manage_clients():
 		manage_clients.languages = manage_clients.config['Languages']
 		superuser_username = manage_clients.config["Server Username"]
 		superuser_password = manage_clients.config["Server Password"]
-		judge_username = manage_clients.config["Judge Username"]
-		judge_password = manage_clients.config["Judge Password"]
 		host = manage_clients.config["Server IP"]
 		manage_clients.key = manage_clients.config["Client Key"]
 		manage_clients.judge_key = manage_clients.config["Judge Key"]
@@ -114,7 +112,7 @@ class manage_clients():
 			manage_clients.log('[ ERROR ] : Channel closed by Broker')
 
 		except (pika.exceptions.ChannelClosedByBroker):
-			print(
+			print( 
 				'[ ERROR ] : Could not get a lock on client_requests.' +
 				' Please check management portal and remove any consumers from the queue'
 			)
@@ -125,7 +123,8 @@ class manage_clients():
 		except Exception as error: 
 			print('[ CLIENT PROCESS ][ CRITICAL ]: ' + str(error))
 			manage_clients.log('[ CLIENT PROCESS ][ CRITICAL ]: ' + str(error))
-		finally:
+
+		finally: 
 			manage_clients.data_changed_flags[7] = 1
 			connection.close()
 			print('[ STOP ] Client subprocess terminated successfully!')
@@ -154,6 +153,9 @@ class manage_clients():
 				manage_clients.log('[ SECURITY ] Complete Message: ' + client_message)
 				ch.basic_ack(delivery_tag = method.delivery_tag)
 				return
+
+			# Strip IP address of spaces
+			client_ip = client_ip.replace(' ', '')
 
 			if  client_key != manage_clients.key and client_key != manage_clients.judge_key :
 				print('[ SECURITY ] Client Key did not match. Client ID: ' + str(json_data['ID']))
@@ -430,6 +432,31 @@ class manage_clients():
 
 			# If client has logged in for the first time
 			elif previously_connected_state == 'New':
+				# Check for IP address Duplicacy
+				if manage_clients.data_changed_flags[14] == 1:
+					status = client_authentication.check_duplicate_ip(client_ip)
+					if status == 0:
+						# Unique IP
+						print('[ LOGIN ] IP duplicacy : None')
+						manage_clients.log('[ LOGIN ] IP duplicacy : None')
+						pass
+					elif status == 1:
+						# Duplicate IP address
+						print('[ LOGIN ][ REJECT] Duplicate IP Address.')
+						manage_clients.log('[ LOGIN ][ REJECT] Duplicate IP Address.')
+						message = {
+							'Code' : 'LRJCT',
+							'Receiver' : client_username,
+							'Client ID' : client_id, 
+							'Message' : 'Multiple logins with same PC are not allowed.'
+						}
+						message = json.dumps(message)
+						manage_clients.task_queue.put(message)
+						return
+					else:
+						print('[ CLIENT ] Error while checking for client IP address.')
+						manage_clients.log('[ CLIENT ] Error while checking for client IP address.')
+			
 				# Fetch new client ID
 				client_id = client_authentication.generate_new_client_id()
 				# Add client to connected users database

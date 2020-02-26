@@ -276,7 +276,7 @@ class generate_report_ui(QMainWindow):
 
 						problem_codes = self.config['Problem Codes']
 						file.write('\n\nSubmission data grouped by problems:\n')
-						for problem in eval(problem_codes):
+						for problem in problem_codes:
 							file.write('> Problem: ' + problem + '\n')
 							file.write('\tRun ID\t\t\t Client ID \t\t\t Language \t\t\t Timestamp \t\t\t Verdict\n')
 							grouped_data = report_management.get_grouped_problem_sub_data(problem)

@@ -158,6 +158,7 @@ class account_edit_ui(QMainWindow):
 
 			print('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
 			self.log('[ USER ][ ' + account_edit_ui.username + ' ][ UPDATE ] State changed to ' + account_edit_ui.state_type)
+
 			if account_edit_ui.state_type == 'Blocked':
 				message = {
 					"Code" : "BLOCK",
@@ -165,6 +166,7 @@ class account_edit_ui(QMainWindow):
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
+				
 			elif account_edit_ui.state_type == 'Disconnected':
 				message = {
 					"Code" : "DSCNT",
