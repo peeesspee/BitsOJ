@@ -24,10 +24,10 @@ class manage_connection():
 		
 		# binding credential manager exchange and login_request queue  which send the login request from client to server
 		try:
-			channel.queue_bind(
-				exchange = 'connection_manager', 
-				queue = 'client_requests'
-			)
+			# channel.queue_bind(
+			# 	exchange = 'connection_manager', 
+			# 	queue = 'client_requests'
+			# )
 
 			return channel,connection
 		except Exception as Error:
