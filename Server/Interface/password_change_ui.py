@@ -118,7 +118,8 @@ class password_change_ui(QMainWindow):
 			message = {
 				'Code' : 'UpUserPwd', 
 				'Username' : password_change_ui.username,
-				'New Password' : new_password
+				'New Password' : new_password,
+				'Type' : password_change_ui.ctype
 			}
 			message = json.dumps(message)
 			self.task_queue.put(message) 

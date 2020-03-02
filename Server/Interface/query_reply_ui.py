@@ -13,6 +13,7 @@ class query_reply_ui(QMainWindow):
 			data_changed_flags,
 			task_queue, 
 			query, 
+			reply,
 			client_id, 
 			query_id, 
 			log_queue,
@@ -27,6 +28,7 @@ class query_reply_ui(QMainWindow):
 		query_reply_ui.query = query
 		query_reply_ui.query_id = query_id
 		query_reply_ui.client_id = client_id
+		query_reply_ui.reply = reply
 
 		self.setWindowTitle('Reply')
 		self.setGeometry(600, 250, 600, 550)
@@ -53,6 +55,7 @@ class query_reply_ui(QMainWindow):
 			query_text.setText(query_reply_ui.query)
 		
 		response_entry = QTextEdit()
+		response_entry.setText(query_reply_ui.reply)
 		response_entry.setPlaceholderText('Max. 500 Characters')
 
 		broadcast_setting_label = QLabel('Reply to: ')

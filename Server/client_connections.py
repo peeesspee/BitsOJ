@@ -83,7 +83,7 @@ class manage_clients():
 
 		# Start listening to client_requests
 		manage_clients.listen_clients(connection, channel, superuser_username, superuser_password, host)
-
+		
 	def log(message):
 		manage_clients.log_queue.put(message)
 
@@ -414,6 +414,34 @@ class manage_clients():
 					}
 					message = json.dumps(message)
 					manage_clients.task_queue.put(message)
+					# #####################################################################
+					# Check if contest has started, also send client the 
+					# START signal for contest
+					if manage_clients.data_changed_flags[10] == 1:
+						# Update self config
+						manage_clients.config = initialize_server.read_config()
+						total_time = manage_clients.config['Contest Set Time']
+						start_time = initialize_server.get_start_time()
+						end_time = initialize_server.get_end_time()
+
+						current_time = time.time()
+						time_difference = total_time - current_time
+						remaining_time = time.strftime('%H:%M:%S', time.gmtime(time_difference))
+
+						message = {
+							'Code' : 'START', 
+							'Receiver' : client_username,
+							'Duration' : remaining_time,
+							'Start Time' : start_time,
+							'End Time' : end_time,
+							'Problem Key' : manage_clients.file_password
+						}
+						message = json.dumps(message)
+						manage_clients.task_queue.put(message)
+						print('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
+						manage_clients.log('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
+						
+					#######################################################################
 
 					return
 	

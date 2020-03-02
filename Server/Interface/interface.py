@@ -1,7 +1,7 @@
 import sys, time, json, threading
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
-from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
+from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel, QSqlQuery
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
 from Interface.ui_classes import *
 from Interface.problem_ui import *
@@ -15,8 +15,7 @@ from Interface.rejudge_problem_ui import *
 from Interface.judge_view_ui import *
 from Interface.generate_report_ui import *
 from init_server import initialize_server, save_status
-from database_management import user_management, submissions_management, query_management, scoreboard_management, client_authentication
-
+from database_management import manage_database
 # This is to ignore some warnings which were thrown when gui exited and 
 # python deleted some assests in wrong order
 # Nothing critical :)
@@ -26,12 +25,19 @@ qInstallMessageHandler(handler)
 
 # This class handles the main interface window of server
 class server_window(QMainWindow):
-	def __init__(self, data_changed_flags2, task_queue, log_queue):
+	def __init__(self, data_changed_flags2, task_queue, log_queue, lock):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo1.png'))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ]')
+
+		
+		# make shared objects accessible from the class methods
+		self.data_changed_flags = data_changed_flags2
+		self.task_queue = task_queue
+		self.log_queue = log_queue
+		self.lock = lock
 
 		# Make  the app run full-screen
 		# Initialize status bar (Bottom Bar)
@@ -47,18 +53,20 @@ class server_window(QMainWindow):
 		self.scoreboard_timer.timeout.connect(self.broadcast_scoreboard)
 		self.scoreboard_timer.start(300000)
 
-		# make data_changed_flag accessible from the class methods
-		self.data_changed_flags = data_changed_flags2
-		self.task_queue = task_queue
-		self.log_queue = log_queue
 		self.log('  [ START ] Interface subprocess started.')
 		
 		###########################################################
 		self.db = self.init_qt_database()
-		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status, judge FROM submissions ORDER BY run_id DESC"
-			# Default leaderboard query
-		self.leaderboard_query = "SELECT * FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC"
+		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status, judge FROM submissions ORDER BY run_id DESC limit 100"
+		# Default leaderboard query
+		self.leaderboard_query = "SELECT * FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC limit 100"
+		self.account_query = "SELECT * FROM accounts limit 100"
 
+		self.connected_clients_query = "SELECT * FROM connected_clients limit 100"
+		self.connected_judges_query = "SELECT * FROM connected_judges limit 10"
+		self.problems_query = "SELECT * FROM problems limit 10"
+		self.queries_query = "SELECT * FROM queries limit 100"
+		
 		###########################################################
 		self.config = initialize_server.read_config()
 		self.contest_set_time = self.config['Contest Set Time']
@@ -350,8 +358,8 @@ class server_window(QMainWindow):
 		return
 
 	def broadcast_scoreboard(self):
-		# If scoreboard broadcast is allowed
-		if self.data_changed_flags[15] == 1:
+		# If scoreboard broadcast is allowed and contest is running
+		if self.data_changed_flags[15] == 1 and self.data_changed_flags[10] == 1:
 			# Just set this flag, update data will take care of it
 			self.data_changed_flags[18] = 1
 			print('[ EVENT ] Scoreboard broadcast to clients ( Time Out )')
@@ -392,34 +400,55 @@ class server_window(QMainWindow):
 			# If data has changed in submission table
 			# Update submission table
 			if self.data_changed_flags[0] == 1:
+				self.lock.acquire()
 				self.sub_model.setQuery(self.submissions_query)
+				self.lock.release()
 				# self.sub_model.select()
 				self.data_changed_flags[0] = 0
+
 			# Update connected clients table
 			if self.data_changed_flags[1] == 1:
+				self.lock.acquire()
+				self.client_model.setQuery('Select * from connected_clients limit 100')
+
+				self.lock.release()
 				self.data_changed_flags[1] = 0
-				self.client_model.select()
-	
+				
 			# Update problems table
 			if self.data_changed_flags[22] == 1:
-				self.problem_model.select()
+				self.lock.acquire()
+				self.problem_model.setQuery('Select * from problems limit 20')
+				self.lock.release()
 				self.data_changed_flags[22] = 0
+
 			# Update accounts table
 			if self.data_changed_flags[5] == 1:
-				self.account_model.select()
+				self.lock.acquire()
+				status = self.account_model.setQuery(self.account_query)
+				self.lock.release()
 				self.data_changed_flags[5] = 0
+
 			# Update Query table
 			if self.data_changed_flags[9] == 1:
-				self.query_model.select()
+				self.lock.acquire()
+				self.query_model.setQuery('Select * from queries order by query_id desc limit 20')
+				self.lock.release()
 				self.data_changed_flags[9] = 0
+
 			# Update judge view
 			if self.data_changed_flags[13] == 1:
-				self.judge_model.select()
+				self.lock.acquire()
+				self.judge_model.setQuery('Select * from connected_judges limit 100')
+				self.lock.release()
 				self.data_changed_flags[13] = 0
+
 			# Update scoreboard view
 			if self.data_changed_flags[16] == 1:
+				self.lock.acquire()
 				self.score_model.setQuery(self.leaderboard_query)
+				self.lock.release()
 				self.data_changed_flags[16] = 0
+
 			# System EXIT
 			if self.data_changed_flags[7] == 1:
 				print('[ UI ] EXIT')
@@ -461,8 +490,6 @@ class server_window(QMainWindow):
 				release_thread.start()
 				release_thread.join()
 				print('[ UI ] All held responses sent!')
-
-
 
 		except Exception as error:
 			print('[ ERROR ] Interface updation error: ' + str(error))
@@ -838,19 +865,43 @@ class server_window(QMainWindow):
 	def init_qt_database(self):
 		try:
 			db = QSqlDatabase.addDatabase('QSQLITE')
+			# db.setConnectOptions("QSQLITE_ENABLE_SHARED_CACHE;QSQLITE_OPEN_READONLY;QSQLITE_OPEN_URI")
+			# db.setDatabaseName('file:server_database.db?nolock=1')
 			db.setDatabaseName('server_database.db')
+
+			query = QSqlQuery()
+			query.prepare("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED")
+			if not query.exec():
+				print(query.executedQuery())
+				print(query.lastError().text())
+
 			return db
 		except:
 			print('[ CRITICAL ] Database loading error!')
 			self.log('[ CRITICAL ] Database loading error!')
 
-
 	def manage_models(self, db, table_name):
 		if db.open():
-			model = QSqlTableModel()
-			model.setTable(table_name)
-			model.setEditStrategy(QSqlTableModel.OnFieldChange)
-			model.select()
+			model = QSqlQueryModel()
+			if table_name == 'connected_clients':
+				query = self.connected_clients_query
+			elif table_name == 'connected_judges':
+				query = self.connected_judges_query
+			elif table_name == 'problems':
+				query = self.problems_query
+			elif table_name == 'queries':
+				query = self.queries_query
+			model.setQuery(query)
+			return model
+		else:
+			print('[ CRITICAL ] Model Error: DB is not open')
+			self.log('[ CRITICAL ] Model Error: DB is not open')
+			return None
+
+	def manage_account_model(self, db, table_name):
+		if db.open():
+			model = QSqlQueryModel()
+			model.setQuery(self.account_query)
 			return model
 		else:
 			print('[ CRITICAL ] Model Error: DB is not open')
@@ -860,7 +911,6 @@ class server_window(QMainWindow):
 	def manage_leaderboard_model(self, db, table_name):
 		if db.open():
 			model = QSqlQueryModel()
-			# model.setEditStrategy()
 			return model
 		else:
 			print('[ CRITICAL ] Model Error: DB is not open')
@@ -871,7 +921,6 @@ class server_window(QMainWindow):
 		if db.open():
 			model = QSqlQueryModel()
 			model.setQuery(self.submissions_query)
-			# model.setEditStrategy()
 			return model
 		else:
 			print('[ CRITICAL ] Model Error: DB is not open')
@@ -895,6 +944,8 @@ class server_window(QMainWindow):
 		table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 		# Set view to delete when gui is closed
 		table.setAttribute(Qt.WA_DeleteOnClose)
+
+		table.setSortingEnabled(False)
 
 		horizontal_header = table.horizontalHeader()
 		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
@@ -964,15 +1015,15 @@ class server_window(QMainWindow):
 			self.window.close()
 		except:
 			pass
-	
+	 
 		try:
 			# Get data from selected row
+			reply = self.query_model.index(selected_row, 3).data()
 			query = self.query_model.index(selected_row, 2).data()
 			client_id = self.query_model.index(selected_row, 1).data()
 			query_id = self.query_model.index(selected_row, 0).data()
-			if client_id == None or query_id == None or query_id == 0:
-				return
-			self.window = query_reply_ui(self.data_changed_flags,self.task_queue, query, client_id, query_id, self.log_queue )
+
+			self.window = query_reply_ui(self.data_changed_flags,self.task_queue, query, reply, client_id, query_id, self.log_queue )
 			self.window.show()
 
 		except Exception as error: 
@@ -993,9 +1044,10 @@ class server_window(QMainWindow):
 			pass
 		try:
 			query = 'Announcement'
+			reply = ''
 			client_id = -1
 			query_id = -1
-			self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query,client_id, query_id, self.log_queue)
+			self.window = query_reply_ui(self.data_changed_flags,self.task_queue ,query, reply, client_id, query_id, self.log_queue)
 			self.window.show()
 
 		except Exception as error: 
@@ -1789,7 +1841,7 @@ class server_window(QMainWindow):
 
 
 class init_gui(server_window):
-	def __init__(self, data_changed_flags, task_queue, log_queue):
+	def __init__(self, data_changed_flags, task_queue, log_queue, lock):
 		# make a reference of App class
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
@@ -1797,21 +1849,9 @@ class init_gui(server_window):
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
-		
-
-		# Splash screen
-		splash = QSplashScreen(QPixmap("./Elements/banner.png"), Qt.WindowStaysOnTopHint)
-		splash.show()
-		splash.showMessage("Loading modules...")
-		server_app = server_window(data_changed_flags, task_queue, log_queue)
-		# Delay splash screen
-		t = 0
-		while(t< 500):
-			t += 0.01
-			app.processEvents()
-
-		splash.finish(server_app)
+		server_app = server_window(data_changed_flags, task_queue, log_queue, lock)
 		server_app.showMaximized()
+
 		# Splash ends
 		# Execute the app mainloop
 		app.exec_()

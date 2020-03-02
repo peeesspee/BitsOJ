@@ -40,6 +40,8 @@ def main():
 	task_queue = multiprocessing.Queue(maxsize = 1000)   
 	# This queue handles logs from all the 3 processes 
 	log_queue = multiprocessing.Queue(maxsize = 100)
+	# Lock object for database
+	lock = multiprocessing.Lock()
 	####################################################################
 
 	log_process = multiprocessing.Process(
@@ -78,8 +80,16 @@ def main():
 	# Initialize database
 	print('[ SETUP ] Initialising database...')
 	log_queue.put('[ SETUP ] Initialising database...')
-	manage_database.initialize_database()
-	
+
+	manage_database()
+	manage_database.init_tables()
+	if config["Contest Status"] == "SETUP":
+		# Load Problems into problems table
+		print('[ SETUP ] Loading problems...')
+		problem_management.init_problems(config['Problems'])
+		log_queue.put('[ SETUP ] Loading problems...')
+		
+
 	# Set local variables and flags :
 	#####################################################################################
 	#index		value		meaning
@@ -87,7 +97,7 @@ def main():
 	#	1		0/1			0/1: New login : Refresh connected clients view
 	#	2		0/1 		0/1: Disallow/Allow logins
 	#	3		0/1			0/1: Disallow/Allow submissions
-	#	4		0/1			1: A create accounts window is open --------------------
+	#	4		0/1			1: A create accounts window is open 
 	#	5		0/1			1: Update accounts view
 	#   6		0/1			1: Database data deletion under progress 
 	#	7		0/1			1: Server shutdown
@@ -111,6 +121,8 @@ def main():
 	#	25		0/1			1: Manual Reviews have just been turned off : Try to send all unjudged submissions?
 	#	26		0/1			1: Connection error : Restart server
 	#	27		0/1			1: Allow multiple IP 
+	# 	28 		0/1			1: Lock on db by core
+	# 	29		0/1			1: Lock by interface on db
 	#####################################################################################
 	
 	# Set submission time limit
@@ -172,11 +184,7 @@ def main():
 		data_changed_flags[10] = 2
 	elif config["Contest Status"] == "SETUP":
 		data_changed_flags[10] = 0
-		# Load Problems into problems table
-		print('[ SETUP ] Loading problems...')
-		problem_management.init_problems(config['Problems'])
-
-		log_queue.put('[ SETUP ] Loading problems...')
+		
  
 	#####################################################################################
 
@@ -189,7 +197,8 @@ def main():
 		host, 
 		data_changed_flags, 
 		task_queue,
-		log_queue
+		log_queue,
+		lock
 	)
 	print('[ SETUP ] Subprocesses started')
 	log_queue.put('[ SETUP ] Subprocesses started')
@@ -204,7 +213,7 @@ def main():
 	
 	# Initialize GUI handler
 	try:
-		init_gui(data_changed_flags, task_queue, log_queue)
+		init_gui(data_changed_flags, task_queue, log_queue, lock)
 	except Exception as error:
 		print("[ MAIN ][ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
 		log_queue.put("[ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
@@ -284,7 +293,10 @@ def main():
 	# Wait until CORE exits successfully
 	while data_changed_flags[8] != 1:
 		pass
- 
+
+	# Disconnect from Database
+	manage_database.disconnect_database()
+	
 	print("  ################################################")
 	print("  #----------SERVER CLOSED SUCCESSFULLY----------#")
 	print("  ################################################")
@@ -296,8 +308,13 @@ def manage_process(
 		host, 
 		data_changed_flags, 
 		task_queue,
-		log_queue
+		log_queue,
+		lock
 	):
+	core_process = multiprocessing.Process(
+		target = core.init_core,
+		args = (data_changed_flags, task_queue, log_queue, lock, )
+	)
 	client_handler_process = multiprocessing.Process(
 		target = manage_clients.prepare, 
 		args = (data_changed_flags, task_queue, log_queue, )
@@ -306,14 +323,11 @@ def manage_process(
 		target = manage_judges.listen_judges, 
 		args = (rabbitmq_username, rabbitmq_password, host, data_changed_flags, task_queue, log_queue, )
 		)
-	core_process = multiprocessing.Process(
-		target = core.init_core,
-		args = (data_changed_flags, task_queue, log_queue, )
-	)
 	
+	core_process.start()
+	time.sleep(1)
 	client_handler_process.start()
 	judge_handler_process.start()
-	core_process.start()
 	
 
 	# We return process ids of both client and server subprocesses to main()

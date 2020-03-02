@@ -15,8 +15,6 @@ class handle_logs():
 			status = handle_logs.poll(file, file2, log_queue)
 			if status == 1:
 				break
-			# Poll every half second
-			time.sleep(0.5)
 
 		file.close()
 		file2.close()

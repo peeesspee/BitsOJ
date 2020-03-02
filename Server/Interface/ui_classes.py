@@ -28,7 +28,7 @@ class ui_widgets:
 		delete_account_button.setObjectName("topbar_button")
 		delete_account_button.setToolTip('Delete account.\nCan be used when contest is \nnot RUNNING')
 
-		accounts_model = self.manage_models(self.db, 'accounts')
+		accounts_model = self.manage_account_model(self.db, 'accounts')
 		accounts_model.setHeaderData(0, Qt.Horizontal, 'Username')
 		accounts_model.setHeaderData(1, Qt.Horizontal, 'Password')
 		accounts_model.setHeaderData(2, Qt.Horizontal, 'Type')
@@ -237,7 +237,7 @@ class ui_widgets:
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
 		head_layout.addWidget(announcement_button)
-		head_layout.addWidget(reply_button)
+		# head_layout.addWidget(reply_button)
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
