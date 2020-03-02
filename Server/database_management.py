@@ -73,6 +73,91 @@ class manage_database():
 	def get_connection_object():
 		return manage_database.conn
 
+class interface_sync(manage_database):
+	def get_account_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			conn.execute('SELECT * FROM accounts limit 500')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch account data: ', e)
+			return []
+
+	def get_submission_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			conn.execute('SELECT * FROM submissions limit 500')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch submissions data: ', e)
+			return []
+
+	def get_connected_clients_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			conn.execute('SELECT * FROM connected_clients limit 500')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch connected_clients data: ', e)
+			return []
+
+	def get_problems_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			conn.execute('SELECT * FROM problems limit 50')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch problems data: ', e)
+			return []
+
+	def get_connected_judges_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			conn.execute('SELECT * FROM connected_judges limit 10')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch connected_judges data: ', e)
+			return []
+
+	def get_queries_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			conn.execute('SELECT * FROM queries limit 100')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch queries data: ', e)
+			return []
+
+	def get_scoreboard_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			conn.execute('SELECT * FROM scoreboard limit 500 ORDER BY score DESC, total_time ASC')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch scoreboard data: ', e)
+			return []
+
 class problem_management(manage_database):
 	def init_problems(problem_dictionary):
 		# This may seem counter intuitive, but it is meant to be done only

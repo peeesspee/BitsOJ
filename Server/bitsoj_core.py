@@ -75,7 +75,12 @@ class core():
 	def init_connection(superuser_username, superuser_password, host):
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
-			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+			params = pika.ConnectionParameters(
+					host = host, 
+					credentials = creds, 
+					heartbeat=0, 
+					blocked_connection_timeout=0
+				)
 			connection = pika.BlockingConnection(params)
 			channel = connection.channel()
 

@@ -15,7 +15,7 @@ from Interface.rejudge_problem_ui import *
 from Interface.judge_view_ui import *
 from Interface.generate_report_ui import *
 from init_server import initialize_server, save_status
-from database_management import manage_database
+from database_management import manage_database, interface_sync
 # This is to ignore some warnings which were thrown when gui exited and 
 # python deleted some assests in wrong order
 # Nothing critical :)
@@ -31,7 +31,6 @@ class server_window(QMainWindow):
 		self.setWindowIcon(QIcon('Elements/logo1.png'))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ]')
-
 		
 		# make shared objects accessible from the class methods
 		self.data_changed_flags = data_changed_flags2
@@ -865,9 +864,7 @@ class server_window(QMainWindow):
 	def init_qt_database(self):
 		try:
 			db = QSqlDatabase.addDatabase('QSQLITE')
-			# db.setConnectOptions("QSQLITE_ENABLE_SHARED_CACHE;QSQLITE_OPEN_READONLY;QSQLITE_OPEN_URI")
-			# db.setDatabaseName('file:server_database.db?nolock=1')
-			db.setDatabaseName('server_database.db')
+			db.setDatabaseName('interface_database.db')
 
 			query = QSqlQuery()
 			query.prepare("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED")
