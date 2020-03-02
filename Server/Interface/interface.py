@@ -31,7 +31,7 @@ class server_window(QMainWindow):
 		self.setWindowIcon(QIcon('Elements/logo1.png'))
 		# Set window title
 		self.setWindowTitle('BitsOJ v1.0.1 [ SERVER ]')
-		
+
 		# make shared objects accessible from the class methods
 		self.data_changed_flags = data_changed_flags2
 		self.task_queue = task_queue
@@ -865,12 +865,6 @@ class server_window(QMainWindow):
 		try:
 			db = QSqlDatabase.addDatabase('QSQLITE')
 			db.setDatabaseName('interface_database.db')
-
-			query = QSqlQuery()
-			query.prepare("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED")
-			if not query.exec():
-				print(query.executedQuery())
-				print(query.lastError().text())
 
 			return db
 		except:

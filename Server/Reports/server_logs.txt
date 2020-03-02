@@ -11629,3 +11629,28 @@
 2020-03-02 13:35:37.479962  :  [ STOP ] Judge subprocess terminated successfully! ###
 2020-03-02 13:35:37.481146  :  [ STOP ] Client subprocess terminated successfully! ###
 2020-03-02 13:35:37.495294  :  [ EXIT ] Saved Server state to file. ###
+2020-03-02 13:59:07.471541  :  #### SERVER START #### ###
+2020-03-02 13:59:07.471756  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-03-02 13:59:07.471797  :  [ SETUP ] Initialising server... ###
+2020-03-02 13:59:07.471824  :  [ SETUP ] Initialising database... ###
+2020-03-02 13:59:08.470558  :  [ SETUP ] Loading problems... ###
+2020-03-02 13:59:08.470792  :  [ SETUP ] Initialising subprocesses... ###
+2020-03-02 13:59:08.479406  :    [ START ] Core subprocess started. ###
+2020-03-02 13:59:09.476539  :  [ SETUP ] Subprocesses started ###
+2020-03-02 13:59:09.476672  :  [ SETUP ][ Process ] Client Manager: 14213 ###
+2020-03-02 13:59:09.476719  :  [ SETUP ][ Process ] Judge Manager: 14214 ###
+2020-03-02 13:59:09.476763  :  [ SETUP ][ Process ] Core: 14210 ###
+2020-03-02 13:59:09.477646  :  [ SETUP ][ Process ] Log Manager: 14203 ###
+2020-03-02 13:59:09.479768  :    [ START ] Client Manager subprocess started. ###
+2020-03-02 13:59:09.493206  :    [ START ] Judge Manager subprocess started. ###
+2020-03-02 13:59:09.523893  :  [ LISTEN ] Started listening on client_requests ###
+2020-03-02 13:59:09.531442  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-03-02 13:59:09.689113  :    [ START ] Interface subprocess started. ###
+2020-03-02 13:59:12.290826  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-03-02 13:59:12.322425  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-03-02 13:59:12.322520  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-03-02 13:59:12.329552  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-03-02 13:59:12.329748  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-03-02 13:59:12.336512  :  [ EXIT ] Signal passed ###
+2020-03-02 13:59:12.336734  :  [ EXIT ] Saving Server state to file. ###
+2020-03-02 13:59:12.350922  :  [ EXIT ] Saved Server state to file. ###
