@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPixmap, QTextCursor, QCursor, QFont, QColor 
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QSize, QRect
-
+from submission_ui import submission_ui
 def handler(msg_type, msg_log_context, msg_string):
 	pass
 qInstallMessageHandler(handler)
@@ -78,11 +78,11 @@ class judge_window(QMainWindow):
 
 		judgements_table = self.generate_view(judgements_model)
 
-		# judgements_table.doubleClicked.connect(
-		# 	lambda: self.view_judgements(
-		# 		judgements_table.selectionModel().currentIndex().row()
-		# 	)
-		# )
+		judgements_table.doubleClicked.connect(
+			lambda: self.view_judgements(
+				judgements_table.selectionModel().currentIndex().row()
+			)
+		)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
@@ -103,14 +103,27 @@ class judge_window(QMainWindow):
 
 	def view_judgements(self, selected_row):
 		run_id = self.table.index(selected_row, 0).data()
-		verdict = self.table.index(selected_row, 0).data()
-		language = self.table.index(selected_row, 0).data()
+		client_id = self.table.index(selected_row, 1).data()
+		verdict = self.table.index(selected_row, 2).data()
+		language = self.table.index(selected_row, 3).data()
+		p_code = self.table.index(selected_row, 4).data()
+		time_stamp = self.table.index(selected_row, 5).data()
+
+		source = 'run1.cpp'
 		# source = manage_database.get_source(run_id)
 		try:
-			self.window = view_source_ui(run_id, verdict, language, source)
+			self.window = submission_ui(
+				run_id, 
+				client_id,
+				verdict, 
+				language, 
+				p_code,
+				time_stamp,
+				source
+			)
 			self.window.show()
 		except Exception as Error:
-			print(str(Error))
+			print('[ JUDGE ][ ERROR ] : ' + str(Error))
 
 	def init_qt_database(self):
 		try:
@@ -164,15 +177,8 @@ class main_interface(judge_window):
 		app.setStyle("Fusion")
 		app.setStyleSheet(open('Assets/style.qss', "r").read())
 		app.aboutToQuit.connect(self.closeEvent)
-		
-		
-		# If user is about to close window
-		# app.aboutToQuit.connect(self.closeEvent)
-		
 		judge_app = judge_window(data_flags)
-		
 		judge_app.show()
-		# Splash ends
 		# Execute the app mainloop
 		app.exec_()
 		return

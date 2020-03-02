@@ -106,7 +106,7 @@ class communicate_server():
 			time_stamp = message['Time Stamp']
 
 			print('\n[ JUDGE ] New Submission-> Run ', run_id, ' by Client: ', client_username)
-
+ 
 			file_name, file_with_ext = communicate_server.make_submission_file(
 				run_id, 
 				problem_code, 
@@ -132,7 +132,7 @@ class communicate_server():
 			#############################################################################################
 			# Actual Judging process
 
-
+ 
 			######################   Function for time limit of problems  ###########
 			time_limit = initialize_judge.get_time_limit()
 			time = time_limit[problem_code]
@@ -168,8 +168,7 @@ class communicate_server():
 				body = message
 			)
 			#############################################################################################
-			# Update table
-			time.sleep(1)
+			
 			# Send Record insertion/Updation message to Core
 			message = {
 				'Code' : 'UPDATE',

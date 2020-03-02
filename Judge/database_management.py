@@ -16,7 +16,7 @@ class manage_database():
 			manage_database.conn = conn
 			manage_database.cur = cur
 
-			cur.execute("create table if not exists verdict(run_id integer, client_id integer, verdict text, language varchar2(20), p_code varchar2(20), time_stamp varchar2(20), source_file text)")
+			cur.execute("create table if not exists verdict(run_id integer, client_id integer, verdict text, language varchar2(20), p_code varchar2(20), time_stamp varchar2(20), source_file text, judge text DEFAULT 'self')")
 
 		except Exception as error:
 			print('[ DB ][ ERROR ] ' + str(error))
@@ -102,21 +102,30 @@ class submission_management(manage_database):
 			return 0
 
 	def update_record(run_id, client_id, verdict, language, p_code, time_stamp, source_file_name):
-		print('[ DB ] Updating record...')
 		cur = manage_database.get_cursor()
 		try:
-			cur.execute(
-				"UPDATE verdict SET client_id = ?,verdict = ?,language = ?,p_code = ?,time_stamp = ?,source_file = ? WHERE run_id = ?",
-				(
-					client_id, 
-					verdict, 
-					language, 
-					p_code, 
-					time_stamp, 
-					source_file_name, 
-					int(run_id), 
+			run_id = int(run_id)
+			client_id = int(client_id)
+			# Check if this run already exists in our table:
+			cur.execute("SELECT * FROM verdict WHERE run_id = ?", (run_id, ))
+			data = cur.fetchall()
+			if data == None or len(data) == 0:
+				# New insertion
+				print('[ DB ] Inserting record...')
+				# run_id , client_id , verdict , language , p_code , time_stamp , source_file , judge 
+				cur.execute(
+					"INSERT INTO verdict VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+					(
+						run_id, 
+						client_id, 
+						verdict, 
+						language, 
+						p_code, 
+						time_stamp, 
+						source_file_name,
+						'<NON LOCAL>' 
+					)
 				)
-			)
-			# cur.execute('commit')
+			cur.execute('commit')
 		except Exception as error:
-			print("insertion error: "+str(error))
+			print("[ DB ][ ERROR ] "+str(error))

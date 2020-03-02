@@ -116,7 +116,7 @@ class main_window(QWizard):
 
 		# Problems Page Data
 		self.config['Problems'] = self.problems
-		self.config['Number Of Problems'] = len(self.problems)
+		self.config['Number Of Problems'] = len(self.problems.keys())
 		self.config['Problem Codes'] = self.problem_codes
 		for i in range(len(self.problems)):
 			problem_code = self.problems['Problem ' + str(i + 1)]['Code']
@@ -205,6 +205,7 @@ class main_window(QWizard):
 		config['Penalty Score'] = self.config['Penalty Score']
 		config['Penalty Time'] = self.config['Penalty Time']
 		config['Problems'] = self.config['Problems']
+		config['Number Of Problems'] = self.config.get('Number Of Problems', 0)
 
 		self.server_config = config
 
@@ -224,7 +225,6 @@ class main_window(QWizard):
 			"client_id": "",
 			"client_key": "",
 			"Username" : "",
-			"Problem Key" : "",
 			"Contest": "START",
 			"Duration": "00:00:00",
 			"Start Time": 0,
@@ -243,7 +243,6 @@ class main_window(QWizard):
 		config['client_id'] = 'NUL'
 		config['client_key'] = self.config['Client Key']
 		config['Username'] = 'NUL'
-		config['Problem Key'] = self.config['Contest Key']
 		config['Contest Name'] = self.config['Contest Name']
 		config['Contest Theme'] = self.config['Contest Theme']
 		config['Languages'] = str(self.config['Allowed Languages'])

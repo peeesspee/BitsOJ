@@ -15,6 +15,74 @@ class verdict():
 	VERDICT = 'Nul'
 	result = 'Nul'
 
+	def main(file_name, file_with_ext, lang, problem_code, run_id, timelimit):
+
+		result = 'Nul'
+		verd = 'Nul'
+		classfile = 'Nul'
+		runfile = 'Nul'
+
+		classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, lang)
+
+		if lang == 'PYTHON-2' or lang == 'PYTHON-3':
+			time_limit = timelimit + 's '
+			e = verdict.run_file(runfile, problem_code, run_id, time_limit, lang)
+			if e == True:
+				result = verdict.result
+				verd = verdict.VERDICT
+				verdict.VERDICT = 'Nul'
+				verdict.result = 'Nul'
+				verdict.ERROR = False
+				return verd,result
+
+			if e == False:
+				result,verd = verdict.compare_outputs(problem_code, run_id)
+				verdict.VERDICT = 'Nul'
+				verdict.result = 'Nul'
+				verdict.ERROR = False
+				return verd,result
+
+
+		e = verdict.compile_file(classfile, lang)
+		# print(verdict.ERROR)
+		# print(verdict.VERDICT)
+		# print(verdict.result)
+
+		if e == True:
+			result = verdict.result
+			verd = verdict.VERDICT
+
+			verdict.VERDICT = 'Nul'
+			verdict.result = 'Nul'
+			verdict.ERROR = False
+			return verd,result
+
+		if e == False:
+			time_limit = timelimit + 's '
+			e = verdict.run_file(runfile, problem_code, run_id, time_limit, lang)
+			# print(verdict.ERROR)
+			# print(verdict.VERDICT)
+			# print(verdict.result)
+			verdict.remove_object(file_name, file_with_ext, lang)
+
+			if e == True:
+				result = verdict.result
+				verd = verdict.VERDICT
+
+				verdict.VERDICT = 'Nul'
+				verdict.result = 'Nul'
+				verdict.ERROR = False
+				print(verd,result)
+				return verd,result
+
+			if e == False:
+				result,verd = verdict.compare_outputs(problem_code, run_id)
+
+				verdict.VERDICT = 'Nul'
+				verdict.result = 'Nul'
+				verdict.ERROR = False
+				return verd,result
+
 	def lang_compiler(file_name, file_with_ext, lang):
 
 		#############################################
@@ -78,9 +146,22 @@ class verdict():
 			print("language is python")
 			verdict.ERROR
 			
-
+ 
 	def run_file(runfile, problem_code, run_id, time_limit, language):
+		print('[ JUDGE ] Running : ', 
+			runfile, 
+			' # ', 
+			problem_code , 
+			' [ ', 
+			run_id, ',', 
+			time_limit, ',', 
+			language, 
+			' ]'
+		)
 
+		time_limit = str(time_limit)
+		run_id = str(run_id)
+		
 		INPUT_PATH = './problems/' + problem_code + '/'
 		SUBM_PATH = './submission_files/' 
 
@@ -204,7 +285,7 @@ class verdict():
 					else:
 						verdict.result = 'Wrong Answer !!!'
 						# print(verdict.result)
-						print("[ JUDGE ][ WA ] Test cases passed: " + str(cases_passed))	
+						print("[ JUDGE ][ WA ] Test cases passed: " , str(cases_passed))	
 						verdict.VERDICT = 'WA'
 						return verdict.result,verdict.VERDICT
 
@@ -218,70 +299,4 @@ class verdict():
 
 		return verdict.result, verdict.VERDICT
 
-	def main(file_name, file_with_ext, lang, problem_code, run_id, timelimit):
-
-		result = 'Nul'
-		verd = 'Nul'
-		classfile = 'Nul'
-		runfile = 'Nul'
-
-		classfile,runfile = verdict.lang_compiler(file_name, file_with_ext, lang)
-
-		if lang == 'PYTHON-2' or lang == 'PYTHON-3':
-			time_limit = timelimit + 's '
-			e = verdict.run_file(runfile, problem_code, run_id, time_limit, lang)
-			if e == True:
-				result = verdict.result
-				verd = verdict.VERDICT
-				verdict.VERDICT = 'Nul'
-				verdict.result = 'Nul'
-				verdict.ERROR = False
-				return verd,result
-
-			if e == False:
-				result,verd = verdict.compare_outputs(problem_code, run_id)
-				verdict.VERDICT = 'Nul'
-				verdict.result = 'Nul'
-				verdict.ERROR = False
-				return verd,result
-
-
-		e = verdict.compile_file(classfile, lang)
-		# print(verdict.ERROR)
-		# print(verdict.VERDICT)
-		# print(verdict.result)
-
-		if e == True:
-			result = verdict.result
-			verd = verdict.VERDICT
-
-			verdict.VERDICT = 'Nul'
-			verdict.result = 'Nul'
-			verdict.ERROR = False
-			return verd,result
-
-		if e == False:
-			time_limit = timelimit + 's '
-			e = verdict.run_file(runfile, problem_code, run_id, time_limit, lang)
-			# print(verdict.ERROR)
-			# print(verdict.VERDICT)
-			# print(verdict.result)
-			verdict.remove_object(file_name, file_with_ext, lang)
-
-			if e == True:
-				result = verdict.result
-				verd = verdict.VERDICT
-
-				verdict.VERDICT = 'Nul'
-				verdict.result = 'Nul'
-				verdict.ERROR = False
-				print(verd,result)
-				return verd,result
-
-			if e == False:
-				result,verd = verdict.compare_outputs(problem_code, run_id)
-
-				verdict.VERDICT = 'Nul'
-				verdict.result = 'Nul'
-				verdict.ERROR = False
-				return verd,result
+	

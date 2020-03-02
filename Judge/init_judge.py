@@ -7,7 +7,7 @@ class initialize_judge():
 	host_ip = 'Nul'
 	key = 'Nul'
 	processlimit = 'Nul'
-
+ 
 	def read_config():
 		with open("./config.json",'r') as read_json:
 			config = json.load(read_json)
