@@ -383,7 +383,7 @@ class server_window(QMainWindow):
 				if time_difference < 0:
 					# Contest time ended
 					self.timer_widget.display('00:00:00')
-					self.process_event('STOP', 'None')
+					self.process_event('STOP')
 					return
 				
 				# Update timer
@@ -402,19 +402,21 @@ class server_window(QMainWindow):
 				self.log_queue.put("[ EXIT ] ABNORMAL SYSTEM EXIT")
 				self.close()
 
-			# New Submission
+			# New Submission : Show indication
 			if self.data_changed_flags[0] == 1:
 				self.button_1.setStyleSheet('''QPushButton{border-right : 10px solid #FFBF00;}''')
 				self.button_1.update()
 				
-			# New query
+			# New query : Show indication
 			if self.data_changed_flags[1] == 1:
 				self.button_4.setStyleSheet('''QPushButton{border-right : 10px solid #FFBF00;}''')
 				self.button_4.update()
-				pass
 			
 			# System EXIT
 			if self.data_changed_flags[7] == 1:
+				if self.data_changed_flags[5] == 1:
+					print('[ UI ][ ERROR ] Cannot exit : Verdicts are being released')
+					return
 				print('[ UI ] EXIT')
 				sys.exit()
 
@@ -426,8 +428,8 @@ class server_window(QMainWindow):
 				remaining_time = time.strftime('%H:%M:%S', time.gmtime(total_time - current_time ))
 
 				message = {
-				'Code' : 'UPDATE',
-				'Time' : remaining_time
+					'Code' : 'UPDATE',
+					'Time' : remaining_time
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
@@ -451,8 +453,8 @@ class server_window(QMainWindow):
 				print('[ UI ] Sending responses for held submissions... ')
 				self.data_changed_flags[25] = 0
 				release_thread = threading.Thread( target = self.release_held_verdicts )
+				self.data_changed_flags[5] = 1
 				release_thread.start()
-				release_thread.join()
 				print('[ UI ] All held responses sent!')
 
 		except Exception as error:
@@ -503,6 +505,8 @@ class server_window(QMainWindow):
 			message = json.dumps(message)
 			self.task_queue.put(message)
 			print('[ UI ][ RESPONSE ] Sent Verdict for Run ', run_id)
+		# All verdicts are released
+		self.data_changed_flags[5] = 0
 		return
 
 	def convert_to_seconds(time_str):
@@ -519,11 +523,12 @@ class server_window(QMainWindow):
 
 	def update_table_contained(self):
 		while not self.update_queue.empty():
+			print('[ UI ][ UPDATE ] Tables under updation...')
 			data = self.update_queue.get()
 			data = json.loads(data)
 			code = data.get('Code', 'None')
 			if code == 'AddNewSub':
-				print('[ UI ] Adding new submission')
+				print('[ UI ][ INSERT ] Adding new submission')
 				row_count = self.sub_model.rowCount()
 				self.sub_model.setRowCount(row_count + 1)
 				self.sub_model.setItem(row_count, 0, QTableWidgetItem(str(data['Run ID'])))
@@ -535,8 +540,7 @@ class server_window(QMainWindow):
 				self.sub_model.setItem(row_count, 6, QTableWidgetItem(data['Status']))
 				self.sub_model.setItem(row_count, 7, QTableWidgetItem(data['Judge']))
 			elif code == 'UpSubStat':
-				print('[ UI ] Update submission status...')
-
+				print('[ UI ][ UPDATE ] Update submission status...')
 				run_id  = int(data['Run ID'])
 				verdict = data['Verdict']
 				sent_status = data['Status']
@@ -554,7 +558,7 @@ class server_window(QMainWindow):
 						self.sub_model.setItem(i, 7, QTableWidgetItem(judge))
 						break
 			elif code == 'AddNewQuery':
-				print('[ UI ] Adding new query')
+				print('[ UI ][ INSERT ] Adding new query')
 				row_count = self.query_model.rowCount()
 				self.query_model.setRowCount(row_count + 1)
 				self.query_model.setItem(row_count, 0, QTableWidgetItem(str(data['Query ID'])))
@@ -562,6 +566,7 @@ class server_window(QMainWindow):
 				self.query_model.setItem(row_count, 2, QTableWidgetItem(data['Query']))
 				self.query_model.setItem(row_count, 3, QTableWidgetItem(data['Response']))
 			elif code == 'QUERY':
+				print('[ UI ][ UPDATE ] Update query status...')
 				# Handle query response
 				client_id = data['Client ID']
 				response = data['Response']
@@ -702,7 +707,7 @@ class server_window(QMainWindow):
 			self.timer_reset_button.setToolTip('Reset Contest timer')
 		return
 
-	def process_event(self, data, extra_data):
+	def process_event(self, data, extra_data = 'None'):
 		if data == 'SET':
 			print('[ SET ] Contest Duration : ' + str(extra_data))
 			self.log('[ SET ] Contest Duration : ' + str(extra_data))

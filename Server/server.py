@@ -116,7 +116,7 @@ def main():
 	#	2		0/1 		0/1: Disallow/Allow logins
 	#	3		0/1			0/1: Disallow/Allow submissions
 	#	4		0/1			1: A create accounts window is open 
-	#	5		0/1			
+	#	5		0/1			1: Held submissions are being released
 	#   6		0/1			1: Database data deletion under progress 
 	#	7		0/1			1: Server shutdown
 	#   8		0/1			1: Core EXIT 

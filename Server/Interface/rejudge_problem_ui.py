@@ -155,10 +155,10 @@ class rejudge_problem_ui(QMainWindow):
 					info_box = QMessageBox()
 					info_box.setIcon(QMessageBox.Critical)
 					info_box.setWindowTitle('Alert')
-					info_box.setText('Source file could not be accessed!')
+					info_box.setText(items[4] + ': Source file could not be accessed!')
 					info_box.setStandardButtons(QMessageBox.Ok)
 					info_box.exec_()
-					return
+					continue
 
 				message = {
 					'Code' : 'RJUDGE', 
@@ -173,7 +173,6 @@ class rejudge_problem_ui(QMainWindow):
 				}
 				message = json.dumps(message)
 				rejudge_problem_ui.task_queue.put(message)
-	
 		self.close()
 
 	def cancel(self):
