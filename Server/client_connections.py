@@ -7,6 +7,8 @@ import re # For RegEx : To check IP address validity
 from database_management import *
 from client_submissions import submission
 from init_server import initialize_server
+class InitializationError(Exception):
+	pass
 
 class manage_clients():
 	channel = ''
@@ -35,6 +37,7 @@ class manage_clients():
 		manage_clients.file_password = manage_clients.config["File Password"]
 		print('  [ START ] Client Manager subprocess started.')
 		manage_clients.log('  [ START ] Client Manager subprocess started.')
+		
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
 			params = pika.ConnectionParameters(
@@ -57,7 +60,7 @@ class manage_clients():
 				exchange_type = 'fanout', 
 				durable = True
 			)
-
+ 
 			channel.queue_declare(queue = 'client_requests', durable = True)
 			channel.queue_declare(queue = 'judge_requests', durable = True)
 
@@ -68,7 +71,7 @@ class manage_clients():
 		except Exception as error:
 			print('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
 			manage_clients.log('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
-			# Wait until gui is closed!
+			# Wait until GUI is closed!
 			# Inform GUI thread
 			manage_clients.data_changed_flags[26] = 1
 			while manage_clients.data_changed_flags[7] !=1:
@@ -76,13 +79,26 @@ class manage_clients():
 			sys.exit()
 
 		try:
+			# Initialize Run ID
+			run_id = submission.init_run_id()
+			if run_id == -1:
+				raise InitializationError
 			previous_data.get_last_client_id()
+		except InitializationError:
+			print('[ CLIENT ][ ERROR ] Process initialization failed! Restart Server.')
+			connection.close()
+			# Wait until GUI is closed!
+			# Inform GUI thread
+			manage_clients.data_changed_flags[26] = 1
+			while manage_clients.data_changed_flags[7] !=1:
+				time.sleep(0.5)
+			return
 		except:
 			print('[ ERROR ] Could not fetch previous client_id')
 			manage_clients.log('[ ERROR ] Could not fetch previous client_id')
-
-		# Start listening to client_requests
-		manage_clients.listen_clients(connection, channel, superuser_username, superuser_password, host)
+		else:
+			# Start listening to client_requests
+			manage_clients.listen_clients(connection, channel, superuser_username, superuser_password, host)
 		
 	def log(message):
 		manage_clients.log_queue.put(message)
@@ -133,6 +149,7 @@ class manage_clients():
 		
 	# This function works on client messages and passes them on to their respective handler function
 	def client_message_handler(ch, method, properties, body):
+		print('\n' + '#' * 100)
 		print('[ ALERT ] Recieved a new client message.')
 		manage_clients.log('[ ALERT ] Recieved a new client message.')
 		
@@ -937,8 +954,7 @@ class manage_clients():
 			}
 			message = json.dumps(message)
 			manage_clients.task_queue.put(message)
-			# Give an indication to ADMIN for new submission
-			manage_clients.data_changed_flags[0] = 1
+
 			print('[ CLIENT ] Sent submission request to CORE')
 			manage_clients.log('[ CLIENT ] Sent submission request to CORE')
 
@@ -981,6 +997,7 @@ class manage_clients():
 	def client_query_handler(client_id, client_username, query):
 		print('[ QUERY ] From ' + str(client_id) + ' : ' + query)
 		manage_clients.log('[ QUERY ] From ' + str(client_id) + ' : ' + query)
+
 		query_id = submission.generate_query_id() 
 		print('[ QUERY ] Assigned Query ID: ' + str(query_id))
 		manage_clients.log('[ QUERY ] Assigned Query ID: ' + str(query_id))
@@ -1025,14 +1042,15 @@ class manage_clients():
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
 
-				# Update connected clients to indicate new data
-				manage_clients.data_changed_flags[1] = 1
 				message = {
 					"Code" : "SHUTDOWN",
 					"Receiver" : client_username
 				}
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
+			else:
+				print('[ LOG OUT ][ ' + str(client_id) + ' ][ REJECT ] Client is not connected.')
+				manage_clients.log_queue.put('[ LOG OUT ][ ' + str(client_id) + ' ][ REJECT ] Client is not connected.')
 		else:
 			print('[ LOG OUT ][ ' + client_username + ' ][ REJECT ] ClientID does not match.')
 			manage_clients.log_queue.put('[ LOG OUT ][ ' + client_username + ' ][ REJECT ] ClientID does not match.')

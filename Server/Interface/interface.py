@@ -293,7 +293,8 @@ class server_window(QMainWindow):
 	def view_submissions(self):
 		if self.data_changed_flags[24] != 1:
 			self.data_changed_flags[0] = 0
-			self.button_1.setStyleSheet('''QPushButton{border-right : 1px solid #AED581;}''')
+			self.button_1.setObjectName('sidebar_button')
+			self.button_1.setStyleSheet('')
 			self.button_1.update()
 			self.right_widget.setCurrentIndex(1)
 
@@ -311,7 +312,8 @@ class server_window(QMainWindow):
 	def manage_queries(self):
 		if self.data_changed_flags[24] != 1:
 			self.data_changed_flags[1] = 0
-			self.button_4.setStyleSheet('''QPushButton{border-right : 1px solid #AED581;}''')
+			self.button_4.setObjectName('sidebar_button')
+			self.button_4.setStyleSheet('')
 			self.button_4.update()
 			self.right_widget.setCurrentIndex(4)
 
@@ -404,12 +406,12 @@ class server_window(QMainWindow):
 
 			# New Submission : Show indication
 			if self.data_changed_flags[0] == 1:
-				self.button_1.setStyleSheet('''QPushButton{border-right : 10px solid #FFBF00;}''')
+				self.button_1.setStyleSheet('border-right : 10px solid #FFBF00;}')
 				self.button_1.update()
 				
 			# New query : Show indication
 			if self.data_changed_flags[1] == 1:
-				self.button_4.setStyleSheet('''QPushButton{border-right : 10px solid #FFBF00;}''')
+				self.button_4.setStyleSheet('border-right : 10px solid #FFBF00;}')
 				self.button_4.update()
 			
 			# System EXIT
@@ -523,6 +525,7 @@ class server_window(QMainWindow):
 
 	def update_table_contained(self):
 		while not self.update_queue.empty():
+			print('\n' + '#' * 100)
 			print('[ UI ][ UPDATE ] Tables under updation...')
 			data = self.update_queue.get()
 			data = json.loads(data)
@@ -634,7 +637,10 @@ class server_window(QMainWindow):
 			contest_duration = '00:00:00'
 			self.timer_widget.display(contest_duration)
 			self.contest_time_entry.setReadOnly(0)
-			self.contest_time_entry.setToolTip('You will not be able to edit this when contest starts.')
+			self.contest_time_entry.setToolTip(
+				'Set Contest duration. Press Set to confirm.' + 
+				'\nYou will not be able to edit this when contest starts.'
+			)
 			self.change_time_entry.setReadOnly(False)
 			self.change_time_entry.setToolTip('You will be able to use it when contest is STARTED')
 			self.set_button.setEnabled(True)
@@ -1323,9 +1329,7 @@ class server_window(QMainWindow):
 			}
 			message = json.dumps(message)
 			self.task_queue.put(message)
-			# Update Accounts and connected clients View
-			self.data_changed_flags[5] = 1
-			self.data_changed_flags[1] = 1
+			
 		elif custom_box.clickedButton() == button_no : 
 			pass
 		# Reset critical flag
@@ -1376,9 +1380,7 @@ class server_window(QMainWindow):
 				self.task_queue.put(message)
 				# Set DISCONNECTED to all connected clients and judges
 				user_management.disconnect_all()
-				self.data_changed_flags[1] = 1
-				self.data_changed_flags[13] = 1
-
+				
 				print('[ EVENT ] Accounts Reset...')
 				self.log('[ EVENT ] Accounts Reset...')
 
@@ -1386,13 +1388,6 @@ class server_window(QMainWindow):
 				user_management.delete_all()
 				# Delete all accounts
 				user_management.delete_all_accounts()
-
-				# Update Clients View
-				self.data_changed_flags[1] = 1
-				# Update Judges View
-				self.data_changed_flags[13] = 1
-				# Update Accounts View
-				self.data_changed_flags[5] = 1
 
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
@@ -1460,8 +1455,6 @@ class server_window(QMainWindow):
 				self.task_queue.put(message)
 				# Set DISCONNECTED to all connected clients and judges
 				user_management.disconnect_all()
-				self.data_changed_flags[1] = 1
-				self.data_changed_flags[13] = 1
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
@@ -1509,12 +1502,8 @@ class server_window(QMainWindow):
 				self.log('[ EVENT ] Submission Reset...')
 
 				submissions_management.delete_all()
-				# Update Submissions View
-				self.data_changed_flags[0] = 1
-
 				scoreboard_management.delete_all()
-				# Refresh Scoreboard View
-				self.data_changed_flags[16] = 1
+				
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
@@ -1562,8 +1551,6 @@ class server_window(QMainWindow):
 				print('[ EVENT ] Queries Reset...')
 				self.log('[ EVENT ] Queries Reset...')
 				query_management.delete_all()
-				# Update Queriess View
-				self.data_changed_flags[9] = 1
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
@@ -1628,41 +1615,31 @@ class server_window(QMainWindow):
 				print('[ RESET ] Deleting all Connected Judges...')
 				self.log('[ RESET ] Deleting all Connected Judges...')
 				
-				# Refresh Client UI
-				self.data_changed_flags[1] = 1
-				# Refresh Judge UI
-				self.data_changed_flags[13] = 1
-
+				
 				# # TODO 														Broadcast this to all judges
 
 				# Reset Scoreboard
 				print('[ RESET ] Clearing scoreboard...')
 				self.log('[ RESET ] Clearing scoreboard...')
-				self.data_changed_flags[16] = 1
 				scoreboard_management.delete_all()
 
 				# Reset accounts
-				# Update Accounts View
 				print('[ RESET ] Resetting Accounts...')
 				self.log('[ RESET ] Resetting Accounts...')
 				user_management.delete_all_accounts()
 
-				# Update Submissions View
-				self.data_changed_flags[5] = 1
+				# Reset submissions
 				print('[ RESET ] Resetting Submissions...')
 				self.log('[ RESET ] Resetting Submissions...')
 				submissions_management.delete_all()
 				
 				# Update Queries View
-				self.data_changed_flags[0] = 1
 				print('[ RESET ] Resetting Queries...')
 				self.log('[ RESET ] Resetting Queries...')
 				query_management.delete_all()
 		
-				self.data_changed_flags[9] = 1
 				print('[ RESET ] Reset environment...')
 				self.log('[ RESET ] Reset environment...')
-
 				server_window.set_button_behavior(self, 'SETUP')
 				save_status.update_entry('Contest Duration', '00:00:00')
 				save_status.update_entry('Contest Status', 'SETUP')

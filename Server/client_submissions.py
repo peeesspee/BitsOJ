@@ -2,6 +2,7 @@ from database_management import submissions_management, query_management
 global query_id_counter
 
 class submission():
+	run_id = 0
 	# Manage a new submission
 	def new_submission(client_id, problem_code, language, time_stamp, source_code):
 		client_id = str(client_id)
@@ -35,8 +36,13 @@ class submission():
 		client_local_file.close()
 		return new_file_name
 
+	def init_run_id():
+		run = submissions_management.init_run_id()
+		return run
+
 	def generate_run_id():
-		run_id = submissions_management.generate_new_run_id()
+		run_id = submission.run_id 
+		submission.run_id += 1
 		return run_id
 
 	def generate_query_id():

@@ -117,14 +117,14 @@ def main():
 	#	3		0/1			0/1: Disallow/Allow submissions
 	#	4		0/1			1: A create accounts window is open 
 	#	5		0/1			1: Held submissions are being released
-	#   6		0/1			1: Database data deletion under progress 
+	#	6		0/1			1: Database data deletion under progress 
 	#	7		0/1			1: Server shutdown
-	#   8		0/1			1: Core EXIT 
+	#	8		0/1			1: Core EXIT 
 	#	9		0/1			
-	# 	10		0/1/2		0: SETUP 1: START 2: STOPPED	Contest Status
+	#	10		0/1/2		0: SETUP 1: START 2: STOPPED	Contest Status
 	#	11		0/1			1: Submission files open
 	#	12		0/1			1: JUDGE logins allowed
-	#   13		0/1			
+	#	13		0/1			
 	#	14		0/1			1: Do not allow multiple logins with same IP address
 	#	15		0/1			1: Scoreboard update allowed
 	# 	16		0/1			
@@ -141,30 +141,37 @@ def main():
 	#	27		0/1			1: Allow multiple IP 
 	
 	#####################################################################################
-	
+	# DEFAULT VALUES of contest flags
 	# Set submission time limit
-	data_changed_flags[14] = 0
-	data_changed_flags[21] = submission_time_limit
-	data_changed_flags[23] = 0
-	data_changed_flags[26] = 0
-	data_changed_flags[27] = 0
+	data_changed_flags[0] = 0
+	data_changed_flags[1] = 0
 	# Do not allow client logins unless Admin checks the allow_login checkbox in Clients tab
 	if login_status == True:
 		data_changed_flags[2] = 1
 	else:
 		data_changed_flags[2] = 0
-
-	# Check if judges can log in
-	if judge_login == True:
-		data_changed_flags[12] = 1
-	else:
-		data_changed_flags[12] = 0
-
 	# Do not allow new submissions unless timer is active or admin begins contest
 	if submission_status == True:
 		data_changed_flags[3] = 1
 	else:
 		data_changed_flags[3] = 0
+	data_changed_flags[4] = 0
+	data_changed_flags[7] = 0 # SYSTEM SHUT flag
+
+	# Contest state flag(0/1/2 values assigned from interface)
+	if config["Contest Status"] == "SETUP":
+		data_changed_flags[10] = 0
+	elif config["Contest Status"] == "RUNNING":
+		data_changed_flags[10] = 1
+	elif config["Contest Status"] == "STOPPED":
+		data_changed_flags[10] = 2
+	
+	# Check if judges can log in
+	if judge_login == True:
+		data_changed_flags[12] = 1
+	else:
+		data_changed_flags[12] = 0
+	data_changed_flags[14] = 0
 
 	# If scoreboard update is allowed, set this flag to 1
 	if scoreboard_status == True:
@@ -180,29 +187,16 @@ def main():
 	elif ranking_algorithm == 'LONG':
 		data_changed_flags[17] = 3
 	else:
-		#DEFAULT TO ACM
-		data_changed_flags[17] = 1
+		data_changed_flags[17] = 2 #DEFAULT TO IOI
 
 	if manual_review == True:
 		data_changed_flags[20] = 1
 	else:
 		data_changed_flags[20] = 0
-
-	data_changed_flags[4] = 0
-	# SYSTEM SHUT flag
-	data_changed_flags[7] = 0
-	# Server lock flag
-	data_changed_flags[24] = 0
-	data_changed_flags[25] = 0
-	# Contest state flag(0/1/2 values assigned from interface, -1 signifies nothing)
-	if config["Contest Status"] == "RUNNING":
-		data_changed_flags[10] = 1
-	elif config["Contest Status"] == "STOPPED":
-		data_changed_flags[10] = 2
-	elif config["Contest Status"] == "SETUP":
-		data_changed_flags[10] = 0
-		
- 
+	data_changed_flags[21] = submission_time_limit
+	data_changed_flags[23] = 0
+	data_changed_flags[26] = 0
+	data_changed_flags[27] = 0
 	#####################################################################################
 
 	# Manage subprocesses

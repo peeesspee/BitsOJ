@@ -45,8 +45,6 @@ class core():
 		while True:
 			try:
 				status = core.poll(task_queue)
-				time.sleep(1)
-			
 			except Exception as error:
 				# Ignore the queue is Empty message
 				if 'Empty' in str(error) or str(error) == '':
@@ -116,7 +114,7 @@ class core():
 
 		# while task_queue.empty() == False:
 			# Data in the task queue is in JSON format
-		data = task_queue.get(block = True, timeout = 1)
+		data = task_queue.get(block = True, timeout = 0.5)
 		data = json.loads(data)
 		code = data['Code']
 		# Get a lock on DB
@@ -424,6 +422,8 @@ class core():
 					status, 
 					time_stamp
 				) 
+				# Update Interface
+				core.data_changed_flags[0] = 1
 				message = {
 					'Code' : 'AddNewSub',
 					'Run ID' : run_id, 
@@ -591,6 +591,8 @@ class core():
 				client_id, 
 				query
 			)
+			# Update Interface
+			core.data_changed_flags[1] = 1
 			message = {
 				'Code' : 'AddNewQuery',
 				'Query ID' : query_id,

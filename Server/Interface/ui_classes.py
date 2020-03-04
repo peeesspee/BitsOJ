@@ -503,7 +503,10 @@ class ui_widgets:
 		contest_time_entry.setText(self.config["Contest Duration"])
 		contest_time_entry.setPlaceholderText('HH:MM:SS')
 		contest_time_entry.setFixedSize(80, 30)
-		contest_time_entry.setToolTip('You will not be able to edit this when contest starts.')
+		contest_time_entry.setToolTip(
+			'Set Contest duration. Press Set to confirm.' + 
+			'\nYou will not be able to edit this when contest starts.'
+		)
 
 		contest_time_layout = QHBoxLayout()
 		contest_time_layout.addWidget(contest_duration_label)
@@ -520,11 +523,14 @@ class ui_widgets:
 		minutes_label.setObjectName('main_screen_content')
 
 		change_time_entry = QSpinBox()
-		change_time_entry.setMinimum(0)
+		change_time_entry.setMinimum(-60)
 		change_time_entry.setMaximum(60)
 		change_time_entry.setValue(0)
 		change_time_entry.setReadOnly(True)
-		change_time_entry.setToolTip('You will be able to use it when contest is STARTED')
+		change_time_entry.setToolTip(
+			'Extend the contest in minutes.' + 
+			'\nYou will be able to use it when contest is STARTED'
+		)
 
 		change_time_layout = QHBoxLayout()
 		change_time_layout.addWidget(contest_extension_label)
@@ -546,7 +552,8 @@ class ui_widgets:
 		submission_limit = QSpinBox()
 		submission_limit.setMinimum(0)
 		submission_limit.setMaximum(5)
-		submission_limit.setToolTip('Increase/Decrease works instantly.')
+		submission_limit.setValue(self.data_changed_flags[21])
+		submission_limit.setToolTip('Set Submission per N minute rule.\nIncrease/Decrease works instantly.')
 		submission_limit.valueChanged.connect(
 			lambda:ui_widgets.time_limit_updater(self, submission_limit.text())
 		)
@@ -568,7 +575,7 @@ class ui_widgets:
 		set_button.setToolTip('Set contest time.\nThis does NOT broadcast to clients.')
 		set_button.clicked.connect(
 			lambda: ui_widgets.preprocess_contest_broadcasts(self, 'SET', contest_time_entry.text())
-			)
+		)
 
 		start_button = QPushButton('Start', self)
 		start_button.setFixedSize(70, 25)
@@ -576,7 +583,7 @@ class ui_widgets:
 		start_button.setToolTip('START the contest and broadcast to all clients.')
 		start_button.clicked.connect(
 			lambda: ui_widgets.preprocess_contest_broadcasts(self, 'START', contest_time_entry.text())
-			)
+		)
 
 		update_button = QPushButton('Update', self)
 		update_button.setEnabled(False)
@@ -584,10 +591,10 @@ class ui_widgets:
 		update_button.setObjectName('interior_button')
 		update_button.setToolTip(
 			'UPDATE contest time and broadcast to all clients.\nDisabled until contest Starts'
-			)
+		)
 		update_button.clicked.connect(
 			lambda: ui_widgets.preprocess_contest_broadcasts(self, 'UPDATE', change_time_entry.value())
-			)
+		)	
 
 		stop_button = QPushButton('Stop', self)
 		stop_button.setEnabled(False)
@@ -595,10 +602,10 @@ class ui_widgets:
 		stop_button.setObjectName('interior_button')
 		stop_button.setToolTip(
 			'STOP the contest and broadcast to all clients.\nDisabled until contest Starts'
-			)
+		)
 		stop_button.clicked.connect(
 			lambda: ui_widgets.preprocess_contest_broadcasts(self, 'STOP')
-			)
+		)
 		
 		contest_buttons_layout = QHBoxLayout()
 		contest_buttons_layout.addWidget(set_button)

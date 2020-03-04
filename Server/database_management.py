@@ -837,8 +837,7 @@ class submissions_management(manage_database):
 			cur.close()
 			return 0
 		
-
-	def generate_new_run_id():
+	def init_run_id():
 		try:
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(run_id) FROM submissions")
@@ -849,7 +848,8 @@ class submissions_management(manage_database):
 			else:
 				return int(data[0][0]) + 1
 		except Exception as error:
-			return 1
+			print('[ DB ][ ERROR ] Run ID could not be generated: ', error)
+			return -1
  
 	def get_held_submissions():
 		try:
@@ -864,6 +864,7 @@ class submissions_management(manage_database):
 		except Exception as error:
 			return []
 
+	# Important function
 	def update_submission_status(run_id, verdict, sent_status, judge = '-'):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
@@ -1061,7 +1062,6 @@ class submissions_management(manage_database):
 			print('[ DB ][ ERROR ] Could not get judge data: ' + str(error))
 			return 'NONE', 'NONE'
 
-
 class query_management(manage_database):
 	def insert_query(query_id, client_id, query):
 		cur = manage_database.get_cursor()
@@ -1155,9 +1155,6 @@ class user_management(manage_database):
 			judge_tuple = (judge_list[i], judge_pass_list[i], 'JUDGE')
 			final_judge_list.append(judge_tuple)
 
-		print(final_judge_list)
-
-		print('[ DB ] Executing SQL')
 		try:
 			conn.execute('BEGIN')
 			conn.executemany("INSERT into accounts values (?, ?, ? )", final_client_list)
