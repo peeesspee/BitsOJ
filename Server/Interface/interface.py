@@ -2,7 +2,7 @@ import sys, time, json, threading
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel, QSqlQuery
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QPoint
 from Interface.ui_classes import *
 from Interface.problem_ui import *
 from Interface.submission_ui import *
@@ -15,17 +15,17 @@ from Interface.rejudge_problem_ui import *
 from Interface.judge_view_ui import *
 from Interface.generate_report_ui import *
 from init_server import initialize_server, save_status
-from database_management import manage_database, interface_sync
+from database_management import *
 # This is to ignore some warnings which were thrown when gui exited and 
 # python deleted some assests in wrong order
 # Nothing critical :)
 def handler(msg_type, msg_log_context, msg_string):
 	pass
 qInstallMessageHandler(handler)
-
+ 
 # This class handles the main interface window of server
 class server_window(QMainWindow):
-	def __init__(self, data_changed_flags2, task_queue, log_queue, lock):
+	def __init__(self, data_changed_flags2, task_queue, log_queue, update_queue, db_list, lock):
 		super().__init__()
 		# Set app icon
 		self.setWindowIcon(QIcon('Elements/logo1.png'))
@@ -36,6 +36,8 @@ class server_window(QMainWindow):
 		self.data_changed_flags = data_changed_flags2
 		self.task_queue = task_queue
 		self.log_queue = log_queue
+		self.update_queue = update_queue
+		self.db_list = db_list
 		self.lock = lock
 
 		# Make  the app run full-screen
@@ -47,6 +49,10 @@ class server_window(QMainWindow):
 		self.timer = QTimer()
 		self.timer.timeout.connect(self.update_data)
 		self.timer.start(1000)
+
+		self.data_timer = QTimer()
+		self.data_timer.timeout.connect(self.update_tables)
+		self.data_timer.start(500)
 		
 		self.scoreboard_timer = QTimer()
 		self.scoreboard_timer.timeout.connect(self.broadcast_scoreboard)
@@ -55,16 +61,8 @@ class server_window(QMainWindow):
 		self.log('  [ START ] Interface subprocess started.')
 		
 		###########################################################
-		self.db = self.init_qt_database()
-		self.submissions_query = "SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status, judge FROM submissions ORDER BY run_id DESC limit 100"
 		# Default leaderboard query
-		self.leaderboard_query = "SELECT * FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC limit 100"
-		self.account_query = "SELECT * FROM accounts limit 100"
-
-		self.connected_clients_query = "SELECT * FROM connected_clients limit 100"
-		self.connected_judges_query = "SELECT * FROM connected_judges limit 10"
-		self.problems_query = "SELECT * FROM problems limit 10"
-		self.queries_query = "SELECT * FROM queries limit 100"
+		self.leaderboard_query = "SELECT * FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC"
 		
 		###########################################################
 		self.config = initialize_server.read_config()
@@ -82,6 +80,7 @@ class server_window(QMainWindow):
 		self.button_0.setFixedSize(button_width, button_height)
 		self.button_0.clicked.connect(self.manage_accounts)
 		self.button_0.setObjectName("sidebar_button")
+		self.button_0.setAutoDefault(True)
 
 		self.button_1 = QPushButton('Submissions', self)
 		self.button_1.setFixedSize(button_width, button_height)
@@ -293,6 +292,9 @@ class server_window(QMainWindow):
 	@pyqtSlot()
 	def view_submissions(self):
 		if self.data_changed_flags[24] != 1:
+			self.data_changed_flags[0] = 0
+			self.button_1.setStyleSheet('''QPushButton{border-right : 1px solid #AED581;}''')
+			self.button_1.update()
 			self.right_widget.setCurrentIndex(1)
 
 	@pyqtSlot()
@@ -308,6 +310,9 @@ class server_window(QMainWindow):
 	@pyqtSlot()
 	def manage_queries(self):
 		if self.data_changed_flags[24] != 1:
+			self.data_changed_flags[1] = 0
+			self.button_4.setStyleSheet('''QPushButton{border-right : 1px solid #AED581;}''')
+			self.button_4.update()
 			self.right_widget.setCurrentIndex(4)
 
 	@pyqtSlot()
@@ -345,7 +350,7 @@ class server_window(QMainWindow):
 	####################################################
 	# Functions related to GUI updates
 	def load_previous_state(self):
-		server_window.set_leaderboard_behavior(self)
+		server_window.set_table_data(self)
 		if self.config["Contest Status"] == "RUNNING":
 			server_window.set_button_behavior(self, 'RUNNING')
 		elif self.config["Contest Status"] == "STOPPED":
@@ -396,58 +401,18 @@ class server_window(QMainWindow):
 				self.data_changed_flags[7] = 1
 				self.log_queue.put("[ EXIT ] ABNORMAL SYSTEM EXIT")
 				self.close()
-			# If data has changed in submission table
-			# Update submission table
+
+			# New Submission
 			if self.data_changed_flags[0] == 1:
-				self.lock.acquire()
-				self.sub_model.setQuery(self.submissions_query)
-				self.lock.release()
-				# self.sub_model.select()
-				self.data_changed_flags[0] = 0
-
-			# Update connected clients table
-			if self.data_changed_flags[1] == 1:
-				self.lock.acquire()
-				self.client_model.setQuery('Select * from connected_clients limit 100')
-
-				self.lock.release()
-				self.data_changed_flags[1] = 0
+				self.button_1.setStyleSheet('''QPushButton{border-right : 10px solid #FFBF00;}''')
+				self.button_1.update()
 				
-			# Update problems table
-			if self.data_changed_flags[22] == 1:
-				self.lock.acquire()
-				self.problem_model.setQuery('Select * from problems limit 20')
-				self.lock.release()
-				self.data_changed_flags[22] = 0
-
-			# Update accounts table
-			if self.data_changed_flags[5] == 1:
-				self.lock.acquire()
-				status = self.account_model.setQuery(self.account_query)
-				self.lock.release()
-				self.data_changed_flags[5] = 0
-
-			# Update Query table
-			if self.data_changed_flags[9] == 1:
-				self.lock.acquire()
-				self.query_model.setQuery('Select * from queries order by query_id desc limit 20')
-				self.lock.release()
-				self.data_changed_flags[9] = 0
-
-			# Update judge view
-			if self.data_changed_flags[13] == 1:
-				self.lock.acquire()
-				self.judge_model.setQuery('Select * from connected_judges limit 100')
-				self.lock.release()
-				self.data_changed_flags[13] = 0
-
-			# Update scoreboard view
-			if self.data_changed_flags[16] == 1:
-				self.lock.acquire()
-				self.score_model.setQuery(self.leaderboard_query)
-				self.lock.release()
-				self.data_changed_flags[16] = 0
-
+			# New query
+			if self.data_changed_flags[1] == 1:
+				self.button_4.setStyleSheet('''QPushButton{border-right : 10px solid #FFBF00;}''')
+				self.button_4.update()
+				pass
+			
 			# System EXIT
 			if self.data_changed_flags[7] == 1:
 				print('[ UI ] EXIT')
@@ -544,33 +509,116 @@ class server_window(QMainWindow):
 		h, m, s = time_str.split(':')
 		return int(h) * 3600 + int(m) * 60 + int(s)
 
-	def set_leaderboard_behavior(self):
-		if self.data_changed_flags[17] == 1:
-			# ACM style leaderboard
-			pass
-		elif self.data_changed_flags[17] == 3:
-			# Long style ranklist
-			self.leaderboard_query = (
-				"SELECT user_name, problems_solved, score FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC"
-			)
-			self.score_model.setQuery(self.leaderboard_query)
-			self.score_model.setHeaderData(0, Qt.Horizontal, 'Team Name')
-			self.score_model.setHeaderData(1, Qt.Horizontal, 'Problems Solved')
-			self.score_model.setHeaderData(2, Qt.Horizontal, 'Score')
-		else:
-			# IOI style ranklist DEFAULT
-			self.leaderboard_query = (
-				"SELECT user_name, problems_solved, score, total_time FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC"
-			)
-			self.score_model.setQuery(self.leaderboard_query)
-			self.score_model.setHeaderData(0, Qt.Horizontal, 'Team Name')
-			self.score_model.setHeaderData(1, Qt.Horizontal, 'Problems Solved')
-			self.score_model.setHeaderData(2, Qt.Horizontal, 'Score')
-			self.score_model.setHeaderData(3, Qt.Horizontal, 'Total Time')
+	def update_tables(self):
+		try:
+			self.update_table_contained()
+		except Exception as e:
+			print('[ UI ] Table updation error: ', e)
+		finally:
+			return
+
+	def update_table_contained(self):
+		while not self.update_queue.empty():
+			data = self.update_queue.get()
+			data = json.loads(data)
+			code = data.get('Code', 'None')
+			if code == 'AddNewSub':
+				print('[ UI ] Adding new submission')
+				row_count = self.sub_model.rowCount()
+				self.sub_model.setRowCount(row_count + 1)
+				self.sub_model.setItem(row_count, 0, QTableWidgetItem(str(data['Run ID'])))
+				self.sub_model.setItem(row_count, 1, QTableWidgetItem(str(data['Client ID'])))
+				self.sub_model.setItem(row_count, 2, QTableWidgetItem(data['Problem Code']))
+				self.sub_model.setItem(row_count, 3, QTableWidgetItem(data['Language']))
+				self.sub_model.setItem(row_count, 4, QTableWidgetItem(data['Time']))
+				self.sub_model.setItem(row_count, 5, QTableWidgetItem(data['Verdict']))
+				self.sub_model.setItem(row_count, 6, QTableWidgetItem(data['Status']))
+				self.sub_model.setItem(row_count, 7, QTableWidgetItem(data['Judge']))
+			elif code == 'UpSubStat':
+				print('[ UI ] Update submission status...')
+
+				run_id  = int(data['Run ID'])
+				verdict = data['Verdict']
+				sent_status = data['Status']
+				judge = data['Judge']
+
+				print('Run : ', run_id, 'verdict:', verdict)
+
+				row_count = self.sub_model.rowCount()
+				for i in range(row_count):
+					item = int(self.sub_model.itemAt(QPoint(i, 0)).text())
+					print(' compare with ', item)
+					if int(item) == int(run_id):
+						self.sub_model.setItem(i, 5, QTableWidgetItem(verdict))
+						self.sub_model.setItem(i, 6, QTableWidgetItem(sent_status))
+						self.sub_model.setItem(i, 7, QTableWidgetItem(judge))
+						break
+			elif code == 'AddNewQuery':
+				print('[ UI ] Adding new query')
+				row_count = self.query_model.rowCount()
+				self.query_model.setRowCount(row_count + 1)
+				self.query_model.setItem(row_count, 0, QTableWidgetItem(str(data['Query ID'])))
+				self.query_model.setItem(row_count, 1, QTableWidgetItem(str(data['Client ID'])))
+				self.query_model.setItem(row_count, 2, QTableWidgetItem(data['Query']))
+				self.query_model.setItem(row_count, 3, QTableWidgetItem(data['Response']))
+			elif code == 'QUERY':
+				# Handle query response
+				client_id = data['Client ID']
+				response = data['Response']
+				row_count = self.query_model.rowCount()
+				for i in range(row_count):
+					item = self.query_model.itemAt(QPoint(i, 1)).text()
+					if int(item) == int(client_id):
+						self.query_model.setItem(i, 3, QTableWidgetItem(response))
+						break
 
 
-		# Refresh leaderboard
-		self.data_changed_flags[16] == 1
+	def set_table_data(self):
+		account_data = self.db_list[0]
+		sub_data = self.db_list[1]
+		client_data = self.db_list[2]
+		judge_data = self.db_list[3]
+		query_data = self.db_list[4]
+		score_data = self.db_list[5]
+		problem_data = self.db_list[6]
+
+
+		self.account_model.setRowCount(len(account_data))
+		for i in range (len(account_data)):
+			for j in range(len(account_data[i])):
+				self.account_model.setItem(i, j, QTableWidgetItem(account_data[i][j]))
+		# Enable sorting in the table view
+		self.account_model.setSortingEnabled(True)
+
+		self.sub_model.setRowCount(len(sub_data))
+		for i in range (len(sub_data)):
+			for j in range(len(sub_data[i])):
+				self.sub_model.setItem(i, j, QTableWidgetItem(str(sub_data[i][j])))
+
+		self.client_model.setRowCount(len(client_data))
+		for i in range (len(client_data)):
+			for j in range(len(client_data[i])):
+				self.client_model.setItem(i, j, QTableWidgetItem(str(client_data[i][j])))
+
+		self.judge_model.setRowCount(len(judge_data))
+		for i in range (len(judge_data)):
+			for j in range(len(judge_data[i])):
+				self.judge_model.setItem(i, j, QTableWidgetItem(str(judge_data[i][j])))
+
+		self.query_model.setRowCount(len(query_data))
+		for i in range (len(query_data)):
+			for j in range(len(query_data[i])):
+				self.query_model.setItem(i, j, QTableWidgetItem(str(query_data[i][j])))
+
+		self.score_model.setRowCount(len(score_data))
+		for i in range (len(score_data)):
+			for j in range(len(score_data[i])):
+				self.score_model.setItem(i, j, QTableWidgetItem(str(score_data[i][j])))
+
+		self.problem_model.setRowCount(len(problem_data))
+		for i in range (len(problem_data)):
+			for j in range(len(problem_data[0])):
+				self.problem_model.setItem(i, j, QTableWidgetItem(str(problem_data[i][j])))
 
 
 	def set_button_behavior(self, status):
@@ -858,92 +906,6 @@ class server_window(QMainWindow):
 		self.data_changed_flags[index] = value
 		return
 
-
-	#####################################################
-	# Databse related functions
-	def init_qt_database(self):
-		try:
-			db = QSqlDatabase.addDatabase('QSQLITE')
-			db.setDatabaseName('interface_database.db')
-
-			return db
-		except:
-			print('[ CRITICAL ] Database loading error!')
-			self.log('[ CRITICAL ] Database loading error!')
-
-	def manage_models(self, db, table_name):
-		if db.open():
-			model = QSqlQueryModel()
-			if table_name == 'connected_clients':
-				query = self.connected_clients_query
-			elif table_name == 'connected_judges':
-				query = self.connected_judges_query
-			elif table_name == 'problems':
-				query = self.problems_query
-			elif table_name == 'queries':
-				query = self.queries_query
-			model.setQuery(query)
-			return model
-		else:
-			print('[ CRITICAL ] Model Error: DB is not open')
-			self.log('[ CRITICAL ] Model Error: DB is not open')
-			return None
-
-	def manage_account_model(self, db, table_name):
-		if db.open():
-			model = QSqlQueryModel()
-			model.setQuery(self.account_query)
-			return model
-		else:
-			print('[ CRITICAL ] Model Error: DB is not open')
-			self.log('[ CRITICAL ] Model Error: DB is not open')
-			return None
-
-	def manage_leaderboard_model(self, db, table_name):
-		if db.open():
-			model = QSqlQueryModel()
-			return model
-		else:
-			print('[ CRITICAL ] Model Error: DB is not open')
-			self.log('[ CRITICAL ] Model Error: DB is not open')
-			return None
-
-	def manage_submissions_model(self, db, table_name):
-		if db.open():
-			model = QSqlQueryModel()
-			model.setQuery(self.submissions_query)
-			return model
-		else:
-			print('[ CRITICAL ] Model Error: DB is not open')
-			self.log('[ CRITICAL ] Model Error: DB is not open')
-			return None
-
-	def generate_view(self, model):
-		table = QTableView()
-		table.setModel(model)
-		# Enable sorting in the table view
-		table.setSortingEnabled(True)
-		# Enable Alternate row colors for readablity
-		table.setAlternatingRowColors(True)
-		# Select whole row when clicked
-		table.setSelectionBehavior(QAbstractItemView.SelectRows)
-		# Allow only one row to be selected
-		table.setSelectionMode(QAbstractItemView.SingleSelection)
-		# fit view to whole space
-		table.resizeColumnsToContents()
-		# Make table non-editable
-		table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-		# Set view to delete when gui is closed
-		table.setAttribute(Qt.WA_DeleteOnClose)
-
-		table.setSortingEnabled(False)
-
-		horizontal_header = table.horizontalHeader()
-		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
-		vertical_header = table.verticalHeader()
-		vertical_header.setVisible(False)
-		return table
-
 	@pyqtSlot()
 	def manual_broadcast_scoreboard(self):
 		# Set broadcast scoreboard flag
@@ -968,13 +930,13 @@ class server_window(QMainWindow):
 			# Get data from selected row
 			#  run_id, client_id, problem_code, language, timestamp, verdict, sent_status
 
-			run_id = self.sub_model.index(selected_row, 0).data()
-			client_id = self.sub_model.index(selected_row, 1).data()
-			problem_code = self.sub_model.index(selected_row, 2).data()
-			language = self.sub_model.index(selected_row, 3).data()
-			timestamp = self.sub_model.index(selected_row, 4).data()
-			verdict = self.sub_model.index(selected_row, 5).data()
-			sent_status = self.sub_model.index(selected_row, 6).data()
+			run_id = self.sub_model.selectedIndexes()[0].data()
+			client_id = self.sub_model.selectedIndexes()[1].data()
+			problem_code = self.sub_model.selectedIndexes()[2].data()
+			language = self.sub_model.selectedIndexes()[3].data()
+			timestamp = self.sub_model.selectedIndexes()[4].data()
+			verdict = self.sub_model.selectedIndexes()[5].data()
+			sent_status = self.sub_model.selectedIndexes()[6].data()
 
 			if client_id == None:
 				pass
@@ -1009,11 +971,15 @@ class server_window(QMainWindow):
 	 
 		try:
 			# Get data from selected row
-			reply = self.query_model.index(selected_row, 3).data()
-			query = self.query_model.index(selected_row, 2).data()
-			client_id = self.query_model.index(selected_row, 1).data()
-			query_id = self.query_model.index(selected_row, 0).data()
+			query_id = self.query_model.selectedIndexes()[0].data()
+			client_id = self.query_model.selectedIndexes()[1].data()
+			query = self.query_model.selectedIndexes()[2].data()
+			reply = self.query_model.selectedIndexes()[3].data()
 
+			if query_id == None:
+				query_id = -2
+
+			
 			self.window = query_reply_ui(self.data_changed_flags,self.task_queue, query, reply, client_id, query_id, self.log_queue )
 			self.window.show()
 
@@ -1141,11 +1107,12 @@ class server_window(QMainWindow):
 			pass
 		# If no row is selected, return
 		try:
-			client_id = self.client_model.index(selected_row, 0).data()
-			username = self.client_model.index(selected_row, 1).data()
-			password = self.client_model.index(selected_row, 2).data()
-			ip = self.client_model.index(selected_row, 3).data()
-			state = self.client_model.index(selected_row, 4).data()
+
+			client_id = self.client_model.selectedIndexes()[0].data()
+			username = self.client_model.selectedIndexes()[1].data()
+			password = self.client_model.selectedIndexes()[2].data()
+			ip = self.client_model.selectedIndexes()[3].data()
+			state = self.client_model.selectedIndexes()[4].data()
 
 			if username == None or client_id == None or password == None or state == None:
 				pass
@@ -1169,11 +1136,11 @@ class server_window(QMainWindow):
 
 		# If no row is selected, return
 		try:
-			judge_id = self.judge_model.index(selected_row, 0).data()
-			username = self.judge_model.index(selected_row, 1).data()
-			password = self.judge_model.index(selected_row, 2).data()
-			ip = self.judge_model.index(selected_row, 3).data()
-			state = self.judge_model.index(selected_row, 4).data()
+			judge_id = self.judge_model.selectedIndexes()[0].data()
+			username = self.judge_model.selectedIndexes()[1].data()
+			password = self.judge_model.selectedIndexes()[2].data()
+			ip = self.judge_model.selectedIndexes()[3].data()
+			state = self.judge_model.selectedIndexes()[4].data()
 
 			if username == None or judge_id == None or password == None or state == None:
 				pass
@@ -1206,9 +1173,9 @@ class server_window(QMainWindow):
 
 		# If no row is selected, return
 		try:
-			username = self.account_model.index(selected_row, 0).data()
-			password = self.account_model.index(selected_row, 1).data()
-			ctype = self.account_model.index(selected_row, 2).data()
+			username = self.account_model.selectedIndexes()[0].data()
+			password = self.account_model.selectedIndexes()[1].data()
+			ctype = self.account_model.selectedIndexes()[2].data()
 
 			if username == None or password == None or ctype == None:
 				pass
@@ -1268,12 +1235,11 @@ class server_window(QMainWindow):
 			self.window.close()
 		except:
 			pass
-		# If no row is selected, return
 		try:
-			problem = self.problem_model.index(selected_row, 0).data()
-			code = self.problem_model.index(selected_row, 1).data()
-			test_files = self.problem_model.index(selected_row, 2).data()
-			time_limit = self.problem_model.index(selected_row, 3).data()
+			problem = self.problem_model.selectedIndexes()[0].data()
+			code = self.problem_model.selectedIndexes()[1].data()
+			test_files = int(self.problem_model.selectedIndexes()[2].data())
+			time_limit = int(self.problem_model.selectedIndexes()[3].data())
 
 			if problem == None:
 				pass
@@ -1298,7 +1264,7 @@ class server_window(QMainWindow):
 	# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	# Code related to database reset
 	@pyqtSlot()
-	def delete_account(self, selected_rows):
+	def delete_account(self, selected_row):
 		if self.data_changed_flags[6] == 0:
 			# Set critical flag
 			self.data_changed_flags[6] = 1
@@ -1307,7 +1273,7 @@ class server_window(QMainWindow):
 			return
 		# If no row is selected, return
 		try:
-			username = str(selected_rows[0].data())
+			username = str(self.account_model.selectedIndexes()[0].data())
 		except: 
 			# Reset data_changed_flag for deletion of account
 			self.data_changed_flags[6] = 0
@@ -1832,7 +1798,7 @@ class server_window(QMainWindow):
 
 
 class init_gui(server_window):
-	def __init__(self, data_changed_flags, task_queue, log_queue, lock):
+	def __init__(self, data_changed_flags, task_queue, log_queue, update_queue, db_list, lock):
 		# make a reference of App class
 		app = QApplication(sys.argv)
 		app.setStyle("Fusion")
@@ -1840,7 +1806,7 @@ class init_gui(server_window):
 		# If user is about to close window
 		app.aboutToQuit.connect(self.closeEvent)
 		
-		server_app = server_window(data_changed_flags, task_queue, log_queue, lock)
+		server_app = server_window(data_changed_flags, task_queue, log_queue, update_queue, db_list, lock)
 		server_app.showMaximized()
 
 		# Splash ends

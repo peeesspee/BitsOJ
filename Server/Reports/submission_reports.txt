@@ -1,0 +1,1085 @@
+2020-03-03 01:30:37.610089
+################ BitsOJ  ################
+Contest: Kodeathon A10 - Naruto
+All Submissions:
+	Run ID		Client ID		Problem Code		Language		Timestamp		Verdict		Judge
+	1				8				CES				C++				00:07:03			RE		judge00001
+	2				86				CES				C++				00:07:08			RE		judge00002
+	3				80				CES				C++				00:07:16			CMPL		judge00001
+	4				32				CES				C++				00:07:35			WA		judge00002
+	5				153				CES				C++				00:07:57			RE		judge00001
+	6				174				CES				C++				00:08:08			WA		judge00002
+	7				82				CES				C++				00:08:09			RE		judge00001
+	8				83				CES				C++				00:08:15			AC		judge00002
+	9				87				CES				C++				00:08:17			RE		judge00001
+	10				88				CES				C++				00:08:25			AC		judge00002
+	11				135				CES				C				00:08:41			CMPL		judge00001
+	12				6				CES				PYTHON-3				00:09:00			WA		judge00002
+	13				90				CES				C++				00:09:02			CMPL		judge00001
+	14				161				CES				PYTHON-3				00:09:21			WA		judge00002
+	15				83				CES				C++				00:09:23			RE		judge00001
+	16				186				CES				C++				00:09:40			AC		judge00002
+	17				88				CES				C++				00:09:48			AC		judge00002
+	18				135				CQS				C				00:09:48			CMPL		judge00001
+	19				136				CES				C++				00:09:57			WA		judge00002
+	20				12				CES				PYTHON-3				00:10:16			RE		judge00001
+	21				132				CES				C++				00:10:49			AC		judge00001
+	22				9				CQS				C++				00:11:06			CMPL		judge00002
+	23				161				CES				C++				00:11:39			WA		judge00002
+	24				8				CES				C++				00:11:49			WA		judge00002
+	25				174				CES				C++				00:11:54			RE		judge00001
+	26				80				CES				C++				00:12:02			AC		judge00002
+	27				117				CES				C++				00:12:05			RE		judge00001
+	28				32				CES				C++				00:12:11			AC		judge00002
+	29				141				CES				C				00:12:20			AC		judge00002
+	30				135				JKD				C				00:12:28			CMPL		judge00002
+	31				76				CES				PYTHON-3				00:12:33			RE		judge00001
+	32				136				CES				C++				00:12:36			AC		judge00002
+	33				35				CES				C				00:12:49			CMPL		judge00001
+	34				15				CES				C				00:12:52			WA		judge00002
+	35				86				CES				C++				00:12:59			AC		judge00002
+	36				88				CES				C++				00:13:01			AC		judge00002
+	37				85				CES				C++				00:13:08			AC		judge00002
+	38				149				CQS				C++				00:13:24			AC		judge00001
+	39				117				CES				C++				00:13:24			AC		judge00002
+	40				174				CES				C++				00:13:30			AC		judge00002
+	41				14				CES				C++				00:13:46			CMPL		judge00001
+	42				76				CES				PYTHON-3				00:14:00			AC		judge00002
+	43				90				CES				C				00:14:02			RE		judge00001
+	44				75				CES				C++				00:14:08			AC		judge00002
+	45				86				CES				C++				00:14:10			AC		judge00002
+	46				85				CES				C				00:14:14			WA		judge00002
+	47				161				CES				C++				00:14:27			WA		judge00002
+	48				12				CES				C++				00:14:34			WA		judge00002
+	49				34				CES				C++				00:14:44			AC		judge00001
+	50				158				CES				C++				00:15:01			AC		judge00002
+	51				152				CES				C++				00:15:46			AC		judge00002
+	52				153				CES				C++				00:15:48			RE		judge00001
+	53				165				CES				C++				00:15:57			RE		judge00001
+	54				117				CES				C				00:16:16			AC		judge00002
+	55				183				CES				C++				00:16:25			AC		judge00002
+	56				17				CES				C++				00:16:38			AC		judge00001
+	57				43				CES				C++				00:16:51			CMPL		judge00002
+	58				153				CQS				C++				00:17:08			RE		judge00002
+	59				166				CES				C++				00:17:32			WA		judge00002
+	60				168				CES				C++				00:17:54			RE		judge00001
+	61				157				CES				C++				00:17:56			RE		judge00001
+	62				78				CES				C++				00:17:59			RE		judge00001
+	63				155				CES				C++				00:18:07			WA		judge00002
+	64				142				CES				PYTHON-3				00:18:19			RE		judge00001
+	65				158				CES				C++				00:18:44			WA		judge00002
+	66				152				CES				C++				00:18:45			AC		judge00002
+	67				140				CES				C++				00:18:53			CMPL		judge00002
+	68				36				CES				PYTHON-3				00:18:59			RE		judge00001
+	69				161				CES				C++				00:19:07			WA		judge00002
+	70				185				CES				C++				00:19:11			AC		judge00002
+	71				134				CES				C++				00:19:36			WA		judge00002
+	72				136				CQS				C++				00:19:38			CMPL		judge00001
+	73				73				CES				C++				00:19:44			WA		judge00002
+	74				157				CES				C++				00:19:52			RE		judge00002
+	75				102				CES				C++				00:20:07			AC		judge00001
+	76				47				CES				C++				00:20:26			AC		judge00002
+	77				19				CES				C++				00:20:26			CMPL		judge00001
+	78				83				CQS				C++				00:20:30			RE		judge00002
+	79				178				CES				C++				00:21:05			RE		judge00001
+	80				147				CES				C++				00:21:09			CMPL		judge00001
+	81				14				CES				C				00:21:13			RE		judge00001
+	82				106				CES				C++				00:21:20			CMPL		judge00001
+	83				162				CES				C++				00:21:31			RE		judge00001
+	84				50				CES				C++				00:21:42			RE		judge00001
+	85				149				CQS				C++				00:21:55			WA		judge00001
+	86				168				CES				C++				00:22:07			WA		judge00002
+	87				148				CES				C++				00:22:18			AC		judge00002
+	88				52				CES				C++				00:22:29			AC		judge00002
+	89				185				CES				C++				00:22:35			RE		judge00001
+	90				13				CQS				C++				00:22:46			CMPL		judge00002
+	91				110				CES				C++				00:23:07			CMPL		judge00002
+	92				26				CES				C++				00:23:24			WA		judge00002
+	93				121				CES				C++				00:23:36			AC		judge00001
+	94				158				CES				C++				00:23:51			RE		judge00002
+	95				118				CES				C++				00:24:11			AC		judge00001
+	96				151				CES				C++				00:24:54			RE		judge00001
+	97				111				CES				C++				00:25:01			WA		judge00002
+	98				169				CES				C				00:25:01			RE		judge00001
+	99				43				CES				C++				00:25:04			RE		judge00001
+	100				12				CES				C++				00:25:32			WA		judge00002
+	101				88				CQS				C++				00:25:41			WA		judge00001
+	102				125				CES				C++				00:25:52			CMPL		judge00001
+	103				173				CES				C++				00:26:02			CMPL		judge00002
+	104				89				CES				C++				00:26:26			RE		judge00002
+	105				33				CES				C				00:26:52			AC		judge00002
+	106				20				CES				C++				00:27:17			CMPL		judge00002
+	107				101				CES				C++				00:27:45			AC		judge00001
+	108				102				CES				C++				00:27:54			AC		judge00001
+	109				58				CES				C++				00:28:08			AC		judge00002
+	110				140				CES				C++				00:28:34			AC		judge00001
+	111				38				CES				C++				00:28:38			AC		judge00002
+	112				148				CES				PYTHON-3				00:28:52			AC		judge00001
+	113				168				CES				C++				00:28:54			AC		judge00002
+	114				3				CES				C++				00:29:00			RE		judge00002
+	115				130				CES				C++				00:29:28			AC		judge00001
+	116				173				CES				C++				00:29:29			AC		judge00001
+	117				12				CES				C++				00:29:34			CMPL		judge00001
+	118				58				CES				C++				00:29:42			AC		judge00001
+	119				16				CES				PYTHON-3				00:29:46			AC		judge00002
+	120				129				CES				C++				00:29:55			WA		judge00001
+	121				13				CQS				C++				00:29:56			RE		judge00002
+	122				186				CES				C++				00:30:07			WA		judge00001
+	123				190				CES				C++				00:30:19			AC		judge00001
+	124				175				CES				C++				00:30:30			WA		judge00001
+	125				10				CES				C				00:30:45			CMPL		judge00001
+	126				88				CQS				C++				00:31:10			AC		judge00001
+	127				110				CES				C++				00:31:11			AC		judge00002
+	128				35				CES				C				00:31:26			CMPL		judge00001
+	129				12				CES				C++				00:31:31			AC		judge00002
+	130				64				CES				C++				00:31:53			CMPL		judge00001
+	131				138				CES				C++				00:32:01			CMPL		judge00002
+	132				9				CQS				C++				00:32:10			RE		judge00002
+	133				133				CES				C++				00:32:15			AC		judge00002
+	134				59				CES				C				00:32:40			CMPL		judge00002
+	135				175				CES				C++				00:32:45			CMPL		judge00001
+	136				181				CES				C++				00:32:51			AC		judge00001
+	137				26				CES				C				00:33:07			CMPL		judge00002
+	138				188				CES				C++				00:33:08			WA		judge00002
+	139				4				CES				C++				00:33:14			AC		judge00001
+	140				13				CES				C++				00:33:23			RE		judge00002
+	141				64				CES				C++				00:33:34			AC		judge00002
+	142				82				CQS				C++				00:33:45			WA		judge00001
+	143				35				CES				C				00:34:15			CMPL		judge00001
+	144				171				CES				C				00:34:20			WA		judge00002
+	145				81				CES				C++				00:34:21			AC		judge00001
+	146				26				CES				C++				00:34:33			AC		judge00002
+	147				192				CES				PYTHON-3				00:34:34			AC		judge00001
+	148				189				CES				C++				00:34:43			CMPL		judge00002
+	149				190				CES				C++				00:34:44			WA		judge00001
+	150				174				CQS				C++				00:34:49			CMPL		judge00002
+	151				136				CQS				C++				00:35:04			TLE		judge00001
+	152				175				CES				C++				00:35:19			AC		judge00001
+	153				188				CES				C++				00:35:59			AC		judge00001
+	154				161				CES				C++				00:36:05			AC		judge00002
+	155				15				CES				C++				00:36:09			AC		judge00002
+	156				59				CES				C++				00:36:12			TLE		judge00002
+	157				190				CES				PYTHON-3				00:36:25			RE		judge00001
+	158				13				CES				C++				00:36:34			AC		judge00001
+	159				186				CQS				C++				00:36:41			RE		judge00002
+	160				56				CES				C++				00:36:54			AC		judge00002
+	161				102				CES				C++				00:37:04			CMPL		judge00001
+	162				32				CQS				C++				00:37:05			TLE		judge00001
+	163				134				CES				C++				00:37:08			AC		judge00001
+	164				13				CQS				C++				00:37:55			RE		judge00002
+	165				130				CQS				C++				00:38:05			WA		judge00001
+	166				59				CES				C++				00:38:10			CMPL		judge00002
+	167				182				CQS				C++				00:38:18			RE		judge00002
+	168				171				CES				C++				00:38:25			WA		judge00002
+	169				179				CES				C++				00:38:49			AC		judge00001
+	170				167				CES				C++				00:38:55			AC		judge00002
+	171				138				CES				C++				00:38:57			AC		judge00001
+	172				101				CES				C++				00:39:05			WA		judge00002
+	173				125				CES				C++				00:39:12			RE		judge00002
+	174				31				CES				C++				00:39:23			AC		judge00001
+	175				10				CES				C				00:39:23			WA		judge00002
+	176				111				CES				C++				00:39:34			AC		judge00002
+	177				3				CES				C++				00:39:39			AC		judge00001
+	178				157				CQS				C++				00:39:58			TLE		judge00001
+	179				77				CES				C++				00:40:01			AC		judge00001
+	180				59				CES				C++				00:40:16			AC		judge00001
+	181				91				CES				C++				00:40:34			WA		judge00001
+	182				36				CES				C++				00:40:39			CMPL		judge00001
+	183				149				CQS				C++				00:40:52			RE		judge00002
+	184				119				CES				C++				00:41:06			RE		judge00002
+	185				170				CQS				C++				00:41:22			WA		judge00001
+	186				186				CQS				C++				00:41:28			RE		judge00002
+	187				125				CES				C++				00:41:45			RE		judge00002
+	188				160				CES				C++				00:41:45			AC		judge00001
+	189				8				CES				C++				00:41:51			AC		judge00001
+	190				136				CQS				C++				00:42:00			AC		judge00001
+	191				91				CES				C++				00:42:09			RE		judge00002
+	192				10				CES				C++				00:42:18			WA		judge00001
+	193				171				CES				C++				00:42:37			RE		judge00002
+	194				52				CQS				C++				00:42:41			RE		judge00002
+	195				59				CES				C++				00:42:45			RE		judge00002
+	196				32				CQS				C++				00:42:49			AC		judge00001
+	197				136				CQS				C++				00:43:08			RE		judge00002
+	198				41				CES				C++				00:43:15			AC		judge00001
+	199				95				CES				C				00:43:24			RE		judge00002
+	200				138				CES				C++				00:43:25			AC		judge00001
+	201				130				CQS				C++				00:43:37			CMPL		judge00001
+	202				167				CQS				C++				00:43:38			RE		judge00002
+	203				36				CES				C++				00:43:42			AC		judge00001
+	204				20				CES				C++				00:43:44			WA		judge00001
+	205				149				CQS				C++				00:44:04			WA		judge00001
+	206				187				CQS				C++				00:44:15			WA		judge00001
+	207				125				CES				C++				00:44:28			AC		judge00002
+	208				124				CES				C				00:44:33			AC		judge00001
+	209				59				CES				C++				00:44:40			RE		judge00002
+	210				167				CQS				C++				00:44:49			TLE		judge00001
+	211				19				CQS				C++				00:45:08			RE		judge00002
+	212				28				CES				C++				00:45:14			RE		judge00001
+	213				27				CQS				C++				00:45:30			WA		judge00001
+	214				130				JKD				C++				00:45:35			WA		judge00001
+	215				153				JKD				C++				00:45:54			RE		judge00002
+	216				20				CES				C++				00:46:10			AC		judge00001
+	217				59				CES				C++				00:46:27			RE		judge00002
+	218				164				CES				C++				00:46:28			CMPL		judge00002
+	219				6				CQS				C++				00:46:32			WA		judge00001
+	220				162				CES				C++				00:46:41			WA		judge00001
+	221				10				CES				C++				00:47:13			RE		judge00002
+	222				27				CQS				C++				00:47:14			WA		judge00001
+	223				138				CES				C++				00:47:17			RE		judge00002
+	224				16				CQS				C++				00:47:33			RE		judge00002
+	225				169				CES				C++				00:47:44			RE		judge00002
+	226				151				CES				C++				00:47:48			AC		judge00001
+	227				101				CES				C++				00:47:53			RE		judge00002
+	228				136				CQS				C++				00:47:58			AC		judge00001
+	229				142				CQS				PYTHON-3				00:48:22			RE		judge00002
+	230				82				CQS				C++				00:48:23			AC		judge00001
+	231				32				CQS				C++				00:48:41			RE		judge00002
+	232				187				CQS				C++				00:51:02			AC		judge00001
+	233				59				CES				C++				00:51:09			RE		judge00002
+	234				103				CQS				C++				00:51:18			TLE		judge00001
+	235				27				CES				C++				00:51:20			RE		judge00002
+	236				109				CQS				C++				00:51:24			TLE		judge00001
+	237				169				CES				C++				00:51:28			RE		judge00002
+	238				142				CQS				PYTHON-3				00:51:38			RE		judge00002
+	239				174				JKD				C++				00:51:39			RE		judge00001
+	240				180				CES				C				00:52:07			CMPL		judge00002
+	241				138				CES				C++				00:52:13			AC		judge00001
+	242				130				CQS				C++				00:52:25			RE		judge00002
+	243				19				CQS				C++				00:52:25			AC		judge00001
+	244				59				CES				C++				00:52:37			RE		judge00002
+	245				87				CQS				C++				00:52:41			AC		judge00001
+	246				142				CQS				PYTHON-3				00:52:50			RE		judge00002
+	247				12				CES				C++				00:52:51			RE		judge00001
+	248				77				CQS				C++				00:52:54			RE		judge00002
+	249				153				JKD				C++				00:53:00			TLE		judge00001
+	250				163				JKD				C++				00:53:09			RE		judge00002
+	251				108				CES				C++				00:53:24			AC		judge00001
+	252				28				CQS				C++				00:53:38			RE		judge00002
+	253				158				CES				C++				00:53:44			CMPL		judge00002
+	254				59				CES				C++				00:53:54			CMPL		judge00002
+	255				10				CES				C++				00:54:02			WA		judge00001
+	256				162				CES				C++				00:54:40			AC		judge00001
+	257				121				CQS				C++				00:54:49			RE		judge00002
+	258				180				CES				C				00:54:51			CMPL		judge00001
+	259				83				CQS				C++				00:55:08			CMPL		judge00002
+	260				158				CES				C++				00:55:25			AC		judge00001
+	261				88				CQS				C++				00:55:31			RE		judge00002
+	262				13				CQS				C++				00:55:36			RE		judge00002
+	263				27				CES				C++				00:55:45			AC		judge00001
+	264				26				CQS				C++				00:56:08			RE		judge00002
+	265				12				CQS				C++				00:56:09			AC		judge00001
+	266				59				CES				C++				00:56:20			RE		judge00002
+	267				130				CQS				C++				00:56:31			WA		judge00001
+	268				174				JKD				C++				00:56:33			RE		judge00002
+	269				169				CES				C++				00:56:38			AC		judge00001
+	270				185				CQS				C++				00:56:39			AC		judge00001
+	271				164				CQS				C++				00:56:57			CMPL		judge00001
+	272				88				CQS				C++				00:57:20			AC		judge00001
+	273				180				CES				C				00:57:35			RE		judge00002
+	274				59				CES				C++				00:57:36			RE		judge00002
+	275				31				CQS				C++				00:57:40			TLE		judge00001
+	276				77				CQS				C++				00:57:50			AC		judge00001
+	277				6				CQS				C++				00:58:00			RE		judge00002
+	278				13				CQS				C++				00:58:07			WA		judge00001
+	279				50				CES				C++				00:58:12			AC		ADMIN
+	280				171				CES				C++				00:58:15			WA		judge00001
+	281				119				CES				PYTHON-3				00:58:19			RE		judge00002
+	282				83				CQS				C++				00:58:36			WA		judge00001
+	283				74				CQS				C				00:58:39			RE		judge00002
+	284				36				CES				C++				00:58:48			RE		judge00001
+	285				177				CQS				C++				00:58:48			RE		judge00002
+	286				164				CQS				C++				00:59:04			TLE		judge00001
+	287				26				CQS				C++				00:59:17			RE		judge00002
+	288				174				JKD				C++				00:59:27			RE		judge00002
+	289				140				JKD				C++				00:59:37			TLE		judge00001
+	290				74				CQS				C				00:59:46			RE		judge00002
+	291				35				CQS				C++				00:59:47			WA		judge00001
+	292				83				CES				C++				00:59:50			RE		judge00002
+	293				169				KMR				C				01:00:29			WA		judge00001
+	294				42				CES				C++				01:00:47			RE		judge00002
+	295				10				CES				C++				01:00:47			AC		judge00001
+	296				171				CES				C++				01:00:50			RE		judge00002
+	297				164				CQS				C++				01:01:01			RE		judge00002
+	298				26				CQS				C++				01:01:16			AC		judge00001
+	299				149				CQS				C++				01:01:16			AC		judge00001
+	300				52				CQS				C++				01:01:21			AC		judge00001
+	301				28				CQS				C++				01:01:40			AC		judge00002
+	302				180				CES				C				01:02:03			RE		judge00001
+	303				169				CQS				C				01:02:31			WA		judge00001
+	304				6				CQS				C++				01:02:51			WA		judge00001
+	305				168				CQS				C++				01:02:52			WA		judge00001
+	306				165				CQS				C++				01:02:55			RE		judge00002
+	307				160				CQS				C++				01:03:00			TLE		judge00001
+	308				83				CQS				C++				01:03:11			RE		judge00002
+	309				138				CES				C++				01:03:25			RE		judge00001
+	310				180				CES				C				01:03:43			RE		judge00002
+	311				77				CQS				C++				01:03:56			AC		judge00001
+	312				76				CQS				PYTHON-3				01:03:58			TLE		judge00002
+	313				171				CES				C++				01:04:08			CMPL		judge00001
+	314				149				CES				C++				01:04:16			RE		judge00002
+	315				13				CQS				C++				01:04:37			WA		judge00001
+	316				101				CES				C++				01:04:41			RE		judge00002
+	317				103				CQS				C++				01:05:19			WA		judge00001
+	318				41				CQS				C++				01:05:23			RE		judge00002
+	319				159				CQS				C++				01:05:39			RE		judge00002
+	320				132				CQS				C++				01:05:52			TLE		judge00001
+	321				119				CQS				C++				01:05:55			RE		judge00002
+	322				193				CQS				C++				01:06:14			AC		judge00001
+	323				180				CES				PYTHON-3				01:06:22			AC		judge00002
+	324				142				CQS				PYTHON-3				01:06:24			AC		ADMIN
+	325				125				CQS				C++				01:06:32			RE		judge00002
+	326				149				CES				C++				01:06:32			RE		judge00002
+	327				172				CQS				C++				01:06:40			TLE		judge00001
+	328				173				CQS				C				01:06:49			RE		judge00002
+	329				81				CES				C++				01:06:57			CMPL		judge00001
+	330				171				CES				C++				01:07:02			RE		judge00002
+	331				149				CES				C++				01:07:33			AC		judge00001
+	332				83				CES				C++				01:07:38			RE		judge00002
+	333				138				CQS				C++				01:07:47			TLE		judge00001
+	334				76				CQS				PYTHON-3				01:07:58			TLE		judge00002
+	335				185				CES				C++				01:08:00			AC		judge00001
+	336				171				CES				C++				01:08:24			RE		judge00002
+	337				132				CQS				C++				01:08:35			AC		judge00001
+	338				64				CQS				C++				01:08:46			CMPL		judge00002
+	339				177				JKD				C++				01:08:47			RE		judge00001
+	340				159				CQS				C++				01:08:50			RE		judge00002
+	341				14				CES				C++				01:08:55			RE		judge00001
+	342				142				CQS				PYTHON-3				01:09:03			RE		judge00002
+	343				130				CES				C++				01:09:17			AC		judge00001
+	344				171				CES				PYTHON-3				01:09:27			WA		judge00001
+	345				42				CQS				C++				01:09:45			WA		judge00001
+	346				15				CES				C++				01:09:48			CMPL		judge00002
+	347				43				CQS				C++				01:09:59			RE		judge00002
+	348				59				CES				C++				01:10:06			WA		judge00001
+	349				178				CQS				C++				01:10:39			RE		judge00002
+	350				64				CQS				C++				01:10:54			AC		judge00001
+	351				43				CQS				C++				01:11:14			RE		judge00002
+	352				71				CQS				C++				01:11:20			WA		judge00001
+	353				142				CQS				PYTHON-3				01:11:25			TLE		judge00002
+	354				177				JKD				C++				01:11:26			RE		judge00001
+	355				59				CES				C++				01:11:41			RE		judge00002
+	356				76				CQS				PYTHON-3				01:12:05			TLE		judge00002
+	357				88				JKD				C++				01:12:38			TLE		judge00001
+	358				157				CES				C++				01:12:55			RE		judge00002
+	359				166				CQS				C++				01:13:50			AC		judge00001
+	360				34				CES				C				01:13:58			CMPL		judge00002
+	361				14				CES				C++				01:13:58			WA		judge00001
+	362				13				JKD				C++				01:14:07			WA		judge00002
+	363				160				CQS				C++				01:14:13			RE		judge00002
+	364				145				CQS				C++				01:14:16			RE		judge00002
+	365				157				CES				C++				01:14:31			RE		judge00002
+	366				59				CES				C++				01:14:40			WA		judge00001
+	367				14				CQS				C++				01:14:48			RE		judge00002
+	368				59				CQS				C++				01:14:53			AC		judge00001
+	369				142				CQS				PYTHON-3				01:14:58			RE		judge00002
+	370				74				CQS				C				01:15:01			RE		judge00001
+	371				52				CQS				C++				01:15:10			RE		judge00002
+	372				142				CQS				PYTHON-3				01:15:12			RE		judge00002
+	373				74				CQS				C				01:15:44			RE		judge00002
+	374				34				CQS				C++				01:15:52			WA		judge00001
+	375				14				CQS				C++				01:15:59			RE		judge00002
+	376				20				CES				C++				01:16:01			WA		judge00001
+	377				16				CQS				C++				01:16:11			WA		judge00001
+	378				117				CQS				C++				01:16:28			AC		judge00001
+	379				121				CQS				C++				01:16:52			CMPL		judge00001
+	380				36				CQS				C++				01:17:01			CMPL		judge00002
+	381				118				CQS				C++				01:17:07			RE		judge00002
+	382				21				CQS				C++				01:17:07			RE		judge00001
+	383				13				JKD				C++				01:17:10			AC		judge00001
+	384				119				CQS				C++				01:17:28			RE		judge00002
+	385				82				JKD				C++				01:17:29			RE		judge00002
+	386				181				CQS				C++				01:17:33			CMPL		judge00002
+	387				20				CES				C++				01:17:40			RE		judge00002
+	388				86				CQS				C++				01:17:52			WA		judge00001
+	389				20				CES				C++				01:18:02			RE		judge00002
+	390				52				CQS				C++				01:18:09			AC		judge00001
+	391				138				CQS				C++				01:18:14			CMPL		judge00001
+	392				118				CQS				C++				01:18:53			RE		judge00002
+	393				20				CES				C++				01:19:01			WA		judge00001
+	394				111				CQS				C++				01:19:10			RE		judge00002
+	395				15				CQS				C++				01:19:18			AC		judge00001
+	396				21				CQS				C++				01:19:38			RE		judge00002
+	397				13				JKD				C++				01:19:39			WA		judge00001
+	398				17				CES				C++				01:19:51			RE		judge00002
+	399				111				CQS				C++				01:19:52			AC		judge00001
+	400				20				CES				C++				01:19:55			RE		judge00002
+	401				160				CQS				C++				01:20:24			TLE		judge00001
+	402				165				CQS				C++				01:20:25			RE		judge00002
+	403				17				CQS				C++				01:20:35			RE		judge00002
+	404				76				CQS				C				01:20:37			CMPL		judge00001
+	405				76				CQS				C++				01:20:55			RE		judge00002
+	406				118				CQS				C++				01:20:58			CMPL		judge00002
+	407				81				CES				C++				01:21:01			RE		judge00002
+	408				9				CQS				C++				01:21:17			AC		judge00001
+	409				76				CQS				C++				01:21:31			AC		ADMIN
+	410				20				CES				C++				01:21:35			WA		judge00001
+	411				86				CQS				C++				01:21:37			RE		judge00002
+	412				86				CQS				C++				01:21:54			WA		judge00001
+	413				162				CQS				C++				01:21:58			RE		judge00002
+	414				103				CQS				C++				01:22:01			AC		judge00001
+	415				138				CQS				C++				01:22:13			AC		judge00001
+	416				181				CQS				C++				01:22:15			CMPL		judge00002
+	417				16				CQS				C++				01:22:24			AC		judge00001
+	418				148				CQS				C++				01:22:35			AC		judge00001
+	419				106				CQS				C++				01:22:43			RE		judge00002
+	420				168				CQS				C++				01:22:47			WA		judge00001
+	421				73				CQS				C++				01:22:53			AC		judge00001
+	422				78				CES				C++				01:23:00			RE		judge00002
+	423				158				CQS				C++				01:23:02			CMPL		judge00001
+	424				163				CQS				C++				01:23:03			AC		ADMIN
+	425				106				CQS				C++				01:23:09			RE		judge00002
+	426				76				CQS				C++				01:23:14			AC		judge00001
+	427				43				CQS				C++				01:23:34			WA		judge00001
+	428				171				CQS				C++				01:23:36			WA		ADMIN
+	429				74				CQS				C				01:23:38			RE		judge00001
+	430				8				CQS				C++				01:23:53			RE		judge00002
+	431				10				CQS				C++				01:23:56			AC		judge00001
+	432				81				CQS				C++				01:24:09			RE		judge00002
+	433				118				CQS				C++				01:24:17			WA		judge00001
+	434				121				CQS				C++				01:24:22			RE		judge00002
+	435				13				JKD				C++				01:24:26			RE		judge00002
+	436				36				CQS				C++				01:24:31			RE		judge00002
+	437				6				CQS				C++				01:24:32			AC		ADMIN
+	438				106				CQS				C++				01:24:36			AC		judge00001
+	439				89				CQS				C++				01:24:48			CMPL		judge00002
+	440				8				CQS				C++				01:24:55			WA		judge00001
+	441				34				CQS				C++				01:24:55			RE		judge00002
+	442				119				CQS				C++				01:25:01			AC		judge00001
+	443				13				JKD				C++				01:25:17			RE		judge00001
+	444				81				CQS				C++				01:25:18			AC		ADMIN
+	445				129				CQS				C++				01:25:22			AC		judge00001
+	446				158				CQS				C++				01:25:26			CMPL		judge00002
+	447				89				CQS				C++				01:25:35			RE		judge00001
+	448				149				JKD				C++				01:25:35			AC		judge00001
+	449				80				CQS				C++				01:25:47			AC		ADMIN
+	450				34				CQS				C++				01:25:53			AC		judge00001
+	451				21				CQS				C++				01:25:56			RE		judge00002
+	452				121				CQS				C++				01:25:57			RE		judge00002
+	453				20				CES				C++				01:26:11			WA		judge00001
+	454				36				CQS				C++				01:26:20			RE		judge00002
+	455				160				CQS				C++				01:26:26			TLE		judge00001
+	456				4				CQS				C++				01:26:31			RE		judge00002
+	457				13				JKD				C++				01:26:36			AC		ADMIN
+	458				118				CQS				C++				01:26:47			RE		judge00002
+	459				171				CQS				C++				01:26:53			RE		judge00001
+	460				157				CQS				C++				01:27:11			RE		judge00002
+	461				78				CQS				C++				01:27:13			RE		judge00002
+	462				21				CQS				C++				01:27:34			AC		judge00001
+	463				89				CQS				C++				01:27:37			RE		judge00002
+	464				140				JKD				C++				01:27:54			TLE		judge00001
+	465				41				CQS				C++				01:27:56			RE		judge00002
+	466				4				CQS				C++				01:28:17			AC		judge00001
+	467				188				CQS				C++				01:28:21			CMPL		judge00001
+	468				165				CQS				C++				01:28:24			AC		ADMIN
+	469				20				CES				C++				01:28:45			AC		judge00001
+	470				129				CES				C++				01:29:04			AC		ADMIN
+	471				158				CQS				C++				01:29:27			CMPL		judge00001
+	472				8				CQS				C++				01:29:28			AC		ADMIN
+	473				168				CQS				C++				01:29:33			CMPL		judge00002
+	474				111				JKD				C++				01:29:46			TLE		judge00001
+	475				78				CQS				C++				01:29:55			RE		judge00002
+	476				20				CES				C++				01:30:02			WA		judge00001
+	477				12				JKD				C++				01:30:11			RE		judge00002
+	478				27				CQS				C++				01:30:23			AC		judge00001
+	479				6				CQS				C++				01:30:25			AC		judge00002
+	480				171				CES				C++				01:30:33			WA		judge00001
+	481				36				CQS				C++				01:30:36			WA		judge00001
+	482				168				CQS				C++				01:30:46			RE		judge00002
+	483				149				JKD				C++				01:31:03			AC		ADMIN
+	484				12				JKD				C++				01:31:03			WA		ADMIN
+	485				109				CQS				C++				01:31:07			CMPL		judge00002
+	486				185				CQS				C++				01:31:27			AC		ADMIN
+	487				78				CQS				C++				01:31:44			AC		judge00001
+	488				160				CQS				C++				01:31:59			RE		judge00002
+	489				41				CQS				C++				01:32:01			AC		judge00001
+	490				78				CQS				C++				01:32:07			AC		judge00002
+	491				168				CQS				C++				01:32:17			WA		judge00001
+	492				171				CES				C++				01:32:20			RE		judge00002
+	493				184				CES				C++				01:32:36			RE		judge00002
+	494				181				CQS				C++				01:32:38			AC		judge00001
+	495				5				CQS				C++				01:32:53			AC		judge00002
+	496				188				CQS				C++				01:32:56			AC		judge00001
+	497				160				CQS				C++				01:32:58			RE		judge00002
+	498				3				CQS				C++				01:33:14			AC		judge00001
+	499				86				CQS				C++				01:33:31			AC		ADMIN
+	500				184				CQS				C++				01:33:45			TLE		judge00001
+	501				3				CQS				C++				01:33:47			AC		judge00002
+	502				140				CQS				C++				01:33:56			RE		judge00001
+	503				7				CQS				C				01:34:04			CMPL		judge00002
+	504				160				CQS				C++				01:34:14			TLE		judge00001
+	505				36				CQS				C++				01:34:44			AC		judge00002
+	506				172				CQS				C++				01:35:35			RE		judge00002
+	507				171				CES				C++				01:36:06			AC		ADMIN
+	508				50				CQS				C++				01:36:23			WA		judge00001
+	509				73				CES				C++				01:36:29			AC		judge00001
+	510				172				CQS				C++				01:36:36			WA		judge00002
+	511				160				CQS				C++				01:36:39			TLE		judge00001
+	512				184				CQS				C++				01:36:49			RE		judge00002
+	513				185				CQS				C++				01:37:36			AC		ADMIN
+	514				160				CQS				C++				01:38:03			TLE		judge00001
+	515				171				CES				C++				01:38:16			RE		judge00002
+	516				50				CQS				C++				01:38:42			AC		ADMIN
+	517				11				CQS				C++				01:38:43			AC		ADMIN
+	518				31				CQS				C++				01:38:53			CMPL		judge00002
+	519				184				CQS				C++				01:39:43			RE		judge00002
+	520				172				CQS				C++				01:39:50			AC		judge00001
+	521				111				JKD				C++				01:40:02			CMPL		judge00001
+	522				160				CQS				C++				01:40:24			RE		judge00002
+	523				12				JKD				C++				01:40:37			TLE		judge00001
+	524				140				CQS				C++				01:41:37			AC		ADMIN
+	525				172				CQS				C++				01:41:49			AC		judge00001
+	526				184				CQS				C++				01:42:40			RE		judge00002
+	527				140				CQS				C++				01:43:19			AC		judge00001
+	528				9				JKD				C++				01:44:20			RE		judge00002
+	529				19				JKD				C++				01:45:00			WA		judge00001
+	530				160				JKD				C++				01:46:40			RE		judge00002
+
+####################################################################################################
+
+Submission data grouped by problems:
+> Problem: CES
+	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
+		1					8				C++				  00:07:03			  RE
+		2					86				C++				  00:07:08			  RE
+		3					80				C++				  00:07:16			  CMPL
+		4					32				C++				  00:07:35			  WA
+		5					153				C++				  00:07:57			  RE
+		6					174				C++				  00:08:08			  WA
+		7					82				C++				  00:08:09			  RE
+		8					83				C++				  00:08:15			  AC
+		9					87				C++				  00:08:17			  RE
+		10					88				C++				  00:08:25			  AC
+		11					135				C				  00:08:41			  CMPL
+		12					6				PYTHON-3				  00:09:00			  WA
+		13					90				C++				  00:09:02			  CMPL
+		14					161				PYTHON-3				  00:09:21			  WA
+		15					83				C++				  00:09:23			  RE
+		16					186				C++				  00:09:40			  AC
+		17					88				C++				  00:09:48			  AC
+		19					136				C++				  00:09:57			  WA
+		20					12				PYTHON-3				  00:10:16			  RE
+		21					132				C++				  00:10:49			  AC
+		23					161				C++				  00:11:39			  WA
+		24					8				C++				  00:11:49			  WA
+		25					174				C++				  00:11:54			  RE
+		26					80				C++				  00:12:02			  AC
+		27					117				C++				  00:12:05			  RE
+		28					32				C++				  00:12:11			  AC
+		29					141				C				  00:12:20			  AC
+		31					76				PYTHON-3				  00:12:33			  RE
+		32					136				C++				  00:12:36			  AC
+		33					35				C				  00:12:49			  CMPL
+		34					15				C				  00:12:52			  WA
+		35					86				C++				  00:12:59			  AC
+		36					88				C++				  00:13:01			  AC
+		37					85				C++				  00:13:08			  AC
+		39					117				C++				  00:13:24			  AC
+		40					174				C++				  00:13:30			  AC
+		41					14				C++				  00:13:46			  CMPL
+		42					76				PYTHON-3				  00:14:00			  AC
+		43					90				C				  00:14:02			  RE
+		44					75				C++				  00:14:08			  AC
+		45					86				C++				  00:14:10			  AC
+		46					85				C				  00:14:14			  WA
+		47					161				C++				  00:14:27			  WA
+		48					12				C++				  00:14:34			  WA
+		49					34				C++				  00:14:44			  AC
+		50					158				C++				  00:15:01			  AC
+		51					152				C++				  00:15:46			  AC
+		52					153				C++				  00:15:48			  RE
+		53					165				C++				  00:15:57			  RE
+		54					117				C				  00:16:16			  AC
+		55					183				C++				  00:16:25			  AC
+		56					17				C++				  00:16:38			  AC
+		57					43				C++				  00:16:51			  CMPL
+		59					166				C++				  00:17:32			  WA
+		60					168				C++				  00:17:54			  RE
+		61					157				C++				  00:17:56			  RE
+		62					78				C++				  00:17:59			  RE
+		63					155				C++				  00:18:07			  WA
+		64					142				PYTHON-3				  00:18:19			  RE
+		65					158				C++				  00:18:44			  WA
+		66					152				C++				  00:18:45			  AC
+		67					140				C++				  00:18:53			  CMPL
+		68					36				PYTHON-3				  00:18:59			  RE
+		69					161				C++				  00:19:07			  WA
+		70					185				C++				  00:19:11			  AC
+		71					134				C++				  00:19:36			  WA
+		73					73				C++				  00:19:44			  WA
+		74					157				C++				  00:19:52			  RE
+		75					102				C++				  00:20:07			  AC
+		76					47				C++				  00:20:26			  AC
+		77					19				C++				  00:20:26			  CMPL
+		79					178				C++				  00:21:05			  RE
+		80					147				C++				  00:21:09			  CMPL
+		81					14				C				  00:21:13			  RE
+		82					106				C++				  00:21:20			  CMPL
+		83					162				C++				  00:21:31			  RE
+		84					50				C++				  00:21:42			  RE
+		86					168				C++				  00:22:07			  WA
+		87					148				C++				  00:22:18			  AC
+		88					52				C++				  00:22:29			  AC
+		89					185				C++				  00:22:35			  RE
+		91					110				C++				  00:23:07			  CMPL
+		92					26				C++				  00:23:24			  WA
+		93					121				C++				  00:23:36			  AC
+		94					158				C++				  00:23:51			  RE
+		95					118				C++				  00:24:11			  AC
+		96					151				C++				  00:24:54			  RE
+		97					111				C++				  00:25:01			  WA
+		98					169				C				  00:25:01			  RE
+		99					43				C++				  00:25:04			  RE
+		100					12				C++				  00:25:32			  WA
+		102					125				C++				  00:25:52			  CMPL
+		103					173				C++				  00:26:02			  CMPL
+		104					89				C++				  00:26:26			  RE
+		105					33				C				  00:26:52			  AC
+		106					20				C++				  00:27:17			  CMPL
+		107					101				C++				  00:27:45			  AC
+		108					102				C++				  00:27:54			  AC
+		109					58				C++				  00:28:08			  AC
+		110					140				C++				  00:28:34			  AC
+		111					38				C++				  00:28:38			  AC
+		112					148				PYTHON-3				  00:28:52			  AC
+		113					168				C++				  00:28:54			  AC
+		114					3				C++				  00:29:00			  RE
+		115					130				C++				  00:29:28			  AC
+		116					173				C++				  00:29:29			  AC
+		117					12				C++				  00:29:34			  CMPL
+		118					58				C++				  00:29:42			  AC
+		119					16				PYTHON-3				  00:29:46			  AC
+		120					129				C++				  00:29:55			  WA
+		122					186				C++				  00:30:07			  WA
+		123					190				C++				  00:30:19			  AC
+		124					175				C++				  00:30:30			  WA
+		125					10				C				  00:30:45			  CMPL
+		127					110				C++				  00:31:11			  AC
+		128					35				C				  00:31:26			  CMPL
+		129					12				C++				  00:31:31			  AC
+		130					64				C++				  00:31:53			  CMPL
+		131					138				C++				  00:32:01			  CMPL
+		133					133				C++				  00:32:15			  AC
+		134					59				C				  00:32:40			  CMPL
+		135					175				C++				  00:32:45			  CMPL
+		136					181				C++				  00:32:51			  AC
+		137					26				C				  00:33:07			  CMPL
+		138					188				C++				  00:33:08			  WA
+		139					4				C++				  00:33:14			  AC
+		140					13				C++				  00:33:23			  RE
+		141					64				C++				  00:33:34			  AC
+		143					35				C				  00:34:15			  CMPL
+		144					171				C				  00:34:20			  WA
+		145					81				C++				  00:34:21			  AC
+		146					26				C++				  00:34:33			  AC
+		147					192				PYTHON-3				  00:34:34			  AC
+		148					189				C++				  00:34:43			  CMPL
+		149					190				C++				  00:34:44			  WA
+		152					175				C++				  00:35:19			  AC
+		153					188				C++				  00:35:59			  AC
+		154					161				C++				  00:36:05			  AC
+		155					15				C++				  00:36:09			  AC
+		156					59				C++				  00:36:12			  TLE
+		157					190				PYTHON-3				  00:36:25			  RE
+		158					13				C++				  00:36:34			  AC
+		160					56				C++				  00:36:54			  AC
+		161					102				C++				  00:37:04			  CMPL
+		163					134				C++				  00:37:08			  AC
+		166					59				C++				  00:38:10			  CMPL
+		168					171				C++				  00:38:25			  WA
+		169					179				C++				  00:38:49			  AC
+		170					167				C++				  00:38:55			  AC
+		171					138				C++				  00:38:57			  AC
+		172					101				C++				  00:39:05			  WA
+		173					125				C++				  00:39:12			  RE
+		174					31				C++				  00:39:23			  AC
+		175					10				C				  00:39:23			  WA
+		176					111				C++				  00:39:34			  AC
+		177					3				C++				  00:39:39			  AC
+		179					77				C++				  00:40:01			  AC
+		180					59				C++				  00:40:16			  AC
+		181					91				C++				  00:40:34			  WA
+		182					36				C++				  00:40:39			  CMPL
+		184					119				C++				  00:41:06			  RE
+		187					125				C++				  00:41:45			  RE
+		188					160				C++				  00:41:45			  AC
+		189					8				C++				  00:41:51			  AC
+		191					91				C++				  00:42:09			  RE
+		192					10				C++				  00:42:18			  WA
+		193					171				C++				  00:42:37			  RE
+		195					59				C++				  00:42:45			  RE
+		198					41				C++				  00:43:15			  AC
+		199					95				C				  00:43:24			  RE
+		200					138				C++				  00:43:25			  AC
+		203					36				C++				  00:43:42			  AC
+		204					20				C++				  00:43:44			  WA
+		207					125				C++				  00:44:28			  AC
+		208					124				C				  00:44:33			  AC
+		209					59				C++				  00:44:40			  RE
+		212					28				C++				  00:45:14			  RE
+		216					20				C++				  00:46:10			  AC
+		217					59				C++				  00:46:27			  RE
+		218					164				C++				  00:46:28			  CMPL
+		220					162				C++				  00:46:41			  WA
+		221					10				C++				  00:47:13			  RE
+		223					138				C++				  00:47:17			  RE
+		225					169				C++				  00:47:44			  RE
+		226					151				C++				  00:47:48			  AC
+		227					101				C++				  00:47:53			  RE
+		233					59				C++				  00:51:09			  RE
+		235					27				C++				  00:51:20			  RE
+		237					169				C++				  00:51:28			  RE
+		240					180				C				  00:52:07			  CMPL
+		241					138				C++				  00:52:13			  AC
+		244					59				C++				  00:52:37			  RE
+		247					12				C++				  00:52:51			  RE
+		251					108				C++				  00:53:24			  AC
+		253					158				C++				  00:53:44			  CMPL
+		254					59				C++				  00:53:54			  CMPL
+		255					10				C++				  00:54:02			  WA
+		256					162				C++				  00:54:40			  AC
+		258					180				C				  00:54:51			  CMPL
+		260					158				C++				  00:55:25			  AC
+		263					27				C++				  00:55:45			  AC
+		266					59				C++				  00:56:20			  RE
+		269					169				C++				  00:56:38			  AC
+		273					180				C				  00:57:35			  RE
+		274					59				C++				  00:57:36			  RE
+		279					50				C++				  00:58:12			  AC
+		280					171				C++				  00:58:15			  WA
+		281					119				PYTHON-3				  00:58:19			  RE
+		284					36				C++				  00:58:48			  RE
+		292					83				C++				  00:59:50			  RE
+		294					42				C++				  01:00:47			  RE
+		295					10				C++				  01:00:47			  AC
+		296					171				C++				  01:00:50			  RE
+		302					180				C				  01:02:03			  RE
+		309					138				C++				  01:03:25			  RE
+		310					180				C				  01:03:43			  RE
+		313					171				C++				  01:04:08			  CMPL
+		314					149				C++				  01:04:16			  RE
+		316					101				C++				  01:04:41			  RE
+		323					180				PYTHON-3				  01:06:22			  AC
+		326					149				C++				  01:06:32			  RE
+		329					81				C++				  01:06:57			  CMPL
+		330					171				C++				  01:07:02			  RE
+		331					149				C++				  01:07:33			  AC
+		332					83				C++				  01:07:38			  RE
+		335					185				C++				  01:08:00			  AC
+		336					171				C++				  01:08:24			  RE
+		341					14				C++				  01:08:55			  RE
+		343					130				C++				  01:09:17			  AC
+		344					171				PYTHON-3				  01:09:27			  WA
+		346					15				C++				  01:09:48			  CMPL
+		348					59				C++				  01:10:06			  WA
+		355					59				C++				  01:11:41			  RE
+		358					157				C++				  01:12:55			  RE
+		360					34				C				  01:13:58			  CMPL
+		361					14				C++				  01:13:58			  WA
+		365					157				C++				  01:14:31			  RE
+		366					59				C++				  01:14:40			  WA
+		376					20				C++				  01:16:01			  WA
+		387					20				C++				  01:17:40			  RE
+		389					20				C++				  01:18:02			  RE
+		393					20				C++				  01:19:01			  WA
+		398					17				C++				  01:19:51			  RE
+		400					20				C++				  01:19:55			  RE
+		407					81				C++				  01:21:01			  RE
+		410					20				C++				  01:21:35			  WA
+		422					78				C++				  01:23:00			  RE
+		453					20				C++				  01:26:11			  WA
+		469					20				C++				  01:28:45			  AC
+		470					129				C++				  01:29:04			  AC
+		476					20				C++				  01:30:02			  WA
+		480					171				C++				  01:30:33			  WA
+		492					171				C++				  01:32:20			  RE
+		493					184				C++				  01:32:36			  RE
+		507					171				C++				  01:36:06			  AC
+		509					73				C++				  01:36:29			  AC
+		515					171				C++				  01:38:16			  RE
+> Problem: CQS
+	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
+		18					135				C				  00:09:48			  CMPL
+		22					9				C++				  00:11:06			  CMPL
+		38					149				C++				  00:13:24			  AC
+		58					153				C++				  00:17:08			  RE
+		72					136				C++				  00:19:38			  CMPL
+		78					83				C++				  00:20:30			  RE
+		85					149				C++				  00:21:55			  WA
+		90					13				C++				  00:22:46			  CMPL
+		101					88				C++				  00:25:41			  WA
+		121					13				C++				  00:29:56			  RE
+		126					88				C++				  00:31:10			  AC
+		132					9				C++				  00:32:10			  RE
+		142					82				C++				  00:33:45			  WA
+		150					174				C++				  00:34:49			  CMPL
+		151					136				C++				  00:35:04			  TLE
+		159					186				C++				  00:36:41			  RE
+		162					32				C++				  00:37:05			  TLE
+		164					13				C++				  00:37:55			  RE
+		165					130				C++				  00:38:05			  WA
+		167					182				C++				  00:38:18			  RE
+		178					157				C++				  00:39:58			  TLE
+		183					149				C++				  00:40:52			  RE
+		185					170				C++				  00:41:22			  WA
+		186					186				C++				  00:41:28			  RE
+		190					136				C++				  00:42:00			  AC
+		194					52				C++				  00:42:41			  RE
+		196					32				C++				  00:42:49			  AC
+		197					136				C++				  00:43:08			  RE
+		201					130				C++				  00:43:37			  CMPL
+		202					167				C++				  00:43:38			  RE
+		205					149				C++				  00:44:04			  WA
+		206					187				C++				  00:44:15			  WA
+		210					167				C++				  00:44:49			  TLE
+		211					19				C++				  00:45:08			  RE
+		213					27				C++				  00:45:30			  WA
+		219					6				C++				  00:46:32			  WA
+		222					27				C++				  00:47:14			  WA
+		224					16				C++				  00:47:33			  RE
+		228					136				C++				  00:47:58			  AC
+		229					142				PYTHON-3				  00:48:22			  RE
+		230					82				C++				  00:48:23			  AC
+		231					32				C++				  00:48:41			  RE
+		232					187				C++				  00:51:02			  AC
+		234					103				C++				  00:51:18			  TLE
+		236					109				C++				  00:51:24			  TLE
+		238					142				PYTHON-3				  00:51:38			  RE
+		242					130				C++				  00:52:25			  RE
+		243					19				C++				  00:52:25			  AC
+		245					87				C++				  00:52:41			  AC
+		246					142				PYTHON-3				  00:52:50			  RE
+		248					77				C++				  00:52:54			  RE
+		252					28				C++				  00:53:38			  RE
+		257					121				C++				  00:54:49			  RE
+		259					83				C++				  00:55:08			  CMPL
+		261					88				C++				  00:55:31			  RE
+		262					13				C++				  00:55:36			  RE
+		264					26				C++				  00:56:08			  RE
+		265					12				C++				  00:56:09			  AC
+		267					130				C++				  00:56:31			  WA
+		270					185				C++				  00:56:39			  AC
+		271					164				C++				  00:56:57			  CMPL
+		272					88				C++				  00:57:20			  AC
+		275					31				C++				  00:57:40			  TLE
+		276					77				C++				  00:57:50			  AC
+		277					6				C++				  00:58:00			  RE
+		278					13				C++				  00:58:07			  WA
+		282					83				C++				  00:58:36			  WA
+		283					74				C				  00:58:39			  RE
+		285					177				C++				  00:58:48			  RE
+		286					164				C++				  00:59:04			  TLE
+		287					26				C++				  00:59:17			  RE
+		290					74				C				  00:59:46			  RE
+		291					35				C++				  00:59:47			  WA
+		297					164				C++				  01:01:01			  RE
+		298					26				C++				  01:01:16			  AC
+		299					149				C++				  01:01:16			  AC
+		300					52				C++				  01:01:21			  AC
+		301					28				C++				  01:01:40			  AC
+		303					169				C				  01:02:31			  WA
+		304					6				C++				  01:02:51			  WA
+		305					168				C++				  01:02:52			  WA
+		306					165				C++				  01:02:55			  RE
+		307					160				C++				  01:03:00			  TLE
+		308					83				C++				  01:03:11			  RE
+		311					77				C++				  01:03:56			  AC
+		312					76				PYTHON-3				  01:03:58			  TLE
+		315					13				C++				  01:04:37			  WA
+		317					103				C++				  01:05:19			  WA
+		318					41				C++				  01:05:23			  RE
+		319					159				C++				  01:05:39			  RE
+		320					132				C++				  01:05:52			  TLE
+		321					119				C++				  01:05:55			  RE
+		322					193				C++				  01:06:14			  AC
+		324					142				PYTHON-3				  01:06:24			  AC
+		325					125				C++				  01:06:32			  RE
+		327					172				C++				  01:06:40			  TLE
+		328					173				C				  01:06:49			  RE
+		333					138				C++				  01:07:47			  TLE
+		334					76				PYTHON-3				  01:07:58			  TLE
+		337					132				C++				  01:08:35			  AC
+		338					64				C++				  01:08:46			  CMPL
+		340					159				C++				  01:08:50			  RE
+		342					142				PYTHON-3				  01:09:03			  RE
+		345					42				C++				  01:09:45			  WA
+		347					43				C++				  01:09:59			  RE
+		349					178				C++				  01:10:39			  RE
+		350					64				C++				  01:10:54			  AC
+		351					43				C++				  01:11:14			  RE
+		352					71				C++				  01:11:20			  WA
+		353					142				PYTHON-3				  01:11:25			  TLE
+		356					76				PYTHON-3				  01:12:05			  TLE
+		359					166				C++				  01:13:50			  AC
+		363					160				C++				  01:14:13			  RE
+		364					145				C++				  01:14:16			  RE
+		367					14				C++				  01:14:48			  RE
+		368					59				C++				  01:14:53			  AC
+		369					142				PYTHON-3				  01:14:58			  RE
+		370					74				C				  01:15:01			  RE
+		371					52				C++				  01:15:10			  RE
+		372					142				PYTHON-3				  01:15:12			  RE
+		373					74				C				  01:15:44			  RE
+		374					34				C++				  01:15:52			  WA
+		375					14				C++				  01:15:59			  RE
+		377					16				C++				  01:16:11			  WA
+		378					117				C++				  01:16:28			  AC
+		379					121				C++				  01:16:52			  CMPL
+		380					36				C++				  01:17:01			  CMPL
+		381					118				C++				  01:17:07			  RE
+		382					21				C++				  01:17:07			  RE
+		384					119				C++				  01:17:28			  RE
+		386					181				C++				  01:17:33			  CMPL
+		388					86				C++				  01:17:52			  WA
+		390					52				C++				  01:18:09			  AC
+		391					138				C++				  01:18:14			  CMPL
+		392					118				C++				  01:18:53			  RE
+		394					111				C++				  01:19:10			  RE
+		395					15				C++				  01:19:18			  AC
+		396					21				C++				  01:19:38			  RE
+		399					111				C++				  01:19:52			  AC
+		401					160				C++				  01:20:24			  TLE
+		402					165				C++				  01:20:25			  RE
+		403					17				C++				  01:20:35			  RE
+		404					76				C				  01:20:37			  CMPL
+		405					76				C++				  01:20:55			  RE
+		406					118				C++				  01:20:58			  CMPL
+		408					9				C++				  01:21:17			  AC
+		409					76				C++				  01:21:31			  AC
+		411					86				C++				  01:21:37			  RE
+		412					86				C++				  01:21:54			  WA
+		413					162				C++				  01:21:58			  RE
+		414					103				C++				  01:22:01			  AC
+		415					138				C++				  01:22:13			  AC
+		416					181				C++				  01:22:15			  CMPL
+		417					16				C++				  01:22:24			  AC
+		418					148				C++				  01:22:35			  AC
+		419					106				C++				  01:22:43			  RE
+		420					168				C++				  01:22:47			  WA
+		421					73				C++				  01:22:53			  AC
+		423					158				C++				  01:23:02			  CMPL
+		424					163				C++				  01:23:03			  AC
+		425					106				C++				  01:23:09			  RE
+		426					76				C++				  01:23:14			  AC
+		427					43				C++				  01:23:34			  WA
+		428					171				C++				  01:23:36			  WA
+		429					74				C				  01:23:38			  RE
+		430					8				C++				  01:23:53			  RE
+		431					10				C++				  01:23:56			  AC
+		432					81				C++				  01:24:09			  RE
+		433					118				C++				  01:24:17			  WA
+		434					121				C++				  01:24:22			  RE
+		436					36				C++				  01:24:31			  RE
+		437					6				C++				  01:24:32			  AC
+		438					106				C++				  01:24:36			  AC
+		439					89				C++				  01:24:48			  CMPL
+		440					8				C++				  01:24:55			  WA
+		441					34				C++				  01:24:55			  RE
+		442					119				C++				  01:25:01			  AC
+		444					81				C++				  01:25:18			  AC
+		445					129				C++				  01:25:22			  AC
+		446					158				C++				  01:25:26			  CMPL
+		447					89				C++				  01:25:35			  RE
+		449					80				C++				  01:25:47			  AC
+		450					34				C++				  01:25:53			  AC
+		451					21				C++				  01:25:56			  RE
+		452					121				C++				  01:25:57			  RE
+		454					36				C++				  01:26:20			  RE
+		455					160				C++				  01:26:26			  TLE
+		456					4				C++				  01:26:31			  RE
+		458					118				C++				  01:26:47			  RE
+		459					171				C++				  01:26:53			  RE
+		460					157				C++				  01:27:11			  RE
+		461					78				C++				  01:27:13			  RE
+		462					21				C++				  01:27:34			  AC
+		463					89				C++				  01:27:37			  RE
+		465					41				C++				  01:27:56			  RE
+		466					4				C++				  01:28:17			  AC
+		467					188				C++				  01:28:21			  CMPL
+		468					165				C++				  01:28:24			  AC
+		471					158				C++				  01:29:27			  CMPL
+		472					8				C++				  01:29:28			  AC
+		473					168				C++				  01:29:33			  CMPL
+		475					78				C++				  01:29:55			  RE
+		478					27				C++				  01:30:23			  AC
+		479					6				C++				  01:30:25			  AC
+		481					36				C++				  01:30:36			  WA
+		482					168				C++				  01:30:46			  RE
+		485					109				C++				  01:31:07			  CMPL
+		486					185				C++				  01:31:27			  AC
+		487					78				C++				  01:31:44			  AC
+		488					160				C++				  01:31:59			  RE
+		489					41				C++				  01:32:01			  AC
+		490					78				C++				  01:32:07			  AC
+		491					168				C++				  01:32:17			  WA
+		494					181				C++				  01:32:38			  AC
+		495					5				C++				  01:32:53			  AC
+		496					188				C++				  01:32:56			  AC
+		497					160				C++				  01:32:58			  RE
+		498					3				C++				  01:33:14			  AC
+		499					86				C++				  01:33:31			  AC
+		500					184				C++				  01:33:45			  TLE
+		501					3				C++				  01:33:47			  AC
+		502					140				C++				  01:33:56			  RE
+		503					7				C				  01:34:04			  CMPL
+		504					160				C++				  01:34:14			  TLE
+		505					36				C++				  01:34:44			  AC
+		506					172				C++				  01:35:35			  RE
+		508					50				C++				  01:36:23			  WA
+		510					172				C++				  01:36:36			  WA
+		511					160				C++				  01:36:39			  TLE
+		512					184				C++				  01:36:49			  RE
+		513					185				C++				  01:37:36			  AC
+		514					160				C++				  01:38:03			  TLE
+		516					50				C++				  01:38:42			  AC
+		517					11				C++				  01:38:43			  AC
+		518					31				C++				  01:38:53			  CMPL
+		519					184				C++				  01:39:43			  RE
+		520					172				C++				  01:39:50			  AC
+		522					160				C++				  01:40:24			  RE
+		524					140				C++				  01:41:37			  AC
+		525					172				C++				  01:41:49			  AC
+		526					184				C++				  01:42:40			  RE
+		527					140				C++				  01:43:19			  AC
+> Problem: JKD
+	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
+		30					135				C				  00:12:28			  CMPL
+		214					130				C++				  00:45:35			  WA
+		215					153				C++				  00:45:54			  RE
+		239					174				C++				  00:51:39			  RE
+		249					153				C++				  00:53:00			  TLE
+		250					163				C++				  00:53:09			  RE
+		268					174				C++				  00:56:33			  RE
+		288					174				C++				  00:59:27			  RE
+		289					140				C++				  00:59:37			  TLE
+		339					177				C++				  01:08:47			  RE
+		354					177				C++				  01:11:26			  RE
+		357					88				C++				  01:12:38			  TLE
+		362					13				C++				  01:14:07			  WA
+		383					13				C++				  01:17:10			  AC
+		385					82				C++				  01:17:29			  RE
+		397					13				C++				  01:19:39			  WA
+		435					13				C++				  01:24:26			  RE
+		443					13				C++				  01:25:17			  RE
+		448					149				C++				  01:25:35			  AC
+		457					13				C++				  01:26:36			  AC
+		464					140				C++				  01:27:54			  TLE
+		474					111				C++				  01:29:46			  TLE
+		477					12				C++				  01:30:11			  RE
+		483					149				C++				  01:31:03			  AC
+		484					12				C++				  01:31:03			  WA
+		521					111				C++				  01:40:02			  CMPL
+		523					12				C++				  01:40:37			  TLE
+		528					9				C++				  01:44:20			  RE
+		529					19				C++				  01:45:00			  WA
+		530					160				C++				  01:46:40			  RE
+> Problem: TSB
+	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
+	No Submissions for this problem.
+> Problem: RRS
+	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
+	No Submissions for this problem.
+> Problem: KMR
+	Run ID			 Client ID 			 Language 			 Timestamp 			 Verdict
+		293					169				C				  01:00:29			  WA
+
+####################################################################################################

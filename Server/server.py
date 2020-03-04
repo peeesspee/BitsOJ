@@ -7,7 +7,7 @@ import time
  
 from time import sleep
 from client_connections import manage_clients
-from database_management import manage_database, problem_management
+from database_management import manage_database, problem_management, interface_sync
 from Interface.interface import server_window, init_gui
 from judge_connections import manage_judges
 from bitsoj_core import core
@@ -30,14 +30,14 @@ def main():
 	manual_review = config["Manual Review"]
 	submission_time_limit = config["Submission Time Limit"]
 
-	
-
 	####################################################################
 	# Create variables/lists that will be shared between processes
 	data_changed_flags = multiprocessing.Array('i', 30)
 	# This queue will be polled from bitsoj_core for handling tasks like 
 	# database updates or data transmission
 	task_queue = multiprocessing.Queue(maxsize = 1000)   
+	# This queue sends table update messages to the interface
+	update_queue = multiprocessing.Queue(maxsize = 1000)  
 	# This queue handles logs from all the 3 processes 
 	log_queue = multiprocessing.Queue(maxsize = 100)
 	# Lock object for database
@@ -88,41 +88,58 @@ def main():
 		print('[ SETUP ] Loading problems...')
 		problem_management.init_problems(config['Problems'])
 		log_queue.put('[ SETUP ] Loading problems...')
-		
+
+	# Get table data for interface
+	client_data = interface_sync.get_connected_clients_table()
+	judge_data = interface_sync.get_connected_judges_table()
+	account_data = interface_sync.get_account_table()
+	submission_data = interface_sync.get_submission_table()
+	scoreboard_data = interface_sync.get_scoreboard_table()
+	query_data = interface_sync.get_queries_table()
+	problem_data = interface_sync.get_problems_table()
+	
+	db_list = [
+		account_data, 
+		submission_data, 
+		client_data, 
+		judge_data, 
+		query_data, 
+		scoreboard_data, 
+		problem_data
+	]
 
 	# Set local variables and flags :
 	#####################################################################################
 	#index		value		meaning
-	#	0		0/1			0/1: No new/ New submission data to refresh
-	#	1		0/1			0/1: New login : Refresh connected clients view
+	#	0		0/1			New Submission : Show indication
+	#	1		0/1			New Query : Show indication
 	#	2		0/1 		0/1: Disallow/Allow logins
 	#	3		0/1			0/1: Disallow/Allow submissions
 	#	4		0/1			1: A create accounts window is open 
-	#	5		0/1			1: Update accounts view
+	#	5		0/1			
 	#   6		0/1			1: Database data deletion under progress 
 	#	7		0/1			1: Server shutdown
 	#   8		0/1			1: Core EXIT 
-	#	9		0/1			1: Refresh query gui
+	#	9		0/1			
 	# 	10		0/1/2		0: SETUP 1: START 2: STOPPED	Contest Status
 	#	11		0/1			1: Submission files open
 	#	12		0/1			1: JUDGE logins allowed
-	#   13		0/1			1: Refresh Connected Judge GUI
+	#   13		0/1			
 	#	14		0/1			1: Do not allow multiple logins with same IP address
 	#	15		0/1			1: Scoreboard update allowed
-	# 	16		0/1			1: Update Scoreboard GUI
+	# 	16		0/1			
 	#	17		0/1			1/2/3: ACM/IOI/Long Ranking Algorithm
 	#	18		0/1			1: Broadcast Scoreboard to all clients
 	#	19		0/1			1: UPDATE remaining time broadcast to all clients
 	#	20		0/1			1: Manual Review Allowed
 	#	21		X			X: Submission time limit 0 < X 
-	#	22		0/1			1: Problem table changed
+	#	22		0/1			
 	#	23		0/1			1: Stop logger
 	#	24		0/1			1: Server locked
 	#	25		0/1			1: Manual Reviews have just been turned off : Try to send all unjudged submissions?
 	#	26		0/1			1: Connection error : Restart server
 	#	27		0/1			1: Allow multiple IP 
-	# 	28 		0/1			1: Lock on db by core
-	# 	29		0/1			1: Lock by interface on db
+	
 	#####################################################################################
 	
 	# Set submission time limit
@@ -198,6 +215,7 @@ def main():
 		data_changed_flags, 
 		task_queue,
 		log_queue,
+		update_queue,
 		lock
 	)
 	print('[ SETUP ] Subprocesses started')
@@ -212,8 +230,11 @@ def main():
 	log_queue.put('[ SETUP ][ Process ] Log Manager: ' + str(log_pid))
 	
 	# Initialize GUI handler
+
 	try:
-		init_gui(data_changed_flags, task_queue, log_queue, lock)
+		######################################################################################
+		init_gui(data_changed_flags, task_queue, log_queue, update_queue, db_list, lock)
+		######################################################################################
 	except Exception as error:
 		print("[ MAIN ][ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
 		log_queue.put("[ CRITICAL ] GUI could not be loaded! Restart Server." + str(error))
@@ -309,11 +330,12 @@ def manage_process(
 		data_changed_flags, 
 		task_queue,
 		log_queue,
+		update_queue,
 		lock
 	):
 	core_process = multiprocessing.Process(
 		target = core.init_core,
-		args = (data_changed_flags, task_queue, log_queue, lock, )
+		args = (data_changed_flags, task_queue, log_queue, update_queue, lock, )
 	)
 	client_handler_process = multiprocessing.Process(
 		target = manage_clients.prepare, 

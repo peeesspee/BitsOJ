@@ -826,19 +826,10 @@ class manage_clients():
 		# current_time = initialize_server.get_time_difference(contest_start_time, current_time)
 		time_difference = initialize_server.get_abs_time_difference(current_time, time_stamp)
 
-		# UNCOMMENT THE FOLLOWING LINES IF YOU WISH TO GIVE A N SECONDS GRACE TIME TO CLIENTS
-		# AND BELIEVE IN THEIR TIMESTAMP
-
-		# N = 20	# Change this value for grace period time ( Seconds )
-		# if time_difference > N:
-		# 	print('[ SUBMISSION ][ CONFLICT ] Time difference: ', time_difference, ' Seconds ', )
-		# 	print('Current Time: ' + current_time)
-		# 	manage_clients.log('[ SUBMISSION ][ CONFLICT ] Time difference: ' + str( time_difference) + ' Seconds ')
-
 		# We don't believe in clients, so timestamp is server time.
 		time_stamp = initialize_server.get_time_difference(contest_start_time, current_time)
 		
-		# Preliminary Validation Finished
+		################################Preliminary Validation Finished##########################################
 
 		# If contest is not in running state, reject all submissions.
 		# This might reject some submissions when user sends code just before contest ends
@@ -946,6 +937,8 @@ class manage_clients():
 			}
 			message = json.dumps(message)
 			manage_clients.task_queue.put(message)
+			# Give an indication to ADMIN for new submission
+			manage_clients.data_changed_flags[0] = 1
 			print('[ CLIENT ] Sent submission request to CORE')
 			manage_clients.log('[ CLIENT ] Sent submission request to CORE')
 

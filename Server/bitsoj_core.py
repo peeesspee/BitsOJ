@@ -18,10 +18,11 @@ class core():
 	judge_broadcast_exchange = 'judge_broadcast_manager'
 	config = {}
 
-	def init_core(data_changed_flags, task_queue, log_queue, lock):
+	def init_core(data_changed_flags, task_queue, log_queue, update_queue, lock):
 		core.data_changed_flags = data_changed_flags
 		core.task_queue = task_queue
 		core.log_queue = log_queue
+		core.update_queue = update_queue
 		core.lock = lock
 		core.config = initialize_server.read_config()
 
@@ -44,9 +45,10 @@ class core():
 		while True:
 			try:
 				status = core.poll(task_queue)
-				time.sleep(2)
+				time.sleep(1)
 			
 			except Exception as error:
+				# Ignore the queue is Empty message
 				if 'Empty' in str(error) or str(error) == '':
 					pass
 				else:
@@ -114,7 +116,7 @@ class core():
 
 		# while task_queue.empty() == False:
 			# Data in the task queue is in JSON format
-		data = task_queue.get(block = True, timeout = 5)
+		data = task_queue.get(block = True, timeout = 1)
 		data = json.loads(data)
 		code = data['Code']
 		# Get a lock on DB
@@ -175,14 +177,14 @@ class core():
 		# Contest EXTeND signal
 		elif code == 'EXTND':
 			time1 = data['Time']
-			print('[ CORE ] Contest time extended by ' + str(time1) + ' minutes.')
-			core.log('[ CORE ] Contest time extended by ' + str(time1) + ' minutes.')
 			message = json.dumps(data)
 			core.channel.basic_publish(
 				exchange = core.broadcast_exchange, 
 				routing_key = '', 
 				body = message
 			)
+			print('[ CORE ] Contest time extended by ' + str(time1) + ' minutes.')
+			core.log('[ CORE ] Contest time extended by ' + str(time1) + ' minutes.')
 			
 		elif code == 'RESPONSE':
 			receiver = data['Receiver']
@@ -243,11 +245,7 @@ class core():
 				core.ranking_algoritm
 			) 
 
-			# Update Submissions GUI
-			core.data_changed_flags[0] = 1
-			# Update scoreboard view in server
-			core.data_changed_flags[16] = 1
-			# Broadcast new scoreboard to clients whenever a new AC is recieved 
+			# Broadcast new scoreboard to clients whenever a new verdict is recieved 
 			# and scoreboard update is allowed.
 			if core.data_changed_flags[15] == 1:
 				# Get user score and broadcast it to clients
@@ -272,7 +270,6 @@ class core():
 			user_management.delete_user(username)
 			print('[ CORE ] User deleted: ', username)
 			core.log('[ CORE ] User deleted: ' + username)
-			# Update Submission status
 
 		elif code == 'UpSubStat':
 			# Update Submission status
@@ -286,7 +283,17 @@ class core():
 					sent_status, 
 					judge
 			)
-			core.data_changed_flags[0] = 1
+			# Send the updated infor to interface
+			message = {
+				'Code' : 'UpSubStat',
+				'Run ID' : run_id, 
+				'Verdict' : verdict,
+				'Status' : sent_status,
+				'Judge' : judge
+			}
+			message = json.dumps(message)
+			core.update_queue.put(message)
+
 			print('[ CORE ] Run ID ' + str(run_id) + ': Status changed.')
 			core.log('[ CORE ] Run ID ' + str(run_id) + ': Status changed.')
 
@@ -299,8 +306,6 @@ class core():
 				state, 
 				judge_ip
 			)
-			# Update Judge View
-			core.data_changed_flags[13] = 1
 			print('[ CORE ] Judge ' + username + ': Status changed to ' + state)
 			core.log('[ CORE ] Judge ' + username + ': Status changed to ' + state)
 
@@ -313,10 +318,6 @@ class core():
 				state, 
 				judge_ip
 			)
-			# Update User Tables View
-			core.data_changed_flags[1] = 1
-			# Update Scoreboard View
-			core.data_changed_flags[16] = 1
 			print('[ CORE ] User ' + username + ': Status changed to ' + state)
 			core.log('[ CORE ] User ' + username + ': Status changed to ' + state)
 
@@ -335,11 +336,6 @@ class core():
 				state, 
 				table
 			)
-			# Update table views
-			# Client accounts
-			core.data_changed_flags[1] = 1
-			# judge accounts
-			core.data_changed_flags[13] = 1
 			print('[ CORE ] Added new user.')
 			core.log('[ CORE ] Added new user.')
 
@@ -364,9 +360,6 @@ class core():
 				print('[ CORE ] Account generation failed!')
 				core.log('[ CORE ] Account generation failed!')
 
-			# Indicate new insertions in accounts
-			core.data_changed_flags[5] = 1
-
 		elif code == 'AddSheetUsers':
 			print('[ CORE ] Adding sheet accounts...')
 			core.log('[ CORE ] Adding sheet accounts...')
@@ -388,28 +381,27 @@ class core():
 				print('[ CORE ] Sheet accounts added!')
 				core.log('[ CORE ] Sheet accounts added!')
 
-			# Indicate new insertions in accounts
-			core.data_changed_flags[5] = 1
+		elif code == 'AddNewScore':											###################################################
+			try:
+				client_username = data['Username' ]
+				client_id = data['ID']
+				score = data['Score']
+				problems_solved = data['Problems Solved']
+				total_time = data['Total Time']
+				scoreboard_management.insert_new_user(
+					client_id, 
+					client_username, 
+					score, 
+					problems_solved, 
+					total_time
+				)
+				print('[ CORE ] Added new user in scoreboard.')
+				core.log('[ CORE ] Added new user in scoreboard.')
+			except Exception as e:
+				print('[ CORE ][ ERROR ] Scoreboard entry could not be added: ', e)
+				core.log('[ CORE ][ ERROR ] Scoreboard entry could not be added: ' +  str(e))
 
-		elif code == 'AddNewScore':
-			client_username = data['Username' ]
-			client_id = data['ID']
-			score = data['Score']
-			problems_solved = data['Problems Solved']
-			total_time = data['Total Time']
-			scoreboard_management.insert_new_user(
-				client_id, 
-				client_username, 
-				score, 
-				problems_solved, 
-				total_time
-			)
-			# Update Scoreboard accounts view
-			core.data_changed_flags[16] = 1
-			print('[ CORE ] Added new user in scoreboard.')
-			core.log('[ CORE ] Added new user in scoreboard.')
-
-		elif code == 'AddNewSub':
+		elif code == 'AddNewSub':											###################################################
 			try:
 				print('[ CORE ] Adding new submission')
 				core.log('[ CORE ] Adding new submission')
@@ -432,14 +424,25 @@ class core():
 					status, 
 					time_stamp
 				) 
+				message = {
+					'Code' : 'AddNewSub',
+					'Run ID' : run_id, 
+					'Client ID' : client_id,
+					'Problem Code' : problem_code,
+					'Language' : language,
+					'Time' : time_stamp,
+					'Verdict' : 'Running',
+					'Status' : 'Waiting',
+					'Judge' : 'Queued'
+				}
+				message = json.dumps(message)
+				core.update_queue.put(message)
 				if status == 1:
 					print('[ CORE ] Submission inserted in database.')
 				else:
 					print('[ CORE ][ ERROR ] Submission NOT inserted in database.')
-				# Update Submissions view
-				core.data_changed_flags[0] = 1
 			except:
-				print('Error while inserting data')
+				print('[ CORE ] Error while inserting data')
 
 		elif code == 'UpUserPwd':
 			username = data['Username']
@@ -450,8 +453,7 @@ class core():
 			core.log('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
 			# Update account views
 			time.sleep(0.5)
-			core.data_changed_flags[5] = 1
-			core.data_changed_flags[1] = 1
+			
 
 		elif code == 'SHUTDOWN':
 			receiver = data['Receiver']
@@ -480,7 +482,8 @@ class core():
 		elif code == 'JUDGE':
 			run_id = data['Run ID']
 			# Refresh GUI
-			core.data_changed_flags[0] = 1
+			
+
 			message = json.dumps(data)
 			core.channel.basic_publish(
 				exchange = core.unicast_exchange,
@@ -496,7 +499,7 @@ class core():
 			# Update submission status
 			submissions_management.update_submission_status(run_id, 'REJUDGE', 'REJUDGE')
 			# Refresh GUI
-			core.data_changed_flags[0] = 1
+			
 
 			data['Code'] = 'JUDGE'
 			message = json.dumps(data)
@@ -571,6 +574,14 @@ class core():
 					routing_key = '', 
 					body = message
 				)
+			message = {
+				'Code' : 'QUERY',
+				'Client ID' : data['Client ID'],
+				'Response' : data['Response']
+			}
+			message = json.dumps(message)
+			core.update_queue.put(message)
+
 		elif code == 'AddQuery':
 			query_id = data['Query ID']
 			client_id = data['Client ID']
@@ -580,8 +591,17 @@ class core():
 				client_id, 
 				query
 			)
-			core.data_changed_flags[9] = 1
-
+			message = {
+				'Code' : 'AddNewQuery',
+				'Query ID' : query_id,
+				'Client ID' : client_id,
+				'Query' : query,
+				'Response' : 'To be answered'
+			}
+			message = json.dumps(message)
+			core.update_queue.put(message)
+			
+			
 		# Client has been DiSCoNnecTed
 		elif code == 'DSCNT':
 			if data['Mode'] == 1:
