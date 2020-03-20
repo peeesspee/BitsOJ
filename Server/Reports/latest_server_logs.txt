@@ -1,0 +1,168 @@
+2020-03-20 22:29:44.961122  :  #### SERVER START #### ###
+2020-03-20 22:29:44.961255  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-03-20 22:29:44.966996  :  [ SETUP ] Initialising server... ###
+2020-03-20 22:29:44.967057  :  [ SETUP ] Initialising database... ###
+2020-03-20 22:29:45.632859  :  [ SETUP ] Loading problems... ###
+2020-03-20 22:29:45.632935  :  [ SETUP ] Initialising subprocesses... ###
+2020-03-20 22:29:45.660993  :    [ START ] Core subprocess started. ###
+2020-03-20 22:29:46.641159  :  [ SETUP ] Subprocesses started ###
+2020-03-20 22:29:46.641242  :  [ SETUP ][ Process ] Client Manager: 16641 ###
+2020-03-20 22:29:46.641292  :  [ SETUP ][ Process ] Judge Manager: 16642 ###
+2020-03-20 22:29:46.641341  :  [ SETUP ][ Process ] Core: 16638 ###
+2020-03-20 22:29:46.641384  :  [ SETUP ][ Process ] Log Manager: 16634 ###
+2020-03-20 22:29:46.658177  :    [ START ] Client Manager subprocess started. ###
+2020-03-20 22:29:46.670658  :    [ START ] Judge Manager subprocess started. ###
+2020-03-20 22:29:46.699439  :  [ LISTEN ] Started listening on client_requests ###
+2020-03-20 22:29:46.703580  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-03-20 22:29:46.982077  :    [ START ] Interface subprocess started. ###
+2020-03-20 22:29:56.773035  :  [ SET ] Contest Duration : 01:00:00 ###
+2020-03-20 22:29:57.592648  :  [ EVENT ][ BROADCAST ] START Contest ###
+2020-03-20 22:29:57.984794  :  [ CORE ][ SCOREBOARD ][ BROADCAST ] ###
+2020-03-20 22:30:22.454690  :  [ USER ][ team00001 ][ UPDATE ] State changed to Disconnected ###
+2020-03-20 22:30:22.651446  :  [ CORE ] User team00001: Status changed to Disconnected ###
+2020-03-20 22:30:22.651798  :  [ CORE ][ EVENT ] Disconnect client : team00001 ###
+2020-03-20 22:30:27.651149  :  [ USER ][ team00001 ][ UPDATE ] State changed to Connected ###
+2020-03-20 22:30:27.836968  :  [ CORE ] User team00001: Status changed to Connected ###
+2020-03-20 22:30:40.404229  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:30:40.404298  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:30:40 ###
+2020-03-20 22:30:40.517088  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:30:40.518456  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:30:40.518527  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:30:40.521423  :  [ CORE ] Adding new submission ###
+2020-03-20 22:30:40.608809  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:30:40.608882  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:30:47.135486  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:30:47.135877  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:30:47 ###
+2020-03-20 22:30:47.136552  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:30:47.136954  :  [ CORE ] Adding new submission ###
+2020-03-20 22:30:47.137145  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:30:47.138254  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:30:47.342203  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:30:47.342370  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:30:57.457844  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:30:57.457913  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:30:57 ###
+2020-03-20 22:30:57.565403  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:30:57.565475  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:30:57.565525  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:30:57.565920  :  [ CORE ] Adding new submission ###
+2020-03-20 22:30:57.644010  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:30:57.644087  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:30:58.520841  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:30:58.520920  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:30:58 ###
+2020-03-20 22:30:58.520971  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:30:58.521016  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:30:58.521059  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:30:58.521102  :  [ CORE ] Adding new submission ###
+2020-03-20 22:30:58.582429  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:30:58.582494  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:30:59.616823  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:30:59.616893  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:30:59 ###
+2020-03-20 22:30:59.616950  :  [ CORE ] Adding new submission ###
+2020-03-20 22:30:59.616997  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:30:59.617042  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:30:59.617087  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:30:59.689804  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:30:59.689878  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:00.591391  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:00.591460  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:00 ###
+2020-03-20 22:31:00.591507  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:00.591551  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:00.591595  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:00.591638  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:00.661141  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:00.661214  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:01.648804  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:01.648872  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:01 ###
+2020-03-20 22:31:01.666284  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:01.666356  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:01.666404  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:01.666730  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:01.752207  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:01.752278  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:02.654756  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:02.654909  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:02 ###
+2020-03-20 22:31:02.654965  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:02.655011  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:02.655055  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:02.655099  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:02.724320  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:02.724397  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:03.382226  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:03.382295  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:03.382345  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:03 ###
+2020-03-20 22:31:03.382392  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:03.382437  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:03.382483  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:03.455787  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:03.455864  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:04.155664  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:04.155735  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:04 ###
+2020-03-20 22:31:04.155814  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:04.156015  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:04.156067  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:04.156132  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:04.269858  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:04.269933  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:04.908827  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:04.908914  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:04 ###
+2020-03-20 22:31:04.908964  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:04.909009  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:04.909055  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:04.909100  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:04.980555  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:04.980634  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:05.872294  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:05.872583  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:05 ###
+2020-03-20 22:31:05.884846  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:05.884927  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:05.884977  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:05.885024  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:05.955236  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:05.955311  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:06.769252  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:06.769587  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:06 ###
+2020-03-20 22:31:06.770309  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:06.770367  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:06.771001  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:06.772020  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:07.229808  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:07.229885  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:07.785148  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:07.785448  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:07 ###
+2020-03-20 22:31:07.786170  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:07.786227  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:07.786810  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:07.787838  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:07.879017  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:07.880775  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:08.671532  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:08.671605  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:08 ###
+2020-03-20 22:31:08.671652  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:08.671694  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:08.671737  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:08.671781  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:08.764812  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:08.764890  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:09.516830  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:31:09.516905  :  [ SUBMISSION ] Client ID :1 IP:192.168.0.0 Username: team00001 Problem:CES Language :C++ Time stamp :22:31:09 ###
+2020-03-20 22:31:09.516958  :  [ CORE ] Adding new submission ###
+2020-03-20 22:31:09.517002  :  [ CLIENT ] Sent submission request to CORE ###
+2020-03-20 22:31:09.517046  :  [ JUDGE ] Requesting a new judgement ###
+2020-03-20 22:31:09.517091  :  [ REQUEST ] New judging request sent successfully. ###
+2020-03-20 22:31:09.594511  :  [ CORE ][ team00001 ] Run ID sent. ###
+2020-03-20 22:31:09.594612  :  [ CORE ] Added a new submission request. ###
+2020-03-20 22:31:36.449769  :  [ ACCOUNT ] Create 0 Clients and 1 Judge Accounts ###
+2020-03-20 22:31:36.449858  :  [ CORE ] Generating accounts... ###
+2020-03-20 22:31:36.629303  :  [ CORE ] All accounts generated! ###
+2020-03-20 22:32:25.008918  :  [ ALERT ] Recieved a new client message. ###
+2020-03-20 22:32:25.008994  :  [ LOGIN REQUEST ] ::: dIutBj :::judge00001@bits1[ TYPE ] JUDGE IP: 127.0.1.1 ###
+2020-03-20 22:32:25.052867  :  [ LOGIN ][ REJECT ] Rejected by ADMIN ###
+2020-03-20 22:33:48.240298  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-03-20 22:33:48.279311  :  [ EXIT ] Signal passed ###
+2020-03-20 22:33:48.282770  :  [ EXIT ] Saving Server state to file. ###
+2020-03-20 22:33:48.282845  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-03-20 22:33:48.282898  :  [ EXIT ] Saved Server state to file. ###
+2020-03-20 22:33:48.282945  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-03-20 22:33:48.282993  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-03-20 22:33:48.284230  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-03-20 22:33:48.668248  :  [ STOP ] Core subprocess terminated successfully! ###

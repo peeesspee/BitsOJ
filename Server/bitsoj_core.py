@@ -661,6 +661,7 @@ class core():
 
 		# QUERY reply to client or broadcast
 		elif code == 'QUERY':
+			query_id = data['Query ID']
 			if data['Mode'] == 'Client':
 				print('[ CORE ][ EVENT ][ UNICAST ] New Query response to client')
 				core.log('[ CORE ][ EVENT ][ UNICAST ] New Query response to client')
@@ -696,10 +697,28 @@ class core():
 				)
 			message = {
 				'Code' : 'QUERY',
-				'Client ID' : data['Client ID'],
+				'Query ID' : query_id,
 				'Response' : data['Response']
 			}
 			core.update_queue.put(message)
+
+		elif code == 'Announce':
+			query_id = data['Query ID']
+			print('[ CORE ][ EVENT ] Announcement broadcasted')
+			core.log('[ CORE ][ EVENT ] Announcement broadcasted')
+			message = {
+				'Code' : 'QUERY',   # Yeah, client doesn't know that its announcement :P
+				'Client ID' : '0',
+				'Query' : data['Query'],
+				'Response' : data['Response'],
+				'Type' : data['Mode']
+			}
+			message = json.dumps(message)
+			core.channel.basic_publish(
+				exchange = core.broadcast_exchange, 
+				routing_key = '', 
+				body = message
+			)
 
 		elif code == 'AddQuery':
 			query_id = data['Query ID']

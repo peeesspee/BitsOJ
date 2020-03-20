@@ -126,12 +126,6 @@ class password_change_ui(QMainWindow):
 
 			print('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
 			self.log('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
-			# Update connected_clients view
-			self.data_changed_flags[1] = 1
-			# Update accounts view
-			self.data_changed_flags[5] = 1
-			# Release the window lock # BUGGY - Might remove later
-			self.data_changed_flags[14] = 0
 			self.close()
 
 		elif new_password == password_change_ui.password:

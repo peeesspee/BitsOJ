@@ -406,12 +406,12 @@ class server_window(QMainWindow):
 				self.close()
 
 			# New Submission : Show indication
-			if self.data_changed_flags[0] == 1:
+			if self.data_changed_flags[0] == 1 and self.right_widget.currentIndex != 1:
 				self.button_1.setStyleSheet('border-right : 10px solid #FFBF00;}')
 				self.button_1.update()
 				
 			# New query : Show indication
-			if self.data_changed_flags[1] == 1:
+			if self.data_changed_flags[1] == 1 and self.right_widget.currentIndex != 4:
 				self.button_4.setStyleSheet('border-right : 10px solid #FFBF00;}')
 				self.button_4.update()
 			
@@ -931,10 +931,13 @@ class server_window(QMainWindow):
 			reply = self.query_model.selectedIndexes()[3].data()
 
 			if query_id == None:
-				query_id = -2
+				query_id = -1
 
-			
-			self.window = query_reply_ui(self.data_changed_flags,self.task_queue, query, reply, client_id, query_id, self.log_queue )
+			mode = 0
+			if client_id == '0':
+				mode = 1
+
+			self.window = query_reply_ui(self.data_changed_flags,self.task_queue, query, reply, client_id, query_id, self.log_queue, mode)
 			self.window.show()
 
 		except Exception as error: 
@@ -953,6 +956,7 @@ class server_window(QMainWindow):
 			self.window.close()
 		except:
 			pass
+
 		try:
 			query = 'Announcement'
 			reply = ''

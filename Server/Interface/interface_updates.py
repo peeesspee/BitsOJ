@@ -6,15 +6,11 @@ from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex,
 class interface_updates:
 	def update_table_contained(self):
 		while not self.update_queue.empty():
-			print('\n' + '#' * 80)
-			print('[ UI ][ UPDATE ] Tables under updation...')
 			data = self.update_queue.get()
 			code = data.get('Code', 'None')
 			if code == 'None':
 				pass
-
 			elif code == 'AddNewUser':
-				print('[ UI ][ INSERT ] Adding new account')
 				table = data['Table']
 				if table == 'connected_clients':
 					row_count = self.client_model.rowCount()
@@ -34,7 +30,6 @@ class interface_updates:
 					self.judge_model.setItem(row_count, 4, QTableWidgetItem(data['State']))
 
 			elif code == 'RefreshUsers':
-				print('[ UI ] Refresh accounts...')
 				account_data = data['Data']
 				self.account_model.setRowCount(len(account_data))
 				for i in range (len(account_data)):
@@ -76,7 +71,6 @@ class interface_updates:
 							break
 
 			elif code == 'AddNewSub':
-				print('[ UI ][ INSERT ] Adding new submission')
 				row_count = self.sub_model.rowCount()
 				self.sub_model.setRowCount(row_count + 1)
 				self.sub_model.setItem(row_count, 0, QTableWidgetItem(str(data['Run ID'])))
@@ -89,12 +83,11 @@ class interface_updates:
 				self.sub_model.setItem(row_count, 7, QTableWidgetItem(data['Judge']))
 
 			elif code == 'UpSubStat':
-				print('[ UI ][ UPDATE ] Update submission status...')
 				run_id  = int(data['Run ID'])
 				verdict = data['Verdict']
 				sent_status = data['Status']
 				judge = data['Judge']
-				print('Run : ', run_id, 'verdict:', verdict)
+				
 				row_count = self.sub_model.rowCount()
 				for i in range(row_count):
 					item = int(self.sub_model.item(i, 0).text())
@@ -125,9 +118,7 @@ class interface_updates:
 				client_id = data['ID']
 				score = str(data['Score'])
 				problems_solved = str(data['Problems Solved'])
-				total_time = data['Total Time']
-
-				print('[ UI ][ INSERT ] Adding new scoreboard entry')
+				total_time = data['Total Time']				
 				row_count = self.score_model.rowCount()
 				self.score_model.setRowCount(row_count + 1)
 				self.score_model.setItem(row_count, 0, QTableWidgetItem(username))
@@ -160,7 +151,6 @@ class interface_updates:
 						break
 
 			elif code == 'AddQuery':
-				print('[ UI ][ INSERT ] Adding new query')
 				row_count = self.query_model.rowCount()
 				self.query_model.setRowCount(row_count + 1)
 				self.query_model.setItem(row_count, 0, QTableWidgetItem(str(data['Query ID'])))
@@ -169,13 +159,12 @@ class interface_updates:
 				self.query_model.setItem(row_count, 3, QTableWidgetItem(data['Response']))
 
 			elif code == 'QUERY':
-				print('[ UI ][ UPDATE ] Update query status...')
 				# Handle query response
 				client_id = data['Client ID']
 				response = data['Response']
 				row_count = self.query_model.rowCount()
 				for i in range(row_count):
-					item = self.query_model.itemAt(QPoint(i, 1)).text()
+					item = self.query_model.item(i, 1).text()
 					if int(item) == int(client_id):
 						self.query_model.setItem(i, 3, QTableWidgetItem(response))
 						break

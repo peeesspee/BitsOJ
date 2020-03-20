@@ -10,7 +10,7 @@ host = 'localhost'
 global client_id, mode, channel, connection
 
 mode = 1
-client_id = '2'
+client_id = '1'
 
 username = 'team00001'
 password = 'bits1'
