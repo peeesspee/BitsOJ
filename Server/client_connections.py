@@ -82,8 +82,15 @@ class manage_clients():
 			# Initialize Run ID
 			run_id = submission.init_run_id()
 			if run_id == -1:
+				print('[ CLIENT ][ ERROR ] Run ID init failed!')
 				raise InitializationError
-			previous_data.get_last_client_id()
+
+			# Initialize Client ID
+			cid_status = previous_data.get_last_client_id()
+			if cid_status == -1:
+				print('[ CLIENT ][ ERROR ] Client ID init failed!')
+				raise InitializationError
+
 		except InitializationError:
 			print('[ CLIENT ][ ERROR ] Process initialization failed! Restart Server.')
 			connection.close()
@@ -949,7 +956,7 @@ class manage_clients():
 				'Language' : language,
 				'Source File Name' : source_file_name,
 				'Problem Code' : problem_code,
-				'Status' : 'RUNNING',
+				'Status' : 'Running',
 				'Timestamp' : time_stamp
 			}
 			message = json.dumps(message)

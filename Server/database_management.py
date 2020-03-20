@@ -38,7 +38,7 @@ class manage_database():
 
 			cur.execute("create table if not exists connected_judges(judge_id varchar2(10), user_name varchar2(10) PRIMARY KEY, password varchar2(10), ip varchar2(16) DEFAULT '0.0.0.0', state varchar2(15))")
 
-			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'WAITING', judge varchar2(15) DEFAULT '-', score integer DEFAULT 0)")
+			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'Waiting', judge varchar2(15) DEFAULT '-', score integer DEFAULT 0)")
 
 			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
 
@@ -635,15 +635,17 @@ class previous_data(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(client_id) FROM connected_clients")
 			data =  cur.fetchall()
-			if(data[0][0] != ''):
-				client_id_counter = int(data[0][0])
-			else:
+			if(len(data) == 0 or data[0][0] == None or data == None):
 				client_id_counter = 0
+			else:
+				client_id_counter = int(data[0][0])
+			cur.close()
+			return client_id_counter
 
-		except:
-			print('[ DB ][ INIT ] Client ID initialised to 0')
+		except Exception as error:
+			print('[ DB ][ ERROR ] Client ID could not be initiated: ', error)
 			client_id_counter = 0
-		cur.close()
+			return -1
 
 class client_authentication(manage_database):
 	#This function validates the (user_name, password, client_id) in the database.
@@ -839,6 +841,7 @@ class submissions_management(manage_database):
 		
 	def init_run_id():
 		try:
+			print('[ DB ] Initialising Run ID')
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(run_id) FROM submissions")
 			data = cur.fetchall()

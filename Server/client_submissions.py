@@ -38,6 +38,7 @@ class submission():
 
 	def init_run_id():
 		run = submissions_management.init_run_id()
+		submission.run_id = run
 		return run
 
 	def generate_run_id():

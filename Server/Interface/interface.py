@@ -1,7 +1,6 @@
 import sys, time, json, threading
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap
-from PyQt5.QtSql import QSqlTableModel, QSqlDatabase, QSqlQueryModel, QSqlQuery
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, QTimer, Qt, QModelIndex, qInstallMessageHandler, QPoint
 from Interface.ui_classes import *
 from Interface.problem_ui import *
@@ -14,8 +13,10 @@ from Interface.ie_accounts_ui import *
 from Interface.rejudge_problem_ui import *
 from Interface.judge_view_ui import *
 from Interface.generate_report_ui import *
+from Interface.interface_updates import *
 from init_server import initialize_server, save_status
 from database_management import *
+
 # This is to ignore some warnings which were thrown when gui exited and 
 # python deleted some assests in wrong order
 # Nothing critical :)
@@ -517,70 +518,12 @@ class server_window(QMainWindow):
 
 	def update_tables(self):
 		try:
-			self.update_table_contained()
+			interface_updates.update_table_contained(self)
 		except Exception as e:
 			print('[ UI ] Table updation error: ', e)
 		finally:
 			return
-
-	def update_table_contained(self):
-		while not self.update_queue.empty():
-			print('\n' + '#' * 100)
-			print('[ UI ][ UPDATE ] Tables under updation...')
-			data = self.update_queue.get()
-			data = json.loads(data)
-			code = data.get('Code', 'None')
-			if code == 'AddNewSub':
-				print('[ UI ][ INSERT ] Adding new submission')
-				row_count = self.sub_model.rowCount()
-				self.sub_model.setRowCount(row_count + 1)
-				self.sub_model.setItem(row_count, 0, QTableWidgetItem(str(data['Run ID'])))
-				self.sub_model.setItem(row_count, 1, QTableWidgetItem(str(data['Client ID'])))
-				self.sub_model.setItem(row_count, 2, QTableWidgetItem(data['Problem Code']))
-				self.sub_model.setItem(row_count, 3, QTableWidgetItem(data['Language']))
-				self.sub_model.setItem(row_count, 4, QTableWidgetItem(data['Time']))
-				self.sub_model.setItem(row_count, 5, QTableWidgetItem(data['Verdict']))
-				self.sub_model.setItem(row_count, 6, QTableWidgetItem(data['Status']))
-				self.sub_model.setItem(row_count, 7, QTableWidgetItem(data['Judge']))
-			elif code == 'UpSubStat':
-				print('[ UI ][ UPDATE ] Update submission status...')
-				run_id  = int(data['Run ID'])
-				verdict = data['Verdict']
-				sent_status = data['Status']
-				judge = data['Judge']
-
-				print('Run : ', run_id, 'verdict:', verdict)
-
-				row_count = self.sub_model.rowCount()
-				for i in range(row_count):
-					item = int(self.sub_model.itemAt(QPoint(i, 0)).text())
-					print(' compare with ', item)
-					if int(item) == int(run_id):
-						self.sub_model.setItem(i, 5, QTableWidgetItem(verdict))
-						self.sub_model.setItem(i, 6, QTableWidgetItem(sent_status))
-						self.sub_model.setItem(i, 7, QTableWidgetItem(judge))
-						break
-			elif code == 'AddNewQuery':
-				print('[ UI ][ INSERT ] Adding new query')
-				row_count = self.query_model.rowCount()
-				self.query_model.setRowCount(row_count + 1)
-				self.query_model.setItem(row_count, 0, QTableWidgetItem(str(data['Query ID'])))
-				self.query_model.setItem(row_count, 1, QTableWidgetItem(str(data['Client ID'])))
-				self.query_model.setItem(row_count, 2, QTableWidgetItem(data['Query']))
-				self.query_model.setItem(row_count, 3, QTableWidgetItem(data['Response']))
-			elif code == 'QUERY':
-				print('[ UI ][ UPDATE ] Update query status...')
-				# Handle query response
-				client_id = data['Client ID']
-				response = data['Response']
-				row_count = self.query_model.rowCount()
-				for i in range(row_count):
-					item = self.query_model.itemAt(QPoint(i, 1)).text()
-					if int(item) == int(client_id):
-						self.query_model.setItem(i, 3, QTableWidgetItem(response))
-						break
-
-
+ 
 	def set_table_data(self):
 		account_data = self.db_list[0]
 		sub_data = self.db_list[1]
@@ -1593,6 +1536,7 @@ class server_window(QMainWindow):
 				self.log('[ EVENT ] SERVER RESET TRIGGERED')
 				
 				# Send disconnect message to all clients
+				user_management.disconnect_all()
 				message = {
 					'Code' : 'DSCNT',
 					'Mode' : 2
@@ -1615,9 +1559,6 @@ class server_window(QMainWindow):
 				print('[ RESET ] Deleting all Connected Judges...')
 				self.log('[ RESET ] Deleting all Connected Judges...')
 				
-				
-				# # TODO 														Broadcast this to all judges
-
 				# Reset Scoreboard
 				print('[ RESET ] Clearing scoreboard...')
 				self.log('[ RESET ] Clearing scoreboard...')

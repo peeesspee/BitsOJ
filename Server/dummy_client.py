@@ -10,7 +10,7 @@ host = 'localhost'
 global client_id, mode, channel, connection
 
 mode = 1
-client_id = '1'
+client_id = '2'
 
 username = 'team00001'
 password = 'bits1'
@@ -122,7 +122,7 @@ def send():
 		'Time' : ctime,
 		'Source' : code,
 		'Local Run ID' : 1,
-		'IP' : '192.168.1.2'
+		'IP' : '192.168.0.0'
 		}
 	message = json.dumps(message)
 	channel.basic_publish(exchange = 'connection_manager', routing_key = 'client_requests', body = message)
