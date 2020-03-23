@@ -18,10 +18,11 @@ class core():
 	judge_broadcast_exchange = 'judge_broadcast_manager'
 	config = {}
 
-	def init_core(data_changed_flags, task_queue, log_queue, lock):
+	def init_core(data_changed_flags, task_queue, log_queue, update_queue, lock):
 		core.data_changed_flags = data_changed_flags
 		core.task_queue = task_queue
 		core.log_queue = log_queue
+		core.update_queue = update_queue
 		core.lock = lock
 		core.config = initialize_server.read_config()
 
@@ -44,9 +45,8 @@ class core():
 		while True:
 			try:
 				status = core.poll(task_queue)
-				time.sleep(2)
-			
 			except Exception as error:
+				# Ignore the queue is Empty message
 				if 'Empty' in str(error) or str(error) == '':
 					pass
 				else:
@@ -75,7 +75,12 @@ class core():
 	def init_connection(superuser_username, superuser_password, host):
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
-			params = pika.ConnectionParameters(host = host, credentials = creds, heartbeat=0, blocked_connection_timeout=0)
+			params = pika.ConnectionParameters(
+					host = host, 
+					credentials = creds, 
+					heartbeat=0, 
+					blocked_connection_timeout=0
+				)
 			connection = pika.BlockingConnection(params)
 			channel = connection.channel()
 
@@ -109,7 +114,7 @@ class core():
 
 		# while task_queue.empty() == False:
 			# Data in the task queue is in JSON format
-		data = task_queue.get(block = True, timeout = 5)
+		data = task_queue.get(block = True, timeout = 0.5)
 		data = json.loads(data)
 		code = data['Code']
 		# Get a lock on DB
@@ -170,14 +175,14 @@ class core():
 		# Contest EXTeND signal
 		elif code == 'EXTND':
 			time1 = data['Time']
-			print('[ CORE ] Contest time extended by ' + str(time1) + ' minutes.')
-			core.log('[ CORE ] Contest time extended by ' + str(time1) + ' minutes.')
 			message = json.dumps(data)
 			core.channel.basic_publish(
 				exchange = core.broadcast_exchange, 
 				routing_key = '', 
 				body = message
 			)
+			print('[ CORE ] Contest time extended by ' + str(time1) + ' minutes.')
+			core.log('[ CORE ] Contest time extended by ' + str(time1) + ' minutes.')
 			
 		elif code == 'RESPONSE':
 			receiver = data['Receiver']
@@ -189,264 +194,6 @@ class core():
 			)
 			print('[ CORE ][ ' + receiver + ' ] Run ID sent.')
 			core.log('[ CORE ][ ' + receiver + ' ] Run ID sent.')
-
-		elif code == 'VRDCT':
-			username = data['Receiver']
-			run_id = data['Run ID']
-			status = data['Status']
-			client_id = data['Client ID']
-			p_code = data['Problem Code']
-			time_stamp = data['Timestamp']
-			try:
-				judge = data['Judge']
-			except:
-				judge = 'SECURITY ERROR'
-				
-			message = json.dumps(data)
-			core.channel.basic_publish(
-				exchange = core.unicast_exchange, 
-				routing_key = username, 
-				body = message
-			)
-			
-			core.channel.basic_publish(
-				exchange = core.judge_broadcast_exchange,
-				routing_key = '',
-				body = message
-			)
-			
-			# Update scoreboard
-			problem_max_score = core.config['AC Points']
-			penalty_score = core.config['Penalty Score']
-			penalty_time = core.config['Penalty Time']
-			
-			# Update submission Database
-			submissions_management.update_submission_status(run_id, status, 'SENT', judge)
-			print('[ CORE ][ ' + username + ' ] Verdict sent to client.')
-			core.log('[ CORE ][ ' + username + ' ] Verdict sent to client.')
-
-			# Call scoreboard updation function
-			scoreboard_management.update_user_score(
-				client_id,
-				run_id,
-				problem_max_score,
-				penalty_score,
-				penalty_time,
-				status, 
-				p_code,
-				time_stamp,
-				core.ranking_algoritm
-			) 
-
-			# Update Submissions GUI
-			core.data_changed_flags[0] = 1
-			# Update scoreboard view in server
-			core.data_changed_flags[16] = 1
-			# Broadcast new scoreboard to clients whenever a new AC is recieved 
-			# and scoreboard update is allowed.
-			if core.data_changed_flags[15] == 1:
-				# Get user score and broadcast it to clients
-				data = scoreboard_management.get_user_score(username)
-				data = str(data)
-			
-				message = {
-					'Code' : 'SCRBD',
-					'Data' : data
-				}
-				message = json.dumps(message)
-				core.channel.basic_publish(
-					exchange = core.broadcast_exchange,
-					routing_key = '',
-					body = message
-				)
-				print('[ CORE ] Scoreboard Updated for clients')
-				core.log('[ CORE ] Scoreboard Updated for clients')
-
-		elif code == 'DelUsr':
-			username = data['Client']
-			user_management.delete_user(username)
-			print('[ CORE ] User deleted: ', username)
-			core.log('[ CORE ] User deleted: ' + username)
-			# Update Submission status
-
-		elif code == 'UpSubStat':
-			# Update Submission status
-			run_id = data['RunID']
-			verdict = data['Verdict']
-			sent_status = data['Sent Status']
-			judge = data['Judge']
-			submissions_management.update_submission_status(
-					run_id, 
-					verdict, 
-					sent_status, 
-					judge
-			)
-			core.data_changed_flags[0] = 1
-			print('[ CORE ] Run ID ' + str(run_id) + ': Status changed.')
-			core.log('[ CORE ] Run ID ' + str(run_id) + ': Status changed.')
-
-		elif code == 'UpJudgeStat':
-			username = data['Username']
-			state = data['State']
-			judge_ip = data['IP']
-			user_management.update_judge_state(
-				username, 
-				state, 
-				judge_ip
-			)
-			# Update Judge View
-			core.data_changed_flags[13] = 1
-			print('[ CORE ] Judge ' + username + ': Status changed to ' + state)
-			core.log('[ CORE ] Judge ' + username + ': Status changed to ' + state)
-
-		elif code == 'UpUserStat':
-			username = data['Username']
-			state = data['State']
-			judge_ip = data['IP']
-			user_management.update_user_state(
-				username, 
-				state, 
-				judge_ip
-			)
-			# Update User Tables View
-			core.data_changed_flags[1] = 1
-			# Update Scoreboard View
-			core.data_changed_flags[16] = 1
-			print('[ CORE ] User ' + username + ': Status changed to ' + state)
-			core.log('[ CORE ] User ' + username + ': Status changed to ' + state)
-
-		elif code == 'AddNewUser':
-			username = data['Username']
-			state = data['State' ]
-			client_ip = data['IP']
-			client_id = data['ID']
-			password = data['Password' ]
-			table = data['Table']
-			client_authentication.add_client(
-				client_id, 
-				username, 
-				password, 
-				client_ip, 
-				state, 
-				table
-			)
-			# Update table views
-			# Client accounts
-			core.data_changed_flags[1] = 1
-			# judge accounts
-			core.data_changed_flags[13] = 1
-			print('[ CORE ] Added new user.')
-			core.log('[ CORE ] Added new user.')
-
-		elif code == 'AddNUsers':
-			print('[ CORE ] Generating accounts...')
-			core.log('[ CORE ] Generating accounts...')
-
-			client_no = data['Clients' ]
-			judge_no = data['Judges' ]
-			pwd_type = data['Password Type' ]
-			
-			status = user_management.generate_n_users(
-				client_no, 
-				judge_no, 
-				pwd_type
-			)
-		
-			if status == 1:
-				print('[ CORE ] All accounts generated!')
-				core.log('[ CORE ] All accounts generated!')
-			else:
-				print('[ CORE ] Account generation failed!')
-				core.log('[ CORE ] Account generation failed!')
-
-			# Indicate new insertions in accounts
-			core.data_changed_flags[5] = 1
-
-		elif code == 'AddSheetUsers':
-			print('[ CORE ] Adding sheet accounts...')
-			core.log('[ CORE ] Adding sheet accounts...')
-			
-			u_list = data['UserList']
-			p_list = data['PassList']
-			t_list = data['TypeList']
-			
-			status = user_management.add_sheet_accounts(
-				u_list, 
-				p_list, 
-				t_list
-			)
-			if status == 0:
-				# Database insertion error
-				print('[ CORE ][ ERROR ] Database insertion error: Team names should be unique.')
-				core.log('[ CORE ][ ERROR ] Database insertion error: Team names should be unique.')
-			else:
-				print('[ CORE ] Sheet accounts added!')
-				core.log('[ CORE ] Sheet accounts added!')
-
-			# Indicate new insertions in accounts
-			core.data_changed_flags[5] = 1
-
-		elif code == 'AddNewScore':
-			client_username = data['Username' ]
-			client_id = data['ID']
-			score = data['Score']
-			problems_solved = data['Problems Solved']
-			total_time = data['Total Time']
-			scoreboard_management.insert_new_user(
-				client_id, 
-				client_username, 
-				score, 
-				problems_solved, 
-				total_time
-			)
-			# Update Scoreboard accounts view
-			core.data_changed_flags[16] = 1
-			print('[ CORE ] Added new user in scoreboard.')
-			core.log('[ CORE ] Added new user in scoreboard.')
-
-		elif code == 'AddNewSub':
-			try:
-				print('[ CORE ] Adding new submission')
-				core.log('[ CORE ] Adding new submission')
-				run_id = data['RunID']
-				local_run_id = data['Local ID']
-				client_id = data['Client ID']
-				language = data['Language']
-				source_file_name = data['Source File Name']
-				problem_code = data['Problem Code']
-				status = data['Status']
-				time_stamp = data['Timestamp']
-
-				status = submissions_management.insert_submission(
-					run_id,
-					local_run_id, 
-					client_id, 
-					language, 
-					source_file_name, 
-					problem_code, 
-					status, 
-					time_stamp
-				) 
-				if status == 1:
-					print('[ CORE ] Submission inserted in database.')
-				else:
-					print('[ CORE ][ ERROR ] Submission NOT inserted in database.')
-				# Update Submissions view
-				core.data_changed_flags[0] = 1
-			except:
-				print('Error while inserting data')
-
-		elif code == 'UpUserPwd':
-			username = data['Username']
-			password = data['New Password']
-			ctype = data['Type']
-			user_management.update_user_password(username, password, ctype) 
-			print('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
-			core.log('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
-			# Update account views
-			time.sleep(0.5)
-			core.data_changed_flags[5] = 1
-			core.data_changed_flags[1] = 1
 
 		elif code == 'SHUTDOWN':
 			receiver = data['Receiver']
@@ -471,11 +218,8 @@ class core():
 				properties = pika.BasicProperties(delivery_mode = 2)
 			) 
 
-
 		elif code == 'JUDGE':
 			run_id = data['Run ID']
-			# Refresh GUI
-			core.data_changed_flags[0] = 1
 			message = json.dumps(data)
 			core.channel.basic_publish(
 				exchange = core.unicast_exchange,
@@ -491,7 +235,7 @@ class core():
 			# Update submission status
 			submissions_management.update_submission_status(run_id, 'REJUDGE', 'REJUDGE')
 			# Refresh GUI
-			core.data_changed_flags[0] = 1
+			
 
 			data['Code'] = 'JUDGE'
 			message = json.dumps(data)
@@ -530,9 +274,394 @@ class core():
 				routing_key = '', 
 				body = message
 			)
+
+# ----------------------------------------------------------------------------------------------------
+
+		elif code == 'AddNewUser':
+			username = data['Username']
+			state = data['State' ]
+			client_ip = data['IP']
+			client_id = data['ID']
+			password = data['Password' ]
+			table = data['Table']
+			client_authentication.add_client(
+				client_id, 
+				username, 
+				password, 
+				client_ip, 
+				state, 
+				table
+			)
+			core.update_queue.put(data)
+			print('[ CORE ] Added new user.')
+			core.log('[ CORE ] Added new user.')
+
+		elif code == 'AddNUsers':
+			print('[ CORE ] Generating accounts...')
+			core.log('[ CORE ] Generating accounts...')
+
+			client_no = data['Clients' ]
+			judge_no = data['Judges' ]
+			pwd_type = data['Password Type' ]
+			
+			status = user_management.generate_n_users(
+				client_no, 
+				judge_no, 
+				pwd_type
+			)
+
+			if status == 1:
+				print('[ CORE ] All accounts generated!')
+				core.log('[ CORE ] All accounts generated!')
+				# Get all accounts:
+				account_data = interface_sync.get_account_table()
+
+				# Update Interface
+				core.update_queue.put({'Code' : 'RefreshUsers', 'Data' : account_data})
+			else:
+				print('[ CORE ] Account generation failed!')
+				core.log('[ CORE ] Account generation failed!')
+				core.update_queue.put(
+					{
+						'Code' : 'ERROR', 
+						'Message' : 'Accounts could not be generated!'
+					}
+				)
+			
+		elif code == 'AddSheetUsers':
+			print('[ CORE ] Adding sheet accounts...')
+			core.log('[ CORE ] Adding sheet accounts...')
+			
+			u_list = data['UserList']
+			p_list = data['PassList']
+			t_list = data['TypeList']
+			
+			status = user_management.add_sheet_accounts(
+				u_list, 
+				p_list, 
+				t_list
+			)
+			if status == 0:
+				# Database insertion error
+				print('[ CORE ][ ERROR ] Database insertion error: Team names should be unique.')
+				core.log('[ CORE ][ ERROR ] Database insertion error: Team names should be unique.')
+				core.update_queue.put(
+					{
+						'Code' : 'ERROR', 
+						'Message' : 'Accounts could not be imported [ Username should be unique ]'
+					}
+				)
+			else:
+				print('[ CORE ] Sheet accounts added!')
+				core.log('[ CORE ] Sheet accounts added!')
+				core.update_queue.put({'Code' : 'RefreshUsers'})
+
+		elif code == 'DelUsr':
+			username = data['Client']
+			user_management.delete_user(username)
+			print('[ CORE ] User deleted: ', username)
+			core.log('[ CORE ] User deleted: ' + username)
+			core.update_queue.put(data)
+
+		elif code == 'UpUserPwd':
+			username = data['Username']
+			password = data['New Password']
+			ctype = data['Type']
+			user_management.update_user_password(username, password, ctype)
+			core.update_queue.put(data)
+			print('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
+			core.log('[ CORE ] Updated user ' + username + '\'s Password to ' + password)
 		
+		elif code == 'AddNewSub':
+			print('[ CORE ] Adding new submission')
+			core.log('[ CORE ] Adding new submission')
+			run_id = data['RunID']
+			local_run_id = data['Local ID']
+			client_id = data['Client ID']
+			language = data['Language']
+			source_file_name = data['Source File Name']
+			problem_code = data['Problem Code']
+			status = data['Status']
+			time_stamp = data['Timestamp']
+			status = submissions_management.insert_submission(
+				run_id,
+				local_run_id, 
+				client_id, 
+				language, 
+				source_file_name, 
+				problem_code, 
+				status, 
+				time_stamp
+			) 
+			if status == 1:
+				print('[ CORE ] Submission inserted in database.')
+			else:
+				print('[ CORE ][ ERROR ] Submission NOT inserted in database.')
+			# Update Interface to show new submission
+			message = {
+				'Code' : 'AddNewSub',
+				'Run ID' : run_id, 
+				'Client ID' : client_id,
+				'Problem Code' : problem_code,
+				'Language' : language,
+				'Time' : time_stamp,
+				'Verdict' : 'Running',
+				'Status' : 'Waiting',
+				'Judge' : 'Queued'
+			}
+			core.update_queue.put(message)
+			# Inform admin of new submission
+			core.data_changed_flags[0] = 1 
+
+		elif code == 'VRDCT':
+			username = data['Receiver']
+			run_id = data['Run ID']
+			status = data['Status']
+			client_id = data['Client ID']
+			p_code = data['Problem Code']
+			time_stamp = data['Timestamp']
+			try:
+				judge = data['Judge']
+			except:
+				judge = 'SECURITY ERROR'
+				
+			# Update scoreboard
+			problem_max_score = core.config['AC Points']
+			penalty_score = core.config['Penalty Score']
+			penalty_time = core.config['Penalty Time']
+			
+			# Update submission Database
+			submissions_management.update_submission_status(run_id, status, 'Sent', judge)
+			# Update interface
+			message = {
+				'Code' : 'UpSubStat',
+				'Run ID' : run_id, 
+				'Verdict' : status,
+				'Status' : 'Sent',
+				'Judge' : judge
+			}
+			core.update_queue.put(message)
+
+			print('[ CORE ][ ' + username + ' ] Verdict sent to client.')
+			core.log('[ CORE ][ ' + username + ' ] Verdict sent to client.')
+
+			# Call scoreboard updation function
+			scoreboard_management.update_user_score(
+				client_id,
+				run_id,
+				problem_max_score,
+				penalty_score,
+				penalty_time,
+				status, 
+				p_code,
+				time_stamp,
+				core.ranking_algoritm
+			) 
+			# Interface scoreboard update 
+			scbd_data = scoreboard_management.get_user_score(username)
+			message = {
+				'Code' : 'UpSCBD',
+				'Data' : scbd_data[0] 
+			}
+			core.update_queue.put(message)
+
+			# Send info to client
+			message = json.dumps(data)
+			core.channel.basic_publish(
+				exchange = core.unicast_exchange, 
+				routing_key = username, 
+				body = message
+			)
+			# Send infor to judges
+			core.channel.basic_publish(
+				exchange = core.judge_broadcast_exchange,
+				routing_key = '',
+				body = message
+			)         
+
+			# Broadcast new scoreboard to clients whenever a new verdict is recieved 
+			# and scoreboard update is allowed.
+			if core.data_changed_flags[15] == 1:
+				# Get user score and broadcast it to clients
+				scbd_data = str(scbd_data)
+				message = {
+					'Code' : 'SCRBD',
+					'Data' : scbd_data
+				}
+				message = json.dumps(message)
+				core.channel.basic_publish(
+					exchange = core.broadcast_exchange,
+					routing_key = '',
+					body = message
+				)
+				print('[ CORE ] Scoreboard Updated for clients')
+				core.log('[ CORE ] Scoreboard Updated for clients')
+
+		elif code == 'AddNewScore':	
+			try:
+				client_username = data['Username' ]
+				client_id = data['ID']
+				score = data['Score']
+				problems_solved = data['Problems Solved']
+				total_time = data['Total Time']
+				scoreboard_management.insert_new_user(
+					client_id, 
+					client_username, 
+					score, 
+					problems_solved, 
+					total_time
+				)
+				core.update_queue.put(data)
+				print('[ CORE ] Added new user in scoreboard.')
+				core.log('[ CORE ] Added new user in scoreboard.')
+			except Exception as e:
+				print('[ CORE ][ ERROR ] Scoreboard entry could not be added: ', e)
+				core.log('[ CORE ][ ERROR ] Scoreboard entry could not be added: ' +  str(e))
+
+		elif code == 'UpSubStat':
+			# Update Submission status
+			run_id = data['RunID']
+			verdict = data['Verdict']
+			sent_status = data['Sent Status']
+			judge = data['Judge']
+			submissions_management.update_submission_status(
+					run_id, 
+					verdict, 
+					sent_status, 
+					judge
+			)
+			# Send the updated infor to interface
+			message = {
+				'Code' : 'UpSubStat',
+				'Run ID' : run_id, 
+				'Verdict' : verdict,
+				'Status' : sent_status,
+				'Judge' : judge
+			}
+			core.update_queue.put(message)
+			print('[ CORE ] Run ID ' + str(run_id) + ': Status changed.')
+			core.log('[ CORE ] Run ID ' + str(run_id) + ': Status changed.')
+
+		elif code == 'UpJudgeStat':
+			username = data['Username']
+			state = data['State']
+			judge_ip = data['IP']
+			user_management.update_judge_state(
+				username, 
+				state, 
+				judge_ip
+			)
+			core.update_queue.put(data)
+			print('[ CORE ] Judge ' + username + ': Status changed to ' + state)
+			core.log('[ CORE ] Judge ' + username + ': Status changed to ' + state)
+
+		elif code == 'JDSCNT':
+			judge = data['Judge']
+			core.update_queue.put(data)
+			if judge == '__ALL__':
+				print('[ CORE ][ EVENT ] Disconnect All Judges')
+				core.log('[ CORE ][ EVENT ] Disconnect All Judges')
+				message = {
+					'Code' : 'DSCNT'
+				}
+				message = json.dumps(message)
+				core.channel.basic_publish(
+					exchange = core.judge_broadcast_exchange,
+					routing_key = '', 
+					body = message
+				)
+				core.update_queue.put({'Code' : 'JDscntAll'})
+			else:
+				print('[ CORE ][ EVENT ] Disconnect judge : ' + judge)
+				core.log('[ CORE ][ EVENT ] Disconnect judge : ' + judge)
+				message = {
+					'Code' : 'DSCNT'
+				}
+				message = json.dumps(message)
+				core.channel.basic_publish(
+					exchange = core.judge_unicast_exchange, 
+					routing_key = judge, 
+					body = message
+				)
+
+		elif code == 'JBLOCK':
+			username = data['Receiver']
+			core.update_queue.put(data)
+			print('[ CORE ][ EVENT ] Judge Block ' + username)
+			core.log('[ CORE ][ EVENT ] Judge Block ' + username)
+			message = {
+				'Code' : 'BLOCK'
+			}
+			message = json.dumps(data)
+			core.channel.basic_publish(
+				exchange = core.judge_unicast_exchange, 
+				routing_key = username, 
+				body = message
+			)
+
+
+		elif code == 'UpUserStat':
+			username = data['Username']
+			state = data['State']
+			judge_ip = data['IP']
+			core.update_queue.put(data)
+			user_management.update_user_state(
+				username, 
+				state, 
+				judge_ip
+			)
+			print('[ CORE ] User ' + username + ': Status changed to ' + state)
+			core.log('[ CORE ] User ' + username + ': Status changed to ' + state)
+
+		# Client has been DiSCoNnecTed
+		elif code == 'DSCNT':
+			core.update_queue.put(data)
+			if data['Mode'] == 1:
+				client = data['Client']
+				print('[ CORE ][ EVENT ] Disconnect client : ' + str(client))
+				core.log('[ CORE ][ EVENT ] Disconnect client : ' + str(client))
+				message = {
+				'Code' : 'DSCNT',
+				'Client' : client
+				}
+				message = json.dumps(message)
+				# UNICAST THIS
+				core.channel.basic_publish(
+					exchange = core.unicast_exchange, 
+					routing_key = client, 
+					body = message
+				)
+			elif data['Mode'] == 2:
+				print('[ CORE ][ EVENT ] Disconnect all clients')
+				core.log('[ CORE ][ EVENT ] Disconnect all clients')
+				message = {
+				'Code' : 'DSCNT',
+				'Client' : 'All'
+				}
+				message = json.dumps(message)
+				core.channel.basic_publish(
+					exchange = core.broadcast_exchange, 
+					routing_key = '', 
+					body = message
+				)
+
+		elif code == 'BLOCK':
+			core.update_queue.put(data)
+			username = data['Receiver']
+			print('[ CORE ][ EVENT ] Block ' + username)
+			core.log('[ CORE ][ EVENT ] Block ' + username)
+		
+			message = json.dumps(data)
+			core.channel.basic_publish(
+				exchange = core.unicast_exchange, 
+				routing_key = username, 
+				body = message
+			)
+
+
 		# QUERY reply to client or broadcast
 		elif code == 'QUERY':
+			query_id = data['Query ID']
 			if data['Mode'] == 'Client':
 				print('[ CORE ][ EVENT ][ UNICAST ] New Query response to client')
 				core.log('[ CORE ][ EVENT ][ UNICAST ] New Query response to client')
@@ -566,6 +695,31 @@ class core():
 					routing_key = '', 
 					body = message
 				)
+			message = {
+				'Code' : 'QUERY',
+				'Query ID' : query_id,
+				'Response' : data['Response']
+			}
+			core.update_queue.put(message)
+
+		elif code == 'Announce':
+			query_id = data['Query ID']
+			print('[ CORE ][ EVENT ] Announcement broadcasted')
+			core.log('[ CORE ][ EVENT ] Announcement broadcasted')
+			message = {
+				'Code' : 'QUERY',   # Yeah, client doesn't know that its announcement :P
+				'Client ID' : '0',
+				'Query' : data['Query'],
+				'Response' : data['Response'],
+				'Type' : data['Mode']
+			}
+			message = json.dumps(message)
+			core.channel.basic_publish(
+				exchange = core.broadcast_exchange, 
+				routing_key = '', 
+				body = message
+			)
+
 		elif code == 'AddQuery':
 			query_id = data['Query ID']
 			client_id = data['Client ID']
@@ -575,92 +729,17 @@ class core():
 				client_id, 
 				query
 			)
-			core.data_changed_flags[9] = 1
-
-		# Client has been DiSCoNnecTed
-		elif code == 'DSCNT':
-			if data['Mode'] == 1:
-				client = data['Client']
-				print('[ CORE ][ EVENT ] Disconnect client : ' + str(client))
-				core.log('[ CORE ][ EVENT ] Disconnect client : ' + str(client))
-				message = {
-				'Code' : 'DSCNT',
-				'Client' : client
-				}
-				message = json.dumps(message)
-				# UNICAST THIS
-				core.channel.basic_publish(
-					exchange = core.unicast_exchange, 
-					routing_key = client, 
-					body = message
-				)
-			elif data['Mode'] == 2:
-				print('[ CORE ][ EVENT ] Disconnect all clients')
-				core.log('[ CORE ][ EVENT ] Disconnect all clients')
-				message = {
-				'Code' : 'DSCNT',
-				'Client' : 'All'
-				}
-				message = json.dumps(message)
-				core.channel.basic_publish(
-					exchange = core.broadcast_exchange, 
-					routing_key = '', 
-					body = message
-				)
-
-		elif code == 'JDSCNT':
-			judge = data['Judge']
-			if judge == '__ALL__':
-				# Disconnect all judges
-				print('[ CORE ][ EVENT ] Disconnect All Judges')
-				core.log('[ CORE ][ EVENT ] Disconnect All Judges')
-				message = {
-					'Code' : 'DSCNT'
-				}
-				message = json.dumps(message)
-				core.channel.basic_publish(
-					exchange = core.judge_broadcast_exchange,
-					routing_key = '', 
-					body = message
-				)
-			else:
-				print('[ CORE ][ EVENT ] Disconnect judge : ' + judge)
-				core.log('[ CORE ][ EVENT ] Disconnect judge : ' + judge)
-				message = {
-					'Code' : 'DSCNT'
-				}
-				message = json.dumps(message)
-				core.channel.basic_publish(
-					exchange = core.judge_unicast_exchange, 
-					routing_key = judge, 
-					body = message
-				)
-
-		elif code == 'JBLOCK':
-			username = data['Receiver']
-			print('[ CORE ][ EVENT ] Judge Block ' + username)
-			core.log('[ CORE ][ EVENT ] Judge Block ' + username)
+			# Update Interface
+			core.data_changed_flags[1] = 1
 			message = {
-				'Code' : 'BLOCK'
+				'Code' : 'AddQuery',
+				'Query ID' : query_id,
+				'Client ID' : client_id,
+				'Query' : query,
+				'Response' : 'To be answered'
 			}
-			message = json.dumps(data)
-			core.channel.basic_publish(
-				exchange = core.judge_unicast_exchange, 
-				routing_key = username, 
-				body = message
-			)
-
-		elif code == 'BLOCK':
-			username = data['Receiver']
-			print('[ CORE ][ EVENT ] Block ' + username)
-			core.log('[ CORE ][ EVENT ] Block ' + username)
-		
-			message = json.dumps(data)
-			core.channel.basic_publish(
-				exchange = core.unicast_exchange, 
-				routing_key = username, 
-				body = message
-			)
+			core.update_queue.put(message)
+			
 		
 		elif code in ['VALID', 'INVLD', 'LRJCT', 'SRJCT']:
 			# Pass the message to appropiate recipient, nothing to process in data

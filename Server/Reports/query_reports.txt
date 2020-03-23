@@ -1,0 +1,27 @@
+2020-03-03 01:30:39.729960
+################ BitsOJ  ################
+Contest: Kodeathon A10 - Naruto
+Queries and Announcements:
+	ClientID					Query					Response
+	13		Problem 2:run id 53		TO BE ANSWERED
+	166		getting RE even though answer is correct		TO BE ANSWERED
+	77		56		TO BE ANSWERED
+	77		Run Id: 56		TO BE ANSWERED
+	47		run id 76		TO BE ANSWERED
+	85		id 47		TO BE ANSWERED
+	118		95 run id (RE)		TO BE ANSWERED
+	75		run id 54		TO BE ANSWERED
+	85		id 46**		TO BE ANSWERED
+	153		problem 2 run id 58 i think my answer is correct but it is giving wa		TO BE ANSWERED
+	0		Announcement		Positions do not matter today, your successful submissions do!
+	13		Problem 2:run id 164		TO BE ANSWERED
+	101		74		TO BE ANSWERED
+	101		74		TO BE ANSWERED
+	101		74		TO BE ANSWERED
+	77		Run Id: 205		TO BE ANSWERED
+	101		74		TO BE ANSWERED
+	101		74		TO BE ANSWERED
+	32		check run id 196		TO BE ANSWERED
+	78		PROBLEM 2: code is running on dev but getting re ,recheck it		TO BE ANSWERED
+
+################################################

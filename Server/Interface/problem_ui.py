@@ -17,7 +17,6 @@ class problem_edit_ui(QMainWindow):
 			parent=None
 		):
 		super(problem_edit_ui, self).__init__(parent)
-		
 		self.data_changed_flags = data_changed_flags
 		self.task_queue = task_queue
 		self.log_queue = log_queue
