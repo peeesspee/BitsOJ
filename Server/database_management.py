@@ -22,7 +22,7 @@ class manage_database():
 		
 	def disconnect_database():
 		try:
-			print('[ DB ][ DISCONNECT ] All')
+			print('[ DB ][ DISCONNECT ]')
 			manage_database.conn.close()
 		except Exception as e:
 			print('[ ERROR ] Could not disconnect database : ', e)

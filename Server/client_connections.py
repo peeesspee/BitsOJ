@@ -21,7 +21,8 @@ class manage_clients():
 	already_read = 0
 	codes = ''
 	languages = ''
-		
+	client_dict = {}
+
 	def prepare(data_changed_flags, task_queue, log_queue):
 		manage_clients.data_changed_flags = data_changed_flags
 		manage_clients.task_queue = task_queue
