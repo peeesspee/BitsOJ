@@ -3,6 +3,7 @@
 QPushButton#sidebar_button{
 	text-align : left; 
 	padding-left : 20; 	
+	border : 0px;
 	border-radius : 0px;
 	margin-top: 2px;
 	background-color : #161a28 ; 
@@ -22,11 +23,6 @@ QPushButton#sidebar_button::hover::focus
 	background-color : #2B2C39 ;
 	border-left : 0px;
 	font-size : 20px;
-}
-QPushButton#sidebar_button::pressed
-{
-	color : #23B2EE;
-	border-right : 4px solid #B2FF59;
 }
 QPushButton#sidebar_button::hover
 {

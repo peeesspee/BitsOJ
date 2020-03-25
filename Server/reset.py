@@ -7,10 +7,6 @@ superuser_username = 'BitsOJ'
 superuser_password = 'root'
 host = 'localhost'
 
-conn, cur = manage_database.initialize_database()
-manage_database.reset_database(conn)
-conn, cur = manage_database.initialize_database()
-
-
-save_status.write_config()
-
+manage_database()
+manage_database.reset_database()
+manage_database.init_tables()

@@ -68,7 +68,6 @@ class communicate_broadcast_server():
 			channel.basic_consume(
 				queue = communicate_broadcast_server.judge_username, 
 				on_message_callback = communicate_broadcast_server.server_response_handler, 
-				auto_ack = True
 			)
 			print('[ JUDGE ][ BROADCAST PROCESS ] Started consuming')
 			channel.start_consuming()

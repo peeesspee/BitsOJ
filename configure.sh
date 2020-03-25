@@ -36,4 +36,4 @@ sudo rabbitmqctl add_user judge1 micro1
 sudo rabbitmqctl set_permissions -p / judge1 ".*" ".*" ".*"
 # Client account
 sudo rabbitmqctl add_user client client
-sudo rabbitmqctl set_permissions -p / client "^team.*" ".*" "^team.*"
+sudo rabbitmqctl set_permissions -p / client "^team.*" "^team.*|client_requests|connection_manager" "^team.*|connection_manager"

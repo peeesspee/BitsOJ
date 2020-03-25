@@ -15,14 +15,14 @@ class manage_submission_ui(QMainWindow):
 	sent_status = ''
 
 	verdict_dict = {
-	'AC' : 'AC - Correct Answer', 
-	'WA' : 'WA - Wrong Answer', 
-	'TLE' : 'TLE - Time Limit Exceeded',
-	'CMPL' : 'CMPL - Compilation Error',
-	'PE' : 'PE - Presentation Error',
-	'RE' : 'RE - Run Time Error',
-	'OLE' : 'OLE - Output Limit Exceeded',
-	'NZEC' : 'NZEC - Non Zero Exit Code'
+		'AC' : 'AC - Correct Answer', 
+		'WA' : 'WA - Wrong Answer', 
+		'TLE' : 'TLE - Time Limit Exceeded',
+		'CMPL' : 'CMPL - Compilation Error',
+		'PE' : 'PE - Presentation Error',
+		'RE' : 'RE - Run Time Error',
+		'OLE' : 'OLE - Output Limit Exceeded',
+		'NZEC' : 'NZEC - Non Zero Exit Code'
 	}
 	inverted_verdict_dict = { v : k for k, v in verdict_dict.items()}
 	

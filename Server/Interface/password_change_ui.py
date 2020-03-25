@@ -118,19 +118,14 @@ class password_change_ui(QMainWindow):
 			message = {
 				'Code' : 'UpUserPwd', 
 				'Username' : password_change_ui.username,
-				'New Password' : new_password
+				'New Password' : new_password,
+				'Type' : password_change_ui.ctype
 			}
 			message = json.dumps(message)
 			self.task_queue.put(message) 
 
 			print('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
 			self.log('[ USER ][ ' + password_change_ui.username + ' ][ UPDATE ] Password changed to ' + new_password)
-			# Update connected_clients view
-			self.data_changed_flags[1] = 1
-			# Update accounts view
-			self.data_changed_flags[5] = 1
-			# Release the window lock # BUGGY - Might remove later
-			self.data_changed_flags[14] = 0
 			self.close()
 
 		elif new_password == password_change_ui.password:

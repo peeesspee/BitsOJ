@@ -1,5 +1,5 @@
 import json, time, os, sys, pika
-from database_management import submissions_management, scoreboard_management, user_management, client_authentication
+from database_management import *
 from init_server import initialize_server
 updated_config = 0
 

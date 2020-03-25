@@ -35,13 +35,23 @@ class initialize_contest():
 #############################################################################
 
 class handle_config():
+	__private_key = ''
 
-	def encryptDecrypt(inpString): 
-		xorKey = '/'; 
+	def __init__(self, key):
+		# print('Constructor called')
+		handle_config.__private_key = key
+
+	def encryptDecrypt(inpString, problem_key = None): 
+		if problem_key == None:
+			key = handle_config.__private_key 
+		else:
+			key = problem_key
+		# print(key)
+		xorKey = key; 
 		length = len(inpString);  
 		for i in range(length): 
-			inpString = (inpString[:i] + chr(ord(inpString[i]) ^ ord(xorKey)) + inpString[i + 1:]); 
-		return inpString; 
+			inpString = (inpString[:i] + chr(ord(inpString[i]) ^ ord(xorKey[i%len(key)])) + inpString[i + 1:]); 
+		return inpString;
 
 
 	def read_config_json():
@@ -50,6 +60,7 @@ class handle_config():
 				data = json.load(read_config)
 			data = handle_config.encryptDecrypt(data)
 			data = eval(data)
+			# print(data)
 			return data
 		except Exception as Error:
 			print(str(Error))

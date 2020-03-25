@@ -1,29 +1,26 @@
-2020-02-18 22:41:14.469389  :  #### SERVER START #### ###
-2020-02-18 22:41:14.469480  :  [ SELF CHECK ][ PASS ] Systems OK. ###
-2020-02-18 22:41:14.469512  :  [ SETUP ] Initialising server... ###
-2020-02-18 22:41:14.469538  :  [ SETUP ] Initialising database... ###
-2020-02-18 22:41:15.470903  :  [ SETUP ] Loading problems... ###
-2020-02-18 22:41:15.470988  :  [ SETUP ] Initialising subprocesses... ###
-2020-02-18 22:41:15.471033  :  [ SETUP ] Subprocesses started ###
-2020-02-18 22:41:15.471072  :  [ SETUP ][ Process ] Client Manager: 10981 ###
-2020-02-18 22:41:15.471109  :  [ SETUP ][ Process ] Judge Manager: 10982 ###
-2020-02-18 22:41:15.471146  :  [ SETUP ][ Process ] Core: 10984 ###
-2020-02-18 22:41:15.471183  :    [ START ] Client Manager subprocess started. ###
-2020-02-18 22:41:15.471219  :  [ SETUP ][ Process ] Log Manager: 10979 ###
-2020-02-18 22:41:15.471256  :    [ START ] Judge Manager subprocess started. ###
-2020-02-18 22:41:15.471294  :    [ START ] Core subprocess started. ###
-2020-02-18 22:41:15.471330  :  [ LISTEN ] Started listening on judge_verdict ###
-2020-02-18 22:41:15.471366  :  [ LISTEN ] Started listening on client_requests ###
-2020-02-18 22:41:15.471403  :    [ START ] Interface subprocess started. ###
-2020-02-18 22:41:25.983651  :  [ STOP ] Core subprocess terminated successfully! ###
-2020-02-18 22:41:25.983736  :  [ SECURITY ] Server Close attempt -> Accepted. ###
-2020-02-18 22:41:25.983793  :  [ EXIT ] Signal passed ###
-2020-02-18 22:41:25.983860  :  [ LISTEN ] STOPPED listening to client channel ###
-2020-02-18 22:41:25.983906  :  [ LISTEN ] STOPPED listening to judge channel ###
-2020-02-18 22:41:25.983951  :  [ EXIT ] Saving Server state to file. ###
-2020-02-18 22:41:25.983996  :  [ STOP ] Judge subprocess terminated successfully! ###
-2020-02-18 22:41:25.984043  :  [ STOP ] Client subprocess terminated successfully! ###
-2020-02-18 22:41:25.984097  :  [ EXIT ] Saved Server state to file. ###
-2020-02-18 22:41:26.985837  :  #### SERVER EXIT ####
-
- ###
+2020-03-23 14:11:24.977623  :  #### SERVER START #### ###
+2020-03-23 14:11:24.993313  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-03-23 14:11:24.993482  :  [ SETUP ] Initialising server... ###
+2020-03-23 14:11:24.993790  :  [ SETUP ] Initialising database... ###
+2020-03-23 14:11:25.001274  :  [ SETUP ] Initialising subprocesses... ###
+2020-03-23 14:11:25.006012  :    [ START ] Core subprocess started. ###
+2020-03-23 14:11:26.005771  :  [ SETUP ] Subprocesses started ###
+2020-03-23 14:11:26.005915  :  [ SETUP ][ Process ] Client Manager: 6625 ###
+2020-03-23 14:11:26.006013  :  [ SETUP ][ Process ] Judge Manager: 6626 ###
+2020-03-23 14:11:26.006122  :  [ SETUP ][ Process ] Core: 6622 ###
+2020-03-23 14:11:26.007583  :    [ START ] Client Manager subprocess started. ###
+2020-03-23 14:11:26.008835  :    [ START ] Judge Manager subprocess started. ###
+2020-03-23 14:11:26.023562  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-03-23 14:11:26.023625  :  [ LISTEN ] Started listening on client_requests ###
+2020-03-23 14:11:26.477123  :  [ SETUP ][ Process ] Log Manager: 6620 ###
+2020-03-23 14:11:27.525599  :    [ START ] Interface subprocess started. ###
+2020-03-23 14:11:28.576830  :  [ CORE ][ EVENT ][ BROADCAST ] STOP Contest ###
+2020-03-23 14:11:35.098847  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-03-23 14:11:35.127340  :  [ EXIT ] Signal passed ###
+2020-03-23 14:11:35.127489  :  [ EXIT ] Saving Server state to file. ###
+2020-03-23 14:11:35.129539  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-03-23 14:11:35.129970  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-03-23 14:11:35.134030  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-03-23 14:11:35.137253  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-03-23 14:11:35.510445  :  [ EXIT ] Saved Server state to file. ###
+2020-03-23 14:11:35.585807  :  [ STOP ] Core subprocess terminated successfully! ###

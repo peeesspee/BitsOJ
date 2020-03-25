@@ -7,6 +7,8 @@ import re # For RegEx : To check IP address validity
 from database_management import *
 from client_submissions import submission
 from init_server import initialize_server
+class InitializationError(Exception):
+	pass
 
 class manage_clients():
 	channel = ''
@@ -19,7 +21,8 @@ class manage_clients():
 	already_read = 0
 	codes = ''
 	languages = ''
-		
+	client_dict = {}
+
 	def prepare(data_changed_flags, task_queue, log_queue):
 		manage_clients.data_changed_flags = data_changed_flags
 		manage_clients.task_queue = task_queue
@@ -35,6 +38,7 @@ class manage_clients():
 		manage_clients.file_password = manage_clients.config["File Password"]
 		print('  [ START ] Client Manager subprocess started.')
 		manage_clients.log('  [ START ] Client Manager subprocess started.')
+		
 		try:
 			creds = pika.PlainCredentials(superuser_username, superuser_password)
 			params = pika.ConnectionParameters(
@@ -57,7 +61,7 @@ class manage_clients():
 				exchange_type = 'fanout', 
 				durable = True
 			)
-
+ 
 			channel.queue_declare(queue = 'client_requests', durable = True)
 			channel.queue_declare(queue = 'judge_requests', durable = True)
 
@@ -68,7 +72,7 @@ class manage_clients():
 		except Exception as error:
 			print('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
 			manage_clients.log('[ CRITICAL ] Could not connect to RabbitMQ server : ' + str(error))
-			# Wait until gui is closed!
+			# Wait until GUI is closed!
 			# Inform GUI thread
 			manage_clients.data_changed_flags[26] = 1
 			while manage_clients.data_changed_flags[7] !=1:
@@ -76,14 +80,34 @@ class manage_clients():
 			sys.exit()
 
 		try:
-			previous_data.get_last_client_id()
+			# Initialize Run ID
+			run_id = submission.init_run_id()
+			if run_id == -1:
+				print('[ CLIENT ][ ERROR ] Run ID init failed!')
+				raise InitializationError
+
+			# Initialize Client ID
+			cid_status = previous_data.get_last_client_id()
+			if cid_status == -1:
+				print('[ CLIENT ][ ERROR ] Client ID init failed!')
+				raise InitializationError
+
+		except InitializationError:
+			print('[ CLIENT ][ ERROR ] Process initialization failed! Restart Server.')
+			connection.close()
+			# Wait until GUI is closed!
+			# Inform GUI thread
+			manage_clients.data_changed_flags[26] = 1
+			while manage_clients.data_changed_flags[7] !=1:
+				time.sleep(0.5)
+			return
 		except:
 			print('[ ERROR ] Could not fetch previous client_id')
 			manage_clients.log('[ ERROR ] Could not fetch previous client_id')
-
-		# Start listening to client_requests
-		manage_clients.listen_clients(connection, channel, superuser_username, superuser_password, host)
-
+		else:
+			# Start listening to client_requests
+			manage_clients.listen_clients(connection, channel, superuser_username, superuser_password, host)
+		
 	def log(message):
 		manage_clients.log_queue.put(message)
 
@@ -133,6 +157,7 @@ class manage_clients():
 		
 	# This function works on client messages and passes them on to their respective handler function
 	def client_message_handler(ch, method, properties, body):
+		print('\n' + '#' * 100)
 		print('[ ALERT ] Recieved a new client message.')
 		manage_clients.log('[ ALERT ] Recieved a new client message.')
 		
@@ -414,6 +439,34 @@ class manage_clients():
 					}
 					message = json.dumps(message)
 					manage_clients.task_queue.put(message)
+					# #####################################################################
+					# Check if contest has started, also send client the 
+					# START signal for contest
+					if manage_clients.data_changed_flags[10] == 1:
+						# Update self config
+						manage_clients.config = initialize_server.read_config()
+						total_time = manage_clients.config['Contest Set Time']
+						start_time = initialize_server.get_start_time()
+						end_time = initialize_server.get_end_time()
+
+						current_time = time.time()
+						time_difference = total_time - current_time
+						remaining_time = time.strftime('%H:%M:%S', time.gmtime(time_difference))
+
+						message = {
+							'Code' : 'START', 
+							'Receiver' : client_username,
+							'Duration' : remaining_time,
+							'Start Time' : start_time,
+							'End Time' : end_time,
+							'Problem Key' : manage_clients.file_password
+						}
+						message = json.dumps(message)
+						manage_clients.task_queue.put(message)
+						print('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
+						manage_clients.log('[ LOGIN ][ RESPONSE ] Sent START to ' + client_username)
+						
+					#######################################################################
 
 					return
 	
@@ -798,19 +851,10 @@ class manage_clients():
 		# current_time = initialize_server.get_time_difference(contest_start_time, current_time)
 		time_difference = initialize_server.get_abs_time_difference(current_time, time_stamp)
 
-		# UNCOMMENT THE FOLLOWING LINES IF YOU WISH TO GIVE A N SECONDS GRACE TIME TO CLIENTS
-		# AND BELIEVE IN THEIR TIMESTAMP
-
-		# N = 20	# Change this value for grace period time ( Seconds )
-		# if time_difference > N:
-		# 	print('[ SUBMISSION ][ CONFLICT ] Time difference: ', time_difference, ' Seconds ', )
-		# 	print('Current Time: ' + current_time)
-		# 	manage_clients.log('[ SUBMISSION ][ CONFLICT ] Time difference: ' + str( time_difference) + ' Seconds ')
-
 		# We don't believe in clients, so timestamp is server time.
 		time_stamp = initialize_server.get_time_difference(contest_start_time, current_time)
 		
-		# Preliminary Validation Finished
+		################################Preliminary Validation Finished##########################################
 
 		# If contest is not in running state, reject all submissions.
 		# This might reject some submissions when user sends code just before contest ends
@@ -913,11 +957,12 @@ class manage_clients():
 				'Language' : language,
 				'Source File Name' : source_file_name,
 				'Problem Code' : problem_code,
-				'Status' : 'RUNNING',
+				'Status' : 'Running',
 				'Timestamp' : time_stamp
 			}
 			message = json.dumps(message)
 			manage_clients.task_queue.put(message)
+
 			print('[ CLIENT ] Sent submission request to CORE')
 			manage_clients.log('[ CLIENT ] Sent submission request to CORE')
 
@@ -960,6 +1005,7 @@ class manage_clients():
 	def client_query_handler(client_id, client_username, query):
 		print('[ QUERY ] From ' + str(client_id) + ' : ' + query)
 		manage_clients.log('[ QUERY ] From ' + str(client_id) + ' : ' + query)
+
 		query_id = submission.generate_query_id() 
 		print('[ QUERY ] Assigned Query ID: ' + str(query_id))
 		manage_clients.log('[ QUERY ] Assigned Query ID: ' + str(query_id))
@@ -1004,14 +1050,15 @@ class manage_clients():
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
 
-				# Update connected clients to indicate new data
-				manage_clients.data_changed_flags[1] = 1
 				message = {
 					"Code" : "SHUTDOWN",
 					"Receiver" : client_username
 				}
 				message = json.dumps(message)
 				manage_clients.task_queue.put(message)
+			else:
+				print('[ LOG OUT ][ ' + str(client_id) + ' ][ REJECT ] Client is not connected.')
+				manage_clients.log_queue.put('[ LOG OUT ][ ' + str(client_id) + ' ][ REJECT ] Client is not connected.')
 		else:
 			print('[ LOG OUT ][ ' + client_username + ' ][ REJECT ] ClientID does not match.')
 			manage_clients.log_queue.put('[ LOG OUT ][ ' + client_username + ' ][ REJECT ] ClientID does not match.')

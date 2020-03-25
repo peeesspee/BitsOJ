@@ -1,45 +1,57 @@
-import sqlite3
-import sys
-import random
-import string
-import os
-  
+import os, time, sqlite3, sys, random, string
 global client_id_counter
 
 class manage_database():
-	cur = None
 	conn = None
-	def initialize_database():
+	core_conn = None
+	def __init__(self):
 		try:
-			conn = sqlite3.connect(
-				'server_database.db', 
-				check_same_thread = False,
-				timeout = 20
+			self.server_conn = sqlite3.connect(
+				"server_database.db",
+				check_same_thread = True,
+				timeout = 1
 			)
-			# WAL Mode for concurrent read/write
-			# conn.execute('PRAGMA journal_mode=WAL')
-			cur = conn.cursor()
-			manage_database.cur = cur
-			manage_database.conn = conn
+			manage_database.conn = self.server_conn
+			manage_database.core_conn = self.server_conn
+
 		except Exception as error:
-			print ("[ CRITICAL ERROR ]Database connection error : " + str(error))
+			print ("[ CRITICAL ERROR ] Database connection error : " + str(error))
+
+	def get_core_connection():
+		return manage_database.core_conn
 		
+	def disconnect_database():
+		try:
+			print('[ DB ][ DISCONNECT ]')
+			manage_database.conn.close()
+		except Exception as e:
+			print('[ ERROR ] Could not disconnect database : ', e)
+		finally:
+			return
+
+	def init_tables():
+		cur = manage_database.get_cursor()
 		try:	
 			cur.execute("create table if not exists accounts(user_name varchar2(10) PRIMARY KEY, password varchar2(15), client_type varchar2(10))")
-			cur.execute("create table if not exists connected_clients(client_id integer PRIMARY KEY, user_name varchar2(10), password varchar2(10), ip varchar2(16) DEFAULT '0.0.0.0', state varchar2(15))")
-			cur.execute("create table if not exists connected_judges(judge_id varchar2(10), user_name varchar2(10), password varchar2(10), ip varchar2(16) DEFAULT '0.0.0.0', state varchar2(15))")
-			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'WAITING', judge varchar2(15) DEFAULT '-', score integer DEFAULT 0)")
+
+			cur.execute("create table if not exists connected_clients(client_id integer, user_name varchar2(10) PRIMARY KEY, password varchar2(10), ip varchar2(16) DEFAULT '0.0.0.0', state varchar2(15))")
+
+			cur.execute("create table if not exists connected_judges(judge_id varchar2(10), user_name varchar2(10) PRIMARY KEY, password varchar2(10), ip varchar2(16) DEFAULT '0.0.0.0', state varchar2(15))")
+
+			cur.execute("create table if not exists submissions(run_id integer PRIMARY KEY, client_run_id integer, client_id integer, language varchar2(3), source_file varchar2(30),problem_code varchar(10), verdict varchar2(5), timestamp text, sent_status varchar2(15) DEFAULT 'Waiting', judge varchar2(15) DEFAULT '-', score integer DEFAULT 0)")
+
 			cur.execute("create table if not exists queries(query_id integer, client_id integer, query varchar2(550), response varchar2(550))")
+
 			cur.execute("create table if not exists scoreboard(client_id integer PRIMARY KEY, user_name varchar2(10), score integer, problems_solved integer, total_time text, penalty integer, is_hidden text DEFAULT 'False')")
+
 			cur.execute("create table if not exists problems(problem_name varchar2(30), problem_code varchar(10), test_files integer, time_limit integer)")
 
 		except Exception as error:
 			print("[ DB ][ CRITICAL ERROR ] Table creation error : " + str(error))
+		return
 
-		return conn, cur
-
-	def reset_database(conn):
-		cur = conn.cursor()
+	def reset_database():
+		cur = manage_database.conn.cursor()
 		try:
 			cur.execute("drop table if exists accounts")
 			cur.execute("drop table if exists submissions")
@@ -52,24 +64,110 @@ class manage_database():
 			print("[ DB ][ CRITICAL ] Table drop error")
 
 	def get_cursor():
-		return manage_database.cur
+		cur = manage_database.conn.cursor()
+		return cur
 
 	def get_connection_object():
 		return manage_database.conn
+
+class interface_sync(manage_database):
+	def get_account_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			cur.execute('SELECT user_name, password, client_type FROM accounts')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch account data: ', e)
+			return []
+
+	def get_submission_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			cur.execute('SELECT run_id, client_id, problem_code, language, timestamp, verdict, sent_status, judge FROM submissions  order by run_id desc')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch submissions data: ', e)
+			return []
+
+	def get_connected_clients_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			cur.execute('SELECT * FROM connected_clients')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch connected_clients data: ', e)
+			return []
+
+	def get_problems_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			cur.execute('SELECT * FROM problems')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch problems data: ', e)
+			return []
+
+	def get_connected_judges_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			cur.execute('SELECT * FROM connected_judges')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch connected_judges data: ', e)
+			return []
+
+	def get_queries_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			cur.execute('SELECT query_id, client_id, query, response FROM queries')
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch queries data: ', e)
+			return []
+
+	def get_scoreboard_table():
+		conn = manage_database.get_connection_object()
+		try:
+			cur = conn.cursor()
+			cur.execute("SELECT user_name, problems_solved, score, total_time FROM scoreboard WHERE is_hidden = 'False' ORDER BY score DESC, total_time ASC")
+			data = cur.fetchall()
+			cur.close()
+			return data
+		except Exception as e:
+			print('[ DB ][ ERROR ][ IS ] Could not fetch scoreboard data: ', e)
+			return []
 
 class problem_management(manage_database):
 	def init_problems(problem_dictionary):
 		# This may seem counter intuitive, but it is meant to be done only
 		# once for a contest in best case scenario
 		try:
-			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 		except Exception as error:
 			print('[ DB ][ CRITICAL ] Could not load problems! '  + str(error))
 			return
 
 		try:
-			cur.execute('DELETE FROM problems')
+			conn.execute('DELETE FROM problems')
+			conn.commit()
 		except:
 			print('[ DB ][ ERROR ] Could not refresh problems!')
 			return
@@ -80,31 +178,28 @@ class problem_management(manage_database):
 				problem_code = content['Code']
 				problem_time = content['Time Limit']
 				files = content['IO Files']
-				cur.execute(
+				conn.execute(
 					"INSERT INTO problems VALUES(?, ?, ?, ?)",
 					(problem_name, problem_code, files, problem_time, )
 				)
 				conn.commit()
 		except Exception as error:
 			print('[ DB ][ ERROR ] Corrupted config file: ' + str(error))
-			cur.execute('rollback')
 			pass
+
 		return
 
 	def update_problem(change_type, key, new_value):
 		try:
-			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
 			if change_type == 1:
-				cur.execute("UPDATE problems SET problem_name = ? WHERE problem_code = ?", (new_value, key, ))
-				conn.commit()
+				conn.execute("UPDATE problems SET problem_name = ? WHERE problem_code = ?", (new_value, key, ))
 			elif change_type == 2:
-				cur.execute("UPDATE problems SET problem_code = ? WHERE problem_code = ?", (new_value, key, ))
-				conn.commit()
+				conn.execute("UPDATE problems SET problem_code = ? WHERE problem_code = ?", (new_value, key, ))
 			elif change_type == 4:
-				new_value = int(new_value)
-				cur.execute("UPDATE problems SET time_limit = ? WHERE problem_code = ?", (new_value, key, ))
-				conn.commit()
+				conn.execute("UPDATE problems SET time_limit = ? WHERE problem_code = ?", (int(new_value), key, ))
+
+			conn.commit()
 			return
 		except Exception as error:
 			print('[ DB ][ ERROR ] Could not update database: ' + str(error))
@@ -113,9 +208,8 @@ class problem_management(manage_database):
 class scoreboard_management():
 	def insert_new_user(client_id, user_name, score, problems_solved, total_time):
 		try:
-			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("INSERT INTO scoreboard values(?, ?, ?, ?, ?, ?, ?)", 
+			conn.execute("INSERT INTO scoreboard values(?, ?, ?, ?, ?, ?, ?)", 
 				(client_id, user_name, score, problems_solved, total_time, 0, 'False'))
 			conn.commit()
 		except Exception as error:
@@ -123,7 +217,7 @@ class scoreboard_management():
 			conn.rollback()
 			pass
 		return
-
+ 
 	def get_scoreboard():
 		try:
 			cur = manage_database.get_cursor()
@@ -132,6 +226,7 @@ class scoreboard_management():
 			return data
 		except Exception as error:
 			print("[ DB ][ CRITICAL ] Could not get scoreboard : " + str(error))
+		cur.close()
 		return	
 
 	def get_user_score(username):
@@ -148,16 +243,17 @@ class scoreboard_management():
 		except Exception as error:
 			print("[ DB ][ CRITICAL ] Could not get user score : " + str(error))
 			pass
+		cur.close()
 		return	
 
 	def delete_all():
 		try:
-			cur = manage_database.get_cursor()
-			cur.execute("DELETE FROM scoreboard")
-			cur.execute('commit')
+			conn = manage_database.get_connection_object()
+			conn.execute("DELETE FROM scoreboard")
+			conn.commit()
 		except:
 			print("[ DB ][ CRITICAL ] Could not reset scoreboard : " + str(error))
-
+		
 	# This is the main scoreboard update logic. Feel free to optimize
 	def update_user_score(
 			client_id,
@@ -174,8 +270,8 @@ class scoreboard_management():
 		# Scoreboard table is: 
 		# 	scoreboard(client_id user_name score problems_solved total_time penalty) <- Here, score is total score
 		# Submissions table is: 
-		# 	submissions(run_id client_run_id client_id language source_file problem_code) <- This score is individual submission score
-		# verdict timestamp sent_status judge score) 
+		# 	submissions(run_id client_run_id client_id language source_file problem_code 
+		# 	verdict timestamp sent_status judge score) <- This score is individual submission score
 		if ranking_algorithm == 1:
 			# ACM style ranklist
 			# For every unsolved problem, if it is a wrong answer, penalty of penalty_time is added 
@@ -209,6 +305,7 @@ class scoreboard_management():
 
 			# No logical difference between LONG and IOI styles, so their algo is same
 			# Only that we do not consider time in LONG style
+			
 
 			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
@@ -225,7 +322,6 @@ class scoreboard_management():
 					problems_solved = 0
 				else:
 					problems_solved = len(data)
-
 				print('[ SCOREBOARD ] Client: ', client_id, ' Problems Solved: ', problems_solved)
 
 				# Get Previous total score of the client
@@ -235,7 +331,6 @@ class scoreboard_management():
 					previous_total_score = 0
 				else:
 					previous_total_score = int(data[0][0])
-
 				print('[ SCOREBOARD ] Run: ', run_id, ' Previous Score: ', previous_total_score)
 
 				# Get Previous problem score of the run_id
@@ -247,7 +342,6 @@ class scoreboard_management():
 					return
 				else:
 					previous_score = int(data[0][0])
-
 				print('[ SCOREBOARD ] Run: ', run_id, ' Previous RunID Score: ', previous_score)
 
 				# Check if this is an AC submission, and if it is the first AC of this problem
@@ -274,14 +368,14 @@ class scoreboard_management():
 					)
 					# If the problem has not been solved yet, ie, number_of_submissions = 0
 					if number_of_submissions == 0:
-						print('[ SCOREBOARD ][ RUN ', run_id, ' ][ PASS ] New AC')
+						print('[ SCOREBOARD ][ RUN ', str(run_id), ' ][ PASS ] New AC')
 						
 						new_total_score = previous_total_score + problem_max_score
 
 						# THIS ASSERTION SHOULD NEVER OCCUR, BUT IT IS THERE AS A FAILSAFE
 						# Assert new_total_score should not be greater than 
 						# problem_solve_count * problem_max_score
-						if new_total_score > problem_max_score * problems_solved:
+						if new_total_score > problem_max_score * problems_solved or new_total_score < 0:
 							print('[ DB ][ SCOREBOARD ][ SECURITY ] Client Total Score error')
 							print('[ DB ][ SCOREBOARD ][ SECURITY ] Run ID: ', run_id)
 							print('[ DB ][ SCOREBOARD ][ SECURITY ] Client ID: ', client_id)
@@ -317,7 +411,7 @@ class scoreboard_management():
 						)
 						conn.commit()
 						
-					elif number_of_submissions > 0 and run_id < previous_scored_run_id:
+					elif number_of_submissions > 0 and int(run_id) < previous_scored_run_id:
 						# If this AC is for a submission with lower RunID for the same problem,
 						# If so, then time is updated but score is not
 				
@@ -531,6 +625,7 @@ class scoreboard_management():
 				fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 				print('[ DB ][ CRITICAL ][ SCOREBOARD ] Updation error: ' + str(error) + 'in File ', fname, ' Line No. ', exc_tb.tb_lineno)
 			finally:
+				cur.close()
 				return
 
 class previous_data(manage_database):
@@ -540,14 +635,17 @@ class previous_data(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(client_id) FROM connected_clients")
 			data =  cur.fetchall()
-			if(data[0][0] != ''):
-				client_id_counter = int(data[0][0])
-			else:
+			if(len(data) == 0 or data[0][0] == None or data == None):
 				client_id_counter = 0
+			else:
+				client_id_counter = int(data[0][0])
+			cur.close()
+			return client_id_counter
 
-		except:
-			print('[ DB ][ INIT ] Client ID initialised to 0')
+		except Exception as error:
+			print('[ DB ][ ERROR ] Client ID could not be initiated: ', error)
 			client_id_counter = 0
+			return -1
 
 class client_authentication(manage_database):
 	#This function validates the (user_name, password, client_id) in the database.
@@ -559,7 +657,7 @@ class client_authentication(manage_database):
 			(user_name, password, )
 		)
 		validation_result = cur.fetchall()
-		
+		cur.close()
 		if validation_result[0][0] == 1:
 			return True
 		else:
@@ -577,7 +675,7 @@ class client_authentication(manage_database):
 			)
 		)
 		validation_result = cur.fetchall()
-		
+		cur.close()
 		if validation_result[0][0] == 1:
 			return True
 		else:
@@ -596,7 +694,7 @@ class client_authentication(manage_database):
 			)
 		)
 		validation_result = cur.fetchall()
-		
+		cur.close()
 		if validation_result[0][0] == 1:
 			return True
 		else:
@@ -626,10 +724,12 @@ class client_authentication(manage_database):
 				"INSERT INTO " + table_name + " values(?, ?, ?, ?, ?)", 
 				(client_id, user_name, password, ip, state, )
 			)
+
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not add client : " + str(error))
 			conn.rollback()
+		cur.close()
 		return	
 
 	def get_connected_clients():
@@ -642,6 +742,7 @@ class client_authentication(manage_database):
 				response.append(entry[0])
 		except Exception as error:
 			print("[ DB ][ ERROR ] : Could not fetch client list.")
+		cur.close()
 		return response
 		
 	# Get client_id when user_name is known
@@ -653,6 +754,7 @@ class client_authentication(manage_database):
 				(user_name, )
 			)
 			client_id = cur.fetchall()
+			cur.close()
 			if len(client_id) == 0:
 				return -1
 			else:
@@ -668,6 +770,7 @@ class client_authentication(manage_database):
 			client_id = int(client_id)
 			cur.execute("SELECT user_name FROM connected_clients WHERE client_id = ?", (client_id, ))
 			client_username = cur.fetchall()
+			cur.close()
 			return client_username[0][0]
 		except Exception as error:
 			print("[ DB ][ ERROR ] : Could not fetch username.")
@@ -679,6 +782,7 @@ class client_authentication(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT * FROM " + table_name + " WHERE user_name = ?", (user_name,))
 			result = cur.fetchall()
+			cur.close()
 			# print('[ LOGIN ][ VALIDATION ] ' + str(user_name) + ' :: Status -> ' + str(result[0][3]))
 			return result[0][4]
 		except:
@@ -690,6 +794,7 @@ class client_authentication(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT * FROM connected_clients WHERE client_id = ? and ip = ?", (client_id, ip, ))
 			result = cur.fetchall()
+			cur.close()
 			if len(result) == 0 or result == '':
 				return 0
 			return 1
@@ -707,6 +812,7 @@ class client_authentication(manage_database):
 					)
 				)
 			result = cur.fetchall()
+			cur.close()
 			if len(result) == 0 or result == '':
 				return 0	# No other clients with same IP Address
 			else:
@@ -726,29 +832,34 @@ class submissions_management(manage_database):
 		try:
 			cur.execute("INSERT INTO submissions values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (run_id, local_run_id, client_id, language, source_file_name, problem_code, verdict, timestamp, 'WAITING', '-', 0, ))
 			conn.commit()
+			cur.close()
 			return 1
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
+			cur.close()
 			return 0
 		
-
-	def generate_new_run_id():
+	def init_run_id():
 		try:
+			print('[ DB ] Initialising Run ID')
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(run_id) FROM submissions")
 			data = cur.fetchall()
+			cur.close()
 			if len(data) == 0 or data[0][0] == None:
 				return 1
 			else:
 				return int(data[0][0]) + 1
 		except Exception as error:
-			return 1
+			print('[ DB ][ ERROR ] Run ID could not be generated: ', error)
+			return -1
  
 	def get_held_submissions():
 		try:
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT run_id, client_id, client_run_id, source_file, problem_code, verdict, judge, timestamp FROM submissions WHERE sent_status = 'REVIEW' ORDER BY run_id ASC")
 			data = cur.fetchall()
+			cur.close()
 			if len(data) == 0 or data == '':
 				return []
 			else:
@@ -756,6 +867,7 @@ class submissions_management(manage_database):
 		except Exception as error:
 			return []
 
+	# Important function
 	def update_submission_status(run_id, verdict, sent_status, judge = '-'):
 		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
@@ -766,15 +878,15 @@ class submissions_management(manage_database):
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not update submission submission : " + str(error))
 			conn.rollback()
+		cur.close()
 		return
 
 	def delete_all():
 		try:
-			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("DELETE FROM submissions")
+			conn.execute("DELETE FROM submissions")
 			conn.commit()
-			
+
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
@@ -783,6 +895,7 @@ class submissions_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(timestamp) FROM submissions WHERE client_id = ?" , (client_id,))
 			data = cur.fetchall()
+			cur.close()
 			if len(data) == 0 or data[0][0] == None:
 				return "NONE"
 			else:
@@ -795,6 +908,7 @@ class submissions_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT judge FROM submissions WHERE run_id = ?" , (run_id,))
 			data = cur.fetchall()
+			cur.close()
 			if len(data) == 0 or data[0][0] == None:
 				return "NONE"
 			else:
@@ -807,6 +921,7 @@ class submissions_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT client_run_id FROM submissions WHERE run_id = ?" , (run_id,))
 			data = cur.fetchall()
+			cur.close()
 			if len(data) == 0 or data[0][0] == None:
 				return "NONE"
 			else:
@@ -819,6 +934,7 @@ class submissions_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT source_file FROM submissions WHERE run_id = ?" , (run_id,))
 			data = cur.fetchall()
+			cur.close()
 			if len(data) == 0 or data[0][0] == None:
 				return "NONE"
 			else:
@@ -834,12 +950,13 @@ class submissions_management(manage_database):
 				query = "SELECT " + items + " FROM submissions ORDER BY timestamp ASC"
 				cur.execute(query)
 				data = cur.fetchall()
+				cur.close()
 				if data == '' or len(data) == 0:
 					return "NF"
 				else:
 					return data
 			except Exception as error:
-				print('[ DB ][ ERROR ] ' + str(error))
+				print('[ DB ][ ERROR ] Could not get submission data: ' + str(error))
 				return "NONE"
 
 		elif client == '*':
@@ -856,12 +973,13 @@ class submissions_management(manage_database):
 				)
 				cur.execute(query)
 				data = cur.fetchall()
+				cur.close()
 				if data == '' or len(data) == 0:
 					return "NF"
 				else:
 					return data
 			except Exception as error:
-				print('[ DB ][ ERROR ] ' + str(error))
+				print('[ DB ][ ERROR ] Could not get submission data: ' + str(error))
 				return "NONE"
 
 		elif code == '*':
@@ -878,12 +996,13 @@ class submissions_management(manage_database):
 				)
 				cur.execute(query)
 				data = cur.fetchall()
+				cur.close()
 				if data == '' or len(data) == 0:
 					return "NONE"
 				else:
 					return data
 			except Exception as error:
-				print('[ DB ][ ERROR ] ' + str(error))
+				print('[ DB ][ ERROR ] Could not get submission data: ' + str(error))
 				return "NONE"
 		else:
 			try:
@@ -900,12 +1019,13 @@ class submissions_management(manage_database):
 				)
 				cur.execute(query)
 				data = cur.fetchall()
+				cur.close()
 				if data == '' or len(data) == 0:
 					return "NONE"
 				else:
 					return data
 			except Exception as error:
-				print('[ DB ][ ERROR ] ' + str(error))
+				print('[ DB ][ ERROR ] Could not get submission data: ' + str(error))
 				return "NONE"
 
 	def get_judge_data(judge_username):
@@ -928,6 +1048,7 @@ class submissions_management(manage_database):
 			)
 			cur.execute(query, (judge_username, ))
 			data2 = cur.fetchall()
+			cur.close()
 
 			if (
 				data1 == '' or 
@@ -940,9 +1061,9 @@ class submissions_management(manage_database):
 				return str(len(data1)), data2[0][0]
 
 		except Exception as error:
-			print('[ DB ][ ERROR ] ' + str(error))
+			cur.close()
+			print('[ DB ][ ERROR ] Could not get judge data: ' + str(error))
 			return 'NONE', 'NONE'
-
 
 class query_management(manage_database):
 	def insert_query(query_id, client_id, query):
@@ -950,8 +1071,8 @@ class query_management(manage_database):
 		conn = manage_database.get_connection_object()
 		try:
 			cur.execute("INSERT INTO queries values(?, ?, ?, ?)", (query_id, client_id, query, 'TO BE ANSWERED', ))
-			cur.execute('commit')
 			conn.commit()
+			cur.close()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
 		return
@@ -961,6 +1082,7 @@ class query_management(manage_database):
 			cur = manage_database.get_cursor()
 			cur.execute("SELECT max(query_id) FROM queries")
 			data = cur.fetchall()
+			cur.close()
 			if len(data) == 0 or data[0][0] == None:
 				return 1
 			else:
@@ -984,22 +1106,26 @@ class query_management(manage_database):
 				conn.commit()
 			except Exception as error:
 				print("[ DB ][ ERROR ] Could not insert into submission : " + str(error))
+		
+		cur.close()
 		return
 
 	def delete_all():
 		try:
-			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("DELETE FROM queries")
+			conn.execute("DELETE FROM queries")
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
+		finally:
+			return
 
 
 class user_management(manage_database): 
 	def generate_n_users(no_of_clients, no_of_judges, password_type):
-		cur = manage_database.get_cursor()
-		conn = manage_database.get_connection_object()
+		print('[ DB ] Add ', no_of_clients, ' clients and ', no_of_judges, ' Judges...')
+		conn = manage_database.conn
+		cur = conn.cursor()
 		# Get max client and judge usernames till now
 		try:
 			cur.execute("SELECT max(user_name) from accounts where client_type = 'CLIENT'")
@@ -1012,36 +1138,40 @@ class user_management(manage_database):
 			max_judge_username = int(cur.fetchall()[0][0][5:])
 		except:
 			max_judge_username = 0
-		
+		print('[ DB ] Account generation on the way...')
 		client_list = user_management.generate_clients(no_of_clients, max_client_username)
 		judge_list = user_management.generate_judges(no_of_judges, max_judge_username)
 		client_pass_list = user_management.generate_passwords(max_client_username, no_of_clients, password_type)
 		judge_pass_list = user_management.generate_passwords(max_judge_username, no_of_judges, password_type)
 
-		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
-		# cur.execute("begin")
+		print('[ DB ] Building Accounts list ')
+		# Generate list of tuples for client
+		final_client_list = []
+		client_tuple = ()
+		for i in range(0, no_of_clients):
+			client_tuple = (client_list[i], client_pass_list[i], 'CLIENT')
+			final_client_list.append(client_tuple)
+		# Generate list of tuples for judge
+		final_judge_list = []
+		judge_tuple = ()
+		for i in range(0, no_of_judges):
+			judge_tuple = (judge_list[i], judge_pass_list[i], 'JUDGE')
+			final_judge_list.append(judge_tuple)
+
 		try:
-			for i in range(0, no_of_clients):
-				print('[ DB ] Adding Account : ', client_list[i] , ' @ ', client_pass_list[i])
-				cur.execute("INSERT into accounts values (?, ?, ? )" , (client_list[i], client_pass_list[i], 'CLIENT'))
-
+			conn.execute('BEGIN')
+			conn.executemany("INSERT into accounts values (?, ?, ? )", final_client_list)
 			conn.commit()
-			
-			for i in range(0, no_of_judges):
-				print('[ DB ] Adding Account : ', judge_list[i] , ' @ ', judge_pass_list[i])
-				cur.execute("INSERT into accounts values (?, ?, ? )" , (judge_list[i], judge_pass_list[i], 'JUDGE'))
-
+			conn.executemany("INSERT into accounts values (?, ?, ? )", final_judge_list)
 			conn.commit()
-			print('[ DB ] All accounts added!')
-			return 1
-
 		except Exception as error:
 			print('[ CRITICAL ] Database insertion error: ' + str(error))
-			cur.execute('rollback')
+			cur.close()
 			return 0
-		# INSERTION FINISHED
+		finally:
+			cur.close()
+			return 1
 		
-
 	def generate_clients(no_of_clients, max_so_far):
 		client_list = list()
 		for i in range(max_so_far+1, max_so_far+no_of_clients+1):
@@ -1071,29 +1201,26 @@ class user_management(manage_database):
 
 	def delete_user(user_name):
 		try:
-			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
+			conn.execute("DELETE FROM accounts WHERE user_name = ?",(user_name,))
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
 	def delete_all_accounts():
 		try:
-			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("DELETE FROM accounts")
+			conn.execute("DELETE FROM accounts")
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 
 	def disconnect_all():
 		try:
-			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute("UPDATE connected_clients SET state = 'Disconnected'")
+			conn.execute("UPDATE connected_clients SET state = 'Disconnected'")
 			conn.commit()
-			cur.execute("UPDATE connected_judges SET state = 'Disconnected'")
+			conn.execute("UPDATE connected_judges SET state = 'Disconnected'")
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database updation error : " + str(error))
@@ -1103,10 +1230,10 @@ class user_management(manage_database):
 
 	def delete_all():
 		try:
-			cur = manage_database.get_cursor()
-			cur.execute("DELETE FROM connected_clients")
-			cur.execute("DELETE FROM connected_judges")
-			cur.execute('commit')
+			conn = manage_database.get_connection_object()
+			conn.execute("DELETE FROM connected_clients")
+			conn.execute("DELETE FROM connected_judges")
+			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database deletion error : " + str(error))
 			conn.rollback()
@@ -1120,13 +1247,12 @@ class user_management(manage_database):
 			hidden = 'False'
 
 		try:
-			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute(
+			conn.execute(
 				"UPDATE connected_clients SET state = ?, ip = ? where user_name = ? ", 
 				(state, ip, username, )
 			)
-			cur.execute(
+			conn.execute(
 				"UPDATE scoreboard SET is_hidden = ? where user_name = ? ", 
 				(hidden, username, )
 			)
@@ -1139,9 +1265,8 @@ class user_management(manage_database):
 
 	def update_judge_state(username, state, ip):
 		try:
-			cur = manage_database.get_cursor()
 			conn = manage_database.get_connection_object()
-			cur.execute(
+			conn.execute(
 				"UPDATE connected_judges SET state = ?, ip = ? where user_name = ? ", 
 				(state, ip, username, )
 			)
@@ -1151,16 +1276,21 @@ class user_management(manage_database):
 		finally:
 			return
 
-	def update_user_password(username, password):
+	def update_user_password(username, password, ctype = 'CLIENT'):
 		try:
-			cur = manage_database.get_cursor()
-			conn = manage_database.get_connection_object()
-			cur.execute("UPDATE accounts SET password = ? where user_name = ? ", (password, username, ))
-			cur.execute("UPDATE connected_clients SET password = ? where user_name = ? ", (password, username, ))
+			conn = manage_database.core_conn
+			conn.execute("UPDATE accounts SET password = ? where user_name = ? ", (password, username, ))
+			conn.commit()
+
+			if ctype == 'CLIENT':
+				conn.execute("UPDATE connected_clients SET password = ? where user_name = ? ", (password, username, ))
+			
+			elif ctype == 'JUDGE':
+				conn.execute("UPDATE connected_judges SET password = ? where user_name = ? ", (password, username, ))
+
 			conn.commit()
 		except Exception as error:
 			print("[ DB ][ ERROR ] Database updation error : " + str(error))
-			conn.rollback()
 		finally:
 			return
 
@@ -1172,26 +1302,31 @@ class user_management(manage_database):
 			print('[ CRITICAL ] Database insertion error: Incorrect datatype or amount')
 			return
 
-		cur = manage_database.get_cursor()
 		conn = manage_database.get_connection_object()
 		# INSERTIONS INTO DATABASE [ CRITICAL SETION ]
 		try:
-			# cur.execute("begin")
+			all_users = []
 			for i in range(0, u_len):
-				username = user_list[i]
-				if username[0:4] != 'team' and username[0:5] != 'judge':
+				username = str(user_list[i])
+				if len(username) < 5 or (username[0:4] != 'team' and username[0:5] != 'judge'):
 					username = 'team_' + username
-				cur.execute(
-						"INSERT into accounts values (?, ?, ? )" , 
-						(username, password_list[i], type_list[i], 
-					)
-				)
+					user_list[i] = username
+
+				# Make a tuple
+				user_data = (user_list[i], password_list[i], type_list[i])
+				all_users.append(user_data)
+
+			conn.execute('BEGIN')
+			conn.executemany(
+					"INSERT into accounts values (?, ?, ? )" , 
+					all_users
+			)
 			conn.commit()
 			# INSERTION FINISHED
 			return 1
 		except Exception as error:
 			print('[ CRITICAL ] Database insertion error: ' + str(error))
-			cur.execute('rollback')
+			conn.rollback()
 			return 0
 		
 	def get_sheet_accounts():
@@ -1210,8 +1345,9 @@ class user_management(manage_database):
 
 		except Exception as error:
 			print('[ CRITICAL ] Database fetch error: ' + str(error))
-
-		return u_list, p_list, t_list
+		finally:
+			cur.close()
+			return u_list, p_list, t_list
 
 class report_management(manage_database):
 	def get_account_data():
@@ -1222,10 +1358,13 @@ class report_management(manage_database):
 			data = cur.fetchall()
 			if data == '' or len(data) == 0:
 				return 'NULL'
+			cur.close()
 			return data
 		except Exception as error:
+			cur.close()
 			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching account reports : ', error)
 			return 'NULL'
+
 
 	def get_all_submission_data():
 		try:
@@ -1233,6 +1372,7 @@ class report_management(manage_database):
 			query = 'SELECT run_id, client_id, problem_code, language, timestamp, verdict, judge FROM submissions ORDER BY run_id ASC'
 			cur.execute(query)
 			data = cur.fetchall()
+			cur.close()
 			if data == '' or len(data) == 0:
 				return 'NULL'
 			return data
@@ -1246,6 +1386,7 @@ class report_management(manage_database):
 			query = 'SELECT run_id, client_id, language, timestamp, verdict FROM submissions where problem_code = ? ORDER BY run_id ASC'
 			cur.execute(query, (problem, ))
 			data = cur.fetchall()
+			cur.close()
 			if data == '' or len(data) == 0:
 				return []
 			return data
@@ -1259,6 +1400,7 @@ class report_management(manage_database):
 			query = 'SELECT client_id, user_name, ip FROM connected_clients ORDER BY client_id ASC'
 			cur.execute(query)
 			data = cur.fetchall()
+			cur.close()
 			if data == '' or len(data) == 0:
 				return []
 			return data
@@ -1272,6 +1414,7 @@ class report_management(manage_database):
 			query = 'SELECT run_id, problem_code, language, timestamp, verdict FROM submissions where client_id = ? ORDER BY run_id ASC'
 			cur.execute(query, (client_id, ))
 			data = cur.fetchall()
+			cur.close()
 			if data == '' or len(data) == 0:
 				return []
 			return data
@@ -1288,6 +1431,7 @@ class report_management(manage_database):
 			if data == '' or len(data) == 0:
 				return []
 			return data
+			cur.close()
 		except Exception as error:
 			print('[ DB ][ REPORTS ][ ERROR ] Error while fetching submission reports : ', error)
 			return []
@@ -1298,6 +1442,7 @@ class report_management(manage_database):
 			query = 'SELECT run_id, client_id, problem_code, language, timestamp, verdict FROM submissions where judge = ? ORDER BY run_id ASC'
 			cur.execute(query, (judge, ))
 			data = cur.fetchall()
+			cur.close()
 			if data == '' or len(data) == 0:
 				return []
 			return data
@@ -1311,6 +1456,7 @@ class report_management(manage_database):
 			query = 'SELECT count(run_id) FROM submissions where judge = ?'
 			cur.execute(query, (judge, ))
 			data = cur.fetchall()
+			cur.close()
 			if data == '' or len(data) == 0:
 				return 0
 			return data[0][0]
@@ -1324,6 +1470,7 @@ class report_management(manage_database):
 			query = "select max(scoreboard.score), connected_clients.user_name from scoreboard, connected_clients where connected_clients.client_id = scoreboard.client_id"
 			cur.execute(query)
 			data = cur.fetchall()
+			cur.close()
 			if data == '' or len(data) == 0:
 				return []
 			return data[0]
@@ -1337,6 +1484,7 @@ class report_management(manage_database):
 			query = "SELECT user_name, score, problems_solved, total_time FROM scoreboard where is_hidden = 'False' ORDER BY score DESC"
 			cur.execute(query)
 			data = cur.fetchall()
+			cur.close()
 			if data == '' or len(data) == 0:
 				return []
 			return data
@@ -1350,6 +1498,7 @@ class report_management(manage_database):
 			query = "SELECT client_id, query, response FROM queries"
 			cur.execute(query)
 			data = cur.fetchall()
+			cur.close()
 			if data == '' or len(data) == 0:
 				return []
 			return data
@@ -1363,6 +1512,7 @@ class report_management(manage_database):
 			query = "SELECT * FROM problems"
 			cur.execute(query)
 			data = cur.fetchall()
+			cur.close()
 			if data == '' or len(data) == 0:
 				return []
 			return data
@@ -1377,13 +1527,14 @@ class report_management(manage_database):
 			# cur.execute("SELECT DISTINCT client_id FROM submissions WHERE problem_code = ? and verdict = 'AC'", (problem_code, ))
 			cur.execute("SELECT client_id FROM submissions WHERE problem_code = ? and verdict = 'AC'", (problem_code, ))
 			data = cur.fetchall()
+			cur.close()
 			if data == None:
 				return 0
 			else:
 				return len(data)
 
 		except Exception as error:
-			print('[ DB ][ ERROR ]', error)
+			print('[ DB ][ ERROR ] Could not get AC count', error)
 			return 0
 
 			return
@@ -1394,13 +1545,14 @@ class report_management(manage_database):
 			conn = manage_database.get_connection_object()
 			cur.execute("SELECT client_id FROM submissions WHERE problem_code = ?", (problem_code, ))
 			data = cur.fetchall()
+			cur.close()
 			if data == None:
 				return 0
 			else:
 				return len(data)
 
 		except Exception as error:
-			print('[ DB ][ ERROR ]', error)
+			print('[ DB ][ ERROR ] Could not get submission count: ', error)
 			return 0
 
 	def get_participant_count():
@@ -1409,13 +1561,14 @@ class report_management(manage_database):
 			conn = manage_database.get_connection_object()
 			cur.execute("SELECT DISTINCT (client_id) FROM submissions")
 			data = cur.fetchall()
+			cur.close()
 			if data == None:
 				return 0
 			else:
 				return len(data)
 
 		except Exception as error:
-			print('[ DB ][ ERROR ]', error)
+			print('[ DB ][ ERROR ] Could not get participant count: ', error)
 			return 0
 
 	def get_participant_pro_count():
@@ -1424,18 +1577,12 @@ class report_management(manage_database):
 			conn = manage_database.get_connection_object()
 			cur.execute("SELECT DISTINCT (client_id) FROM submissions WHERE verdict = 'AC'")
 			data = cur.fetchall()
+			cur.close()
 			if data == None:
 				return 0
 			else:
 				return len(data)
 
 		except Exception as error:
-			print('[ DB ][ ERROR ]', error)
+			print('[ DB ][ ERROR ] Could not get pro count:', error)
 			return 0
-
-
-
-
-
-
-

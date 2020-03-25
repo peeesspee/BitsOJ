@@ -1,0 +1,38 @@
+2020-03-03 01:30:39.327748
+################ BitsOJ  ################
+Contest: Kodeathon A10 - Naruto
+Number of participants with at least one submission: 125
+Number of participants with at least one AC submission: 99
+Contest Problem Details:
+ > Chakra Enhanced Speed[ CES ]
+	 Time Limit : 1 Seconds
+	 Number of Test files: 1
+	 Total Submissions on this problem: 257
+	 AC Submissions on this problem: 93
+ > Clone Queries[ CQS ]
+	 Time Limit : 1 Seconds
+	 Number of Test files: 1
+	 Total Submissions on this problem: 242
+	 AC Submissions on this problem: 69
+ > Jiraya's Kindness[ JKD ]
+	 Time Limit : 1 Seconds
+	 Number of Test files: 1
+	 Total Submissions on this problem: 30
+	 AC Submissions on this problem: 4
+ > Tsunade's Bet[ TSB ]
+	 Time Limit : 5 Seconds
+	 Number of Test files: 1
+	 Total Submissions on this problem: 0
+	 AC Submissions on this problem: 0
+ > Ramen Rush[ RRS ]
+	 Time Limit : 1 Seconds
+	 Number of Test files: 1
+	 Total Submissions on this problem: 0
+	 AC Submissions on this problem: 0
+ > Kurama the Maze Runner[ KMR ]
+	 Time Limit : 2 Seconds
+	 Number of Test files: 1
+	 Total Submissions on this problem: 1
+	 AC Submissions on this problem: 0
+
+################################################

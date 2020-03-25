@@ -13,9 +13,11 @@ class query_reply_ui(QMainWindow):
 			data_changed_flags,
 			task_queue, 
 			query, 
+			reply,
 			client_id, 
 			query_id, 
 			log_queue,
+			window_type = 0,
 			parent=None
 		):
 		super(query_reply_ui, self).__init__(parent)
@@ -24,9 +26,11 @@ class query_reply_ui(QMainWindow):
 		self.data_changed_flags = data_changed_flags
 		self.task_queue = task_queue
 		self.log_queue = log_queue
+		self.window_type = window_type
 		query_reply_ui.query = query
 		query_reply_ui.query_id = query_id
 		query_reply_ui.client_id = client_id
+		query_reply_ui.reply = reply
 
 		self.setWindowTitle('Reply')
 		self.setGeometry(600, 250, 600, 550)
@@ -53,6 +57,7 @@ class query_reply_ui(QMainWindow):
 			query_text.setText(query_reply_ui.query)
 		
 		response_entry = QTextEdit()
+		response_entry.setText(query_reply_ui.reply)
 		response_entry.setPlaceholderText('Max. 500 Characters')
 
 		broadcast_setting_label = QLabel('Reply to: ')
@@ -83,6 +88,10 @@ class query_reply_ui(QMainWindow):
 		confirm_button.clicked.connect(
 			lambda:query_reply_ui.final_status(self, query_text.toPlainText(), response_entry.toPlainText())
 		)
+		if self.window_type == 1:
+			# If it is an announcement, disable the confirm button
+			confirm_button.setEnabled(False)
+			
 		confirm_button.setDefault(True)
 		cancel_button = QPushButton('Cancel')
 		cancel_button.setFixedSize(200, 50)
@@ -156,7 +165,7 @@ class query_reply_ui(QMainWindow):
 			self.log('[ QUERY ][ RSPONSE ][ ' + send_type + ' ] New query response sent by ADMIN')
 		else:
 			message ={
-				'Code' : 'QUERY',
+				'Code' : 'Announce',
 				'Query' : query,
 				'Response' : response,
 				'Mode' : 'Broadcast',

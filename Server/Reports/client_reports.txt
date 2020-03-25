@@ -1,0 +1,1120 @@
+2020-03-03 01:30:38.013136
+################ BitsOJ  ################
+Contest: Kodeathon A10 - Naruto
+All Clients:
+	Client ID		Team Name		  IP Address
+	1				team00004		  192.168.6.98
+	2				team00300		  192.168.6.246
+	3				team00234		  192.168.6.143
+	4				team00257		  192.168.6.184
+	5				team00261		  192.168.6.54
+	6				team00258		  192.168.6.221
+	7				team00137		  192.168.6.178
+	8				team00219		  192.168.6.76
+	9				team00160		  192.168.6.187
+	10				team00262		  192.168.6.22
+	11				team00244		  192.168.6.73
+	12				team00221		  192.168.56.1
+	13				team00056		  192.168.6.14
+	14				team00266		  192.168.56.1
+	15				team00138		  192.168.56.1
+	16				team00231		  192.168.6.102
+	17				team00268		  192.168.6.201
+	18				team00130		  192.168.6.214
+	19				team00193		  192.168.6.206
+	20				team00139		  192.168.56.1
+	21				team00187		  192.168.6.209
+	22				team00241		  192.168.6.104
+	23				team00174		  192.168.6.101
+	24				team00001		  192.168.6.181
+	25				team00104		  192.168.6.98
+	26				team00159		  192.168.56.1
+	27				team00235		  192.168.6.180
+	28				team00211		  192.168.56.1
+	29				team00194		  192.168.6.146
+	30				team00170		  192.168.6.79
+	31				team00141		  192.168.6.190
+	32				team00232		  192.168.6.70
+	33				team00177		  192.168.56.1
+	34				team00173		  192.168.56.1
+	35				team00155		  192.168.6.242
+	36				team00168		  192.168.6.192
+	37				team00176		  192.168.6.196
+	38				team00214		  192.168.6.197
+	41				team00224		  192.168.6.216
+	42				team00209		  192.168.6.37
+	43				team00242		  192.168.6.93
+	44				team00238		  192.168.6.92
+	45				team00167		  192.168.6.58
+	46				team00077		  192.168.6.94
+	47				team00164		  192.168.6.56
+	48				team00253		  192.168.6.66
+	49				team00175		  192.168.6.96
+	50				team00228		  192.168.6.49
+	52				team00121		  192.168.6.213
+	53				team00205		  192.168.6.61
+	54				team00249		  192.168.6.204
+	56				team00189		  192.168.6.141
+	57				team00216		  192.168.6.172
+	58				team00254		  192.168.6.89
+	59				team00161		  192.168.56.1
+	61				team00222		  192.168.6.53
+	62				team00171		  192.168.6.35
+	63				team00132		  192.168.6.31
+	64				team00270		  192.168.6.21
+	65				team00200		  192.168.6.148
+	66				team00201		  192.168.6.59
+	67				team00140		  192.168.6.80
+	68				team00199		  192.168.6.86
+	69				team00197		  192.168.6.38
+	70				team00195		  192.168.6.40
+	71				team00149		  192.168.6.83
+	72				team00227		  192.168.6.85
+	73				team00237		  192.168.6.91
+	74				team00246		  192.168.6.65
+	75				team00208		  192.168.6.62
+	76				team00220		  192.168.6.63
+	77				team00186		  192.168.6.29
+	78				team00233		  192.168.6.12
+	79				team00243		  192.168.6.39
+	80				team00128		  192.168.6.47
+	81				team00226		  192.168.6.140
+	82				team00198		  192.168.6.27
+	83				team00165		  192.168.6.26
+	84				team00192		  192.168.6.142
+	85				team00245		  192.168.6.67
+	86				team00179		  192.168.6.50
+	87				team00172		  192.168.6.20
+	88				team00153		  192.168.6.23
+	89				team00181		  192.168.6.69
+	90				team00206		  192.168.6.4
+	91				team00156		  192.168.6.78
+	93				team00151		  192.168.52.67
+	95				team00263		  192.168.6.215
+	99				team00207		  192.168.6.25
+	100				team00204		  192.168.6.15
+	101				team00196		  192.168.6.82
+	102				team00250		  192.168.6.99
+	103				team00035		  192.168.52.110
+	106				team00185		  192.168.52.52
+	108				team00148		  192.168.52.72
+	109				team00049		  192.168.52.70
+	110				team00134		  192.168.52.115
+	111				team00131		  192.168.56.1
+	112				team00190		  192.168.52.60
+	114				team00142		  192.168.52.48
+	116				team00203		  192.168.52.114
+	117				team00236		  192.168.6.45
+	118				team00230		  192.168.6.44
+	119				team00117		  192.168.6.137
+	121				team00144		  192.168.52.62
+	122				team00212		  192.168.52.30
+	123				team00152		  192.168.52.49
+	124				team00111		  192.168.52.54
+	125				team00154		  192.168.52.19
+	126				team00299		  192.168.6.94
+	128				team00188		  192.168.52.78
+	129				team00076		  192.168.6.52
+	130				team00135		  192.168.52.117
+	131				team00202		  192.168.52.20
+	132				team00074		  192.168.6.90
+	133				team00163		  192.168.6.71
+	134				team00169		  192.168.6.77
+	135				team00210		  192.168.6.17
+	136				team00096		  192.168.6.112
+	137				team00136		  192.168.52.51
+	138				team00296		  192.168.6.196
+	139				team00251		  192.168.6.172
+	140				team00180		  192.168.6.55
+	141				team00252		  192.168.6.204
+	142				team00295		  192.168.6.181
+	143				team00005		  192.168.6.72
+	144				team00400		  192.168.6.41
+	145				team00399		  192.168.6.100
+	146				team00350		  192.168.6.94
+	147				team00292		  192.168.6.53
+	148				team00398		  192.168.6.104
+	149				team00351		  192.168.6.43
+	150				team00397		  192.168.6.58
+	151				team00183		  192.168.52.113
+	152				team00396		  192.168.6.40
+	153				team00082		  192.168.52.66
+	154				team00395		  192.168.6.92
+	155				team00394		  192.168.6.61
+	156				team00349		  192.168.52.49
+	157				team00348		  192.168.52.55
+	158				team00345		  192.168.52.75
+	159				team00343		  192.168.52.89
+	160				team00105		  192.168.52.73
+	161				team00344		  192.168.52.86
+	162				team00353		  192.168.52.74
+	163				team00341		  192.168.52.83
+	164				team00015		  192.168.52.64
+	165				team00339		  192.168.52.76
+	166				team00338		  192.168.52.79
+	167				team00021		  192.168.52.80
+	168				team00340		  192.168.52.69
+	169				team00191		  192.168.52.71
+	170				team00389		  192.168.52.108
+	171				team00328		  192.168.52.112
+	172				team00294		  192.168.6.193
+	173				team00327		  192.168.52.12
+	174				team00385		  192.168.6.176
+	175				team00326		  192.168.52.77
+	176				team00325		  192.168.52.63
+	177				team00384		  192.168.52.31
+	178				team00383		  192.168.52.46
+	179				team00324		  192.168.52.53
+	180				team00322		  192.168.52.13
+	181				team00382		  192.168.52.155
+	182				team00321		  192.168.52.90
+	183				team00380		  192.168.6.58
+	184				team00018		  192.168.52.82
+	185				team00379		  192.168.6.66
+	186				team00378		  192.168.6.39
+	187				team00315		  192.168.6.246
+	188				team00039		  192.168.52.68
+	189				team00317		  192.168.1.41
+	190				team00318		  192.168.1.45
+	191				team00260		  192.168.6.217
+	192				team00290		  192.168.6.217
+	193				team00390		  192.168.6.39
+
+####################################################################################################
+
+Submission data grouped by clients:
+> Client: team00004
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00300
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00234
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		114				  CES					C++				  00:29:00				RE
+		177				  CES					C++				  00:39:39				AC
+		498				  CQS					C++				  01:33:14				AC
+		501				  CQS					C++				  01:33:47				AC
+> Client: team00257
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		139				  CES					C++				  00:33:14				AC
+		456				  CQS					C++				  01:26:31				RE
+		466				  CQS					C++				  01:28:17				AC
+> Client: team00261
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		495				  CQS					C++				  01:32:53				AC
+> Client: team00258
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		12				  CES					PYTHON-3				  00:09:00				WA
+		219				  CQS					C++				  00:46:32				WA
+		277				  CQS					C++				  00:58:00				RE
+		304				  CQS					C++				  01:02:51				WA
+		437				  CQS					C++				  01:24:32				AC
+		479				  CQS					C++				  01:30:25				AC
+> Client: team00137
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		503				  CQS					C				  01:34:04				CMPL
+> Client: team00219
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		1				  CES					C++				  00:07:03				RE
+		24				  CES					C++				  00:11:49				WA
+		189				  CES					C++				  00:41:51				AC
+		430				  CQS					C++				  01:23:53				RE
+		440				  CQS					C++				  01:24:55				WA
+		472				  CQS					C++				  01:29:28				AC
+> Client: team00160
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		22				  CQS					C++				  00:11:06				CMPL
+		132				  CQS					C++				  00:32:10				RE
+		408				  CQS					C++				  01:21:17				AC
+		528				  JKD					C++				  01:44:20				RE
+> Client: team00262
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		125				  CES					C				  00:30:45				CMPL
+		175				  CES					C				  00:39:23				WA
+		192				  CES					C++				  00:42:18				WA
+		221				  CES					C++				  00:47:13				RE
+		255				  CES					C++				  00:54:02				WA
+		295				  CES					C++				  01:00:47				AC
+		431				  CQS					C++				  01:23:56				AC
+> Client: team00244
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		517				  CQS					C++				  01:38:43				AC
+> Client: team00221
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		20				  CES					PYTHON-3				  00:10:16				RE
+		48				  CES					C++				  00:14:34				WA
+		100				  CES					C++				  00:25:32				WA
+		117				  CES					C++				  00:29:34				CMPL
+		129				  CES					C++				  00:31:31				AC
+		247				  CES					C++				  00:52:51				RE
+		265				  CQS					C++				  00:56:09				AC
+		477				  JKD					C++				  01:30:11				RE
+		484				  JKD					C++				  01:31:03				WA
+		523				  JKD					C++				  01:40:37				TLE
+> Client: team00056
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		90				  CQS					C++				  00:22:46				CMPL
+		121				  CQS					C++				  00:29:56				RE
+		140				  CES					C++				  00:33:23				RE
+		158				  CES					C++				  00:36:34				AC
+		164				  CQS					C++				  00:37:55				RE
+		262				  CQS					C++				  00:55:36				RE
+		278				  CQS					C++				  00:58:07				WA
+		315				  CQS					C++				  01:04:37				WA
+		362				  JKD					C++				  01:14:07				WA
+		383				  JKD					C++				  01:17:10				AC
+		397				  JKD					C++				  01:19:39				WA
+		435				  JKD					C++				  01:24:26				RE
+		443				  JKD					C++				  01:25:17				RE
+		457				  JKD					C++				  01:26:36				AC
+> Client: team00266
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		41				  CES					C++				  00:13:46				CMPL
+		81				  CES					C				  00:21:13				RE
+		341				  CES					C++				  01:08:55				RE
+		361				  CES					C++				  01:13:58				WA
+		367				  CQS					C++				  01:14:48				RE
+		375				  CQS					C++				  01:15:59				RE
+> Client: team00138
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		34				  CES					C				  00:12:52				WA
+		155				  CES					C++				  00:36:09				AC
+		346				  CES					C++				  01:09:48				CMPL
+		395				  CQS					C++				  01:19:18				AC
+> Client: team00231
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		119				  CES					PYTHON-3				  00:29:46				AC
+		224				  CQS					C++				  00:47:33				RE
+		377				  CQS					C++				  01:16:11				WA
+		417				  CQS					C++				  01:22:24				AC
+> Client: team00268
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		56				  CES					C++				  00:16:38				AC
+		398				  CES					C++				  01:19:51				RE
+		403				  CQS					C++				  01:20:35				RE
+> Client: team00130
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00193
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		77				  CES					C++				  00:20:26				CMPL
+		211				  CQS					C++				  00:45:08				RE
+		243				  CQS					C++				  00:52:25				AC
+		529				  JKD					C++				  01:45:00				WA
+> Client: team00139
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		106				  CES					C++				  00:27:17				CMPL
+		204				  CES					C++				  00:43:44				WA
+		216				  CES					C++				  00:46:10				AC
+		376				  CES					C++				  01:16:01				WA
+		387				  CES					C++				  01:17:40				RE
+		389				  CES					C++				  01:18:02				RE
+		393				  CES					C++				  01:19:01				WA
+		400				  CES					C++				  01:19:55				RE
+		410				  CES					C++				  01:21:35				WA
+		453				  CES					C++				  01:26:11				WA
+		469				  CES					C++				  01:28:45				AC
+		476				  CES					C++				  01:30:02				WA
+> Client: team00187
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		382				  CQS					C++				  01:17:07				RE
+		396				  CQS					C++				  01:19:38				RE
+		451				  CQS					C++				  01:25:56				RE
+		462				  CQS					C++				  01:27:34				AC
+> Client: team00241
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00174
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00001
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00104
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00159
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		92				  CES					C++				  00:23:24				WA
+		137				  CES					C				  00:33:07				CMPL
+		146				  CES					C++				  00:34:33				AC
+		264				  CQS					C++				  00:56:08				RE
+		287				  CQS					C++				  00:59:17				RE
+		298				  CQS					C++				  01:01:16				AC
+> Client: team00235
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		213				  CQS					C++				  00:45:30				WA
+		222				  CQS					C++				  00:47:14				WA
+		235				  CES					C++				  00:51:20				RE
+		263				  CES					C++				  00:55:45				AC
+		478				  CQS					C++				  01:30:23				AC
+> Client: team00211
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		212				  CES					C++				  00:45:14				RE
+		252				  CQS					C++				  00:53:38				RE
+		301				  CQS					C++				  01:01:40				AC
+> Client: team00194
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00170
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00141
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		174				  CES					C++				  00:39:23				AC
+		275				  CQS					C++				  00:57:40				TLE
+		518				  CQS					C++				  01:38:53				CMPL
+> Client: team00232
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		4				  CES					C++				  00:07:35				WA
+		28				  CES					C++				  00:12:11				AC
+		162				  CQS					C++				  00:37:05				TLE
+		196				  CQS					C++				  00:42:49				AC
+		231				  CQS					C++				  00:48:41				RE
+> Client: team00177
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		105				  CES					C				  00:26:52				AC
+> Client: team00173
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		49				  CES					C++				  00:14:44				AC
+		360				  CES					C				  01:13:58				CMPL
+		374				  CQS					C++				  01:15:52				WA
+		441				  CQS					C++				  01:24:55				RE
+		450				  CQS					C++				  01:25:53				AC
+> Client: team00155
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		33				  CES					C				  00:12:49				CMPL
+		128				  CES					C				  00:31:26				CMPL
+		143				  CES					C				  00:34:15				CMPL
+		291				  CQS					C++				  00:59:47				WA
+> Client: team00168
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		68				  CES					PYTHON-3				  00:18:59				RE
+		182				  CES					C++				  00:40:39				CMPL
+		203				  CES					C++				  00:43:42				AC
+		284				  CES					C++				  00:58:48				RE
+		380				  CQS					C++				  01:17:01				CMPL
+		436				  CQS					C++				  01:24:31				RE
+		454				  CQS					C++				  01:26:20				RE
+		481				  CQS					C++				  01:30:36				WA
+		505				  CQS					C++				  01:34:44				AC
+> Client: team00176
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00214
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		111				  CES					C++				  00:28:38				AC
+> Client: team00224
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		198				  CES					C++				  00:43:15				AC
+		318				  CQS					C++				  01:05:23				RE
+		465				  CQS					C++				  01:27:56				RE
+		489				  CQS					C++				  01:32:01				AC
+> Client: team00209
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		294				  CES					C++				  01:00:47				RE
+		345				  CQS					C++				  01:09:45				WA
+> Client: team00242
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		57				  CES					C++				  00:16:51				CMPL
+		99				  CES					C++				  00:25:04				RE
+		347				  CQS					C++				  01:09:59				RE
+		351				  CQS					C++				  01:11:14				RE
+		427				  CQS					C++				  01:23:34				WA
+> Client: team00238
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00167
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00077
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00164
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		76				  CES					C++				  00:20:26				AC
+> Client: team00253
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00175
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00228
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		84				  CES					C++				  00:21:42				RE
+		279				  CES					C++				  00:58:12				AC
+		508				  CQS					C++				  01:36:23				WA
+		516				  CQS					C++				  01:38:42				AC
+> Client: team00121
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		88				  CES					C++				  00:22:29				AC
+		194				  CQS					C++				  00:42:41				RE
+		300				  CQS					C++				  01:01:21				AC
+		371				  CQS					C++				  01:15:10				RE
+		390				  CQS					C++				  01:18:09				AC
+> Client: team00205
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00249
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00189
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		160				  CES					C++				  00:36:54				AC
+> Client: team00216
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00254
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		109				  CES					C++				  00:28:08				AC
+		118				  CES					C++				  00:29:42				AC
+> Client: team00161
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		134				  CES					C				  00:32:40				CMPL
+		156				  CES					C++				  00:36:12				TLE
+		166				  CES					C++				  00:38:10				CMPL
+		180				  CES					C++				  00:40:16				AC
+		195				  CES					C++				  00:42:45				RE
+		209				  CES					C++				  00:44:40				RE
+		217				  CES					C++				  00:46:27				RE
+		233				  CES					C++				  00:51:09				RE
+		244				  CES					C++				  00:52:37				RE
+		254				  CES					C++				  00:53:54				CMPL
+		266				  CES					C++				  00:56:20				RE
+		274				  CES					C++				  00:57:36				RE
+		348				  CES					C++				  01:10:06				WA
+		355				  CES					C++				  01:11:41				RE
+		366				  CES					C++				  01:14:40				WA
+		368				  CQS					C++				  01:14:53				AC
+> Client: team00222
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00171
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00132
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00270
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		130				  CES					C++				  00:31:53				CMPL
+		141				  CES					C++				  00:33:34				AC
+		338				  CQS					C++				  01:08:46				CMPL
+		350				  CQS					C++				  01:10:54				AC
+> Client: team00200
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00201
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00140
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00199
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00197
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00195
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00149
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		352				  CQS					C++				  01:11:20				WA
+> Client: team00227
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00237
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		73				  CES					C++				  00:19:44				WA
+		421				  CQS					C++				  01:22:53				AC
+		509				  CES					C++				  01:36:29				AC
+> Client: team00246
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		283				  CQS					C				  00:58:39				RE
+		290				  CQS					C				  00:59:46				RE
+		370				  CQS					C				  01:15:01				RE
+		373				  CQS					C				  01:15:44				RE
+		429				  CQS					C				  01:23:38				RE
+> Client: team00208
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		44				  CES					C++				  00:14:08				AC
+> Client: team00220
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		31				  CES					PYTHON-3				  00:12:33				RE
+		42				  CES					PYTHON-3				  00:14:00				AC
+		312				  CQS					PYTHON-3				  01:03:58				TLE
+		334				  CQS					PYTHON-3				  01:07:58				TLE
+		356				  CQS					PYTHON-3				  01:12:05				TLE
+		404				  CQS					C				  01:20:37				CMPL
+		405				  CQS					C++				  01:20:55				RE
+		409				  CQS					C++				  01:21:31				AC
+		426				  CQS					C++				  01:23:14				AC
+> Client: team00186
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		179				  CES					C++				  00:40:01				AC
+		248				  CQS					C++				  00:52:54				RE
+		276				  CQS					C++				  00:57:50				AC
+		311				  CQS					C++				  01:03:56				AC
+> Client: team00233
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		62				  CES					C++				  00:17:59				RE
+		422				  CES					C++				  01:23:00				RE
+		461				  CQS					C++				  01:27:13				RE
+		475				  CQS					C++				  01:29:55				RE
+		487				  CQS					C++				  01:31:44				AC
+		490				  CQS					C++				  01:32:07				AC
+> Client: team00243
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00128
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		3				  CES					C++				  00:07:16				CMPL
+		26				  CES					C++				  00:12:02				AC
+		449				  CQS					C++				  01:25:47				AC
+> Client: team00226
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		145				  CES					C++				  00:34:21				AC
+		329				  CES					C++				  01:06:57				CMPL
+		407				  CES					C++				  01:21:01				RE
+		432				  CQS					C++				  01:24:09				RE
+		444				  CQS					C++				  01:25:18				AC
+> Client: team00198
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		7				  CES					C++				  00:08:09				RE
+		142				  CQS					C++				  00:33:45				WA
+		230				  CQS					C++				  00:48:23				AC
+		385				  JKD					C++				  01:17:29				RE
+> Client: team00165
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		8				  CES					C++				  00:08:15				AC
+		15				  CES					C++				  00:09:23				RE
+		78				  CQS					C++				  00:20:30				RE
+		259				  CQS					C++				  00:55:08				CMPL
+		282				  CQS					C++				  00:58:36				WA
+		292				  CES					C++				  00:59:50				RE
+		308				  CQS					C++				  01:03:11				RE
+		332				  CES					C++				  01:07:38				RE
+> Client: team00192
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00245
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		37				  CES					C++				  00:13:08				AC
+		46				  CES					C				  00:14:14				WA
+> Client: team00179
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		2				  CES					C++				  00:07:08				RE
+		35				  CES					C++				  00:12:59				AC
+		45				  CES					C++				  00:14:10				AC
+		388				  CQS					C++				  01:17:52				WA
+		411				  CQS					C++				  01:21:37				RE
+		412				  CQS					C++				  01:21:54				WA
+		499				  CQS					C++				  01:33:31				AC
+> Client: team00172
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		9				  CES					C++				  00:08:17				RE
+		245				  CQS					C++				  00:52:41				AC
+> Client: team00153
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		10				  CES					C++				  00:08:25				AC
+		17				  CES					C++				  00:09:48				AC
+		36				  CES					C++				  00:13:01				AC
+		101				  CQS					C++				  00:25:41				WA
+		126				  CQS					C++				  00:31:10				AC
+		261				  CQS					C++				  00:55:31				RE
+		272				  CQS					C++				  00:57:20				AC
+		357				  JKD					C++				  01:12:38				TLE
+> Client: team00181
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		104				  CES					C++				  00:26:26				RE
+		439				  CQS					C++				  01:24:48				CMPL
+		447				  CQS					C++				  01:25:35				RE
+		463				  CQS					C++				  01:27:37				RE
+> Client: team00206
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		13				  CES					C++				  00:09:02				CMPL
+		43				  CES					C				  00:14:02				RE
+> Client: team00156
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		181				  CES					C++				  00:40:34				WA
+		191				  CES					C++				  00:42:09				RE
+> Client: team00151
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00263
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		199				  CES					C				  00:43:24				RE
+> Client: team00207
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00204
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00196
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		107				  CES					C++				  00:27:45				AC
+		172				  CES					C++				  00:39:05				WA
+		227				  CES					C++				  00:47:53				RE
+		316				  CES					C++				  01:04:41				RE
+> Client: team00250
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		75				  CES					C++				  00:20:07				AC
+		108				  CES					C++				  00:27:54				AC
+		161				  CES					C++				  00:37:04				CMPL
+> Client: team00035
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		234				  CQS					C++				  00:51:18				TLE
+		317				  CQS					C++				  01:05:19				WA
+		414				  CQS					C++				  01:22:01				AC
+> Client: team00185
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		82				  CES					C++				  00:21:20				CMPL
+		419				  CQS					C++				  01:22:43				RE
+		425				  CQS					C++				  01:23:09				RE
+		438				  CQS					C++				  01:24:36				AC
+> Client: team00148
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		251				  CES					C++				  00:53:24				AC
+> Client: team00049
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		236				  CQS					C++				  00:51:24				TLE
+		485				  CQS					C++				  01:31:07				CMPL
+> Client: team00134
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		91				  CES					C++				  00:23:07				CMPL
+		127				  CES					C++				  00:31:11				AC
+> Client: team00131
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		97				  CES					C++				  00:25:01				WA
+		176				  CES					C++				  00:39:34				AC
+		394				  CQS					C++				  01:19:10				RE
+		399				  CQS					C++				  01:19:52				AC
+		474				  JKD					C++				  01:29:46				TLE
+		521				  JKD					C++				  01:40:02				CMPL
+> Client: team00190
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00142
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00203
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00236
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		27				  CES					C++				  00:12:05				RE
+		39				  CES					C++				  00:13:24				AC
+		54				  CES					C				  00:16:16				AC
+		378				  CQS					C++				  01:16:28				AC
+> Client: team00230
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		95				  CES					C++				  00:24:11				AC
+		381				  CQS					C++				  01:17:07				RE
+		392				  CQS					C++				  01:18:53				RE
+		406				  CQS					C++				  01:20:58				CMPL
+		433				  CQS					C++				  01:24:17				WA
+		458				  CQS					C++				  01:26:47				RE
+> Client: team00117
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		184				  CES					C++				  00:41:06				RE
+		281				  CES					PYTHON-3				  00:58:19				RE
+		321				  CQS					C++				  01:05:55				RE
+		384				  CQS					C++				  01:17:28				RE
+		442				  CQS					C++				  01:25:01				AC
+> Client: team00144
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		93				  CES					C++				  00:23:36				AC
+		257				  CQS					C++				  00:54:49				RE
+		379				  CQS					C++				  01:16:52				CMPL
+		434				  CQS					C++				  01:24:22				RE
+		452				  CQS					C++				  01:25:57				RE
+> Client: team00212
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00152
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00111
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		208				  CES					C				  00:44:33				AC
+> Client: team00154
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		102				  CES					C++				  00:25:52				CMPL
+		173				  CES					C++				  00:39:12				RE
+		187				  CES					C++				  00:41:45				RE
+		207				  CES					C++				  00:44:28				AC
+		325				  CQS					C++				  01:06:32				RE
+> Client: team00299
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00188
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00076
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		120				  CES					C++				  00:29:55				WA
+		445				  CQS					C++				  01:25:22				AC
+		470				  CES					C++				  01:29:04				AC
+> Client: team00135
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		115				  CES					C++				  00:29:28				AC
+		165				  CQS					C++				  00:38:05				WA
+		201				  CQS					C++				  00:43:37				CMPL
+		214				  JKD					C++				  00:45:35				WA
+		242				  CQS					C++				  00:52:25				RE
+		267				  CQS					C++				  00:56:31				WA
+		343				  CES					C++				  01:09:17				AC
+> Client: team00202
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00074
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		21				  CES					C++				  00:10:49				AC
+		320				  CQS					C++				  01:05:52				TLE
+		337				  CQS					C++				  01:08:35				AC
+> Client: team00163
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		133				  CES					C++				  00:32:15				AC
+> Client: team00169
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		71				  CES					C++				  00:19:36				WA
+		163				  CES					C++				  00:37:08				AC
+> Client: team00210
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		11				  CES					C				  00:08:41				CMPL
+		18				  CQS					C				  00:09:48				CMPL
+		30				  JKD					C				  00:12:28				CMPL
+> Client: team00096
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		19				  CES					C++				  00:09:57				WA
+		32				  CES					C++				  00:12:36				AC
+		72				  CQS					C++				  00:19:38				CMPL
+		151				  CQS					C++				  00:35:04				TLE
+		190				  CQS					C++				  00:42:00				AC
+		197				  CQS					C++				  00:43:08				RE
+		228				  CQS					C++				  00:47:58				AC
+> Client: team00136
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00296
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		131				  CES					C++				  00:32:01				CMPL
+		171				  CES					C++				  00:38:57				AC
+		200				  CES					C++				  00:43:25				AC
+		223				  CES					C++				  00:47:17				RE
+		241				  CES					C++				  00:52:13				AC
+		309				  CES					C++				  01:03:25				RE
+		333				  CQS					C++				  01:07:47				TLE
+		391				  CQS					C++				  01:18:14				CMPL
+		415				  CQS					C++				  01:22:13				AC
+> Client: team00251
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00180
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		67				  CES					C++				  00:18:53				CMPL
+		110				  CES					C++				  00:28:34				AC
+		289				  JKD					C++				  00:59:37				TLE
+		464				  JKD					C++				  01:27:54				TLE
+		502				  CQS					C++				  01:33:56				RE
+		524				  CQS					C++				  01:41:37				AC
+		527				  CQS					C++				  01:43:19				AC
+> Client: team00252
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		29				  CES					C				  00:12:20				AC
+> Client: team00295
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		64				  CES					PYTHON-3				  00:18:19				RE
+		229				  CQS					PYTHON-3				  00:48:22				RE
+		238				  CQS					PYTHON-3				  00:51:38				RE
+		246				  CQS					PYTHON-3				  00:52:50				RE
+		324				  CQS					PYTHON-3				  01:06:24				AC
+		342				  CQS					PYTHON-3				  01:09:03				RE
+		353				  CQS					PYTHON-3				  01:11:25				TLE
+		369				  CQS					PYTHON-3				  01:14:58				RE
+		372				  CQS					PYTHON-3				  01:15:12				RE
+> Client: team00005
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00400
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00399
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		364				  CQS					C++				  01:14:16				RE
+> Client: team00350
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00292
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		80				  CES					C++				  00:21:09				CMPL
+> Client: team00398
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		87				  CES					C++				  00:22:18				AC
+		112				  CES					PYTHON-3				  00:28:52				AC
+		418				  CQS					C++				  01:22:35				AC
+> Client: team00351
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		38				  CQS					C++				  00:13:24				AC
+		85				  CQS					C++				  00:21:55				WA
+		183				  CQS					C++				  00:40:52				RE
+		205				  CQS					C++				  00:44:04				WA
+		299				  CQS					C++				  01:01:16				AC
+		314				  CES					C++				  01:04:16				RE
+		326				  CES					C++				  01:06:32				RE
+		331				  CES					C++				  01:07:33				AC
+		448				  JKD					C++				  01:25:35				AC
+		483				  JKD					C++				  01:31:03				AC
+> Client: team00397
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00183
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		96				  CES					C++				  00:24:54				RE
+		226				  CES					C++				  00:47:48				AC
+> Client: team00396
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		51				  CES					C++				  00:15:46				AC
+		66				  CES					C++				  00:18:45				AC
+> Client: team00082
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		5				  CES					C++				  00:07:57				RE
+		52				  CES					C++				  00:15:48				RE
+		58				  CQS					C++				  00:17:08				RE
+		215				  JKD					C++				  00:45:54				RE
+		249				  JKD					C++				  00:53:00				TLE
+> Client: team00395
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00394
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		63				  CES					C++				  00:18:07				WA
+> Client: team00349
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00348
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		61				  CES					C++				  00:17:56				RE
+		74				  CES					C++				  00:19:52				RE
+		178				  CQS					C++				  00:39:58				TLE
+		358				  CES					C++				  01:12:55				RE
+		365				  CES					C++				  01:14:31				RE
+		460				  CQS					C++				  01:27:11				RE
+> Client: team00345
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		50				  CES					C++				  00:15:01				AC
+		65				  CES					C++				  00:18:44				WA
+		94				  CES					C++				  00:23:51				RE
+		253				  CES					C++				  00:53:44				CMPL
+		260				  CES					C++				  00:55:25				AC
+		423				  CQS					C++				  01:23:02				CMPL
+		446				  CQS					C++				  01:25:26				CMPL
+		471				  CQS					C++				  01:29:27				CMPL
+> Client: team00343
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		319				  CQS					C++				  01:05:39				RE
+		340				  CQS					C++				  01:08:50				RE
+> Client: team00105
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		188				  CES					C++				  00:41:45				AC
+		307				  CQS					C++				  01:03:00				TLE
+		363				  CQS					C++				  01:14:13				RE
+		401				  CQS					C++				  01:20:24				TLE
+		455				  CQS					C++				  01:26:26				TLE
+		488				  CQS					C++				  01:31:59				RE
+		497				  CQS					C++				  01:32:58				RE
+		504				  CQS					C++				  01:34:14				TLE
+		511				  CQS					C++				  01:36:39				TLE
+		514				  CQS					C++				  01:38:03				TLE
+		522				  CQS					C++				  01:40:24				RE
+		530				  JKD					C++				  01:46:40				RE
+> Client: team00344
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		14				  CES					PYTHON-3				  00:09:21				WA
+		23				  CES					C++				  00:11:39				WA
+		47				  CES					C++				  00:14:27				WA
+		69				  CES					C++				  00:19:07				WA
+		154				  CES					C++				  00:36:05				AC
+> Client: team00353
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		83				  CES					C++				  00:21:31				RE
+		220				  CES					C++				  00:46:41				WA
+		256				  CES					C++				  00:54:40				AC
+		413				  CQS					C++				  01:21:58				RE
+> Client: team00341
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		250				  JKD					C++				  00:53:09				RE
+		424				  CQS					C++				  01:23:03				AC
+> Client: team00015
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		218				  CES					C++				  00:46:28				CMPL
+		271				  CQS					C++				  00:56:57				CMPL
+		286				  CQS					C++				  00:59:04				TLE
+		297				  CQS					C++				  01:01:01				RE
+> Client: team00339
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		53				  CES					C++				  00:15:57				RE
+		306				  CQS					C++				  01:02:55				RE
+		402				  CQS					C++				  01:20:25				RE
+		468				  CQS					C++				  01:28:24				AC
+> Client: team00338
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		59				  CES					C++				  00:17:32				WA
+		359				  CQS					C++				  01:13:50				AC
+> Client: team00021
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		170				  CES					C++				  00:38:55				AC
+		202				  CQS					C++				  00:43:38				RE
+		210				  CQS					C++				  00:44:49				TLE
+> Client: team00340
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		60				  CES					C++				  00:17:54				RE
+		86				  CES					C++				  00:22:07				WA
+		113				  CES					C++				  00:28:54				AC
+		305				  CQS					C++				  01:02:52				WA
+		420				  CQS					C++				  01:22:47				WA
+		473				  CQS					C++				  01:29:33				CMPL
+		482				  CQS					C++				  01:30:46				RE
+		491				  CQS					C++				  01:32:17				WA
+> Client: team00191
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		98				  CES					C				  00:25:01				RE
+		225				  CES					C++				  00:47:44				RE
+		237				  CES					C++				  00:51:28				RE
+		269				  CES					C++				  00:56:38				AC
+		293				  KMR					C				  01:00:29				WA
+		303				  CQS					C				  01:02:31				WA
+> Client: team00389
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		185				  CQS					C++				  00:41:22				WA
+> Client: team00328
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		144				  CES					C				  00:34:20				WA
+		168				  CES					C++				  00:38:25				WA
+		193				  CES					C++				  00:42:37				RE
+		280				  CES					C++				  00:58:15				WA
+		296				  CES					C++				  01:00:50				RE
+		313				  CES					C++				  01:04:08				CMPL
+		330				  CES					C++				  01:07:02				RE
+		336				  CES					C++				  01:08:24				RE
+		344				  CES					PYTHON-3				  01:09:27				WA
+		428				  CQS					C++				  01:23:36				WA
+		459				  CQS					C++				  01:26:53				RE
+		480				  CES					C++				  01:30:33				WA
+		492				  CES					C++				  01:32:20				RE
+		507				  CES					C++				  01:36:06				AC
+		515				  CES					C++				  01:38:16				RE
+> Client: team00294
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		327				  CQS					C++				  01:06:40				TLE
+		506				  CQS					C++				  01:35:35				RE
+		510				  CQS					C++				  01:36:36				WA
+		520				  CQS					C++				  01:39:50				AC
+		525				  CQS					C++				  01:41:49				AC
+> Client: team00327
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		103				  CES					C++				  00:26:02				CMPL
+		116				  CES					C++				  00:29:29				AC
+		328				  CQS					C				  01:06:49				RE
+> Client: team00385
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		6				  CES					C++				  00:08:08				WA
+		25				  CES					C++				  00:11:54				RE
+		40				  CES					C++				  00:13:30				AC
+		150				  CQS					C++				  00:34:49				CMPL
+		239				  JKD					C++				  00:51:39				RE
+		268				  JKD					C++				  00:56:33				RE
+		288				  JKD					C++				  00:59:27				RE
+> Client: team00326
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		124				  CES					C++				  00:30:30				WA
+		135				  CES					C++				  00:32:45				CMPL
+		152				  CES					C++				  00:35:19				AC
+> Client: team00325
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00384
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		285				  CQS					C++				  00:58:48				RE
+		339				  JKD					C++				  01:08:47				RE
+		354				  JKD					C++				  01:11:26				RE
+> Client: team00383
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		79				  CES					C++				  00:21:05				RE
+		349				  CQS					C++				  01:10:39				RE
+> Client: team00324
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		169				  CES					C++				  00:38:49				AC
+> Client: team00322
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		240				  CES					C				  00:52:07				CMPL
+		258				  CES					C				  00:54:51				CMPL
+		273				  CES					C				  00:57:35				RE
+		302				  CES					C				  01:02:03				RE
+		310				  CES					C				  01:03:43				RE
+		323				  CES					PYTHON-3				  01:06:22				AC
+> Client: team00382
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		136				  CES					C++				  00:32:51				AC
+		386				  CQS					C++				  01:17:33				CMPL
+		416				  CQS					C++				  01:22:15				CMPL
+		494				  CQS					C++				  01:32:38				AC
+> Client: team00321
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		167				  CQS					C++				  00:38:18				RE
+> Client: team00380
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		55				  CES					C++				  00:16:25				AC
+> Client: team00018
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		493				  CES					C++				  01:32:36				RE
+		500				  CQS					C++				  01:33:45				TLE
+		512				  CQS					C++				  01:36:49				RE
+		519				  CQS					C++				  01:39:43				RE
+		526				  CQS					C++				  01:42:40				RE
+> Client: team00379
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		70				  CES					C++				  00:19:11				AC
+		89				  CES					C++				  00:22:35				RE
+		270				  CQS					C++				  00:56:39				AC
+		335				  CES					C++				  01:08:00				AC
+		486				  CQS					C++				  01:31:27				AC
+		513				  CQS					C++				  01:37:36				AC
+> Client: team00378
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		16				  CES					C++				  00:09:40				AC
+		122				  CES					C++				  00:30:07				WA
+		159				  CQS					C++				  00:36:41				RE
+		186				  CQS					C++				  00:41:28				RE
+> Client: team00315
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		206				  CQS					C++				  00:44:15				WA
+		232				  CQS					C++				  00:51:02				AC
+> Client: team00039
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		138				  CES					C++				  00:33:08				WA
+		153				  CES					C++				  00:35:59				AC
+		467				  CQS					C++				  01:28:21				CMPL
+		496				  CQS					C++				  01:32:56				AC
+> Client: team00317
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		148				  CES					C++				  00:34:43				CMPL
+> Client: team00318
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		123				  CES					C++				  00:30:19				AC
+		149				  CES					C++				  00:34:44				WA
+		157				  CES					PYTHON-3				  00:36:25				RE
+> Client: team00260
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+	No Submissions by this client.
+> Client: team00290
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		147				  CES					PYTHON-3				  00:34:34				AC
+> Client: team00390
+	Run ID			 Problem Code 			 Language 			 Timestamp 			 Verdict
+		322				  CQS					C++				  01:06:14				AC
+
+####################################################################################################

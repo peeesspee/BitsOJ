@@ -6,6 +6,30 @@ from database_management import user_management, query_management, client_authen
 import json, time
   
 class ui_widgets:
+	def create_table_widget(col = 1, row = 1, headers = []):
+		table = QTableWidget()
+		table.setColumnCount(col)
+		table.setRowCount(row)
+		table.setHorizontalHeaderLabels(headers)
+		# fit view to whole space
+		table.resizeColumnsToContents()
+		# Make table non-editable
+		table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		# Enable Alternate row colors for readablity
+		table.setAlternatingRowColors(True)
+		# Select whole row when clicked
+		table.setSelectionBehavior(QAbstractItemView.SelectRows)
+		# Allow only one row to be selected
+		table.setSelectionMode(QAbstractItemView.SingleSelection)
+		# Enable Sorting
+		table.setSortingEnabled(True)
+		
+		vertical_header = table.verticalHeader()
+		vertical_header.setVisible(False)
+		horizontal_header = table.horizontalHeader()
+		horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+		return table
+
 	def accounts_ui(self):
 		heading = QLabel('Manage Accounts')
 		heading.setObjectName('main_screen_heading')
@@ -23,18 +47,14 @@ class ui_widgets:
 		delete_account_button = QPushButton('Delete', self)
 		delete_account_button.setFixedSize(200, 50)
 		delete_account_button.clicked.connect(
-			lambda:self.delete_account(accounts_table.selectionModel().selectedRows())
+			lambda:self.delete_account(accounts_model.selectionModel().selectedRows())
 			)
 		delete_account_button.setObjectName("topbar_button")
 		delete_account_button.setToolTip('Delete account.\nCan be used when contest is \nnot RUNNING')
 
-		accounts_model = self.manage_models(self.db, 'accounts')
-		accounts_model.setHeaderData(0, Qt.Horizontal, 'Username')
-		accounts_model.setHeaderData(1, Qt.Horizontal, 'Password')
-		accounts_model.setHeaderData(2, Qt.Horizontal, 'Type')
-		accounts_table = self.generate_view(accounts_model)
-		accounts_table.doubleClicked.connect(
-			lambda:self.edit_account(accounts_table.selectionModel().currentIndex().row())
+		accounts_model = ui_widgets.create_table_widget(3, 1, ['Username', 'Password', 'Type'])
+		accounts_model.doubleClicked.connect(
+			lambda:self.edit_account(accounts_model.selectionModel().selectedRows())
 		)
  
 		head_layout = QHBoxLayout()
@@ -53,7 +73,7 @@ class ui_widgets:
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
-		main_layout.addWidget(accounts_table)
+		main_layout.addWidget(accounts_model)
 		
 		main_layout.setStretch(0,10)
 		main_layout.setStretch(1,90)
@@ -69,7 +89,7 @@ class ui_widgets:
 		edit_submission_button = QPushButton('Review', self)
 		edit_submission_button.setFixedSize(200, 50)
 		edit_submission_button.clicked.connect(
-			lambda:self.manage_submission(submission_table.selectionModel().currentIndex().row())
+			lambda:self.manage_submission(submission_model.selectionModel().currentIndex().row())
 		)
 		edit_submission_button.setObjectName("topbar_button")
 		edit_submission_button.setToolTip('Review selected submission')
@@ -82,23 +102,11 @@ class ui_widgets:
 		rejudge_problem_button.setObjectName("topbar_button")
 		rejudge_problem_button.setToolTip('Rejudge all submissions for a problem for selected client.\nThis is a costly operation!')
 
-		submission_model = self.manage_submissions_model(self.db, 'submissions')
-
-		# run_id, client_id, problem_code, language, timestamp, verdict, sent_status
-	
-		submission_model.setHeaderData(0, Qt.Horizontal, 'Run ID')
-		submission_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
-		submission_model.setHeaderData(2, Qt.Horizontal, 'Problem Code')
-		submission_model.setHeaderData(3, Qt.Horizontal, 'Language')
-		submission_model.setHeaderData(4, Qt.Horizontal, 'Time')
-		submission_model.setHeaderData(5, Qt.Horizontal, 'Verdict')
-		submission_model.setHeaderData(6, Qt.Horizontal, 'Status')
-		submission_model.setHeaderData(7, Qt.Horizontal, 'Judge')
+		headers = ['Run ID', 'Client ID', 'Problem Code', 'Language', 'Time', 'Verdict', 'Status', 'Judge']
+		submission_model = ui_widgets.create_table_widget(8, 1, headers)
 		
-		submission_table = self.generate_view(submission_model)
-		submission_table.setSortingEnabled(False)
-		submission_table.doubleClicked.connect(
-			lambda:self.manage_submission(submission_table.selectionModel().currentIndex().row())
+		submission_model.doubleClicked.connect(
+			lambda:self.manage_submission(submission_model.selectionModel().currentIndex().row())
 		)
 
 		head_layout = QHBoxLayout()
@@ -114,7 +122,7 @@ class ui_widgets:
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
-		main_layout.addWidget(submission_table)
+		main_layout.addWidget(submission_model)
 		main_layout.setStretch(0,10)
 		main_layout.setStretch(1,90)
 
@@ -126,16 +134,11 @@ class ui_widgets:
 
 
 	def client_ui(self):
-		client_model = self.manage_models(self.db, 'connected_clients')
-		client_model.setHeaderData(0, Qt.Horizontal, 'Client ID')
-		client_model.setHeaderData(1, Qt.Horizontal, 'Username')
-		client_model.setHeaderData(2, Qt.Horizontal, 'Password')
-		client_model.setHeaderData(3, Qt.Horizontal, 'IP Address')
-		client_model.setHeaderData(4, Qt.Horizontal, 'State')
-		client_view = self.generate_view(client_model)
+		headers = ['Client ID', 'Username', 'Password', 'IP Address', 'State']
+		client_model = ui_widgets.create_table_widget(5, 1, headers)
 
-		client_view.doubleClicked.connect(
-			lambda:self.edit_client(client_view.selectionModel().currentIndex().row())
+		client_model.doubleClicked.connect(
+			lambda:self.edit_client(client_model.selectionModel().currentIndex().row())
 		)
 
 		heading = QLabel('Connected Clients')
@@ -144,7 +147,7 @@ class ui_widgets:
 		edit_client_button = QPushButton('Edit State', self)
 		edit_client_button.setFixedSize(200, 50)
 		edit_client_button.clicked.connect(
-			lambda:self.edit_client(client_view.selectionModel().currentIndex().row())
+			lambda:self.edit_client(client_model.selectionModel().currentIndex().row())
 		)
 		edit_client_button.setObjectName("topbar_button")
 		edit_client_button.setToolTip('Change client status.')
@@ -160,7 +163,7 @@ class ui_widgets:
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
-		main_layout.addWidget(client_view)
+		main_layout.addWidget(client_model)
 		main_layout.setStretch(0,10)
 		main_layout.setStretch(1,90)		
 
@@ -173,16 +176,11 @@ class ui_widgets:
 		heading = QLabel('Connected Judges')
 		heading.setObjectName('main_screen_heading')
 
-		judge_model = self.manage_models(self.db, 'connected_judges')
-		judge_model.setHeaderData(0, Qt.Horizontal, 'Judge ID')
-		judge_model.setHeaderData(1, Qt.Horizontal, 'Username')
-		judge_model.setHeaderData(2, Qt.Horizontal, 'Password')
-		judge_model.setHeaderData(3, Qt.Horizontal, 'IP Address')
-		judge_model.setHeaderData(4, Qt.Horizontal, 'State')
+		headers = ['Judge ID', 'Username', 'Password', 'IP Address', 'State']
+		judge_model = ui_widgets.create_table_widget(5, 1, headers)
 
-		judge_view = self.generate_view(judge_model)
-		judge_view.doubleClicked.connect(
-			lambda:self.view_judge(judge_view.selectionModel().currentIndex().row())
+		judge_model.doubleClicked.connect(
+			lambda:self.view_judge(judge_model.selectionModel().currentIndex().row())
 		)
 
 		head_layout = QHBoxLayout()
@@ -194,7 +192,7 @@ class ui_widgets:
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
-		main_layout.addWidget(judge_view)
+		main_layout.addWidget(judge_model)
 		main_layout.setStretch(0,10)
 		main_layout.setStretch(1,90)		
 
@@ -204,7 +202,6 @@ class ui_widgets:
 		return main, judge_model
 
 
-
 	def query_ui(self):
 		heading = QLabel('All Clarifications')
 		heading.setObjectName('main_screen_heading')
@@ -212,7 +209,7 @@ class ui_widgets:
 		reply_button = QPushButton('Reply')
 		reply_button.setFixedSize(200, 50)
 		reply_button.clicked.connect(
-			lambda: self.query_reply(query_view.selectionModel().currentIndex().row())
+			lambda: self.query_reply(query_model.selectionModel().currentIndex().row())
 			)
 		reply_button.setObjectName("topbar_button")
 
@@ -220,30 +217,26 @@ class ui_widgets:
 		announcement_button.setFixedSize(200, 50)
 		announcement_button.clicked.connect(
 			lambda: self.announcement()
-			)
+		)
 		announcement_button.setObjectName("topbar_button")
 
-		query_model = self.manage_models(self.db, 'queries')
-		query_model.setHeaderData(0, Qt.Horizontal, 'Query ID')
-		query_model.setHeaderData(1, Qt.Horizontal, 'Client ID')
-		query_model.setHeaderData(2, Qt.Horizontal, 'Query')
-		query_model.setHeaderData(3, Qt.Horizontal, 'Response')
+		headers = ['Query ID', 'Client ID', 'Query', 'Response']
+		query_model = ui_widgets.create_table_widget(4, 1, headers)
 
-		query_view = self.generate_view(query_model)
-		query_view.doubleClicked.connect(
-			lambda:self.query_reply(query_view.selectionModel().currentIndex().row())
+		query_model.doubleClicked.connect(
+			lambda:self.query_reply(query_model.selectionModel().currentIndex().row())
 		)
 
 		head_layout = QHBoxLayout()
 		head_layout.addWidget(heading)
 		head_layout.addWidget(announcement_button)
-		head_layout.addWidget(reply_button)
+		# head_layout.addWidget(reply_button)
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
-		main_layout.addWidget(query_view)
+		main_layout.addWidget(query_model)
 		main_layout.setStretch(0,10)
 		main_layout.setStretch(1,90)	
 		main = QWidget()
@@ -260,17 +253,21 @@ class ui_widgets:
 		if scoring_num == 1:
 			# ACM Style ranking
 			scoring_type = 'ACM'
+			headers = ['Team', 'Problems Solved', 'Score', 'Total Time']
+			col_count = 4
 		elif scoring_num == 2:
 			# IOI Style ranking
 			scoring_type = 'IOI'
+			headers = ['Team', 'Problems Solved', 'Score', 'Total Time']
+			col_count = 4
 		else:
 			scoring_type = 'LONG'
+			headers = ['Team', 'Problems Solved', 'Score', 'Total Time']
+			col_count = 4
 
 		scoring_label = QLabel('Scoring Type: ' + scoring_type)
 
-		score_model = self.manage_leaderboard_model(self.db, 'scoreboard')
-		score_table = self.generate_view(score_model)
-		score_table.setSortingEnabled(False)
+		score_model = ui_widgets.create_table_widget(col_count, 1, headers)
 
 		update_button = QPushButton('Broadcast Scoreboard')
 		update_button.setToolTip('Manually send scoreboard to all clients.')
@@ -289,13 +286,12 @@ class ui_widgets:
 		head_layout.setAlignment(scoring_label, Qt.AlignCenter)
 		head_layout.setAlignment(update_button, Qt.AlignRight)
 
-		
 		head_widget = QWidget()
 		head_widget.setLayout(head_layout)
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
-		main_layout.addWidget(score_table)
+		main_layout.addWidget(score_model)
 		main_layout.setStretch(0,10)
 		main_layout.setStretch(1,90)
 
@@ -310,22 +306,20 @@ class ui_widgets:
 		heading = QLabel('Manage Problems')
 		heading.setObjectName('main_screen_heading')
 
+		headers = ['Problem Name', 'Code', 'Test Files', 'Time Limit']
+		problem_model = ui_widgets.create_table_widget(4, 1, headers)
+
 		view_problem_button = QPushButton('Manage Problem', self)
 		view_problem_button.setFixedSize(200, 50)
 		view_problem_button.clicked.connect(
-			lambda:self.view_problem(problem_table.selectionModel().currentIndex().row()) 
+			lambda:self.view_problem(problem_model.selectionModel().currentIndex().row()) 
 		)
 		view_problem_button.setObjectName("topbar_button")
 		view_problem_button.setToolTip('View/Edit Problems')
 
-		problem_model = self.manage_models(self.db, 'problems')
-		problem_model.setHeaderData(0, Qt.Horizontal, 'Problem Name')
-		problem_model.setHeaderData(1, Qt.Horizontal, 'Code')
-		problem_model.setHeaderData(2, Qt.Horizontal, 'Test Files')
-		problem_model.setHeaderData(3, Qt.Horizontal, 'Time Limit')
-		problem_table = self.generate_view(problem_model)
-		problem_table.doubleClicked.connect(
-			lambda:self.view_problem(problem_table.selectionModel().currentIndex().row())
+ 
+		problem_model.doubleClicked.connect(
+			lambda:self.view_problem(problem_model.selectionModel().currentIndex().row())
 		)
 
 		head_layout = QHBoxLayout()
@@ -340,7 +334,7 @@ class ui_widgets:
 
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(head_widget)
-		main_layout.addWidget(problem_table)
+		main_layout.addWidget(problem_model)
 		
 		main_layout.setStretch(0,10)
 		main_layout.setStretch(1,90)
@@ -509,7 +503,10 @@ class ui_widgets:
 		contest_time_entry.setText(self.config["Contest Duration"])
 		contest_time_entry.setPlaceholderText('HH:MM:SS')
 		contest_time_entry.setFixedSize(80, 30)
-		contest_time_entry.setToolTip('You will not be able to edit this when contest starts.')
+		contest_time_entry.setToolTip(
+			'Set Contest duration. Press Set to confirm.' + 
+			'\nYou will not be able to edit this when contest starts.'
+		)
 
 		contest_time_layout = QHBoxLayout()
 		contest_time_layout.addWidget(contest_duration_label)
@@ -526,11 +523,14 @@ class ui_widgets:
 		minutes_label.setObjectName('main_screen_content')
 
 		change_time_entry = QSpinBox()
-		change_time_entry.setMinimum(0)
+		change_time_entry.setMinimum(-60)
 		change_time_entry.setMaximum(60)
 		change_time_entry.setValue(0)
 		change_time_entry.setReadOnly(True)
-		change_time_entry.setToolTip('You will be able to use it when contest is STARTED')
+		change_time_entry.setToolTip(
+			'Extend the contest in minutes.' + 
+			'\nYou will be able to use it when contest is STARTED'
+		)
 
 		change_time_layout = QHBoxLayout()
 		change_time_layout.addWidget(contest_extension_label)
@@ -552,7 +552,8 @@ class ui_widgets:
 		submission_limit = QSpinBox()
 		submission_limit.setMinimum(0)
 		submission_limit.setMaximum(5)
-		submission_limit.setToolTip('Increase/Decrease works instantly.')
+		submission_limit.setValue(self.data_changed_flags[21])
+		submission_limit.setToolTip('Set Submission per N minute rule.\nIncrease/Decrease works instantly.')
 		submission_limit.valueChanged.connect(
 			lambda:ui_widgets.time_limit_updater(self, submission_limit.text())
 		)
@@ -574,7 +575,7 @@ class ui_widgets:
 		set_button.setToolTip('Set contest time.\nThis does NOT broadcast to clients.')
 		set_button.clicked.connect(
 			lambda: ui_widgets.preprocess_contest_broadcasts(self, 'SET', contest_time_entry.text())
-			)
+		)
 
 		start_button = QPushButton('Start', self)
 		start_button.setFixedSize(70, 25)
@@ -582,7 +583,7 @@ class ui_widgets:
 		start_button.setToolTip('START the contest and broadcast to all clients.')
 		start_button.clicked.connect(
 			lambda: ui_widgets.preprocess_contest_broadcasts(self, 'START', contest_time_entry.text())
-			)
+		)
 
 		update_button = QPushButton('Update', self)
 		update_button.setEnabled(False)
@@ -590,10 +591,10 @@ class ui_widgets:
 		update_button.setObjectName('interior_button')
 		update_button.setToolTip(
 			'UPDATE contest time and broadcast to all clients.\nDisabled until contest Starts'
-			)
+		)
 		update_button.clicked.connect(
 			lambda: ui_widgets.preprocess_contest_broadcasts(self, 'UPDATE', change_time_entry.value())
-			)
+		)	
 
 		stop_button = QPushButton('Stop', self)
 		stop_button.setEnabled(False)
@@ -601,10 +602,10 @@ class ui_widgets:
 		stop_button.setObjectName('interior_button')
 		stop_button.setToolTip(
 			'STOP the contest and broadcast to all clients.\nDisabled until contest Starts'
-			)
+		)
 		stop_button.clicked.connect(
 			lambda: ui_widgets.preprocess_contest_broadcasts(self, 'STOP')
-			)
+		)
 		
 		contest_buttons_layout = QHBoxLayout()
 		contest_buttons_layout.addWidget(set_button)
