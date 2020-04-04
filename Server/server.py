@@ -334,11 +334,11 @@ def manage_process(
 	client_handler_process = multiprocessing.Process(
 		target = manage_clients.prepare, 
 		args = (data_changed_flags, task_queue, log_queue, )
-		)
+	)
 	judge_handler_process = multiprocessing.Process(
 		target = manage_judges.listen_judges, 
 		args = (rabbitmq_username, rabbitmq_password, host, data_changed_flags, task_queue, log_queue, )
-		)
+	)
 	
 	core_process.start()
 	time.sleep(1)
