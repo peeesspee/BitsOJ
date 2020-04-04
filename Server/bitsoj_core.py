@@ -42,6 +42,7 @@ class core():
 		core.ranking_algoritm = core.data_changed_flags[17]
 		# Infinite Loop to Poll the task_queue every second
 		status = 0
+
 		while True:
 			try:
 				status = core.poll(task_queue)
@@ -233,9 +234,16 @@ class core():
 		elif code == 'RJUDGE':
 			run_id = data['Run ID']
 			# Update submission status
-			submissions_management.update_submission_status(run_id, 'REJUDGE', 'REJUDGE')
+			submissions_management.update_submission_status(run_id, 'Running', 'Rejudge')
 			# Refresh GUI
-			
+			message = {
+				'Code' : 'UpSubStat',
+				'Run ID' : run_id, 
+				'Verdict' : 'Running',
+				'Status' : 'Rejudge',
+				'Judge' : '-'
+			}
+			core.update_queue.put(message)
 
 			data['Code'] = 'JUDGE'
 			message = json.dumps(data)
@@ -254,8 +262,8 @@ class core():
 			print('[ CORE ][ EVENT ][ BROADCAST ] UPDATE Contest')
 			core.log('[ CORE ][ EVENT ][ BROADCAST ] UPDATE Contest')
 			message = {
-			'Code' : 'UPDATE',
-			'Time' : data['Time']
+				'Code' : 'UPDATE',
+				'Time' : data['Time']
 			}
 			message = json.dumps(message)
 			core.channel.basic_publish(
@@ -557,7 +565,7 @@ class core():
 
 		elif code == 'JDSCNT':
 			judge = data['Judge']
-			core.update_queue.put(data)
+			
 			if judge == '__ALL__':
 				print('[ CORE ][ EVENT ] Disconnect All Judges')
 				core.log('[ CORE ][ EVENT ] Disconnect All Judges')
@@ -583,10 +591,10 @@ class core():
 					routing_key = judge, 
 					body = message
 				)
+				core.update_queue.put({'Code' : 'JDscnt', 'Judge' : judge})
 
 		elif code == 'JBLOCK':
 			username = data['Receiver']
-			core.update_queue.put(data)
 			print('[ CORE ][ EVENT ] Judge Block ' + username)
 			core.log('[ CORE ][ EVENT ] Judge Block ' + username)
 			message = {
@@ -598,7 +606,7 @@ class core():
 				routing_key = username, 
 				body = message
 			)
-
+			core.update_queue.put({'Code' : 'JBlock', 'Judge' : username})
 
 		elif code == 'UpUserStat':
 			username = data['Username']
@@ -644,6 +652,21 @@ class core():
 					routing_key = '', 
 					body = message
 				)
+				# Set DISCONNECTED to all connected clients and judges
+				user_management.disconnect_all()
+
+		elif code == 'AccReset':
+			# Delete all connected_clients and connected_judges
+			user_management.delete_all()
+			# Delete all accounts
+			user_management.delete_all_accounts()
+				
+		elif code == 'SubReset':
+			submissions_management.delete_all()
+			scoreboard_management.delete_all()	
+
+		elif code == 'QueryReset':
+			query_management.delete_all()
 
 		elif code == 'BLOCK':
 			core.update_queue.put(data)

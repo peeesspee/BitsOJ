@@ -170,4 +170,30 @@ class interface_updates:
 						break
 			
 			elif code == 'ERROR':
+				message = data['Message']
+				info_box = QMessageBox()
+				info_box.setIcon(QMessageBox.Critical)
+				info_box.setWindowTitle('Error')
+				info_box.setText(message)
+				info_box.setStandardButtons(QMessageBox.Ok)
+				info_box.exec_()
+
+			elif code == 'INFO':
+				message = data['Message']
+				info_box = QMessageBox()
+				info_box.setIcon(QMessageBox.Information)
+				info_box.setWindowTitle('Alert')
+				info_box.setText(message)
+				info_box.setStandardButtons(QMessageBox.Ok)
+				info_box.exec_()
+
+			elif code == 'JDscntAll':
+				pass
+
+			elif code == 'JDscnt':
+				judge = data['Judge']
+				pass
+
+			elif code == 'JBlock':
+				judge = data['Judge']
 				pass

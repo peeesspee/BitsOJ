@@ -1264,7 +1264,7 @@ class server_window(QMainWindow):
 			message = {
 				'Code' : 'DelUsr',
 				'Client' : username
-			}
+			} 
 			message = json.dumps(message)
 			self.task_queue.put(message)
 
@@ -1325,16 +1325,17 @@ class server_window(QMainWindow):
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
-				# Set DISCONNECTED to all connected clients and judges
-				user_management.disconnect_all()
-				
-				print('[ EVENT ] Accounts Reset...')
-				self.log('[ EVENT ] Accounts Reset...')
 
-				# Delete all connected_clients and connected_judges
-				user_management.delete_all()
-				# Delete all accounts
-				user_management.delete_all_accounts()
+				print('[ EVENT ] Disconnecting all accounts...')
+				self.log('[ EVENT ] Disconnecting all accounts...')
+				message = {
+					'Code' : 'AccReset'
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+
+				self.account_model.clearContents()
+				self.account_model.setRowCount(0)
 
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
@@ -1368,8 +1369,7 @@ class server_window(QMainWindow):
 
 		# If no row is selected, return
 		try:
-			message = "Are you sure to DISCONNECT all clients?\nClients will be able to login again\nif permitted."
-			
+			message = "Are you sure to DISCONNECT all Clients and Judges?\nClients will be able to login again if permitted."
 			custom_close_box = QMessageBox()
 			custom_close_box.setIcon(QMessageBox.Critical)
 			custom_close_box.setWindowTitle('Disconnect Clients')
@@ -1400,10 +1400,14 @@ class server_window(QMainWindow):
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
-				# Set DISCONNECTED to all connected clients and judges
-				user_management.disconnect_all()
+				self.client_model.clearContents()
+				self.client_model.setRowCount(0)
+				self.judge_model.clearContents()
+				self.judge_model.setRowCount(0)
+
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
+
 		except Exception as error:
 			print('Could not reset database : ' + str(error))
 			self.log('Could not reset database : ' + str(error))
@@ -1448,11 +1452,18 @@ class server_window(QMainWindow):
 				print('[ EVENT ] Submission Reset...')
 				self.log('[ EVENT ] Submission Reset...')
 
-				submissions_management.delete_all()
-				scoreboard_management.delete_all()
-				
+				message = {
+					'Code' : 'SubReset'
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+
+				self.sub_model.clearContents()
+				self.sub_model.setRowCount(0)
+
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
+
 		except Exception as error:
 			print('[ UI ][ ERROR ] Could not reset database : ' + str(error))
 			self.log('[ UI ][ ERROR ] Could not reset database : ' + str(error))
@@ -1497,7 +1508,15 @@ class server_window(QMainWindow):
 			if custom_close_box.clickedButton() == button_yes:
 				print('[ EVENT ] Queries Reset...')
 				self.log('[ EVENT ] Queries Reset...')
-				query_management.delete_all()
+				message = {
+					'Code' : 'QueryReset'
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+
+				self.query_model.clearContents()
+				self.query_model.setRowCount(0)
+
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:
@@ -1539,50 +1558,64 @@ class server_window(QMainWindow):
 				print('[ EVENT ] SERVER RESET TRIGGERED')
 				self.log('[ EVENT ] SERVER RESET TRIGGERED')
 				
-				# Send disconnect message to all clients
-				user_management.disconnect_all()
+				print('[ RESET ] Disconnecting all Connected Clients...')
+				self.log('[ RESET ] Disconnecting all Connected Clients...')
 				message = {
 					'Code' : 'DSCNT',
 					'Mode' : 2
 				} 
 				message = json.dumps(message)
 				self.task_queue.put(message)
-				# Set DISCONNECTED to all connected clients and judges
-				print('[ RESET ] Disconnecting all clients...')
-				self.log('[ RESET ] Disconnecting all clients...')
+				self.client_model.clearContents()
+				self.client_model.setRowCount(0)
+
+				print('[ RESET ] Disconnecting all Connected Judges...')
+				self.log('[ RESET ] Disconnecting all Connected Judges...')
 				message = {
 					"Code" : 'JDSCNT',
 					"Judge" : '__ALL__'
 				}
 				message = json.dumps(message)
 				self.task_queue.put(message)
-				print('[ RESET ] Disconnecting all judges...')
-				self.log('[ RESET ] Disconnecting all judges...')
-
-				user_management.delete_all()
-				print('[ RESET ] Deleting all Connected Judges...')
-				self.log('[ RESET ] Deleting all Connected Judges...')
-				
-				# Reset Scoreboard
-				print('[ RESET ] Clearing scoreboard...')
-				self.log('[ RESET ] Clearing scoreboard...')
-				scoreboard_management.delete_all()
+				self.judge_model.clearContents()
+				self.judge_model.setRowCount(0)
 
 				# Reset accounts
-				print('[ RESET ] Resetting Accounts...')
-				self.log('[ RESET ] Resetting Accounts...')
-				user_management.delete_all_accounts()
+				print('[ RESET ] Deleting all User Accounts...')
+				self.log('[ RESET ] Deleting all User Accounts...')
+				message = {
+					'Code' : 'AccReset'
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+				self.account_model.clearContents()
+				self.account_model.setRowCount(0)
 
 				# Reset submissions
 				print('[ RESET ] Resetting Submissions...')
 				self.log('[ RESET ] Resetting Submissions...')
-				submissions_management.delete_all()
+				# Reset Scoreboard
+				print('[ RESET ] Clearing scoreboard...')
+				self.log('[ RESET ] Clearing scoreboard...')
+				message = {
+					'Code' : 'SubReset'
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+				self.sub_model.clearContents()
+				self.sub_model.setRowCount(0)
 				
 				# Update Queries View
 				print('[ RESET ] Resetting Queries...')
 				self.log('[ RESET ] Resetting Queries...')
-				query_management.delete_all()
-		
+				message = {
+					'Code' : 'QueryReset'
+				}
+				message = json.dumps(message)
+				self.task_queue.put(message)
+				self.query_model.clearContents()
+				self.query_model.setRowCount(0)
+
 				print('[ RESET ] Reset environment...')
 				self.log('[ RESET ] Reset environment...')
 				server_window.set_button_behavior(self, 'SETUP')
@@ -1591,6 +1624,7 @@ class server_window(QMainWindow):
 				save_status.update_entry('Contest Start Time', '00:00:00')
 				save_status.update_entry('Contest End Time', '00:00:00')
 				save_status.update_entry('Contest Set Time', 0)
+
 			elif custom_close_box.clickedButton() == button_no : 
 				pass
 		except Exception as error:

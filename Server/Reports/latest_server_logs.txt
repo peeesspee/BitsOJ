@@ -1,26 +1,27 @@
-2020-03-23 14:11:24.977623  :  #### SERVER START #### ###
-2020-03-23 14:11:24.993313  :  [ SELF CHECK ][ PASS ] Systems OK. ###
-2020-03-23 14:11:24.993482  :  [ SETUP ] Initialising server... ###
-2020-03-23 14:11:24.993790  :  [ SETUP ] Initialising database... ###
-2020-03-23 14:11:25.001274  :  [ SETUP ] Initialising subprocesses... ###
-2020-03-23 14:11:25.006012  :    [ START ] Core subprocess started. ###
-2020-03-23 14:11:26.005771  :  [ SETUP ] Subprocesses started ###
-2020-03-23 14:11:26.005915  :  [ SETUP ][ Process ] Client Manager: 6625 ###
-2020-03-23 14:11:26.006013  :  [ SETUP ][ Process ] Judge Manager: 6626 ###
-2020-03-23 14:11:26.006122  :  [ SETUP ][ Process ] Core: 6622 ###
-2020-03-23 14:11:26.007583  :    [ START ] Client Manager subprocess started. ###
-2020-03-23 14:11:26.008835  :    [ START ] Judge Manager subprocess started. ###
-2020-03-23 14:11:26.023562  :  [ LISTEN ] Started listening on judge_verdict ###
-2020-03-23 14:11:26.023625  :  [ LISTEN ] Started listening on client_requests ###
-2020-03-23 14:11:26.477123  :  [ SETUP ][ Process ] Log Manager: 6620 ###
-2020-03-23 14:11:27.525599  :    [ START ] Interface subprocess started. ###
-2020-03-23 14:11:28.576830  :  [ CORE ][ EVENT ][ BROADCAST ] STOP Contest ###
-2020-03-23 14:11:35.098847  :  [ SECURITY ] Server Close attempt -> Accepted. ###
-2020-03-23 14:11:35.127340  :  [ EXIT ] Signal passed ###
-2020-03-23 14:11:35.127489  :  [ EXIT ] Saving Server state to file. ###
-2020-03-23 14:11:35.129539  :  [ LISTEN ] STOPPED listening to judge channel ###
-2020-03-23 14:11:35.129970  :  [ STOP ] Judge subprocess terminated successfully! ###
-2020-03-23 14:11:35.134030  :  [ LISTEN ] STOPPED listening to client channel ###
-2020-03-23 14:11:35.137253  :  [ STOP ] Client subprocess terminated successfully! ###
-2020-03-23 14:11:35.510445  :  [ EXIT ] Saved Server state to file. ###
-2020-03-23 14:11:35.585807  :  [ STOP ] Core subprocess terminated successfully! ###
+2020-04-04 22:54:45.968724  :  #### SERVER START #### ###
+2020-04-04 22:54:45.969274  :  [ SELF CHECK ][ PASS ] Systems OK. ###
+2020-04-04 22:54:45.969334  :  [ SETUP ] Initialising server... ###
+2020-04-04 22:54:45.969377  :  [ SETUP ] Initialising database... ###
+2020-04-04 22:54:46.967617  :  [ SETUP ] Loading problems... ###
+2020-04-04 22:54:46.969940  :  [ SETUP ] Initialising subprocesses... ###
+2020-04-04 22:54:46.973375  :    [ START ] Core subprocess started. ###
+2020-04-04 22:54:47.975948  :  [ SETUP ] Subprocesses started ###
+2020-04-04 22:54:47.976020  :  [ SETUP ][ Process ] Client Manager: 12632 ###
+2020-04-04 22:54:47.976074  :  [ SETUP ][ Process ] Judge Manager: 12633 ###
+2020-04-04 22:54:47.976115  :  [ SETUP ][ Process ] Core: 12629 ###
+2020-04-04 22:54:47.976156  :  [ SETUP ][ Process ] Log Manager: 12625 ###
+2020-04-04 22:54:47.977760  :    [ START ] Judge Manager subprocess started. ###
+2020-04-04 22:54:47.994634  :  [ LISTEN ] Started listening on judge_verdict ###
+2020-04-04 22:54:47.998025  :    [ START ] Client Manager subprocess started. ###
+2020-04-04 22:54:48.028409  :  [ LISTEN ] Started listening on client_requests ###
+2020-04-04 22:54:48.160910  :    [ START ] Interface subprocess started. ###
+2020-04-04 22:55:07.878592  :  [ CRITICAL ] Could not read test file : [Errno 2] No such file or directory: 'Problem Data/SXS/input00.in' ###
+2020-04-04 22:55:13.330516  :  [ SECURITY ] Server Close attempt -> Accepted. ###
+2020-04-04 22:55:13.374051  :  [ LISTEN ] STOPPED listening to client channel ###
+2020-04-04 22:55:13.374129  :  [ LISTEN ] STOPPED listening to judge channel ###
+2020-04-04 22:55:13.374175  :  [ EXIT ] Signal passed ###
+2020-04-04 22:55:13.374218  :  [ EXIT ] Saving Server state to file. ###
+2020-04-04 22:55:13.377092  :  [ STOP ] Judge subprocess terminated successfully! ###
+2020-04-04 22:55:13.377411  :  [ STOP ] Client subprocess terminated successfully! ###
+2020-04-04 22:55:13.388463  :  [ EXIT ] Saved Server state to file. ###
+2020-04-04 22:55:13.519843  :  [ STOP ] Core subprocess terminated successfully! ###
