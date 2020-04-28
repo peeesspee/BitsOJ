@@ -65,7 +65,7 @@ class core():
 						# New Submission
 						print('[ CORE ] Insert Record: Run', run_id)
 						status = submission_management.insert_record(
-							run_id, 
+							run_id,  
 							client_id, 
 							verdict,	
 							language, 
@@ -78,6 +78,7 @@ class core():
 						else:
 							print('[ CORE ] Submission Not Processed')
 						core.data_changed_flags[4] = 1
+
 					else:
 						print('[ CORE ] Update Record: Run', run_id)
 						submission_management.update_record(
@@ -101,7 +102,7 @@ class core():
 					time_stamp = data['Timestamp']
 					file_with_ext = data['Filename']
 
-					print('[ CORE ] Update: ', run_id)
+					print('[ CORE ] Update Run: ', run_id)
 					submission_management.update_record(
 						run_id, 
 						client_id, 

@@ -113,7 +113,7 @@ class submission_management(manage_database):
 				# New insertion
 				print('[ DB ] Inserting record...')
 				# run_id , client_id , verdict , language , p_code , time_stamp , source_file , judge 
-				cur.execute(
+				conn.execute(
 					"INSERT INTO verdict VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
 					(
 						run_id, 
@@ -126,6 +126,18 @@ class submission_management(manage_database):
 						'<NON LOCAL>' 
 					)
 				)
-			cur.execute('commit')
+				conn.commit()
+			else:
+				print('[ DB ] Updating record...')
+				# run_id , client_id , verdict , language , p_code , time_stamp , source_file , judge 
+				conn.execute(
+					"UPDATE verdict SET verdict = ? where run_id = ?",
+					(
+						verdict,
+						run_id, 
+					)
+				)
+				conn.commit()
+
 		except Exception as error:
-			print("[ DB ][ ERROR ] "+str(error))
+			print("[ DB ][ ERROR ] ", error)

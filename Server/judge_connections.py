@@ -155,15 +155,16 @@ class manage_judges():
 			# Judge has been validated.
 			code = json_data["Code"] 
 			if code == 'VRDCT':
-				local_run_id = json_data['Local Run ID']
-				client_username = json_data['Client Username']
-				client_id = json_data['Client ID']
-				status = json_data['Status']
-				run_id = json_data['Run ID']
-				message = json_data['Message']
-				p_code = json_data['PCode']
-				time_stamp = json_data['Time Stamp']
-				judge = json_data['Judge']
+				local_run_id = json_data.get('Local Run ID', 'NULL')
+				client_username = json_data.get('Client Username', 'NULL')
+				client_id = json_data.get('Client ID', '0')
+				status = json_data.get('Status', 'NULL')
+				run_id = json_data.get('Run ID', '0')
+				message = json_data.get('Message', 'NULL')
+				p_code = json_data.get('PCode', 'NULL')
+				time_stamp = json_data.get('Time Stamp', 'xx:xx:xx')
+				judge = json_data.get('Judge', '<SECURITY>')
+				language = json_data.get('Language', '-')
 
 				print('[ VERDICT ] ' + judge + ' :: ' + status)
 				manage_judges.log('[ VERDICT ] ' + judge + ' :: ' + status)
@@ -223,7 +224,7 @@ class manage_judges():
 				message = json.dumps(message)
 
 				# Publish message to client if allowed
-				if manage_judges.data_changed_flags[20] == 0:
+				if manage_judges.data_changed_flags[20] == 0: 
 					# Manual Review is OFF
 					try:
 						# Put response to task queue, to further connect to the client

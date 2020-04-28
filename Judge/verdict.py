@@ -58,7 +58,7 @@ class verdict():
 			return verd,result
 
 		if e == False:
-			time_limit = timelimit + 's '
+			time_limit = str(timelimit) + 's '
 			e = verdict.run_file(runfile, problem_code, run_id, time_limit, lang)
 			# print(verdict.ERROR)
 			# print(verdict.VERDICT)

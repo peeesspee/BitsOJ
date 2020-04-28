@@ -49,12 +49,14 @@ class interface_updates:
 				username = data['Username']
 				password = data['New Password']
 				ctype = data['Type']
+
 				row_count = self.account_model.rowCount()
 				for i in range (row_count):
 					item = self.account_model.item(i, 0).text()
 					if item == username:
 						self.account_model.setItem(i, 1, QTableWidgetItem(password))
 						break
+
 				if ctype == 'CLIENT':
 					row_count = self.client_model.rowCount()
 					for i in range (row_count):
@@ -62,6 +64,7 @@ class interface_updates:
 						if item == username:
 							self.client_model.setItem(i, 2, QTableWidgetItem(password))
 							break
+							
 				elif ctype == 'JUDGE':
 					row_count = self.judge_model.rowCount()
 					for i in range (row_count):
@@ -188,12 +191,4 @@ class interface_updates:
 				info_box.exec_()
 
 			elif code == 'JDscntAll':
-				pass
-
-			elif code == 'JDscnt':
-				judge = data['Judge']
-				pass
-
-			elif code == 'JBlock':
-				judge = data['Judge']
 				pass

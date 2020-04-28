@@ -332,7 +332,7 @@ class manage_clients():
 		if client_type == 'CLIENT':
 			# If client logins have been halted by the ADMIN, Send a rejection message to the client
 			if(manage_clients.data_changed_flags[2] == 0):
-				print('[ LOGIN ][ REJECT ] Rejected by ADMIN')
+				print('[ LOGIN ][ REJECT ] Rejected by ADMIN [ Logins not allowed ]')
 				manage_clients.log('[ LOGIN ][ REJECT ] Rejected by ADMIN')
 				message = {
 					'Code' : 'LRJCT',

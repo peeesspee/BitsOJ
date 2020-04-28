@@ -14,7 +14,7 @@ client_id = '1'
 
 username = 'team00001'
 password = 'bits1'
-key = 'Td1p5Yw'
+key = 'fQ40S4J'
 
 
 
@@ -117,7 +117,7 @@ def send():
 		'Code' : 'SUBMT', 
 		'Username' : username,
 		'ID' : client_id,
-		'PCode' : 'CES',
+		'PCode' : 'SXS',
 		'Language' : 'C++',
 		'Time' : ctime,
 		'Source' : code,

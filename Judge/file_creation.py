@@ -1,6 +1,4 @@
 class file_manager():
-
-
 	def create_file(source_code, language, file_name):
 		
 		# if code is in C++

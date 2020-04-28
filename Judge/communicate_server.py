@@ -96,6 +96,7 @@ class communicate_server():
 		message = json.loads(server_data)
 		code = message['Code']
 		if code == 'JUDGE':
+			print('Loading submission data...')
 			run_id = str(message["Run ID"])
 			problem_code = message["PCode"]
 			language = message["Language"]
@@ -131,13 +132,11 @@ class communicate_server():
 
 			#############################################################################################
 			# Actual Judging process
-
  
 			######################   Function for time limit of problems  ###########
 			time_limit = initialize_judge.get_time_limit()
 			time = time_limit[problem_code]
 			#########################################################################
-
 			result, error = verdict.main(file_name, file_with_ext, language, problem_code, run_id, time)
 			#############################################################################################
 			try:
@@ -159,7 +158,8 @@ class communicate_server():
 				'PCode': problem_code,
 				'Time Stamp' : time_stamp,
 				'Judge' : judge_cred[1],
-				'IP': communicate_server.my_ip
+				'IP': communicate_server.my_ip,
+				'Language' : language
 			}
 			message = json.dumps(message)
 			ch.basic_publish(

@@ -95,7 +95,7 @@ class communicate_broadcast_server():
 			run_id = data['Run ID']
 			client_id = data['Client ID']
 			verdict = data['Status']
-			language = '< Non Local >'
+			language = data.get('Language', '-')
 			problem_code = data['Problem Code']
 			time_stamp = data['Timestamp']
 			file_with_ext = '< Non Local >'

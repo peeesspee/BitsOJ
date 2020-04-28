@@ -465,6 +465,7 @@ class core():
 				time_stamp,
 				core.ranking_algoritm
 			) 
+
 			# Interface scoreboard update 
 			scbd_data = scoreboard_management.get_user_score(username)
 			message = {
@@ -480,7 +481,8 @@ class core():
 				routing_key = username, 
 				body = message
 			)
-			# Send infor to judges
+			
+			# Send info to judges
 			core.channel.basic_publish(
 				exchange = core.judge_broadcast_exchange,
 				routing_key = '',
